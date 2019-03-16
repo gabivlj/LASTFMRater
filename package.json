@@ -1,0 +1,19 @@
+{
+  "name": "soundcloudapi",
+  "version": "1.0.0",
+  "description": "Making a Soundcloud api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon server.js"
+  },
+  "author": "Gabriel Villalonga",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.19",
+    "nodemon": "^1.18.10",
+    "request": "^2.88.0"
+  }
+}
