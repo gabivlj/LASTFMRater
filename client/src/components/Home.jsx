@@ -1,5 +1,5 @@
 import React from 'react'
-import KEYS from '../APIKEYS'
+import KEYS from '../API'
 import logo from '../logo.png'
 export default function Home() {
   return (

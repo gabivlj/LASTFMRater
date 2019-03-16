@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import API_KEYS from '../APIKEYS'
+import API_KEYS from '../API'
 
 export const getArtist = artist => dispatch => {
   console.log(artist)

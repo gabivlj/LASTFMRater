@@ -1,5 +1,5 @@
 import axios from 'axios'
-import API_KEYS from '../APIKEYS'
+import API_KEYS from '../API'
 import md5 from '../utils/md5'
 import convert from 'xml-js'
 import User from '../classes/User'
