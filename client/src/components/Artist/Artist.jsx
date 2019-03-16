@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getArtist } from '../../actions/artistActions'
+import ArtistAlbums from './ArtistAlbums'
+
 class Artist extends Component {
   constructor(props) {
     super(props)
     this.state = {
       artist: null
     }
+    this.loadedArtist = false
   }
   componentDidMount() {
     this.props.getArtist({
@@ -15,18 +18,31 @@ class Artist extends Component {
     })
   }
   componentDidUpdate() {
-    if (!this.state.artist && this.props.artist.artist) {
+    if (
+      !this.loadedArtist &&
+      this.props.artist.artist &&
+      !this.props.artist.artist.error
+    ) {
+      this.loadedArtist = true
       this.setState({
         artist: this.props.artist.artist.artist
       })
+    } else if (!this.loadedArtist && this.props.artist.artist.error > -1) {
+      this.loadedArtist = true
+      this.setState({
+        artist: this.props.artist.artist
+      })
     }
+
+    console.log(this.state)
   }
+
   render() {
     let { artist } = this.state
 
     return (
       <div>
-        {artist ? (
+        {artist && !artist.error ? (
           <div className="jumbotron">
             <div className="container">
               <h1 className="display-4">{artist.name}</h1>
@@ -76,6 +92,14 @@ class Artist extends Component {
               </a>
             </p>
           </div>
+        ) : (
+          "The artist you supplied couldn't be found"
+        )}
+        {this.props.artist.albums && artist ? (
+          <ArtistAlbums
+            album={this.props.artist.albums.album}
+            image={artist.image[4]['#text']}
+          />
         ) : null}
       </div>
     )

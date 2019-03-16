@@ -23,9 +23,11 @@ class Auth extends Component {
     }
     return (
       <div>
-        {user
-          ? `Welcome to my app, ${user.name}! `
-          : 'No user was received, please go back'}
+        {user ? (
+          <h1>Welcome to my app, {user.name}! </h1>
+        ) : (
+          'No user was received, please go back'
+        )}
         <ArtistsUser history={this.props.history} />
       </div>
     )

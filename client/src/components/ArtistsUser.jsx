@@ -12,8 +12,8 @@ class ArtistsUser extends Component {
       this.props.auth.currentUser &&
       Object.keys(this.props.auth.artists).length === 0
     ) {
-      this.props.setUsersArtists(this.props.auth.currentUser.name)
-    } else if (!this.props.auth.currentuser) {
+      this.props.setUsersArtists(this.props.auth.currentUser.name) //this.props.auth.currentUser.name
+    } else if (!this.props.auth.currentUser) {
       this.props.history.push('/')
     }
   }
