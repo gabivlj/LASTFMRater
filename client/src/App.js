@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 import AuthHandler from './components/AuthHandler'
 import Artist from './components/Artist/Artist'
+import Album from './components/Album/Album'
 class App extends Component {
   render() {
     return (
@@ -17,6 +18,11 @@ class App extends Component {
             <Route exact path="/:token" component={AuthHandler} />
             <Route exact path="/me/profile" component={Auth} />
             <Route exact path="/artist/:name/:mbid" component={Artist} />
+            <Route
+              exact
+              path="/album/:artist/:albumname/:mbid"
+              component={Album}
+            />
           </div>
         </Router>
       </Provider>
