@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getAlbum } from '../../actions/albumActions'
-function fmtMSS(s) {
-  return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
-}
+import hourFormat from '../../utils/hourFormat'
+
 class Album extends Component {
   constructor(props) {
     super(props)
@@ -11,6 +10,8 @@ class Album extends Component {
       artist: '',
       album: null
     }
+
+    // There is a delay with this.setState that'd bug the componentDidUpdate()
     this.loadedAlbum = false
   }
   componentDidMount() {
@@ -32,11 +33,12 @@ class Album extends Component {
     const { album } = this.state
     let tracks
     if (album) {
+      // Map through every track
       tracks = album.tracks.track.map(tr => (
         <li className="list-group-item d-flex justify-content-between align-items-center">
           {tr.name}
           <span className="badge badge-primary badge-pill">
-            {fmtMSS(tr.duration)}
+            {hourFormat.fmtMSS(tr.duration)}
           </span>
         </li>
       ))

@@ -1,5 +1,6 @@
 const initialState = {
-  album: null
+  album: null,
+  albumDB: null
 }
 
 export default (state = initialState, action) => {
@@ -8,6 +9,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         album: action.payload
+      }
+    case 'ADD_ALBUM':
+      return {
+        ...state,
+        albumDB: action.payload
       }
     default:
       return state

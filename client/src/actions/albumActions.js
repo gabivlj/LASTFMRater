@@ -20,4 +20,10 @@ export const getAlbum = albumData => dispatch => {
       })
     })
     .catch(err => console.log(err))
+  axios
+    .post('/api/album', albumData)
+    .then(res => dispatch({ type: 'ADD_ALBUM', payload: res.data }))
+    .catch(err => console.log(err))
 }
+
+export const addAlbum = albumData => dispatch => {}

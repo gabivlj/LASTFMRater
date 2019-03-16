@@ -6,6 +6,7 @@
 /client/src/API.js
 /.pnp
 .pnp.js
+/server/config/keys.js
 
 # testing
 /coverage
