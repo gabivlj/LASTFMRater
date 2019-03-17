@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getAlbum } from '../../actions/albumActions'
+import store from '../../store'
 import hourFormat from '../../utils/hourFormat'
+import AlbumRating from './AlbumRating'
 
 class Album extends Component {
   constructor(props) {
@@ -13,6 +15,11 @@ class Album extends Component {
 
     // There is a delay with this.setState that'd bug the componentDidUpdate()
     this.loadedAlbum = false
+  }
+  componentWillUnmount() {
+    store.dispatch({
+      type: 'CLEAR_ALBUM'
+    })
   }
   componentDidMount() {
     const { artist, albumname, mbid } = this.props.match.params
@@ -32,28 +39,36 @@ class Album extends Component {
   render() {
     const { album } = this.state
     let tracks
+    let duration
     if (album) {
       // Map through every track
-      tracks = album.tracks.track.map(tr => (
-        <li className="list-group-item d-flex justify-content-between align-items-center">
+      tracks = album.tracks.track.map((tr, index) => (
+        <li
+          key={index}
+          className="list-group-item d-flex justify-content-between align-items-center"
+        >
           {tr.name}
           <span className="badge badge-primary badge-pill">
             {hourFormat.fmtMSS(tr.duration)}
           </span>
         </li>
       ))
+      duration = album.tracks.track.reduce(
+        (total, current) => total + parseInt(current.duration),
+        0
+      )
     }
-    console.log(album)
+
     return (
       <div>
         <div className="jumbotron">
           <div className="container">
-            <h1 className="display-6">{this.state.artist}</h1>
             {album ? (
               <div>
                 <div className="row">
                   <div className="col-md-4 " style={{ marginTop: '10%' }}>
-                    <h2 className="display-2">{album.name}</h2>
+                    <h1 className="display-6">{this.state.artist}</h1>
+                    <h2 className="display-3">{album.name}</h2>
                     <p>{album.mbid}</p>
                   </div>
                   <div className="col-md-4">
@@ -72,6 +87,10 @@ class Album extends Component {
                 <div className="badge badge-primary ml-3">
                   Listeners: {album.listeners}
                 </div>
+                <div className="badge badge-primary ml-3">
+                  Total duration: {hourFormat.fmtMSS(duration)}
+                </div>
+                <AlbumRating />
               </div>
             ) : null}
           </div>

@@ -1,5 +1,5 @@
 export default (
-  state = { auth: false, currentUser: null, artists: {} },
+  state = { auth: false, currentUser: null, artists: {}, apiUser: null },
   action
 ) => {
   switch (action.type) {
@@ -8,6 +8,12 @@ export default (
         ...state,
         auth: true,
         currentUser: action.payload
+      }
+    case 'SET_API_USER':
+      return {
+        ...state,
+        auth: true,
+        apiUser: action.payload
       }
     case 'SET_USER_ARTISTS':
       return {

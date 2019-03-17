@@ -8,12 +8,12 @@ export default (state = initialState, action) => {
     case 'SET_ARTIST_ALBUMS':
       return {
         ...state,
-        albums: action.payload.topalbums
+        albums: action.payload ? action.payload.topalbums : null
       }
     case 'SET_ARTIST':
       return {
         ...state,
-        artist: action.payload
+        artist: action.payload ? action.payload : null
       }
     default:
       return state

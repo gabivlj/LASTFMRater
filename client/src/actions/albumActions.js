@@ -23,7 +23,27 @@ export const getAlbum = albumData => dispatch => {
   axios
     .post('/api/album', albumData)
     .then(res => dispatch({ type: 'ADD_ALBUM', payload: res.data }))
-    .catch(err => console.log(err))
+    .catch(err => dispatch({ type: 'ALBUM_BEING_ADDED', payload: '' }))
 }
 
-export const addAlbum = albumData => dispatch => {}
+export const addAlbumRating = (albumId, puntuation, userid) => dispatch => {
+  let infoToSendToApi = { puntuation, userid }
+  axios
+    .post(`/api/album/rate/${albumId}`, infoToSendToApi)
+    .then(res => {
+      dispatch({
+        type: 'ADD_ALBUM',
+        payload: res.data
+      })
+    })
+    .catch(err => console.log(err))
+  axios
+    .post('/api/user/rate', { name: userid, albumId })
+    .then(res => {
+      dispatch({
+        type: 'SET_API_USER',
+        payload: res.data
+      })
+    })
+    .catch(err => console.log(err))
+}

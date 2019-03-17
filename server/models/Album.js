@@ -20,7 +20,7 @@ const AlbumSchema = new Schema({
         required: true
       },
       user: {
-        type: Schema.Types.ObjectId,
+        type: String,
         required: true
       }
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getArtist } from '../../actions/artistActions'
+import { getArtist, cleanArtist } from '../../actions/artistActions'
 import ArtistAlbums from './ArtistAlbums'
 
 class Artist extends Component {
@@ -11,15 +11,18 @@ class Artist extends Component {
     }
     this.loadedArtist = false
   }
+  componentWillUnmount() {
+    this.props.cleanArtist()
+  }
   componentDidMount() {
     this.props.getArtist({
-      name: this.props.match.params.name,
-      mbid: this.props.match.params.mbid
+      name: this.props.match.params.name
     })
   }
   componentDidUpdate() {
     if (
       !this.loadedArtist &&
+      this.props.artist &&
       this.props.artist.artist &&
       !this.props.artist.artist.error
     ) {
@@ -27,7 +30,11 @@ class Artist extends Component {
       this.setState({
         artist: this.props.artist.artist.artist
       })
-    } else if (!this.loadedArtist && this.props.artist.artist.error > -1) {
+    } else if (
+      !this.loadedArtist &&
+      this.props.artist.artist &&
+      this.props.artist.artist.error > -1
+    ) {
       this.loadedArtist = true
       this.setState({
         artist: this.props.artist.artist
@@ -59,8 +66,10 @@ class Artist extends Component {
               </div>
             </div>
             <p className="lead">{artist.bio.summary.split('<')[0]}</p>
-            {artist.tags.tag.map(t => (
-              <span className="badge badge-primary ml-3">{t.name}</span>
+            {artist.tags.tag.map((t, index) => (
+              <span key={index} className="badge badge-primary ml-3">
+                {t.name}
+              </span>
             ))}
             <br />
 
@@ -111,5 +120,5 @@ const mapStateToProps = state => ({
 })
 export default connect(
   mapStateToProps,
-  { getArtist }
+  { getArtist, cleanArtist }
 )(Artist)

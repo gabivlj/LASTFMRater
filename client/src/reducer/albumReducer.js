@@ -15,6 +15,11 @@ export default (state = initialState, action) => {
         ...state,
         albumDB: action.payload
       }
+    case 'CLEAR_ALBUM':
+      return {
+        album: null,
+        albumDB: null
+      }
     default:
       return state
   }

@@ -11,6 +11,7 @@ class AuthHandler extends Component {
   }
   componentWillUpdate(next) {
     if (next.auth.auth) {
+      localStorage.setItem('session', JSON.stringify(next.auth.currentUser))
       this.props.history.push(`/me/profile`)
     }
   }

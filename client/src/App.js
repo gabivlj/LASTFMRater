@@ -8,6 +8,11 @@ import store from './store'
 import AuthHandler from './components/AuthHandler'
 import Artist from './components/Artist/Artist'
 import Album from './components/Album/Album'
+import { setFullUserFromSession } from './actions/authActions'
+
+// Get user from localStorage.
+store.dispatch(setFullUserFromSession())
+
 class App extends Component {
   render() {
     return (
@@ -17,7 +22,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/:token" component={AuthHandler} />
             <Route exact path="/me/profile" component={Auth} />
-            <Route exact path="/artist/:name/:mbid" component={Artist} />
+            <Route exact path="/artist/:name" component={Artist} />
             <Route
               exact
               path="/album/:artist/:albumname/:mbid"

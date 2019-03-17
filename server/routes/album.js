@@ -38,7 +38,37 @@ router.post('/', async (req, res) => {
  * @DESCRIPTION Try to add a rating to the album with the user id, if it does already exist just update it.
  */
 
-router.post('/rate/:albumid', (req, res) => {})
+router.post('/rate/:albumid', async (req, res) => {
+  try {
+    const album = await Album.findOne({
+      _id: req.params.albumid
+    })
+    if (album) {
+      const index = album.ratings
+        .map(rating => rating.user)
+        .indexOf(req.body.userid)
+      if (index <= -1) {
+        album.ratings.push({
+          puntuation: req.body.puntuation,
+          user: req.body.userid
+        })
+      } else {
+        album.ratings.splice(index, 1, {
+          puntuation: req.body.puntuation,
+          user: req.body.userid
+        })
+      }
+      album
+        .save()
+        .then(res_ => res.json(res_))
+        .catch(err => console.log(err))
+    } else {
+      return res.status(400).json('Error finding the album.')
+    }
+  } catch (err) {
+    return res.status(400).json('Error .')
+  }
+})
 
 /**
  * @POST

@@ -34,8 +34,8 @@ class ArtistsUser extends Component {
         <h1>Your artists!: </h1>
         <div className="row">
           {artists && artist
-            ? artist.map(artist => (
-                <div className="col-md-4">
+            ? artist.map((artist, index) => (
+                <div className="col-md-4" key={index}>
                   <div class="card" style={{ width: '100%' }}>
                     <img
                       className="card-img-top"
@@ -46,7 +46,7 @@ class ArtistsUser extends Component {
                       <h5 class="card-title">{artist.name}</h5>
                       <p class="card-text">Times played: {artist.playcount}</p>
                       <Link
-                        to={`/artist/${artist.name}/${artist.mbid}`}
+                        to={`/artist/${artist.name}`}
                         className="btn btn-primary"
                       >
                         Go to artists page
