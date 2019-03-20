@@ -9,9 +9,11 @@ class AuthHandler extends Component {
       this.props.setUser(this.props.match.params.token)
     }
   }
+  componentWillMount() {
+    localStorage.removeItem('session')
+  }
   componentWillUpdate(next) {
     if (next.auth.auth) {
-      localStorage.setItem('session', JSON.stringify(next.auth.currentUser))
       this.props.history.push(`/me/profile`)
     }
   }

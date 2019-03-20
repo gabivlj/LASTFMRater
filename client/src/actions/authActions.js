@@ -16,7 +16,7 @@ export const setUser = token => async dispatch => {
     )
     .then(async res => {
       const user = new User(res.data)
-
+      localStorage.setItem('session', JSON.stringify(user))
       dispatch({
         type: 'SET_USER',
         payload: user

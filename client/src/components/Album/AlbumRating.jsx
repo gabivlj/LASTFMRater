@@ -36,10 +36,17 @@ class AlbumRating extends Component {
         actualRating += rating.puntuation
       }
       actualRating /= this.props.album.albumDB.ratings.length
+      let userRating = this.props.album.albumDB.ratings.filter(
+        element => element.user === this.props.auth.currentUser.name
+      )
+      if (userRating.length > 0) userRating = userRating[0].puntuation
+      else {
+        userRating = actualRating
+      }
       this.setState({
         generalRating: actualRating,
-        rating: actualRating,
-        actualRating,
+        rating: userRating,
+        actualRating: userRating,
         currentVersion: this.props.album.albumDB.__v
       })
       this.changedRating = true

@@ -9,6 +9,9 @@ import AuthHandler from './components/AuthHandler'
 import Artist from './components/Artist/Artist'
 import Album from './components/Album/Album'
 import { setFullUserFromSession } from './actions/authActions'
+import SpotifyPlayer from './utils/SpotifyPlayer'
+import AppBar_ from './components/Search/AppBarMine'
+import AppBarMine from './components/Search/AppBarMine'
 
 // Get user from localStorage.
 store.dispatch(setFullUserFromSession())
@@ -19,17 +22,20 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/:token" component={AuthHandler} />
-            <Route exact path="/me/profile" component={Auth} />
-            <Route exact path="/artist/:name" component={Artist} />
-            <Route
-              exact
-              path="/album/:artist/:albumname/:mbid"
-              component={Album}
-            />
+            <div>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/:token" component={AuthHandler} />
+              <Route exact path="/me/profile" component={Auth} />
+              <Route exact path="/artist/:name" component={Artist} />
+              <Route
+                exact
+                path="/album/:artist/:albumname/:mbid"
+                component={Album}
+              />
+            </div>
           </div>
         </Router>
+        <AppBarMine />
       </Provider>
     )
   }

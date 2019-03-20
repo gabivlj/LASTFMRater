@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setUsersArtists } from '../actions/authActions'
 import { Link } from 'react-router-dom'
+import AppBarMine from './Search/AppBarMine'
 
 const isArray = a => {
   return !!a && a.constructor === Array

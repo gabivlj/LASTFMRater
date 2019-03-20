@@ -4,6 +4,7 @@ import { getAlbum } from '../../actions/albumActions'
 import store from '../../store'
 import hourFormat from '../../utils/hourFormat'
 import AlbumRating from './AlbumRating'
+import SpotifyPlayer from '../../utils/SpotifyPlayer'
 
 class Album extends Component {
   constructor(props) {
@@ -26,7 +27,13 @@ class Album extends Component {
     this.setState({
       artist
     })
-    this.props.getAlbum({ artist, albumname, mbid })
+
+    this.props.getAlbum({
+      artist,
+      albumname,
+      mbid,
+      username: this.props.currentUser ? this.props.currentUser.name : null
+    })
   }
   componentDidUpdate() {
     if (!this.loadedAlbum && this.props.album.album) {
@@ -70,6 +77,12 @@ class Album extends Component {
                     <h1 className="display-6">{this.state.artist}</h1>
                     <h2 className="display-3">{album.name}</h2>
                     <p>{album.mbid}</p>
+                    {album.userplaycount ? (
+                      <h5>
+                        {this.props.currentUser.name}'s playcount:{' '}
+                        {album.userplaycount}
+                      </h5>
+                    ) : null}
                   </div>
                   <div className="col-md-4">
                     <img
@@ -100,7 +113,8 @@ class Album extends Component {
   }
 }
 const mapStateToProps = state => ({
-  album: state.album
+  album: state.album,
+  currentUser: state.auth.currentUser
 })
 export default connect(
   mapStateToProps,
