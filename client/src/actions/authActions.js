@@ -3,7 +3,7 @@ import API_KEYS from '../API'
 import md5 from '../utils/md5'
 import User from '../classes/User'
 
-export const setUser = token => async dispatch => {
+export const setUser = (token, history = null) => async dispatch => {
   axios
     .get(
       `http://ws.audioscrobbler.com/2.0?token=${token}&api_key=${
@@ -26,6 +26,8 @@ export const setUser = token => async dispatch => {
         type: 'SET_API_USER',
         payload: apiUser.data
       })
+      // For anti-bug purposes, we redirect when we finish setting the user
+      if (history) history.push(`/me/profile`)
     })
     .catch(err => console.log(err))
 }

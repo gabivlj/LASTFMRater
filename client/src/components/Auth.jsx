@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setUser } from '../actions/authActions'
 import ArtistsUser from './ArtistsUser'
+
 class Auth extends Component {
   constructor(props) {
     super(props)
@@ -10,8 +11,8 @@ class Auth extends Component {
     }
   }
 
-  componentDidMount() {
-    if (!this.state.user) {
+  componentWillReceiveProps() {
+    if (this.state.user !== this.props.auth.currentUser) {
       this.setState({
         user: this.props.auth.currentUser
       })

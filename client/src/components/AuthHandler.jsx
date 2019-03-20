@@ -6,17 +6,13 @@ class AuthHandler extends Component {
   componentDidMount() {
     if (this.props.match.params.token) {
       console.log(this.props.match.params.token)
-      this.props.setUser(this.props.match.params.token)
+      this.props.setUser(this.props.match.params.token, this.props.history)
     }
   }
   componentWillMount() {
     localStorage.removeItem('session')
   }
-  componentWillUpdate(next) {
-    if (next.auth.auth) {
-      this.props.history.push(`/me/profile`)
-    }
-  }
+
   render() {
     return <div>Handling some stuff...</div>
   }

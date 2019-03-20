@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
       })
       newAlbum
         .save()
-        .then(res => res.json(res))
+        .then(saved => res.json(saved))
         .catch(err => res.status(404).json('Errors have been made'))
     } else {
       res.json(album)

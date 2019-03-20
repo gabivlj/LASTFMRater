@@ -32,11 +32,10 @@ class LoadList extends Component {
   }
 
   render() {
-    const { albums, loading, className } = this.props.search
+    const { className, search } = this.props
+    const { albums, loading } = search
     let albumsSearchResult
-    // if (className === 'byeWidth' && albums.length > 0) {
-    //   store.dispatch({ type: 'SEARCH_ALBUMS', payload: [] })
-    // }
+
     if (albums.length > 0) {
       albumsSearchResult = albums.map((album, index) => (
         // TODO: Basically, load artists, playlists, and users...
