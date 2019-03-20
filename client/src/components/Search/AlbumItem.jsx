@@ -33,7 +33,7 @@ const styles = theme => ({
 })
 
 function MediaControlCard(props) {
-  const { classes, theme, name, artist, style, className, img } = props
+  const { classes, name, artist, style, className, img } = props
 
   return (
     <Card className={classes.card + ' ' + className} style={style}>

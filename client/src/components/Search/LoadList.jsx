@@ -32,8 +32,11 @@ class LoadList extends Component {
   }
 
   render() {
-    const { albums, loading } = this.props.search
+    const { albums, loading, className } = this.props.search
     let albumsSearchResult
+    // if (className === 'byeWidth' && albums.length > 0) {
+    //   store.dispatch({ type: 'SEARCH_ALBUMS', payload: [] })
+    // }
     if (albums.length > 0) {
       albumsSearchResult = albums.map((album, index) => (
         // TODO: Basically, load artists, playlists, and users...
@@ -55,8 +58,14 @@ class LoadList extends Component {
             style={{ marginLeft: '', marginBottom: '0%' }}
           />
         ) : (
-          <div className={'row ' + this.props.className}>
-            {albumsSearchResult}
+          <div className={'row ' + className}>
+            {albumsSearchResult && albumsSearchResult.length > 0 ? (
+              albumsSearchResult
+            ) : (
+              <h3 style={{ marginLeft: '15%', marginTop: '5%' }}>
+                No results available...
+              </h3>
+            )}
           </div>
         )}
       </div>

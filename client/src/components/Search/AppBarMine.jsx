@@ -8,12 +8,7 @@ import Fab from '@material-ui/core/Fab'
 import MenuIcon from '@material-ui/icons/Menu'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
-import {
-  Input,
-  Typography,
-  CircularProgress,
-  LinearProgress
-} from '@material-ui/core'
+import { Input } from '@material-ui/core'
 
 import MoreIcon from '@material-ui/icons/MoreVert'
 import LoadList from './LoadList'

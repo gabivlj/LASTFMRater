@@ -4,7 +4,6 @@ import { getAlbum } from '../../actions/albumActions'
 import store from '../../store'
 import hourFormat from '../../utils/hourFormat'
 import AlbumRating from './AlbumRating'
-import SpotifyPlayer from '../../utils/SpotifyPlayer'
 
 class Album extends Component {
   constructor(props) {
