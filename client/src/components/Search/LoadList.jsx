@@ -5,6 +5,7 @@ import { searchThingsForSearchBar } from '../../actions/searchActions'
 import { connect } from 'react-redux'
 import store from '../../store'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 const __propTypes = {
   searchThingsForSearchBar: PropTypes.func.isRequired,
@@ -40,7 +41,7 @@ class LoadList extends Component {
   }
 
   render() {
-    const { className, search } = this.props
+    const { className, search, searchValue } = this.props
     const { albums, loading } = search
     let albumsSearchResult
 
@@ -73,6 +74,9 @@ class LoadList extends Component {
                 No results available...
               </h3>
             )}
+            <Link to={`/search/${searchValue}`} className="btn btn-secondary">
+              <h2 className="mt-3">Search more</h2>
+            </Link>
           </div>
         )}
       </div>
