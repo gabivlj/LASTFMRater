@@ -2,11 +2,18 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setUsersArtists } from '../actions/authActions'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+
+const __propTypes = {
+  setUsersArtists: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+}
 
 const isArray = a => {
   return !!a && a.constructor === Array
 }
 class ArtistsUser extends Component {
+  static propTypes = __propTypes
   componentDidMount() {
     if (
       this.props.auth.currentUser &&

@@ -4,8 +4,16 @@ import { getAlbum } from '../../actions/albumActions'
 import store from '../../store'
 import hourFormat from '../../utils/hourFormat'
 import AlbumRating from './AlbumRating'
+import PropTypes from 'prop-types'
+
+const __propTypes = {
+  getAlbum: PropTypes.func.isRequired,
+  album: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired
+}
 
 class Album extends Component {
+  static propTypes = __propTypes
   constructor(props) {
     super(props)
     this.state = {
@@ -102,6 +110,7 @@ class Album extends Component {
                 <div className="badge badge-primary ml-3">
                   Total duration: {hourFormat.fmtMSS(duration)}
                 </div>
+                {/*TODO: Pass album and currentUser props so it has better performance and it's more useful but whatever*/}
                 <AlbumRating />
               </div>
             ) : null}

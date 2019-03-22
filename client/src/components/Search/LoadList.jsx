@@ -4,8 +4,16 @@ import AlbumItem from './AlbumItem'
 import { searchThingsForSearchBar } from '../../actions/searchActions'
 import { connect } from 'react-redux'
 import store from '../../store'
+import PropTypes from 'prop-types'
+
+const __propTypes = {
+  searchThingsForSearchBar: PropTypes.func.isRequired,
+  search: PropTypes.object.isRequired
+}
 
 class LoadList extends Component {
+  static propTypes = __propTypes
+
   constructor(props) {
     super(props)
     this.state = {

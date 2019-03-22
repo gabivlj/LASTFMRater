@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { addAlbumRating } from '../../actions/albumActions'
+import PropTypes from 'prop-types'
+
+const __propTypes = {
+  album: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  addAlbumRating: PropTypes.func.isRequired
+}
 
 const buttonStyle = {
   textDecoration: 'none',
@@ -8,7 +15,9 @@ const buttonStyle = {
   background: 'none',
   cursor: 'pointer'
 }
+
 class AlbumRating extends Component {
+  static propTypes = __propTypes
   constructor() {
     super()
     this.state = {

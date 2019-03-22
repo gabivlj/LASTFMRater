@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setUser } from '../actions/authActions'
+import PropTypes from 'prop-types'
+
+const __propTypes = {
+  setUser: PropTypes.func.isRequired
+}
 
 class AuthHandler extends Component {
+  static propTypes = __propTypes
+
   componentDidMount() {
     if (this.props.match.params.token) {
       console.log(this.props.match.params.token)
