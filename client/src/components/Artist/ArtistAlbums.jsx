@@ -1,5 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+
+const __propTypes = {
+  album: PropTypes.array.isRequired,
+  image: PropTypes.image,
+  artist: PropTypes.string
+}
+
 const ArtistAlbums = ({ album, image, artist, ...props }) => {
   return (
     <div className="row">
@@ -42,4 +50,7 @@ const ArtistAlbums = ({ album, image, artist, ...props }) => {
     </div>
   )
 }
+
+ArtistAlbums.propTypes = __propTypes
+
 export default ArtistAlbums

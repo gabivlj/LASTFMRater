@@ -2,8 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getArtist, cleanArtist } from '../../actions/artistActions'
 import ArtistAlbums from './ArtistAlbums'
+import PropTypes from 'prop-types'
+
+const __propTypes = {
+  getArtist: PropTypes.func.isRequired,
+  cleanArtist: PropTypes.func.isRequired,
+  artist: PropTypes.object.isRequired
+}
 
 class Artist extends Component {
+  static propTypes = __propTypes
   constructor(props) {
     super(props)
     this.state = {
