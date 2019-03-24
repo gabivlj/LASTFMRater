@@ -4,4 +4,18 @@
 
 ### Using LASTFM Api. Node.js, Express, Mongodb and React.js.
 
-**_ This is an under construction application. Not finished by any means. _**
+### Why a music rater?
+A: Because current music pages for that purpose are not that good.
+
+## Installation
+ * Download the repo.
+  `npm install`
+  `npm run server`
+  `cd client && npm start`
+
+* Made by Gabriel Villalonga Simón
+* If you wanna contribute to this project contact me, I'd love to collaborate with anyone.
+* Any questions regarding code or something, just ask me.
+
+## Screenshots (soon)
+
