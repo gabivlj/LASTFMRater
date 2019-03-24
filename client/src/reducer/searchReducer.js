@@ -60,6 +60,18 @@ export default (state = initialState, action) => {
           playlists: { loading: false, list: [] }
         }
       }
+    case 'SET_LOADING_SEARCH_PAGE':
+      delete state.searchData[action.payload]
+      return {
+        ...state,
+        searchData: {
+          [action.payload]: {
+            loading: true,
+            list: []
+          },
+          ...state.searchData
+        }
+      }
     default:
       return state
   }
