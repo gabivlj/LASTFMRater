@@ -23,4 +23,6 @@ A: Because current music pages for that purpose are not that good.
 - If you wanna contribute to this project contact me, I'd love to collaborate with anyone.
 - Any questions regarding code or something, just ask me.
 
-## Screenshots (soon)
+## Screenshots
+
+<img src="./capture.png" alt="Logolastfm" width="600" >
