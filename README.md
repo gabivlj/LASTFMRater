@@ -26,3 +26,6 @@ A: Because current music pages for that purpose are not that good.
 ## Screenshots
 
 <img src="./capture1.png" alt="Logolastfm" width="600" >
+<img src="./capture2.png" alt="Logolastfm" width="600" >
+<img src="./capture3.png" alt="Logolastfm" width="600" >
+<img src="./capture4.png" alt="Logolastfm" width="600" >
