@@ -1,6 +1,7 @@
 # LASTFMRater
 
 <img src="./client/src/logo.png" alt="Logolastfm" width="250" height="250">
+
 ## Rate your favorite music, share your reviews and rating with other people!
 
 ### Using LASTFM Api. Node.js, Express, Mongodb and React.js.
