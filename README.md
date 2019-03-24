@@ -1,6 +1,6 @@
 # LASTFMRater
 
-![LogoLastfm](./client/src/logo.png)
+![LogoLastfm](./client/src/logo.png | width=100)
 
 ## Rate your favorite music, share your reviews and rating with other people!
 
