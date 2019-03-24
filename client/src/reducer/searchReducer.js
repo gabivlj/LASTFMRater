@@ -6,7 +6,8 @@ const initialState = {
   searchData: {
     albums: { loading: false, list: [] },
     artists: { loading: false, list: [] },
-    playlists: { loading: false, list: [] }
+    playlists: { loading: false, list: [] },
+    cleaned: false
   }
 }
 
@@ -57,7 +58,8 @@ export default (state = initialState, action) => {
         searchData: {
           albums: { loading: false, list: [] },
           artists: { loading: false, list: [] },
-          playlists: { loading: false, list: [] }
+          playlists: { loading: false, list: [] },
+          cleaned: true
         }
       }
     case 'SET_LOADING_SEARCH_PAGE':
@@ -70,6 +72,14 @@ export default (state = initialState, action) => {
             list: []
           },
           ...state.searchData
+        }
+      }
+    case 'POPULATE_SEARCH':
+      return {
+        ...state,
+        searchData: {
+          ...state.searchData,
+          cleaned: false
         }
       }
     default:

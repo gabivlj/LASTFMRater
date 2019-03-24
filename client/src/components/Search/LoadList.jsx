@@ -74,7 +74,11 @@ class LoadList extends Component {
                 No results available...
               </h3>
             )}
-            <Link to={`/search/${searchValue}`} className="btn btn-secondary">
+            <Link
+              to={`/search/${searchValue}`}
+              onClick={() => store.dispatch({ type: 'CLEAN_SEARCH_PAGE' })}
+              className="btn btn-secondary"
+            >
               <h2 className="mt-3">Search more</h2>
             </Link>
           </div>

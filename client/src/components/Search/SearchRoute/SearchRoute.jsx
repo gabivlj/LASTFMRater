@@ -24,7 +24,22 @@ class SearchRoute extends Component {
   componentDidMount() {
     const { searchquery } = this.props.match.params
     this.searchHandler = new Search(searchquery, store)
+    // We set cleaned: false to inform that we populated lists.
+    store.dispatch({ type: 'POPULATE_SEARCH' })
     this.add('albums', this.props.searchAlbums)
+  }
+
+  componentWillReceiveProps(next) {
+    if (next.search.cleaned) {
+      // This means that the user has searched another thing in the searchbar and it has cleaned every lists.
+      // So we need to get the items that the user is searching. So now we set to cleaned: false to say: "Hey, we searched things"
+      store.dispatch({ type: 'POPULATE_SEARCH' })
+      // Change the query param in the Search class.
+      this.searchHandler.searchquery = next.match.params.searchquery
+      // Find albums
+      this.add('albums', this.props.searchAlbums)
+      // TODO search other stuff
+    }
   }
 
   add = (type, functionprops) => {
