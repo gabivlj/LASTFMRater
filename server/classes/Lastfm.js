@@ -1,4 +1,4 @@
-const APIKEYS = require('../config/API')
+const APIKEYS = require('../config/api')
 const md5 = require('md5')
 const axios = require('axios')
 
