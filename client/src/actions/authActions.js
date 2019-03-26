@@ -3,7 +3,11 @@ import API_KEYS from '../API'
 import md5 from '../utils/md5'
 import User from '../classes/User'
 
-export const setUser = (token, history = null) => async dispatch => {
+export const setUser = (
+  token,
+  history = null,
+  typeoflogin = null
+) => async dispatch => {
   axios
     .get(
       `http://ws.audioscrobbler.com/2.0?token=${token}&api_key=${
@@ -42,6 +46,10 @@ export const setFullUserFromSession = () => async dispatch => {
   })
 }
 
+/**
+ * @description Get the artists that the user listens to in Lastfm.
+ */
+
 export const setUsersArtists = name => dispatch => {
   if (name)
     axios
@@ -56,5 +64,5 @@ export const setUsersArtists = name => dispatch => {
           payload: res.data
         })
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err.response.data))
 }
