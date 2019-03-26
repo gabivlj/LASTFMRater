@@ -1,5 +1,8 @@
 const router = require('express').Router()
 const Album = require('../models/Album')
+const Lastfm = require('../classes/Lastfm')
+
+const FM = new Lastfm(null)
 
 /**
  * @POST
@@ -29,6 +32,41 @@ router.post('/', async (req, res) => {
     }
   } catch (err) {
     res.status(400).json('INTERNAL ERROR')
+  }
+})
+
+// @GET
+// @OPTIONALQUERYPARAMS username
+router.get('/album/:albumname/:artistname', async (req, res) => {
+  const username = req.query.username
+
+  const AlbumData = {
+    albumname: req.params.albumname,
+    username,
+    artist: req.params.artistname
+  }
+  const album__ = await FM.getAlbum(AlbumData)
+  if (album__) {
+    if (album__.tracks.track.length <= 0) {
+      // Find Album Tracks in our database incase we have them...
+      const tracks = await Album.findOne({
+        artist: album__.artist,
+        name: album__name
+      }).tracks
+      if (tracks.length > 0) {
+        album__.tracks = tracks
+      }
+    }
+    return res.json(album__)
+  } else {
+    const album = await Album.findOne({
+      name: req.params.albumname,
+      artist: req.params.artistname
+    })
+    if (!album) {
+      return res.status(400).json('Album not found!')
+    }
+    return res.json(album)
   }
 })
 

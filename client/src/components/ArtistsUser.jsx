@@ -38,7 +38,9 @@ class ArtistsUser extends Component {
 
     return (
       <div className="container">
-        <h1>Your artists!: </h1>
+        <div className="badge badge-primary">
+          <h1>Your artists </h1>
+        </div>
         <div className="row">
           {artists && artist
             ? artist.map((artist, index) => (
@@ -62,7 +64,7 @@ class ArtistsUser extends Component {
                   </div>
                 </div>
               ))
-            : null}
+            : `We don't have current data of your LastFM last Artists...`}
         </div>
       </div>
     )

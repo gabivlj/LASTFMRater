@@ -15,25 +15,34 @@ class Auth extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: null
+      user: { empty: true }
     }
   }
 
   componentWillReceiveProps() {
-    if (this.state.user !== this.props.auth.currentUser) {
+    if (this.state.user.name !== this.props.auth.currentUser.name) {
       this.setState({
         user: this.props.auth.currentUser
       })
     }
   }
+
+  componentDidMount() {
+    if (this.state.user.name !== this.props.auth.currentUser.name) {
+      this.setState({
+        user: this.props.auth.currentUser
+      })
+    }
+  }
+
   render() {
     const { user } = this.state
     if (!user) {
     }
     return (
       <div>
-        {user ? (
-          <h1>Welcome to my app, {user.name}! </h1>
+        {!user.empty ? (
+          <h1 className="container">Welcome to LastRater, {user.name}! </h1>
         ) : (
           'No user was received, please go back'
         )}

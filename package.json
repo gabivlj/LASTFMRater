@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon ./server/server.js"
+    "server": "nodemon ./server/server.js",
+    "dev": "concurrently \"npm run server\" \"cd client && npm start\""
   },
   "author": "Gabriel Villalonga",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
+    "concurrently": "^4.1.0",
     "express": "^4.16.4",
+    "md5": "^2.2.1",
     "mongoose": "^5.4.19",
     "nodemon": "^1.18.10",
     "request": "^2.88.0"
