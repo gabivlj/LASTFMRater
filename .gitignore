@@ -7,7 +7,7 @@
 /.pnp
 .pnp.js
 /server/config/keys.js
-
+/server/config/API.js
 # testing
 /coverage
 
