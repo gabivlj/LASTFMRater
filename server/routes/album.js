@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
 
 // @GET
 // @OPTIONALQUERYPARAMS username
-router.get('/album/:albumname/:artistname', async (req, res) => {
+router.get('/:albumname/:artistname', async (req, res) => {
   const username = req.query.username
 
   const AlbumData = {
@@ -45,20 +45,23 @@ router.get('/album/:albumname/:artistname', async (req, res) => {
     username,
     artist: req.params.artistname
   }
-  const album__ = await FM.getAlbum(AlbumData)
+  let album__ = await FM.getAlbum(AlbumData)
   if (album__) {
+    album__ = album__.album
     if (album__.tracks.track.length <= 0) {
       // Find Album Tracks in our database incase we have them...
       const tracks = await Album.findOne({
         artist: album__.artist,
-        name: album__name
+        name: album__.name
       }).tracks
-      if (tracks.length > 0) {
+      if (tracks && tracks.length > 0) {
         album__.tracks = tracks
       }
+      console.log('yes')
     }
-    return res.json(album__)
+    return res.json({ album: album__ })
   } else {
+    console.log('n')
     const album = await Album.findOne({
       name: req.params.albumname,
       artist: req.params.artistname
@@ -66,7 +69,7 @@ router.get('/album/:albumname/:artistname', async (req, res) => {
     if (!album) {
       return res.status(400).json('Album not found!')
     }
-    return res.json(album)
+    return res.json({ album: album })
   }
 })
 
