@@ -5,19 +5,9 @@ export const getAlbum = albumData => dispatch => {
   let mbidString = ''
   // if (albumData.mbid) mbidString = `&mbid:${albumData.mbid}`
   console.log(albumData)
-  let username
-  if (albumData.username) {
-    username = `&username=${albumData.username}`
-  } else username = ''
-
+  let username = albumData.username ? `?username=${albumData.username}` : ''
   axios
-    .get(
-      `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
-        API_KEYS.API_KEY
-      }&artist=${albumData.artist}&album=${
-        albumData.albumname
-      }${mbidString}${username}&format=json`
-    )
+    .get(`/api/album/${albumData.albumname}/${albumData.artist}${username}`)
     .then(res => {
       dispatch({
         type: 'GET_ALBUM',
@@ -25,6 +15,21 @@ export const getAlbum = albumData => dispatch => {
       })
     })
     .catch(err => console.log(err))
+  // axios
+  //   .get(
+  //     `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
+  //       API_KEYS.API_KEY
+  //     }&artist=${albumData.artist}&album=${
+  //       albumData.albumname
+  //     }${mbidString}${username}&format=json`
+  //   )
+  //   .then(res => {
+  //     dispatch({
+  //       type: 'GET_ALBUM',
+  //       payload: res.data
+  //     })
+  //   })
+  //   .catch(err => console.log(err))
   axios
     .post('/api/album', albumData)
     .then(res => dispatch({ type: 'ADD_ALBUM', payload: res.data }))

@@ -9,31 +9,49 @@ export const setUser = (
   typeoflogin = null
 ) => async dispatch => {
   axios
-    .get(
-      `http://ws.audioscrobbler.com/2.0?token=${token}&api_key=${
-        API_KEYS.API_KEY
-      }&api_sig=${md5(
-        `api_key${API_KEYS.API_KEY}methodauth.getSessiontoken${token}${
-          API_KEYS.SECRET
-        }`
-      )}&method=auth.getSession`
-    )
+    .get(`/api/user/${token}`)
     .then(async res => {
       const user = new User(res.data)
+      console.log(user)
       localStorage.setItem('session', JSON.stringify(user))
+      const apiUser = await axios.post('/api/user', user)
       dispatch({
         type: 'SET_USER',
         payload: user
       })
-      const apiUser = await axios.post('/api/user', user)
       dispatch({
         type: 'SET_API_USER',
         payload: apiUser.data
       })
-      // For anti-bug purposes, we redirect when we finish setting the user
       if (history) history.push(`/me/profile`)
     })
     .catch(err => console.log(err))
+  // axios
+  //   .get(
+  //     `http://ws.audioscrobbler.com/2.0?token=${token}&api_key=${
+  //       API_KEYS.API_KEY
+  //     }&api_sig=${md5(
+  //       `api_key${API_KEYS.API_KEY}methodauth.getSessiontoken${token}${
+  //         API_KEYS.SECRET
+  //       }`
+  //     )}&method=auth.getSession`
+  //   )
+  //   .then(async res => {
+  //     const user = new User(res.data)
+  //     localStorage.setItem('session', JSON.stringify(user))
+  //     dispatch({
+  //       type: 'SET_USER',
+  //       payload: user
+  //     })
+  //     const apiUser = await axios.post('/api/user', user)
+  //     dispatch({
+  //       type: 'SET_API_USER',
+  //       payload: apiUser.data
+  //     })
+  //     // For anti-bug purposes, we redirect when we finish setting the user
+  //     if (history) history.push(`/me/profile`)
+  //   })
+  //   .catch(err => console.log(err))
 }
 
 export const setFullUserFromSession = () => async dispatch => {
@@ -53,11 +71,7 @@ export const setFullUserFromSession = () => async dispatch => {
 export const setUsersArtists = name => dispatch => {
   if (name)
     axios
-      .get(
-        `http://ws.audioscrobbler.com/2.0/?method=library.getartists&api_key=${
-          API_KEYS.API_KEY
-        }&user=${name}&format=json`
-      )
+      .get(`/api/user/artists/${name}`)
       .then(res => {
         dispatch({
           type: 'SET_USER_ARTISTS',
@@ -66,3 +80,6 @@ export const setUsersArtists = name => dispatch => {
       })
       .catch(err => console.log(err.response.data))
 }
+// http://ws.audioscrobbler.com/2.0/?method=library.getartists&api_key=${
+//   API_KEYS.API_KEY
+// }&user=${name}&format=json

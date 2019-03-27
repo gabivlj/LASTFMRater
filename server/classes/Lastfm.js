@@ -24,7 +24,6 @@ class Lastfm {
             this.API_SIGNATURE
           }&method=auth.getSession`
         )
-
         if (!user.data || !user) {
           resolve({ error: 'Error with Lasftm API', moreinfo: user })
         }
@@ -110,6 +109,7 @@ class Lastfm {
 
   async getAlbum(albumData) {
     return new Promise(async (resolve, reject) => {
+      let username
       try {
         if (albumData.username) {
           username = `&username=${albumData.username}`
@@ -127,6 +127,7 @@ class Lastfm {
         }
         resolve(album.data)
       } catch (err) {
+        console.log(err)
         resolve(null)
       }
     })
