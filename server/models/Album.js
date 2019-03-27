@@ -66,6 +66,20 @@ const AlbumSchema = new Schema({
         type: Number
       }
     }
+  ],
+  comments: [
+    {
+      text: { type: String },
+      userName: { type: String, required: true },
+      user: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
+      likes: [
+        { user: { type: Schema.Types.ObjectId, required: true, ref: 'users' } }
+      ],
+      Date: {
+        type: Date,
+        default: Date.now()
+      }
+    }
   ]
 })
 
