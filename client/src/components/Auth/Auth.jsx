@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setUser } from '../actions/authActions'
+import { setUser } from '../../actions/authActions'
 import ArtistsUser from './ArtistsUser'
 import PropTypes from 'prop-types'
 

@@ -39,13 +39,13 @@ router.post('/', async (req, res) => {
 // @OPTIONALQUERYPARAMS username
 router.get('/:albumname/:artistname', async (req, res) => {
   const username = req.query.username
-
   const AlbumData = {
     albumname: req.params.albumname,
     username,
     artist: req.params.artistname
   }
   let album__ = await FM.getAlbum(AlbumData)
+
   if (album__) {
     album__ = album__.album
     if (album__.tracks.track.length <= 0) {
@@ -57,11 +57,9 @@ router.get('/:albumname/:artistname', async (req, res) => {
       if (tracks && tracks.length > 0) {
         album__.tracks = tracks
       }
-      console.log('yes')
     }
     return res.json({ album: album__ })
   } else {
-    console.log('n')
     const album = await Album.findOne({
       name: req.params.albumname,
       artist: req.params.artistname

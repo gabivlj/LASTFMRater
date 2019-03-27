@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setUsersArtists } from '../actions/authActions'
+import { setUsersArtists } from '../../actions/authActions'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
