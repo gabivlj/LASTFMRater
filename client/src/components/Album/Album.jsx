@@ -100,7 +100,11 @@ class Album extends Component {
                   </div>
                 </div>
                 <h5 className="mt-3 ">Track list:</h5>
-                <ul className="list-group mt-3 w-50">{tracks}</ul>
+                <ul className="list-group mt-3 w-50">
+                  {tracks && tracks.length > 0
+                    ? tracks
+                    : 'There are no tracks listed on this album, wanna add one? Colaborate!'}
+                </ul>
                 <div className="badge badge-primary">
                   Playcount: {album.playcount}
                 </div>
