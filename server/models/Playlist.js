@@ -41,7 +41,11 @@ const PlaylistModel = new Schema({
       user: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
       likes: [
         { user: { type: Schema.Types.ObjectId, required: true, ref: 'users' } }
-      ]
+      ],
+      Date: {
+        type: Date,
+        default: Date.now()
+      }
     }
   ],
   playlistName: {

@@ -12,7 +12,13 @@ const UserSchema = new Schema({
       ref: 'album'
     }
   ],
-  reviews: [{ type: Schema.Types.ObjectId, ref: 'album' }]
+  reviews: [{ type: Schema.Types.ObjectId, ref: 'album' }],
+  followedAccounts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'users'
+    }
+  ]
 })
 
 module.exports = User = mongoose.model('users', UserSchema)
