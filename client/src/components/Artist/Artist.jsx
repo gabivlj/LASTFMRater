@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { getArtist, cleanArtist } from '../../actions/artistActions'
 import ArtistAlbums from './ArtistAlbums'
 import PropTypes from 'prop-types'
+import { LinearProgress } from '@material-ui/core'
 
 const __propTypes = {
   getArtist: PropTypes.func.isRequired,
@@ -110,7 +111,7 @@ class Artist extends Component {
             </p>
           </div>
         ) : (
-          "The artist you supplied couldn't be found"
+          <LinearProgress />
         )}
         {this.props.artist.albums && artist ? (
           <ArtistAlbums

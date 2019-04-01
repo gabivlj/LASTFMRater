@@ -26,10 +26,6 @@ const AlbumSchema = new Schema({
       },
       duration: {
         type: Number // Seconds
-      },
-      trackId: {
-        type: Schema.Types.ObjectId,
-        ref: 'tracks'
       }
     }
   ],

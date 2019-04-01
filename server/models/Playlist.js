@@ -23,10 +23,6 @@ const PlaylistModel = new Schema({
       duration: {
         type: String,
         required: true
-      },
-      trackId: {
-        type: Schema.Types.ObjectId,
-        ref: 'tracks'
       }
     }
   ],

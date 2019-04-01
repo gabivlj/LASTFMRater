@@ -18,6 +18,16 @@ const UserSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'users'
     }
+  ],
+  playlists: [
+    {
+      playlistid: {
+        type: Schema.Types.ObjectId,
+        ref: 'playlists',
+        required: true
+      },
+      name: { type: String, required: true }
+    }
   ]
 })
 

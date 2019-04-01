@@ -15,6 +15,7 @@ export const setUser = (
       console.log(user)
       localStorage.setItem('session', JSON.stringify(user))
       const apiUser = await axios.post('/api/user', user)
+
       dispatch({
         type: 'SET_USER',
         payload: user

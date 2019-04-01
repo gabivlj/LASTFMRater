@@ -24,5 +24,21 @@ const ArtistSchema = new Schema({
         default: Date.now()
       }
     }
+  ],
+  albums: [
+    {
+      ref: 'albums',
+      type: Schema.Types.ObjectId
+    }
+  ],
+  description: {
+    type: String
+  },
+  genres: [
+    {
+      type: String
+    }
   ]
 })
+
+module.exports = ArtistSchema = mongoose.model('artists', ArtistSchema)

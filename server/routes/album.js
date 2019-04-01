@@ -116,4 +116,19 @@ router.post('/rate/:albumid', async (req, res) => {
  */
 
 router.post('/review/:albumid', (req, res) => {})
+
+router.get('/search/:name', async (req, res) => {
+  const { page, limit } = req.query
+  limit = limit || 20
+  page = page || 1
+  const { name } = req.params
+  try {
+    const album = await Album.find({ name })
+    if (album && album.length > 0) return res.json(album.slice(limit))
+    const album__ = await FM.searchAlbums(name, limit, page)
+    return res.json(album__)
+  } catch (err) {
+    res.status(400).json('Error finding albums')
+  }
+})
 module.exports = router
