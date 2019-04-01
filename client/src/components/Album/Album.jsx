@@ -5,6 +5,7 @@ import store from '../../store'
 import hourFormat from '../../utils/hourFormat'
 import AlbumRating from './AlbumRating'
 import PropTypes from 'prop-types'
+import { LinearProgress } from '@material-ui/core'
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
@@ -117,7 +118,9 @@ class Album extends Component {
                 {/*TODO: Pass album and currentUser props so it has better performance and it's more useful but whatever*/}
                 <AlbumRating />
               </div>
-            ) : null}
+            ) : (
+              <LinearProgress />
+            )}
           </div>
         </div>
       </div>

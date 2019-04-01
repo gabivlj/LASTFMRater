@@ -67,7 +67,7 @@ class Lastfm {
       try {
         params.api_key = this.API_KEY
         const albums = await axios.get(
-          `${this.LASTFMROUTE}/2.0/?method=album.search&format=json`,
+          `${this.LASTFMROUTE}/?method=album.search&format=json`,
           { params: params }
         )
         if (!albums) {
@@ -84,7 +84,9 @@ class Lastfm {
     return new Promise(async (resolve, reject) => {
       try {
         const artist__ = await axios.get(
-          `http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${artist}&api_key=${
+          `${
+            this.LASTFMROUTE
+          }/?method=artist.getinfo&artist=${artist}&api_key=${
             this.API_KEY
           }&format=json`
         )
@@ -115,7 +117,7 @@ class Lastfm {
           username = `&username=${albumData.username}`
         } else username = ''
         const album = await axios.get(
-          `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
+          `${this.LASTFMROUTE}/?method=album.getinfo&api_key=${
             this.API_KEY
           }&artist=${albumData.artist}&album=${
             albumData.albumname
@@ -130,6 +132,51 @@ class Lastfm {
         console.log(err)
         resolve(null)
       }
+    })
+  }
+
+  async searchAlbums(search = '', limit = 5, page = 1) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(
+          `${this.LASTFMROUTE}/?method=album.search&album=${search}&api_key=${
+            API_KEYS.API_KEY
+          }&page=${page}&limit=${limit}&format=json`
+        )
+        .then(res => {
+          resolve(res.data.results.albummatches.album)
+        })
+        .catch(err => reject(err.response))
+    })
+  }
+
+  async searchArtists(searchValue) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(
+          `${this.LASTFMROUTE}/?method=artist.search&api_key=${
+            API_KEYS.API_KEY
+          }&artist=${searchValue}&limit=20&format=json`
+        )
+        .then(res => {
+          resolve(res.data.results.artistmatches.artist)
+        })
+        .catch(err => reject(err.response))
+    })
+  }
+
+  async getArtist(searchValue) {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(
+          `http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${searchValue}&api_key=${
+            API_KEYS.API_KEY
+          }&format=json`
+        )
+        .then(res => {
+          resolve(res.data)
+        })
+        .catch(err => reject(err.response))
     })
   }
 }
