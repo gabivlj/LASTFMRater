@@ -123,13 +123,11 @@ class Lastfm {
             albumData.albumname
           }${username}&format=json`
         )
-
         if (!album) {
           resolve(null)
         }
         resolve(album.data)
       } catch (err) {
-        console.log(err)
         resolve(null)
       }
     })
@@ -140,28 +138,28 @@ class Lastfm {
       axios
         .get(
           `${this.LASTFMROUTE}/?method=album.search&album=${search}&api_key=${
-            API_KEYS.API_KEY
+            this.API_KEY
           }&page=${page}&limit=${limit}&format=json`
         )
         .then(res => {
           resolve(res.data.results.albummatches.album)
         })
-        .catch(err => reject(err.response))
+        .catch(err => reject(err))
     })
   }
 
-  async searchArtists(searchValue) {
+  async searchArtists(searchValue, limit = 5, page = 1) {
     return new Promise((resolve, reject) => {
       axios
         .get(
           `${this.LASTFMROUTE}/?method=artist.search&api_key=${
-            API_KEYS.API_KEY
-          }&artist=${searchValue}&limit=20&format=json`
+            this.API_KEY
+          }&artist=${searchValue}&page=${page}&limit=${limit}&format=json`
         )
         .then(res => {
           resolve(res.data.results.artistmatches.artist)
         })
-        .catch(err => reject(err.response))
+        .catch(err => reject(err))
     })
   }
 
@@ -169,15 +167,36 @@ class Lastfm {
     return new Promise((resolve, reject) => {
       axios
         .get(
-          `http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${searchValue}&api_key=${
-            API_KEYS.API_KEY
+          `${
+            this.LASTFMROUTE
+          }/?method=artist.getinfo&artist=${searchValue}&api_key=${
+            this.API_KEY
           }&format=json`
         )
         .then(res => {
           resolve(res.data)
         })
-        .catch(err => reject(err.response))
+        .catch(err => {
+          reject(err)
+        })
     })
+  }
+
+  async getArtistAlbums(artist) {
+    return new Promise((resolve, reject) =>
+      axios
+        .get(
+          `${
+            this.LASTFMROUTE
+          }/?method=artist.gettopalbums&artist=${artist}&api_key=${
+            this.API_KEY
+          }&format=json`
+        )
+        .then(res => {
+          resolve(res.data)
+        })
+        .catch(err => console.log(err) && reject(err.response))
+    )
   }
 }
 

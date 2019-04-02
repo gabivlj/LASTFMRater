@@ -34,7 +34,6 @@ class LoadList extends Component {
       // We check for empty values.
       if (nextProps.searchValue.trim() !== '')
         this.timeout = setTimeout(() => {
-          console.log('SEND API')
           this.props.searchThingsForSearchBar(nextProps.searchValue)
         }, 800)
     }

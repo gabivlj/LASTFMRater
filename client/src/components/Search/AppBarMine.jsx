@@ -83,7 +83,6 @@ class AppBarMine extends Component {
                 onInputCapture={e => {
                   e.preventDefault()
                   this.setState({ valueSearch: e.target.value })
-                  console.log('uwu')
                 }}
                 onChange={e => this.setState({ valueSearch: e.target.value })}
               />

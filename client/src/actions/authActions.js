@@ -1,6 +1,5 @@
 import axios from 'axios'
-import API_KEYS from '../API'
-import md5 from '../utils/md5'
+
 import User from '../classes/User'
 
 export const setUser = (
@@ -12,7 +11,7 @@ export const setUser = (
     .get(`/api/user/${token}`)
     .then(async res => {
       const user = new User(res.data)
-      console.log(user)
+
       localStorage.setItem('session', JSON.stringify(user))
       const apiUser = await axios.post('/api/user', user)
 

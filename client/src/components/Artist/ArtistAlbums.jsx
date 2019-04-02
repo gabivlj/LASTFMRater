@@ -4,17 +4,18 @@ import PropTypes from 'prop-types'
 
 const __propTypes = {
   album: PropTypes.array.isRequired,
-  image: PropTypes.image,
+  image: PropTypes.string,
   artist: PropTypes.string
 }
 
 const ArtistAlbums = ({ album, image, artist, ...props }) => {
+  console.log(album)
   return (
     <div className="row">
       {album
-        ? album.map(element =>
+        ? album.map((element, index) =>
             element.name !== '(null)' ? (
-              <div className="card col-md-4">
+              <div className="card col-md-4" key={index}>
                 {/* Sometimes the image doesn't work because Lastfm api... We must find another way*/}
                 <img
                   className="card-img-top"
@@ -30,9 +31,9 @@ const ArtistAlbums = ({ album, image, artist, ...props }) => {
                   <p className="card-text">
                     Made by: {element.artist.name} <br />
                     Playcounts:{' '}
-                    <div className="badge badge-primary">
+                    <span className="badge badge-primary">
                       {element.playcount}
-                    </div>
+                    </span>
                   </p>
                   <Link
                     to={`/album/${element.artist.name}/${element.name}/${

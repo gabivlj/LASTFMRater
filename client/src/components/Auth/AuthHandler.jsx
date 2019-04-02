@@ -12,7 +12,6 @@ class AuthHandler extends Component {
 
   componentDidMount() {
     if (this.props.match.params.token) {
-      console.log(this.props.match.params.token)
       this.props.setUser(this.props.match.params.token, this.props.history)
     }
   }
