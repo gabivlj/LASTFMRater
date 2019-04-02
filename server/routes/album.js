@@ -35,39 +35,34 @@ router.post('/', async (req, res) => {
   }
 })
 
-// @GET
-// @OPTIONALQUERYPARAMS username
-router.get('/:albumname/:artistname', async (req, res) => {
-  const username = req.query.username
-  const AlbumData = {
-    albumname: req.params.albumname,
-    username,
-    artist: req.params.artistname
-  }
-  let album__ = await FM.getAlbum(AlbumData)
+/**
+ * @POST
+ * @PRIVATE
+ * @DESCRIPTION Try to add a review, if it already exists just don't add it.
+ */
 
-  if (album__) {
-    album__ = album__.album
-    if (album__.tracks.track.length <= 0) {
-      // Find Album Tracks in our database incase we have them...
-      const tracks = await Album.findOne({
-        artist: album__.artist,
-        name: album__.name
-      }).tracks
-      if (tracks && tracks.length > 0) {
-        album__.tracks = tracks
-      }
-    }
-    return res.json({ album: album__ })
-  } else {
-    const album = await Album.findOne({
-      name: req.params.albumname,
-      artist: req.params.artistname
-    })
-    if (!album) {
-      return res.status(400).json('Album not found!')
-    }
-    return res.json({ album: album })
+router.post('/review/:albumid', (req, res) => {})
+
+/**
+ * @GET
+ * @PUBLIC
+ * @DESCRIPTION Gets all the albums that match with the finding
+ */
+
+router.get('/search/:name', async (req, res) => {
+  let { page, limit } = req.query
+  limit = limit || 20
+  page = page || 1
+  const { name } = req.params
+
+  try {
+    // TODO Make this like the lastfm api
+    // const album = await Album.find({ name })
+    const album__ = await FM.searchAlbums(name, limit, page)
+
+    return res.json(album__)
+  } catch (err) {
+    res.status(400).json('Error finding albums')
   }
 })
 
@@ -109,26 +104,40 @@ router.post('/rate/:albumid', async (req, res) => {
   }
 })
 
-/**
- * @POST
- * @PRIVATE
- * @DESCRIPTION Try to add a review, if it already exists just don't add it.
- */
+// @GET
+// @OPTIONALQUERYPARAMS username
+router.get('/:albumname/:artistname', async (req, res) => {
+  const username = req.query.username
+  const AlbumData = {
+    albumname: req.params.albumname,
+    username,
+    artist: req.params.artistname
+  }
+  let album__ = await FM.getAlbum(AlbumData)
 
-router.post('/review/:albumid', (req, res) => {})
-
-router.get('/search/:name', async (req, res) => {
-  const { page, limit } = req.query
-  limit = limit || 20
-  page = page || 1
-  const { name } = req.params
-  try {
-    const album = await Album.find({ name })
-    if (album && album.length > 0) return res.json(album.slice(limit))
-    const album__ = await FM.searchAlbums(name, limit, page)
-    return res.json(album__)
-  } catch (err) {
-    res.status(400).json('Error finding albums')
+  if (album__) {
+    album__ = album__.album
+    if (album__ && album__.tracks.track.length <= 0) {
+      // Find Album Tracks in our database incase we have them...
+      const tracks = await Album.findOne({
+        artist: album__.artist,
+        name: album__.name
+      }).tracks
+      if (tracks && tracks.length > 0) {
+        album__.tracks = tracks
+      }
+    }
+    return res.json({ album: album__ })
+  } else {
+    const album = await Album.findOne({
+      name: req.params.albumname,
+      artist: req.params.artistname
+    })
+    if (!album) {
+      return res.status(400).json('Album not found!')
+    }
+    return res.json({ album: album })
   }
 })
+
 module.exports = router

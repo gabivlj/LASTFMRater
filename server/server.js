@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const db = require('./config/keys').MONGOURI
 const album = require('./routes/album')
 const user = require('./routes/user')
+const artist = require('./routes/artist')
 
 mongoose.connect(db, { useNewUrlParser: true }, err => {
   console.log('Connected to Mongo Atlas')
@@ -19,6 +20,7 @@ app.get('/api/token', (req, res) => {
 })
 app.use('/api/album', album)
 app.use('/api/user', user)
+app.use('/api/artist', artist)
 const PORT = process.env.PORT || 8000
 app.listen(PORT, err =>
   err ? console.log(err) : console.log('Port connected')

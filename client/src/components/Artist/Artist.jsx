@@ -32,12 +32,12 @@ class Artist extends Component {
     if (
       !this.loadedArtist &&
       this.props.artist &&
-      this.props.artist.artist &&
+      Object.keys(this.props.artist.artist).length > 0 &&
       !this.props.artist.artist.error
     ) {
       this.loadedArtist = true
       this.setState({
-        artist: this.props.artist.artist.artist
+        artist: this.props.artist.artist
       })
     } else if (
       !this.loadedArtist &&

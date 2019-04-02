@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { searchAlbums } from '../../../actions/searchActions'
+import { searchAlbums, searchArtists } from '../../../actions/searchActions'
 import store from '../../../store'
 import Albums from './albums/Albums'
 import { Fab } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import Search from '../../../utils/searchFunctions'
+import ArtistsComponent from './artists/Artists.component'
 
 const __propTypes = {
   search: PropTypes.object.isRequired,
@@ -17,7 +18,7 @@ class SearchRoute extends Component {
   static propTypes = __propTypes
   constructor() {
     super()
-    this.state = { albums: { currentItems: 10 } }
+    this.state = { albums: { currentItems: 0 }, artists: { currentItems: 0 } }
     this.searchHandler = null
   }
 
@@ -27,9 +28,11 @@ class SearchRoute extends Component {
     // We set cleaned: false to inform that we populated lists.
     store.dispatch({ type: 'POPULATE_SEARCH' })
     this.add('albums', this.props.searchAlbums)
+    this.add('artists', this.props.searchArtists)
   }
 
   componentWillReceiveProps(next) {
+    // Check if the next props are data coming from the bottom bar search.
     if (next.search.cleaned) {
       // This means that the user has searched another thing in the searchbar and it has cleaned every lists.
       // So we need to get the items that the user is searching. So now we set to cleaned: false to say: "Hey, we searched things"
@@ -38,11 +41,14 @@ class SearchRoute extends Component {
       this.searchHandler.searchquery = next.match.params.searchquery
       // Find albums
       this.add('albums', this.props.searchAlbums)
-      // TODO search other stuff
+      this.add('artists', this.props.searchArtists)
     }
   }
-
+  // Add the items corresponding to their object in the state.
   add = (type, functionprops) => {
+    if (type === 'albums') {
+      // console.log(this.state, this.state[type].currentItems)
+    }
     this.searchHandler.search(
       type,
       this.state[type].currentItems + 10,
@@ -60,7 +66,7 @@ class SearchRoute extends Component {
 
   render() {
     const { searchquery } = this.props.match.params
-    const { albums } = this.props.search
+    const { albums, artists } = this.props.search
     return (
       <div className="container">
         <h1>
@@ -78,11 +84,23 @@ class SearchRoute extends Component {
         >
           <AddIcon />
         </Fab>
-        {/* Artists */}
 
+        {/* Artists */}
+        <ArtistsComponent artists={artists} />
+        <Fab
+          color="primary"
+          aria-label="Add"
+          onClick={() => {
+            this.add('artists', this.props.searchAlbums)
+          }}
+        >
+          <AddIcon />
+        </Fab>
         {/* Playlists */}
 
         {/* Users */}
+
+        <div style={{ paddingBottom: '13%' }} />
       </div>
     )
   }
@@ -93,5 +111,5 @@ const mapStateToProps = state => ({
 })
 export default connect(
   mapStateToProps,
-  { searchAlbums }
+  { searchAlbums, searchArtists }
 )(SearchRoute)

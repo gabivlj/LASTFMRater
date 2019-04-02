@@ -18,38 +18,33 @@ const styles = {
   }
 }
 const __propTypes = {
-  album: PropTypes.object.isRequired,
+  artist: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   className: PropTypes.string
 }
 
-const Album = ({ album, className, ...props }) => {
+const Artist = ({ artist, className, ...props }) => {
   const { classes } = props
-  const mbid = album.mbid ? album.mbid : 0
   return (
     <Card className={classes.card + ' ' + className}>
       <CardActionArea
-        onClick={() =>
-          (window.location.href = `/album/${album.artist}/${
-            album.name
-          }/${mbid}`)
-        }
+        onClick={() => (window.location.href = `/artist/${artist.name}`)}
       >
         <CardMedia
           className={classes.media}
           image={
-            album.image[3]['#text'] ||
+            artist.image[3]['#text'] ||
             'https://www.mompetit.com/wp-content/themes/holalady/img/img_placeholder.png'
           }
-          title={album.name}
+          title={artist.name}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {album.name}
+            {artist.name}
           </Typography>
           <Typography component="p">
-            {album.artist} <br />
-            {album.mbid}
+            {artist.artist} <br />
+            {artist.mbid}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -65,6 +60,6 @@ const Album = ({ album, className, ...props }) => {
   )
 }
 
-Album.propTypes = __propTypes
+Artist.propTypes = __propTypes
 
-export default withStyles(styles)(Album)
+export default withStyles(styles)(Artist)

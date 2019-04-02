@@ -40,7 +40,10 @@ export default (state = initialState, action) => {
         loadingSearch: false,
         searchData: {
           ...state.searchData,
-          artists: { list: [...action.payload], loading: false }
+          artists: {
+            list: [...(action.payload ? action.payload : [])],
+            loading: false
+          }
         }
       }
     case 'SEARCH_PLAYLISTS_FOR_SEARCH':
