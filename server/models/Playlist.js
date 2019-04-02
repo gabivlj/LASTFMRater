@@ -7,22 +7,9 @@ const Schema = mongoose.Schema
 const PlaylistModel = new Schema({
   tracks: [
     {
-      // Maybe saving the album and artist names on the track are not a greeeeat idea but...
-      name: {
-        type: String,
-        required: true
-      },
-      album: {
-        type: String,
-        required: true
-      },
-      artist: {
-        type: String,
-        required: true
-      },
-      duration: {
-        type: String,
-        required: true
+      trackId: {
+        ref: 'tracks',
+        type: Schema.Types.ObjectId
       }
     }
   ],
