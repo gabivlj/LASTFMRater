@@ -91,7 +91,7 @@ class SearchRoute extends Component {
           color="primary"
           aria-label="Add"
           onClick={() => {
-            this.add('artists', this.props.searchAlbums)
+            this.add('artists', this.props.searchArtists)
           }}
         >
           <AddIcon />
