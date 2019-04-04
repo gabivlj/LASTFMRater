@@ -80,10 +80,6 @@ class AppBarMine extends Component {
             <div>
               <Input
                 className={this.state.extended ? 'ExtendedInput' : 'NoInput'}
-                onInputCapture={e => {
-                  e.preventDefault()
-                  this.setState({ valueSearch: e.target.value })
-                }}
                 onChange={e => this.setState({ valueSearch: e.target.value })}
               />
               <IconButton
