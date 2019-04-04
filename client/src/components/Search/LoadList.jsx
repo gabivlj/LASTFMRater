@@ -24,19 +24,27 @@ class LoadList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.searchValue)
     if (nextProps.searchValue !== this.props.searchValue) {
-      // Clear timeouts because we wanna send to api when
-      // the user has stopped typing.
-      store.dispatch({
-        type: 'SET_LOADING_SEARCH'
-      })
-      if (this.timeout) clearTimeout(this.timeout)
-      // We check for empty values.
-      if (nextProps.searchValue.trim() !== '')
-        this.timeout = setTimeout(() => {
-          this.props.searchThingsForSearchBar(nextProps.searchValue)
-        }, 800)
+      this.search(nextProps.searchValue)
     }
+  }
+  componentDidMount() {
+    this.search(this.props.searchValue)
+  }
+
+  search = searchValue => {
+    store.dispatch({
+      type: 'SET_LOADING_SEARCH'
+    })
+    // Clear timeouts because we wanna send to api when
+    // the user has stopped typing.
+    if (this.timeout) clearTimeout(this.timeout)
+    // We check for empty values.
+    if (searchValue && searchValue.trim() !== '')
+      this.timeout = setTimeout(() => {
+        this.props.searchThingsForSearchBar(searchValue)
+      }, 800)
   }
 
   render() {
@@ -49,7 +57,7 @@ class LoadList extends Component {
         // TODO: Basically, load artists, playlists, and users...
         <AlbumItem
           key={index}
-          className="col-md-4"
+          className="col-md-4 w-80"
           style={{ height: '90px' }}
           artist={album.artist}
           name={album.name}
@@ -66,6 +74,13 @@ class LoadList extends Component {
           />
         ) : (
           <div className={'row ' + className}>
+            <Link
+              to={`/search/${searchValue}`}
+              onClick={() => store.dispatch({ type: 'CLEAN_SEARCH_PAGE' })}
+              className="btn btn-primary col-md-12"
+            >
+              <h4 className="mt-3 w-100">Search more</h4>
+            </Link>
             {albumsSearchResult && albumsSearchResult.length > 0 ? (
               albumsSearchResult
             ) : (
@@ -73,13 +88,6 @@ class LoadList extends Component {
                 No results available...
               </h3>
             )}
-            <Link
-              to={`/search/${searchValue}`}
-              onClick={() => store.dispatch({ type: 'CLEAN_SEARCH_PAGE' })}
-              className="btn btn-secondary"
-            >
-              <h2 className="mt-3">Search more</h2>
-            </Link>
           </div>
         )}
       </div>

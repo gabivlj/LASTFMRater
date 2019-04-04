@@ -5,6 +5,10 @@ const Schema = mongoose.Schema
  * @PLAYLISTMODEL only tracks are here.
  */
 const PlaylistModel = new Schema({
+  user: {
+    type: String,
+    required: true
+  },
   tracks: [
     {
       trackId: {

@@ -6,7 +6,7 @@ export const searchThingsForSearchBar = searchValue => dispatch => {
     .get(
       `http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=${
         API_KEYS.API_KEY
-      }&album=${searchValue}&limit=20&format=json`
+      }&album=${searchValue}&limit=6&format=json`
     )
     .then(res => {
       dispatch({
