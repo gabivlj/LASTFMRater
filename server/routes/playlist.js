@@ -47,18 +47,18 @@ router.post('/:id', async (req, res) => {
     artist,
     album
   }
+  // Make a simple check if the fields are all correct.
   if (!duration || !name || !artist || !album)
-    return res
-      .status(400)
-      .json({
-        error:
-          'Not all the fields are filled in, please make sure that you are passing everything right or there are no errors in the front end'
-      })
+    return res.status(400).json({
+      error:
+        'Not all the fields are filled in, please make sure that you are passing everything right or there are no errors in the front end'
+    })
+
   try {
     // Find the playlist
     const pl = await Playlist.findOne({ user, id })
     if (!pl) {
-      return res.status(400).json({ error: 'Error finding the playlist' })
+      return res.status(400).json({ error: 'Error finding the playlist.' })
     }
     // Add the track
     const mongoTrack = await Track.findOne({ duration, name, artist, album })
