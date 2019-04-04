@@ -29,9 +29,11 @@ class Artist extends Component {
     })
   }
   componentDidUpdate() {
+    console.log('Thispropsartist', this.props.artist)
     if (
       !this.loadedArtist &&
       this.props.artist &&
+      this.props.artist.artist &&
       Object.keys(this.props.artist.artist).length > 0 &&
       !this.props.artist.artist.error
     ) {
@@ -39,18 +41,7 @@ class Artist extends Component {
       this.setState({
         artist: this.props.artist.artist
       })
-    } else if (
-      !this.loadedArtist &&
-      this.props.artist.artist &&
-      this.props.artist.artist.error > -1
-    ) {
-      this.loadedArtist = true
-      this.setState({
-        artist: this.props.artist.artist
-      })
     }
-
-    console.log(this.state)
   }
 
   render() {
