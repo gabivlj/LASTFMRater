@@ -1,5 +1,6 @@
 /*	This work is licensed under Creative Commons GNU LGPL License.
-
+  !!!!!THIS IS NOT MY CODE, PLEASE CHECK THESE CREDITS... !!!!!!!
+  * It doesn't work tho lol *
 	License: http://creativecommons.org/licenses/LGPL/2.1/
    Version: 0.9
 	Author:  Stefan Goessner/2006

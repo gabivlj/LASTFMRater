@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import GeneralForm from './visuals/GeneralForm'
+import CurrentTracks from './Track/current/CurrentTracks'
 
 const propTypes_ = {
   auth: PropTypes.object.isRequired
@@ -33,6 +35,14 @@ class PlaylistFormComponent extends Component {
     if (!this.props.auth.auth) {
       // TODO PUSH NOTIFICATION TO INFORM THAT HE HAS BEEN REDIRECTED !
       this.props.history.push('/')
+    }
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.auth.apiUser && !this.state.user) {
+      this.setState({
+        user: nextProps.auth.apiUser._id
+      })
     }
   }
 
@@ -72,13 +82,23 @@ class PlaylistFormComponent extends Component {
   }
 
   render() {
+    const { name, description, img, tracks } = this.state
     return (
       <div>
-        <h1>Welcome to PlaylistFormComponent</h1>
+        <h3 className="ml-3 mt-4">Fill the data for your playlist!</h3>
         {/* GeneralForm pass: name, description, img, onChange() */}
-
+        <h4 className="ml-3 mt-4">General information</h4>
+        <GeneralForm
+          name={name}
+          description={description}
+          img={img}
+          onChange={this.onChange}
+        />
         {/* AddedTracks pass: tracks, deleteTrack() */}
-
+        <div className="container">
+          <h4 className="ml-3 mt-4">Selected tracks</h4>
+          <CurrentTracks tracks={tracks} />
+        </div>
         {/* TrackForm pass: addTrack() */}
       </div>
     )

@@ -1,0 +1,10 @@
+.trash {
+  color: #d60047;
+  margin-top: 20px;
+  margin-left: 40%;
+  cursor: pointer;
+}
+
+.trash:hover {
+  color: #841037;
+}
