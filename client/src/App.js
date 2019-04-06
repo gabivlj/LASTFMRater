@@ -13,7 +13,8 @@ import { setFullUserFromSession } from './actions/authActions'
 import AppBarMine from './components/Search/AppBarMine'
 import SearchRoute from './components/Search/SearchRoute/SearchRoute'
 import NotFound from './components/not-found/NotFound'
-
+import PrivateRoute from './components/Common/PrivateRoute'
+import PlaylistFormComponent from './components/Playlist/PlaylistForm/PlaylistForm.component'
 // Get user from localStorage.
 store.dispatch(setFullUserFromSession())
 
@@ -35,6 +36,11 @@ class App extends Component {
                   exact
                   path="/album/:artist/:albumname/:mbid"
                   component={Album}
+                />
+                <PrivateRoute
+                  exact
+                  path="/playlist/create"
+                  component={PlaylistFormComponent}
                 />
                 <Route
                   exact
