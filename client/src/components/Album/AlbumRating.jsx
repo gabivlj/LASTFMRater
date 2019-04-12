@@ -35,31 +35,32 @@ class AlbumRating extends Component {
     this.ratingUpdate()
   }
   ratingUpdate = () => {
-    if (
-      this.props.album.albumDB &&
-      this.props.album.albumDB.ratings.length > 0 &&
-      this.props.album.albumDB.__v !== this.state.currentVersion
-    ) {
-      let actualRating = 0
-      for (let rating of this.props.album.albumDB.ratings) {
-        actualRating += rating.puntuation
+    if (this.props.auth.auth)
+      if (
+        this.props.album.albumDB &&
+        this.props.album.albumDB.ratings.length > 0 &&
+        this.props.album.albumDB.__v !== this.state.currentVersion
+      ) {
+        let actualRating = 0
+        for (let rating of this.props.album.albumDB.ratings) {
+          actualRating += rating.puntuation
+        }
+        actualRating /= this.props.album.albumDB.ratings.length
+        let userRating = this.props.album.albumDB.ratings.filter(
+          element => element.user === this.props.auth.currentUser.name
+        )
+        if (userRating.length > 0) userRating = userRating[0].puntuation
+        else {
+          userRating = actualRating
+        }
+        this.setState({
+          generalRating: actualRating,
+          rating: userRating,
+          actualRating: userRating,
+          currentVersion: this.props.album.albumDB.__v
+        })
+        this.changedRating = true
       }
-      actualRating /= this.props.album.albumDB.ratings.length
-      let userRating = this.props.album.albumDB.ratings.filter(
-        element => element.user === this.props.auth.currentUser.name
-      )
-      if (userRating.length > 0) userRating = userRating[0].puntuation
-      else {
-        userRating = actualRating
-      }
-      this.setState({
-        generalRating: actualRating,
-        rating: userRating,
-        actualRating: userRating,
-        currentVersion: this.props.album.albumDB.__v
-      })
-      this.changedRating = true
-    }
   }
   handleClick = i => {
     const { auth } = this.props.auth

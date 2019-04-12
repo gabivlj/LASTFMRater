@@ -6,6 +6,7 @@ const FM = new Lastfm()
 router.post('/', async (req, res) => {
   try {
     const { name } = req.body
+    if (!name) return res.status(400).json('Invalid credentials')
     const user = await User.findOne({ name })
     if (user) {
       res.json(user)
