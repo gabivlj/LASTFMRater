@@ -25,30 +25,32 @@ class App extends Component {
         <Router>
           <div>
             <div>
+              {/* Create a Not found page... */}
+              <Route exact path="/" component={Home} />
+              {/* Change this route */}
+              <Route exact path="/:token" component={AuthHandler} />
+              <Route exact path="/me/profile" component={Auth} />
+              <Route exact path="/artist/:name" component={Artist} />
+              <Route
+                exact
+                path="/album/:artist/:albumname/:mbid"
+                component={Album}
+              />
+
+              <Route
+                exact
+                path="/search/:searchquery"
+                component={SearchRoute}
+              />
+
               <Switch>
-                {/* Create a Not found page... */}
-                <Route exact path="/" component={Home} />
-                {/* Change this route */}
-                <Route exact path="/:token" component={AuthHandler} />
-                <Route exact path="/me/profile" component={Auth} />
-                <Route exact path="/artist/:name" component={Artist} />
-                <Route
-                  exact
-                  path="/album/:artist/:albumname/:mbid"
-                  component={Album}
-                />
                 <PrivateRoute
                   exact
                   path="/playlist/create"
                   component={PlaylistFormComponent}
                 />
-                <Route
-                  exact
-                  path="/search/:searchquery"
-                  component={SearchRoute}
-                />
-                <Route component={NotFound} />
               </Switch>
+              <Route component={NotFound} />
             </div>
             <AppBarMine />
           </div>

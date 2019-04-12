@@ -32,9 +32,10 @@ class PlaylistFormComponent extends Component {
 
   // React.lifecycles
   componentDidMount() {
-    if (!this.props.auth.auth) {
+    console.log(this.props.auth)
+    if (!this.props.auth.apiUser && !this.props.auth.auth) {
       // TODO PUSH NOTIFICATION TO INFORM THAT HE HAS BEEN REDIRECTED !
-      this.props.history.push('/')
+      // this.props.history.push('/')
     }
   }
 

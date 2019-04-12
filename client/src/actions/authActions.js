@@ -11,7 +11,7 @@ export const setUser = (
     .get(`/api/user/${token}`)
     .then(async res => {
       const user = new User(res.data)
-
+      dispatch({ type: 'SET_IS_LOADING_AUTH' })
       localStorage.setItem('session', JSON.stringify(user))
       const apiUser = await axios.post('/api/user', user)
 
@@ -55,13 +55,25 @@ export const setUser = (
 }
 
 export const setFullUserFromSession = () => async dispatch => {
-  const localStorageSession = JSON.parse(localStorage.getItem('session'))
-  dispatch({ type: 'SET_USER', payload: localStorageSession })
-  const apiUser = await axios.post('/api/user', localStorageSession)
-  dispatch({
-    type: 'SET_API_USER',
-    payload: apiUser.data
-  })
+  try {
+    const localStorageSession = JSON.parse(localStorage.getItem('session'))
+    dispatch({ type: 'SET_IS_LOADING_AUTH' })
+    const apiUser = await axios.post('/api/user', localStorageSession)
+    dispatch({ type: 'SET_USER', payload: localStorageSession })
+    dispatch({
+      type: 'SET_API_USER',
+      payload: apiUser.data
+    })
+  } catch (err) {
+    dispatch({
+      type: 'SET_USER',
+      payload: {}
+    })
+    dispatch({
+      type: 'SET_API_USER',
+      payload: {}
+    })
+  }
 }
 
 /**
