@@ -202,15 +202,17 @@ class Lastfm {
   async searchTracks(search) {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await axios.get(`${this.LASTFMROUTE}
-        /?method=track.search&track=${search}&api_key=${
-          this.API_KEY
-        }&format=json`)
+        const response = await axios.get(
+          `${this.LASTFMROUTE}/?method=track.search&track=${search}&api_key=${
+            this.API_KEY
+          }&format=json`
+        )
+
         resolve({ tracks: response.data.results.trackmatches })
       } catch (err) {
         reject({
           error: 'Error with Lastfm info. gathering.',
-          errorObject: err.response
+          errorObject: err.response.data
         })
       }
     })

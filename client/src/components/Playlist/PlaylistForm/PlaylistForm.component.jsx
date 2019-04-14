@@ -3,19 +3,11 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import GeneralForm from './visuals/GeneralForm'
 import CurrentTracks from './Track/current/CurrentTracks'
+import TrackSearchComponent from './Track/TrackSearch.component'
+import { removeTrack } from '../../../actions/playlistActions'
 
 const propTypes_ = {
   auth: PropTypes.object.isRequired
-}
-const ___IsEqualTheTrack = (track1, track2) => {
-  return (
-    track1.name === track2.name &&
-    track1.artist === track2.artist &&
-    // Check if it's an api track, if it's not use listeners param to check if they're equal. ( Holy... Lastfm's api no mbid guaranteed is bad...)
-    (track1._id
-      ? track1._id === track2._id
-      : track1.listeners === track2.listeners)
-  )
 }
 
 class PlaylistFormComponent extends Component {
@@ -47,6 +39,15 @@ class PlaylistFormComponent extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    // const { playlist } = nextProps
+    // if (
+    //   playlist.addedTracks.length !== this.props.playlist.addedTracks.length
+    // ) {
+    //   const { addedTracks } = playlist
+    // }
+  }
+
   // Set the propTypes
   static propTypes = propTypes_
 
@@ -57,33 +58,9 @@ class PlaylistFormComponent extends Component {
     })
   }
 
-  /**
-   * @COMPONENTFOR <TrackFinder />
-   * @COMPONENTTYPE VISUAL
-   * @DESCRIPTION Func. we're gonna use for adding tracks to the state.
-   */
-  addTrack = track => {
-    this.setState({ tracks: [...this.state.tracks, track] })
-    return this.state.tracks
-  }
-
-  /**
-   * @COMPONENTFOR <TrackList />
-   * @COMPONENTTYPE VISUAL
-   * @DESCRIPTION Func. we're gonna use for deleting tracks from the state.
-   */
-  deleteTrack = trackToCheck => {
-    const { tracks_ } = this.state
-    this.setState({
-      tracks: [
-        ...tracks_.filter(track => !___IsEqualTheTrack(track, trackToCheck))
-      ]
-    })
-    return this.state.tracks
-  }
-
   render() {
     const { name, description, img, tracks } = this.state
+    const { addedTracks } = this.props.playlist
     return (
       <div>
         <h3 className="ml-3 mt-4">Fill the data for your playlist!</h3>
@@ -98,19 +75,24 @@ class PlaylistFormComponent extends Component {
         {/* AddedTracks pass: tracks, deleteTrack() */}
         <div className="container">
           <h4 className="ml-3 mt-4">Selected tracks</h4>
-          <CurrentTracks tracks={tracks} />
+          <CurrentTracks
+            tracks={addedTracks}
+            deleteTrack={this.props.removeTrack}
+          />
         </div>
         {/* TrackForm pass: addTrack() */}
+        <TrackSearchComponent />
       </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  playlist: state.playlist
 })
 
 export default connect(
   mapStateToProps,
-  {}
+  { removeTrack }
 )(PlaylistFormComponent)

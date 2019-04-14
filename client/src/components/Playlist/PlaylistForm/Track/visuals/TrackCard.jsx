@@ -35,7 +35,16 @@ const styles = theme => ({
   }
 })
 
-const TrackCard = ({ title, artist, className, ...props }) => {
+const TrackCard = ({
+  title,
+  artist,
+  className,
+  img,
+  add,
+  onClick,
+  mbid,
+  ...props
+}) => {
   const { classes } = props
   return (
     <div className={className}>
@@ -48,14 +57,23 @@ const TrackCard = ({ title, artist, className, ...props }) => {
             <Typography variant="subtitle1" color="textSecondary">
               {artist}
             </Typography>
-            <div className="outter-trash">
-              <i className="fa fa-trash trash" />
-            </div>
+            {!add ? (
+              <div className="outter-trash" onClick={() => onClick(mbid)}>
+                <i className="fa fa-trash trash" />
+              </div>
+            ) : (
+              <div className="outter-add" onClick={() => onClick(mbid)}>
+                <i className="fa fa-plus plus" aria-hidden="true" />
+              </div>
+            )}
           </CardContent>
         </div>
         <CardMedia
           className={classes.cover}
-          image="https://img.apmcdn.org/80ef67f5910de61be7dbb1a1adfdb4253e08dad4/square/0b317c-20130929-arctic-monkeys-am-album-cover-art.jpg"
+          image={
+            img ||
+            'https://www.mompetit.com/wp-content/themes/holalady/img/img_placeholder.png'
+          }
           title="Live from space album cover"
         />
       </Card>
