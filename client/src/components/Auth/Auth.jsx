@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { setUser } from '../../actions/authActions'
 import ArtistsUser from './ArtistsUser'
 import PropTypes from 'prop-types'
+import { LinearProgress } from '@material-ui/core'
 
 const __propTypes = {
   setUser: PropTypes.func.isRequired,
@@ -19,16 +20,24 @@ class Auth extends Component {
     }
   }
 
-  componentWillReceiveProps() {
-    if (this.state.user.name !== this.props.auth.currentUser.name) {
+  componentWillReceiveProps(nextProps) {
+    if (
+      this.state.user.empty &&
+      nextProps.auth.currentUser &&
+      Object.keys(nextProps.auth.currentUser)
+    ) {
       this.setState({
-        user: this.props.auth.currentUser
+        user: nextProps.auth.currentUser
       })
     }
   }
 
   componentDidMount() {
-    if (this.state.user.name !== this.props.auth.currentUser.name) {
+    if (
+      this.props.auth.currentUser &&
+      Object.keys(this.props.auth.currentUser).length > 0 &&
+      this.state.user.empty
+    ) {
       this.setState({
         user: this.props.auth.currentUser
       })
@@ -44,7 +53,7 @@ class Auth extends Component {
         {!user.empty ? (
           <h1 className="container">Welcome to LastRater, {user.name}! </h1>
         ) : (
-          'No user was received, please go back'
+          <LinearProgress />
         )}
         <ArtistsUser history={this.props.history} />
       </div>

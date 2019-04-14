@@ -9,14 +9,14 @@ import store from './store'
 import AuthHandler from './components/Auth/AuthHandler'
 import Artist from './components/Artist/Artist'
 import Album from './components/Album/Album'
-import { setFullUserFromSession } from './actions/authActions'
+import { setFullUserFromSession, logFromSession } from './actions/authActions'
 import AppBarMine from './components/Search/AppBarMine'
 import SearchRoute from './components/Search/SearchRoute/SearchRoute'
 import NotFound from './components/not-found/NotFound'
 import PrivateRoute from './components/Common/PrivateRoute'
 import PlaylistFormComponent from './components/Playlist/PlaylistForm/PlaylistForm.component'
 // Get user from localStorage.
-store.dispatch(setFullUserFromSession())
+store.dispatch(logFromSession())
 
 class App extends Component {
   render() {
@@ -26,24 +26,25 @@ class App extends Component {
           <div>
             <div>
               {/* Create a Not found page... */}
-              <Route exact path="/" component={Home} />
-              {/* Change this route */}
-              <Route exact path="/:token" component={AuthHandler} />
-              <Route exact path="/me/profile" component={Auth} />
-              <Route exact path="/artist/:name" component={Artist} />
-              <Route
-                exact
-                path="/album/:artist/:albumname/:mbid"
-                component={Album}
-              />
-
-              <Route
-                exact
-                path="/search/:searchquery"
-                component={SearchRoute}
-              />
 
               <Switch>
+                <Route exact path="/" component={Home} />
+                {/* Change this route */}
+                <Route exact path="/:token" component={AuthHandler} />
+
+                <Route exact path="/artist/:name" component={Artist} />
+                <Route
+                  exact
+                  path="/album/:artist/:albumname/:mbid"
+                  component={Album}
+                />
+
+                <Route
+                  exact
+                  path="/search/:searchquery"
+                  component={SearchRoute}
+                />
+                <PrivateRoute exact path="/me/profile" component={Auth} />
                 <PrivateRoute
                   exact
                   path="/playlist/create"

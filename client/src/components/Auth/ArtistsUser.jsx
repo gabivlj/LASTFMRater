@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { setUsersArtists } from '../../actions/authActions'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { LinearProgress } from '@material-ui/core'
 
 const __propTypes = {
   setUsersArtists: PropTypes.func.isRequired,
@@ -12,19 +13,27 @@ const __propTypes = {
 const isArray = a => {
   return !!a && a.constructor === Array
 }
+
 class ArtistsUser extends Component {
   static propTypes = __propTypes
   componentDidMount() {
     if (
       this.props.auth.currentUser &&
+      this.props.auth.auth &&
       Object.keys(this.props.auth.artists).length === 0
     ) {
       this.props.setUsersArtists(this.props.auth.currentUser.name) //this.props.auth.currentUser.name
-    } else if (!this.props.auth.currentUser) {
-      this.props.history.push('/')
     }
   }
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.auth.currentUser &&
+      nextProps.auth.auth &&
+      Object.keys(this.props.auth.artists).length === 0
+    ) {
+      this.props.setUsersArtists(nextProps.auth.currentUser.name) //this.props.auth.currentUser.name
+    }
+  }
   render() {
     const { auth } = this.props
     let artist
@@ -33,7 +42,9 @@ class ArtistsUser extends Component {
     // We do this because if artist param has only one artist, it will be an object and not an array.
     if (auth.artists.artists) {
       artists = auth.artists.artists
-      artist = isArray(artists.artist) ? artists.artist : [artists.artist]
+      artist = isArray(artists.artist)
+        ? artists.artist.slice(0, 10)
+        : [artists.artist]
     }
 
     return (
@@ -41,30 +52,34 @@ class ArtistsUser extends Component {
         <div className="badge badge-primary">
           <h1>Your artists </h1>
         </div>
-        <div className="row">
-          {artists && artist
-            ? artist.map((artist, index) => (
-                <div className="col-md-4" key={index}>
-                  <div class="card" style={{ width: '100%' }}>
-                    <img
-                      className="card-img-top"
-                      src={artist.image[4]['#text']}
-                      alt=""
-                    />
-                    <div class="card-body">
-                      <h5 class="card-title">{artist.name}</h5>
-                      <p class="card-text">Times played: {artist.playcount}</p>
-                      <Link
-                        to={`/artist/${artist.name}`}
-                        className="btn btn-primary"
-                      >
-                        Go to artists page
-                      </Link>
-                    </div>
+        <div className="row" style={{ paddingBottom: '10%' }}>
+          {artists && artist ? (
+            artist.map((artist, index) => (
+              <div className="col-md-4 mt-3" key={index}>
+                <div className="card" style={{ width: '100%' }}>
+                  <img
+                    className="card-img-top"
+                    src={artist.image[4]['#text']}
+                    alt=""
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{artist.name}</h5>
+                    <p className="card-text">
+                      Times played: {artist.playcount}
+                    </p>
+                    <Link
+                      to={`/artist/${artist.name}`}
+                      className="btn btn-primary"
+                    >
+                      Go to artists page
+                    </Link>
                   </div>
                 </div>
-              ))
-            : `We don't have current data of your LastFM last Artists...`}
+              </div>
+            ))
+          ) : (
+            <LinearProgress />
+          )}
         </div>
       </div>
     )

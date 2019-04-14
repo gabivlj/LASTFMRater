@@ -2,27 +2,35 @@ const router = require('express').Router()
 const User = require('../models/User')
 const Lastfm = require('../classes/Lastfm')
 const FM = new Lastfm()
+const Authenticator = require('../classes/Authenticator')
+const passport = require('passport')
 
-router.post('/', async (req, res) => {
-  try {
-    const { name } = req.body
-    if (!name) return res.status(400).json('Invalid credentials')
-    const user = await User.findOne({ name })
-    if (user) {
-      res.json(user)
-    } else {
-      const newUser = new User({ name })
-      newUser.save().then(u => res.json(u))
+router.post(
+  '/lastfm/:username',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { name } = req.body
+      if (!name) return res.status(400).json('Invalid credentials')
+      const user = await User.findOne({ username: req.params.username })
+      if (user) {
+        user.lastfm = name
+        const userFinal = await user.save()
+        delete userFinal.password
+        res.json(userFinal)
+      } else {
+        res.status(400).json({ error: 'Error finding user' })
+      }
+    } catch (err) {
+      res.status(400).json('Error processing')
     }
-  } catch (err) {
-    res.status(400).json('Error processing')
   }
-})
+)
 
 router.post('/rate', async (req, res) => {
   try {
     const { name, albumId } = req.body
-    const user = await User.findOne({ name })
+    const user = await User.findOne({ username: name })
     if (user) {
       const index = user.ratedAlbums.indexOf(albumId)
       if (index <= -1) user.ratedAlbums.push(albumId)
@@ -41,10 +49,100 @@ router.get('/artists/:username', async (req, res) => {
     .catch(err => res.status(404).json('Error at ' + err))
 })
 
-router.get('/:token', async (req, res) => {
-  FM.setUser(req.params.token)
-    .then(user => res.json(user))
-    .catch(err => res.status(400).json('ERROR WITH API'))
+router.post(
+  '/:token',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const user_ = await User.findOne({ username: req.body.username })
+    if (!user) {
+      res.status(400).json({ error: 'User not found' })
+    }
+
+    FM.setUser(req.params.token)
+      .then(user => {
+        res.json(user)
+      })
+      .catch(err => res.status(400).json('ERROR WITH API'))
+  }
+)
+
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body
+  const { isValid, errors } = Authenticator.AuthenticateUserInputLogin(req.body)
+
+  if (!isValid) {
+    return res.status(400).json({ errors })
+  }
+  try {
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      errors.auth = 'Invalid credentials.'
+      return res.status(400).json({ errors })
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) {
+      errors.auth = 'Invalid credentials'
+      return res.status(400).json({ errors })
+    }
+    jwt.sign(
+      {
+        email,
+        user: user.username,
+        id: user.id
+      },
+      secret,
+      { expiresIn: 4800 },
+      (err, token) => {
+        return res.json({ token: `Bearer ${token}`, success: true })
+      }
+    )
+  } catch (err) {
+    console.log(err)
+    return res.status(401).json({ errors: err, message: 'Unknown accident!' })
+  }
+})
+
+router.post('/register', async (req, res) => {
+  const { email, password, password2, username } = req.body
+  // Input check
+  const { isValid, errors } = Authenticator.AuthenticateUserInputRegister(
+    req.body
+  )
+  // If it is invalid, return 400
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+  // Start auth
+  try {
+    // We try to find a user that meets email or username
+    const doesUserExists = await User.findOne({
+      $or: [{ email }, { username }]
+    })
+    // Check if it does exist
+    if (!Authenticator.isEmpty(doesUserExists)) {
+      errors.exist = 'This user already exists.'
+      return res.status(400).json(errors)
+    }
+    // We generate the salt
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(password, salt, async (err, encrypted) => {
+        try {
+          const user = new User({ email, password: encrypted, name: username })
+          const userS = await user.save()
+          return res.json(userS)
+        } catch (err) {
+          console.log(err)
+          return res
+            .status(401)
+            .json({ auth: 'Error with authentification', err })
+        }
+      })
+    })
+  } catch (err) {
+    return res.status(401).json({ error: err, message: 'Unknown accident!' })
+  }
 })
 
 module.exports = router
