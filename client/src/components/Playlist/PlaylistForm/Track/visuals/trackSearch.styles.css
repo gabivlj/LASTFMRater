@@ -8,3 +8,14 @@
 .trash:hover {
   color: #841037;
 }
+
+.plus {
+  color: #1fe498;
+  margin-top: 20px;
+  margin-left: 40%;
+  cursor: pointer;
+}
+
+.plus:hover {
+  color: #24b39b;
+}

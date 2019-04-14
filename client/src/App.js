@@ -50,7 +50,7 @@ class App extends Component {
                   component={PlaylistFormComponent}
                 />
               </Switch>
-              <Route component={NotFound} />
+              <Route component={NotFound} exact path="/not-found" />
             </div>
             <AppBarMine />
           </div>

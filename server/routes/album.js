@@ -56,7 +56,7 @@ router.get('/search/:name', async (req, res) => {
   const { name } = req.params
 
   try {
-    // TODO Make this like the lastfm api
+    // TODO Make our DB find albums like the lastfm api
     // const album = await Album.find({ name })
     const album__ = await FM.searchAlbums(name, limit, page)
 
