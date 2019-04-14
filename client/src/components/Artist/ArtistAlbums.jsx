@@ -9,7 +9,6 @@ const __propTypes = {
 }
 
 const ArtistAlbums = ({ album, image, artist, ...props }) => {
-  console.log(album)
   return (
     <div className="row">
       {album

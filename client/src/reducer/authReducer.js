@@ -3,6 +3,7 @@ export default (
     auth: null,
     currentUser: null,
     artists: {},
+    lastFmUser: '',
     apiUser: null,
     isLoading: false
   },
@@ -24,6 +25,11 @@ export default (
         auth: action.payload && Object.keys(action.payload).length > 0,
         apiUser: action.payload,
         isLoading: false
+      }
+    case 'SET_LASTFM_USER':
+      return {
+        ...state,
+        lastFmUser: action.payload
       }
     case 'SET_USER_ARTISTS':
       return {

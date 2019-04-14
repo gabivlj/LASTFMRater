@@ -29,7 +29,6 @@ class Artist extends Component {
     })
   }
   componentDidUpdate() {
-    console.log('Thispropsartist', this.props.artist)
     if (
       !this.loadedArtist &&
       this.props.artist &&

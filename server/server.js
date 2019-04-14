@@ -10,6 +10,8 @@ const user = require('./routes/user')
 const artist = require('./routes/artist')
 const playlist = require('./routes/playlist')
 const track = require('./routes/track')
+const passport = require('passport')
+const passportConfig = require('./config/passport')
 
 // Database connection
 mongoose.connect(db, { useNewUrlParser: true }, err => {
@@ -20,6 +22,10 @@ mongoose.connect(db, { useNewUrlParser: true }, err => {
 // BodyParser Init.
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(passport.initialize())
+app.use(passport.session())
+
+passportConfig(passport)
 
 // Route for auth. Lastfm
 app.get('/api/token', (req, res) => {
