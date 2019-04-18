@@ -18,30 +18,37 @@ export const setUser = (
     .then(async res => {
       const user = new User(res.data)
       const apiUser = await axios.post(`/api/user/lastfm/${username}`, user)
+      history.push('/auth/login')
       deleteAuthTokenFromLS()
-      dispatch({
-        type: 'SET_API_USER',
-        payload: apiUser.data
-      })
+      Auth.LogOut()
+      // dispatch({
+      //   type: 'SET_API_USER',
+      //   payload: apiUser.data
+      // })
     })
     .catch(err => console.log(err))
 }
 
-//
-
 export const logFromSession = () => dispatch => {
   const user = Auth.LogUserFromLS()
   if (!user) return
+  if (user.exp < Date.now() / 1000) {
+    return
+  }
   dispatch({
     type: 'SET_API_USER',
     payload: user
   })
 }
 
-export const logIn = (email, password) => async dispatch => {
-  const user = await Auth.LogUserFromLogin({ email, password })
+export const logIn = user_ => async dispatch => {
+  const user = await Auth.LogUserFromLogin(user_)
   if (user.error) {
     // dispatch error
+    dispatch({
+      type: 'SET_ERRORS_LOGIN',
+      errors: user.error
+    })
     return
   }
   dispatch({

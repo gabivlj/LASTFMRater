@@ -32,21 +32,26 @@ class AlbumRating extends Component {
     this.ratingUpdate()
   }
   componentDidUpdate() {
+    console.log('!!!!')
     this.ratingUpdate()
   }
+  componentWillUpdate(nextProps) {
+    console.log(nextProps.ratings)
+  }
   ratingUpdate = () => {
+    const { album } = this.props.album.album
     if (
-      this.props.album.albumDB &&
-      this.props.album.albumDB.ratings.length > 0 &&
-      this.props.album.albumDB.__v !== this.state.currentVersion
+      album &&
+      album.ratings.length > 0 &&
+      album.__v !== this.state.currentVersion
     ) {
       let actualRating = 0
-      for (let rating of this.props.album.albumDB.ratings) {
+      for (let rating of album.ratings) {
         actualRating += rating.puntuation
       }
-      actualRating /= this.props.album.albumDB.ratings.length
-      let userRating = this.props.album.albumDB.ratings.filter(
-        element => element.user === this.props.auth.currentUser.name
+      actualRating /= album.ratings.length
+      let userRating = album.ratings.filter(
+        element => element.user === this.props.auth.apiUser.user
       )
       if (userRating.length > 0) userRating = userRating[0].puntuation
       else {
@@ -56,8 +61,9 @@ class AlbumRating extends Component {
         generalRating: actualRating,
         rating: userRating,
         actualRating: userRating,
-        currentVersion: this.props.album.albumDB.__v
+        currentVersion: album.__v
       })
+      console.log(actualRating)
       this.changedRating = true
     }
   }
@@ -66,9 +72,9 @@ class AlbumRating extends Component {
     if (auth) {
       this.setState({ actualRating: i })
       this.props.addAlbumRating(
-        this.props.album.albumDB._id,
+        this.props.album.album.album._id,
         i,
-        this.props.auth.currentUser.name
+        this.props.auth.apiUser.user
       )
     } else {
       this.setState({
@@ -79,8 +85,8 @@ class AlbumRating extends Component {
   }
   render() {
     let stars = []
-    const { albumDB } = this.props.album
-    if (albumDB && albumDB.ratings.length >= 0) {
+    const { album } = this.props.album.album
+    if (album && album.ratings.length >= 0) {
       for (let i = 0; i < 10; i++) {
         if (i >= this.state.rating) {
           stars.push(
@@ -127,7 +133,8 @@ class AlbumRating extends Component {
 
 const mapStateToProps = state => ({
   album: state.album,
-  auth: state.auth
+  auth: state.auth,
+  ratings: state.album.album.album.ratings
 })
 export default connect(
   mapStateToProps,

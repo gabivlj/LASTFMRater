@@ -18,22 +18,24 @@ class ArtistsUser extends Component {
   static propTypes = __propTypes
   componentDidMount() {
     if (
-      this.props.auth.currentUser &&
+      this.props.auth.apiUser &&
+      this.props.auth.apiUser.lastfm &&
       this.props.auth.auth &&
       Object.keys(this.props.auth.artists).length === 0
     ) {
-      this.props.setUsersArtists(this.props.auth.currentUser.name) //this.props.auth.currentUser.name
+      this.props.setUsersArtists(this.props.auth.apiUser.lastfm) //this.props.auth.currentUser.name
     }
   }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.auth.currentUser &&
-      nextProps.auth.auth &&
-      Object.keys(this.props.auth.artists).length === 0
-    ) {
-      this.props.setUsersArtists(nextProps.auth.currentUser.name) //this.props.auth.currentUser.name
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (
+  //     nextProps.auth.apiUser &&
+  //     nextProps.auth.apiUser.lastfm &&
+  //     nextProps.auth.auth &&
+  //     Object.keys(this.props.auth.artists).length === 0
+  //   ) {
+  //     this.props.setUsersArtists(nextProps.auth.currentUser.name) //this.props.auth.currentUser.name
+  //   }
+  // }
   render() {
     const { auth } = this.props
     let artist

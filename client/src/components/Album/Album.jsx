@@ -35,12 +35,15 @@ class Album extends Component {
     this.setState({
       artist
     })
-
+    console.log(this.props.currentUser.lastfm)
     this.props.getAlbum({
       artist,
       albumname,
       mbid,
-      username: this.props.currentUser ? this.props.currentUser.name : null
+      username:
+        this.props.currentUser && this.props.currentUser.lastfm
+          ? this.props.currentUser.lastfm
+          : null
     })
   }
   componentDidUpdate() {
@@ -87,7 +90,7 @@ class Album extends Component {
                     <p>{album.mbid}</p>
                     {album.userplaycount ? (
                       <h5>
-                        {this.props.currentUser.name}'s playcount:{' '}
+                        {this.props.currentUser.user}'s playcount:{' '}
                         {album.userplaycount}
                       </h5>
                     ) : null}
@@ -129,7 +132,7 @@ class Album extends Component {
 }
 const mapStateToProps = state => ({
   album: state.album,
-  currentUser: state.auth.currentUser
+  currentUser: state.auth.apiUser
 })
 export default connect(
   mapStateToProps,

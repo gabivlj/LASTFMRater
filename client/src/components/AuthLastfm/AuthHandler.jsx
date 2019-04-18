@@ -10,13 +10,18 @@ const __propTypes = {
 class AuthHandler extends Component {
   static propTypes = __propTypes
 
-  componentDidMount() {
-    if (this.props.match.params.token) {
-      this.props.setUser(this.props.match.params.token, this.props.history)
+  componentDidMount(nextProps) {
+    if (this.props.match.params.token && this.props.auth.auth) {
+      console.log('!!')
+      this.props.setUser(
+        this.props.match.params.token,
+        this.props.auth.apiUser.user,
+        this.props.history
+      )
     }
   }
   componentWillMount() {
-    localStorage.removeItem('session')
+    // localStorage.removeItem('session')
   }
 
   render() {
