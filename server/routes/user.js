@@ -4,6 +4,9 @@ const Lastfm = require('../classes/Lastfm')
 const FM = new Lastfm()
 const Authenticator = require('../classes/Authenticator')
 const passport = require('passport')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const secret = require('../config/keys').keyOrSecret
 
 router.post(
   '/lastfm/:username',
@@ -54,7 +57,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const user_ = await User.findOne({ username: req.body.username })
-    if (!user) {
+    if (!user_) {
       res.status(400).json({ error: 'User not found' })
     }
 
@@ -66,7 +69,7 @@ router.post(
   }
 )
 
-router.post('/login', async (req, res) => {
+router.post('/auth/login', async (req, res) => {
   const { email, password } = req.body
   const { isValid, errors } = Authenticator.AuthenticateUserInputLogin(req.body)
 
@@ -90,7 +93,12 @@ router.post('/login', async (req, res) => {
       {
         email,
         user: user.username,
-        id: user.id
+        lastfm: user.lastfm,
+        id: user.id,
+        ratedAlbums: user.ratedAlbums,
+        reviews: user.reviews,
+        playlists: user.playlists,
+        followedAccounts: user.followedAccounts
       },
       secret,
       { expiresIn: 4800 },
@@ -104,7 +112,7 @@ router.post('/login', async (req, res) => {
   }
 })
 
-router.post('/register', async (req, res) => {
+router.post('/auth/register', async (req, res) => {
   const { email, password, password2, username } = req.body
   // Input check
   const { isValid, errors } = Authenticator.AuthenticateUserInputRegister(
@@ -129,7 +137,11 @@ router.post('/register', async (req, res) => {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(password, salt, async (err, encrypted) => {
         try {
-          const user = new User({ email, password: encrypted, name: username })
+          const user = new User({
+            email: email,
+            password: encrypted,
+            username: username
+          })
           const userS = await user.save()
           return res.json(userS)
         } catch (err) {
@@ -141,6 +153,7 @@ router.post('/register', async (req, res) => {
       })
     })
   } catch (err) {
+    console.log(err)
     return res.status(401).json({ error: err, message: 'Unknown accident!' })
   }
 })

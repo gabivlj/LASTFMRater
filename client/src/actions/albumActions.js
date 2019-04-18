@@ -32,7 +32,7 @@ export const addAlbumRating = (albumId, puntuation, userid) => dispatch => {
     .post('/api/user/rate', { name: userid, albumId })
     .then(res => {
       dispatch({
-        type: 'SET_API_USER',
+        type: 'SET_RATING_USER',
         payload: res.data
       })
     })

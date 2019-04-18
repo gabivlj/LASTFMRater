@@ -17,7 +17,7 @@ class Auth {
    */
   static async LogUserFromLogin({ email, password }) {
     const [error, authResponse] = await handleError(
-      axios.post(`http://localhost:8000/api/user/login`, { email, password })
+      axios.post(`/api/user/auth/login`, { email, password })
     )
 
     if (error) {
@@ -31,9 +31,7 @@ class Auth {
 
   // Not used method.
   static async IsUserLoged() {
-    const [error, data] = await handleError(
-      axios.get('http://localhost:8000/api/user/loged')
-    )
+    const [error, data] = await handleError(axios.get('/api/user/loged'))
     if (error) {
       return false
     }
@@ -52,8 +50,10 @@ class Auth {
     if (!token || token === undefined || token === 'undefined') {
       return null
     }
+    const user = jwt(token)
+    if (user.exp < Date.now() / 1000) return null
     setAuthTokenAxios(token)
-    return jwt(token)
+    return user
   }
 }
 

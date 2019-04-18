@@ -13,7 +13,13 @@ export default (state = initialState, action) => {
     case 'ADD_ALBUM':
       return {
         ...state,
-        albumDB: action.payload
+        album: {
+          album: {
+            ...state.album.album,
+            __v: action.payload.__v,
+            ratings: action.payload.ratings
+          }
+        }
       }
     case 'CLEAR_ALBUM':
       return {

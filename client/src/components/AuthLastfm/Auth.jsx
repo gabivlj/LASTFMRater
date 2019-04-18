@@ -27,19 +27,19 @@ class Auth extends Component {
       Object.keys(nextProps.auth.currentUser)
     ) {
       this.setState({
-        user: nextProps.auth.currentUser
+        user: nextProps.auth.apiUser
       })
     }
   }
 
   componentDidMount() {
     if (
-      this.props.auth.currentUser &&
-      Object.keys(this.props.auth.currentUser).length > 0 &&
+      this.props.auth.apiUser &&
+      Object.keys(this.props.auth.apiUser).length > 0 &&
       this.state.user.empty
     ) {
       this.setState({
-        user: this.props.auth.currentUser
+        user: this.props.auth.apiUser
       })
     }
   }
@@ -51,11 +51,18 @@ class Auth extends Component {
     return (
       <div>
         {!user.empty ? (
-          <h1 className="container">Welcome to LastRater, {user.name}! </h1>
+          <h1 className="container">Welcome to LastRater, {user.user}! </h1>
         ) : (
           <LinearProgress />
         )}
-        <ArtistsUser history={this.props.history} />
+        {!user.lastfm || user.lastfm.trim() === '' ? (
+          <h2>
+            Pair your current Lastfm account with this account to get all the
+            advantages!
+          </h2>
+        ) : (
+          <ArtistsUser history={this.props.history} />
+        )}
       </div>
     )
   }

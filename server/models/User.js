@@ -7,10 +7,13 @@ const UserSchema = new Schema({
     required: true
   },
   lastfm: {
+    type: String
+  },
+  password: {
     type: String,
     required: true
   },
-  password: {
+  email: {
     type: String,
     required: true
   },

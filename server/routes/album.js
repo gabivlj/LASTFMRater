@@ -94,7 +94,7 @@ router.post('/rate/:albumid', async (req, res) => {
       }
       album
         .save()
-        .then(res_ => res.json(res_))
+        .then(res_ => res.json({ ratings: res_.ratings, __v: res_.__v }))
         .catch(err => console.log(err))
     } else {
       return res.status(400).json('Error finding the album.')
@@ -117,16 +117,22 @@ router.get('/:albumname/:artistname', async (req, res) => {
 
   if (album__) {
     album__ = album__.album
+    const find = await Album.findOne({
+      artist: album__.artist,
+      name: album__.name
+    })
     if (album__ && album__.tracks.track.length <= 0) {
       // Find Album Tracks in our database incase we have them...
-      const tracks = await Album.findOne({
-        artist: album__.artist,
-        name: album__.name
-      }).tracks
+
       if (tracks && tracks.length > 0) {
-        album__.tracks = tracks
+        album__.tracks = find.tracks
       }
     }
+    console.log(find)
+    album__.ratings = find.ratings
+    album__.reviews = find.reviews
+    album__._id = find._id
+    album__.__v = find.__v
     return res.json({ album: album__ })
   } else {
     const album = await Album.findOne({

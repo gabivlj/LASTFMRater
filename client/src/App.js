@@ -3,10 +3,10 @@ import './App.css'
 // TODO: Add private routes as well. Also, we must check if we can make authentification without Lastfm API.
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './components/Home/Home'
-import Auth from './components/Auth/Auth'
+import Auth from './components/AuthLastfm/Auth'
 import { Provider } from 'react-redux'
 import store from './store'
-import AuthHandler from './components/Auth/AuthHandler'
+import AuthHandler from './components/AuthLastfm/AuthHandler'
 import Artist from './components/Artist/Artist'
 import Album from './components/Album/Album'
 import { setFullUserFromSession, logFromSession } from './actions/authActions'
@@ -15,6 +15,9 @@ import SearchRoute from './components/Search/SearchRoute/SearchRoute'
 import NotFound from './components/not-found/NotFound'
 import PrivateRoute from './components/Common/PrivateRoute'
 import PlaylistFormComponent from './components/Playlist/PlaylistForm/PlaylistForm.component'
+import Login from './components/Login/Login'
+import Register from './components/Register/Register'
+import LastfmAuth from './components/LastfmAuth/LastfmAuth'
 // Get user from localStorage.
 store.dispatch(logFromSession())
 
@@ -44,11 +47,18 @@ class App extends Component {
                   path="/search/:searchquery"
                   component={SearchRoute}
                 />
+                <Route exact path="/auth/login" component={Login} />
+                <Route exact path="/auth/register" component={Register} />
                 <PrivateRoute exact path="/me/profile" component={Auth} />
                 <PrivateRoute
                   exact
                   path="/playlist/create"
                   component={PlaylistFormComponent}
+                />
+                <PrivateRoute
+                  exact
+                  path="/lastfm/connect"
+                  component={LastfmAuth}
                 />
               </Switch>
               <Route component={NotFound} exact path="/not-found" />

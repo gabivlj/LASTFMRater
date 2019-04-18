@@ -5,7 +5,8 @@ export default (
     artists: {},
     lastFmUser: '',
     apiUser: null,
-    isLoading: false
+    isLoading: false,
+    errors: {}
   },
   action
 ) => {
@@ -30,6 +31,15 @@ export default (
       return {
         ...state,
         lastFmUser: action.payload
+      }
+    case 'SET_RATING_USER':
+      console.log(action.payload)
+      return {
+        ...state,
+        apiUser: {
+          ...state.apiUser,
+          ratedAlbums: [...action.payload.ratedAlbums]
+        }
       }
     case 'SET_USER_ARTISTS':
       return {
