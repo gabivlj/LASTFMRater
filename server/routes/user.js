@@ -1,93 +1,97 @@
-const router = require('express').Router()
-const User = require('../models/User')
-const Lastfm = require('../classes/Lastfm')
-const FM = new Lastfm()
-const Authenticator = require('../classes/Authenticator')
-const passport = require('passport')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const secret = require('../config/keys').keyOrSecret
+const router = require('express').Router();
+const passport = require('passport');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const User = require('../models/User');
+const Lastfm = require('../classes/Lastfm');
+const Authenticator = require('../classes/Authenticator');
+const secret = require('../config/keys').keyOrSecret;
+
+const FM = new Lastfm();
 
 router.post(
   '/lastfm/:username',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const { name } = req.body
-      if (!name) return res.status(400).json('Invalid credentials')
-      const user = await User.findOne({ username: req.params.username })
+      const { name } = req.body;
+      if (!name) return res.status(400).json('Invalid credentials');
+      const user = await User.findOne({ username: req.params.username });
       if (user) {
-        user.lastfm = name
-        const userFinal = await user.save()
-        delete userFinal.password
-        res.json(userFinal)
+        user.lastfm = name;
+        const userFinal = await user.save();
+        delete userFinal.password;
+        res.json(userFinal);
       } else {
-        res.status(400).json({ error: 'Error finding user' })
+        res.status(400).json({ error: 'Error finding user' });
       }
     } catch (err) {
-      res.status(400).json('Error processing')
+      res.status(400).json('Error processing');
     }
   }
-)
+);
 
 router.post('/rate', async (req, res) => {
   try {
-    const { name, albumId } = req.body
-    const user = await User.findOne({ username: name })
+    const { name, albumId } = req.body;
+    const user = await User.findOne({ username: name });
     if (user) {
-      const index = user.ratedAlbums.indexOf(albumId)
-      if (index <= -1) user.ratedAlbums.push(albumId)
-      user.save().then(usr => res.json(usr))
+      const index = user.ratedAlbums.indexOf(albumId);
+      if (index <= -1) user.ratedAlbums.push(albumId);
+      user.save().then(usr => res.json(usr));
     } else {
-      res.status(400).json('User not found.')
+      res.status(400).json('User not found.');
     }
   } catch (err) {
-    res.status(400).json('Error processing')
+    res.status(400).json('Error processing');
   }
-})
+});
 
 router.get('/artists/:username', async (req, res) => {
   FM.getUsersArtist(req.params.username)
     .then(artists => res.json(artists))
-    .catch(err => res.status(404).json('Error at ' + err))
-})
+    .catch(err => res.status(404).json(`Error at ${err}`));
+});
 
 router.post(
   '/:token',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const user_ = await User.findOne({ username: req.body.username })
+    const user_ = await User.findOne({ username: req.body.username });
     if (!user_) {
-      res.status(400).json({ error: 'User not found' })
+      res.status(400).json({ error: 'User not found' });
     }
 
     FM.setUser(req.params.token)
       .then(user => {
-        res.json(user)
+        res.json(user);
       })
-      .catch(err => res.status(400).json('ERROR WITH API'))
+      .catch(err => res.status(400).json('ERROR WITH API'));
   }
-)
+);
 
 router.post('/auth/login', async (req, res) => {
-  const { email, password } = req.body
-  const { isValid, errors } = Authenticator.AuthenticateUserInputLogin(req.body)
+  const { email, password } = req.body;
+  const { isValid, errors } = Authenticator.AuthenticateUserInputLogin(
+    req.body
+  );
 
   if (!isValid) {
-    return res.status(400).json({ errors })
+    return res.status(400).json({ errors });
   }
   try {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
 
     if (!user) {
-      errors.auth = 'Invalid credentials.'
-      return res.status(400).json({ errors })
+      errors.auth = 'Invalid credentials.';
+      return res.status(400).json({ errors });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password)
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      errors.auth = 'Invalid credentials'
-      return res.status(400).json({ errors })
+      errors.auth = 'Invalid credentials';
+      return res.status(400).json({ errors });
     }
     jwt.sign(
       {
@@ -98,64 +102,62 @@ router.post('/auth/login', async (req, res) => {
         ratedAlbums: user.ratedAlbums,
         reviews: user.reviews,
         playlists: user.playlists,
-        followedAccounts: user.followedAccounts
+        followedAccounts: user.followedAccounts,
       },
       secret,
       { expiresIn: 4800 },
-      (err, token) => {
-        return res.json({ token: `Bearer ${token}`, success: true })
-      }
-    )
+      (err, token) => res.json({ token: `Bearer ${token}`, success: true })
+    );
   } catch (err) {
-    console.log(err)
-    return res.status(401).json({ errors: err, message: 'Unknown accident!' })
+    console.log(err);
+    return res.status(401).json({ errors: err, message: 'Unknown accident!' });
   }
-})
+});
 
 router.post('/auth/register', async (req, res) => {
-  const { email, password, password2, username } = req.body
+  const { email, password, password2, username } = req.body;
   // Input check
   const { isValid, errors } = Authenticator.AuthenticateUserInputRegister(
     req.body
-  )
+  );
   // If it is invalid, return 400
   if (!isValid) {
-    return res.status(400).json(errors)
+    return res.status(400).json(errors);
   }
   // Start auth
   try {
     // We try to find a user that meets email or username
     const doesUserExists = await User.findOne({
-      $or: [{ email }, { username }]
-    })
+      $or: [{ email }, { username }],
+    });
     // Check if it does exist
     if (!Authenticator.isEmpty(doesUserExists)) {
-      errors.exist = 'This user already exists.'
-      return res.status(400).json(errors)
+      errors.exist = 'This user already exists.';
+      return res.status(400).json(errors);
     }
     // We generate the salt
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(password, salt, async (err, encrypted) => {
         try {
           const user = new User({
-            email: email,
+            email,
             password: encrypted,
-            username: username
-          })
-          const userS = await user.save()
-          return res.json(userS)
+            username,
+          });
+          const userS = await user.save();
+          return res.json(userS);
         } catch (err) {
-          console.log(err)
+          console.log(err);
           return res
             .status(401)
-            .json({ auth: 'Error with authentification', err })
+            .json({ auth: 'Error with authentification', err });
         }
-      })
-    })
+      });
+    });
   } catch (err) {
-    console.log(err)
-    return res.status(401).json({ error: err, message: 'Unknown accident!' })
+    console.log(err);
+    return res.status(401).json({ error: err, message: 'Unknown accident!' });
   }
-})
+});
 
-module.exports = router
+module.exports = router;

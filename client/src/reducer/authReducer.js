@@ -33,7 +33,7 @@ export default (
         lastFmUser: action.payload
       }
     case 'SET_RATING_USER':
-      console.log(action.payload)
+      console.log(action.payload);
       return {
         ...state,
         apiUser: {

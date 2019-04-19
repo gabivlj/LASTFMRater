@@ -9,12 +9,18 @@ class Login extends Component {
   }
 
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value })
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   componentDidMount() {
     if (this.props.auth.auth) {
-      this.props.history.push('/lastfm/connect')
+      this.props.history.push('/me/profile');
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.auth) {
+      this.props.history.push('/me/profile');
     }
   }
 
@@ -40,7 +46,7 @@ class Login extends Component {
             value={this.state['password']}
             onChange={this.onChange}
           />
-          <input type="submit" value="" />
+          <input type="submit" value="Log in" />
         </form>
       </div>
     )

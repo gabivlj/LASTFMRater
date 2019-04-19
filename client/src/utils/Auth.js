@@ -8,8 +8,8 @@ class Auth {
   }
 
   static LogOut() {
-    deleteAuthTokenAxios()
-    deleteAuthTokenFromLS()
+    deleteAuthTokenAxios();
+    deleteAuthTokenFromLS();
   }
 
   /**

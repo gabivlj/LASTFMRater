@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
 
 /**
  * @PLAYLISTMODEL only tracks are here.
@@ -7,19 +8,19 @@ const Schema = mongoose.Schema
 const PlaylistModel = new Schema({
   user: {
     type: String,
-    required: true
+    required: true,
   },
   tracks: [
     {
       trackId: {
         ref: 'tracks',
-        type: Schema.Types.ObjectId
-      }
-    }
+        type: Schema.Types.ObjectId,
+      },
+    },
   ],
   playlistRating: {
     type: Number,
-    default: 0
+    default: 0,
   },
   playlistComments: [
     {
@@ -27,26 +28,26 @@ const PlaylistModel = new Schema({
       userName: { type: String, required: true },
       user: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
       likes: [
-        { user: { type: Schema.Types.ObjectId, required: true, ref: 'users' } }
+        { user: { type: Schema.Types.ObjectId, required: true, ref: 'users' } },
       ],
       Date: {
         type: Date,
-        default: Date.now()
-      }
-    }
+        default: Date.now(),
+      },
+    },
   ],
   playlistName: {
     type: String,
-    default: ''
+    default: '',
   },
   playlistDescription: {
     type: String,
-    default: ''
+    default: '',
   },
   playlistCover: {
     type: String,
-    default: ''
-  }
-})
+    default: '',
+  },
+});
 
-module.exports = Playlist = mongoose.model('playlists', PlaylistModel)
+module.exports = Playlist = mongoose.model('playlists', PlaylistModel);

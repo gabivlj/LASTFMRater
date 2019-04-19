@@ -34,18 +34,9 @@ class PlaylistFormComponent extends Component {
   componentWillUpdate(nextProps) {
     if (nextProps.auth.apiUser && !this.state.user) {
       this.setState({
-        user: nextProps.auth.apiUser._id
+        user: nextProps.auth.apiUser.id
       })
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // const { playlist } = nextProps
-    // if (
-    //   playlist.addedTracks.length !== this.props.playlist.addedTracks.length
-    // ) {
-    //   const { addedTracks } = playlist
-    // }
   }
 
   // Set the propTypes

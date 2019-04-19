@@ -11,8 +11,10 @@ class AuthHandler extends Component {
   static propTypes = __propTypes
 
   componentDidMount(nextProps) {
+    if (this.props.match.params.token === '') {
+      this.props.history.push('/')
+    }
     if (this.props.match.params.token && this.props.auth.auth) {
-      console.log('!!')
       this.props.setUser(
         this.props.match.params.token,
         this.props.auth.apiUser.user,

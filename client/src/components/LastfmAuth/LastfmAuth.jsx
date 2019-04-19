@@ -1,8 +1,9 @@
 import React from 'react'
 import KEYS from '../../API'
 const LastfmAuth = () => {
+  
   return (
-    <div>
+    <div className="container mt-3">
       <h2>
         Wanna connect your Lastfm account with your LastRater account? Press
         here!

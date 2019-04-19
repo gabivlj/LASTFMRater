@@ -1,56 +1,57 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+;
+const {Schema} = mongoose;
 
 const AlbumSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   artist: {
     type: String,
-    required: true
+    required: true,
   },
   tracks: [
     {
       trackId: {
         ref: 'tracks',
-        type: Schema.Types.ObjectId
-      }
-    }
+        type: Schema.Types.ObjectId,
+      },
+    },
   ],
   mbid: {
-    type: String
+    type: String,
   },
   ratings: [
     {
       puntuation: {
         type: Number,
-        required: true
+        required: true,
       },
       user: {
         type: String,
-        required: true
-      }
-    }
+        required: true,
+      },
+    },
   ],
   reviews: [
     {
       text: {
         type: String,
-        required: true
+        required: true,
       },
       author: {
         type: String,
-        isRequired: true
+        isRequired: true,
       },
       title: {
         type: String,
-        isRequired: true
+        isRequired: true,
       },
       puntuation: {
-        type: Number
-      }
-    }
+        type: Number,
+      },
+    },
   ],
   comments: [
     {
@@ -58,14 +59,14 @@ const AlbumSchema = new Schema({
       userName: { type: String, required: true },
       user: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
       likes: [
-        { user: { type: Schema.Types.ObjectId, required: true, ref: 'users' } }
+        { user: { type: Schema.Types.ObjectId, required: true, ref: 'users' } },
       ],
       Date: {
         type: Date,
-        default: Date.now()
-      }
-    }
-  ]
-})
+        default: Date.now(),
+      },
+    },
+  ],
+});
 
-module.exports = User = mongoose.model('albums', AlbumSchema)
+module.exports = User = mongoose.model('albums', AlbumSchema);
