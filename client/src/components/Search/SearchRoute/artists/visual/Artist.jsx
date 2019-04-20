@@ -1,32 +1,32 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 const styles = {
   card: {
-    maxWidth: 345
+    maxWidth: 345,
   },
   media: {
-    height: 140
-  }
-}
+    height: 140,
+  },
+};
 const __propTypes = {
   artist: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  className: PropTypes.string
-}
+  className: PropTypes.string,
+};
 
 const Artist = ({ artist, className, ...props }) => {
-  const { classes } = props
+  const { classes } = props;
   return (
-    <Card className={classes.card + ' ' + className}>
+    <Card className={`${classes.card} ${className}`}>
       <CardActionArea
         onClick={() => (window.location.href = `/artist/${artist.name}`)}
       >
@@ -57,9 +57,9 @@ const Artist = ({ artist, className, ...props }) => {
         </Button>
       </CardActions>
     </Card>
-  )
-}
+  );
+};
 
-Artist.propTypes = __propTypes
+Artist.propTypes = __propTypes;
 
-export default withStyles(styles)(Artist)
+export default withStyles(styles)(Artist);

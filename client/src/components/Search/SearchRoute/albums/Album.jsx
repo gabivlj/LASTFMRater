@@ -1,33 +1,33 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 const styles = {
   card: {
-    maxWidth: 345
+    maxWidth: 345,
   },
   media: {
-    height: 140
-  }
-}
+    height: 140,
+  },
+};
 const __propTypes = {
   album: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  className: PropTypes.string
-}
+  className: PropTypes.string,
+};
 
 const Album = ({ album, className, ...props }) => {
-  const { classes } = props
-  const mbid = album.mbid ? album.mbid : 0
+  const { classes } = props;
+  const mbid = album.mbid ? album.mbid : 0;
   return (
-    <Card className={classes.card + ' ' + className}>
+    <Card className={`${classes.card} ${className}`}>
       <CardActionArea
         onClick={() =>
           (window.location.href = `/album/${album.artist}/${
@@ -62,9 +62,9 @@ const Album = ({ album, className, ...props }) => {
         </Button>
       </CardActions>
     </Card>
-  )
-}
+  );
+};
 
-Album.propTypes = __propTypes
+Album.propTypes = __propTypes;
 
-export default withStyles(styles)(Album)
+export default withStyles(styles)(Album);

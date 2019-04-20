@@ -1,33 +1,37 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { getArtist, cleanArtist } from '../../actions/artistActions'
-import ArtistAlbums from './ArtistAlbums'
-import PropTypes from 'prop-types'
-import { LinearProgress } from '@material-ui/core'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { LinearProgress } from '@material-ui/core';
+import { getArtist, cleanArtist } from '../../actions/artistActions';
+import ArtistAlbums from './ArtistAlbums';
 
 const __propTypes = {
   getArtist: PropTypes.func.isRequired,
   cleanArtist: PropTypes.func.isRequired,
-  artist: PropTypes.object.isRequired
-}
+  artist: PropTypes.object.isRequired,
+};
 
 class Artist extends Component {
-  static propTypes = __propTypes
+  static propTypes = __propTypes;
+
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      artist: null
-    }
-    this.loadedArtist = false
+      artist: null,
+    };
+    this.loadedArtist = false;
   }
+
   componentWillUnmount() {
-    this.props.cleanArtist()
+    this.props.cleanArtist();
   }
+
   componentDidMount() {
     this.props.getArtist({
-      name: this.props.match.params.name
-    })
+      name: this.props.match.params.name,
+    });
   }
+
   componentDidUpdate() {
     if (
       !this.loadedArtist &&
@@ -36,15 +40,15 @@ class Artist extends Component {
       Object.keys(this.props.artist.artist).length > 0 &&
       !this.props.artist.artist.error
     ) {
-      this.loadedArtist = true
+      this.loadedArtist = true;
       this.setState({
-        artist: this.props.artist.artist
-      })
+        artist: this.props.artist.artist,
+      });
     }
   }
 
   render() {
-    let { artist } = this.state
+    const { artist } = this.state;
 
     return (
       <div>
@@ -57,7 +61,7 @@ class Artist extends Component {
                   src={artist.image[4]['#text']}
                   style={{
                     height: 'auto',
-                    width: '40%'
+                    width: '40%',
                   }}
                   className="rounded"
                   alt="Responsive"
@@ -110,14 +114,14 @@ class Artist extends Component {
           />
         ) : null}
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
-  artist: state.artist
-})
+  artist: state.artist,
+});
 export default connect(
   mapStateToProps,
   { getArtist, cleanArtist }
-)(Artist)
+)(Artist);

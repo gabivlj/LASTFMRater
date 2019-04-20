@@ -1,15 +1,15 @@
 const initialState = {
   album: null,
-  albumDB: null
-}
+  albumDB: null,
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case 'GET_ALBUM':
       return {
         ...state,
-        album: action.payload
-      }
+        album: action.payload,
+      };
     case 'ADD_ALBUM':
       return {
         ...state,
@@ -17,16 +17,16 @@ export default (state = initialState, action) => {
           album: {
             ...state.album.album,
             __v: action.payload.__v,
-            ratings: action.payload.ratings
-          }
-        }
-      }
+            ratings: action.payload.ratings,
+          },
+        },
+      };
     case 'CLEAR_ALBUM':
       return {
         album: null,
-        albumDB: null
-      }
+        albumDB: null,
+      };
     default:
-      return state
+      return state;
   }
-}
+};

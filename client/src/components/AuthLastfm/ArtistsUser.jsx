@@ -1,21 +1,20 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { setUsersArtists } from '../../actions/authActions'
-import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { LinearProgress } from '@material-ui/core'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { LinearProgress } from '@material-ui/core';
+import { setUsersArtists } from '../../actions/authActions';
 
 const __propTypes = {
   setUsersArtists: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
-}
+  auth: PropTypes.object.isRequired,
+};
 
-const isArray = a => {
-  return !!a && a.constructor === Array
-}
+const isArray = a => !!a && a.constructor === Array;
 
 class ArtistsUser extends Component {
-  static propTypes = __propTypes
+  static propTypes = __propTypes;
+
   componentDidMount() {
     if (
       this.props.auth.apiUser &&
@@ -23,9 +22,10 @@ class ArtistsUser extends Component {
       this.props.auth.auth &&
       Object.keys(this.props.auth.artists).length === 0
     ) {
-      this.props.setUsersArtists(this.props.auth.apiUser.lastfm) //this.props.auth.currentUser.name
+      this.props.setUsersArtists(this.props.auth.apiUser.lastfm); // this.props.auth.currentUser.name
     }
   }
+
   // componentWillReceiveProps(nextProps) {
   //   if (
   //     nextProps.auth.apiUser &&
@@ -37,16 +37,16 @@ class ArtistsUser extends Component {
   //   }
   // }
   render() {
-    const { auth } = this.props
-    let artist
-    let artists
+    const { auth } = this.props;
+    let artist;
+    let artists;
 
     // We do this because if artist param has only one artist, it will be an object and not an array.
     if (auth.artists.artists) {
-      artists = auth.artists.artists
+      artists = auth.artists.artists;
       artist = isArray(artists.artist)
         ? artists.artist.slice(0, 10)
-        : [artists.artist]
+        : [artists.artist];
     }
 
     return (
@@ -84,15 +84,15 @@ class ArtistsUser extends Component {
           )}
         </div>
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
-})
+  auth: state.auth,
+});
 
 export default connect(
   mapStateToProps,
   { setUsersArtists }
-)(ArtistsUser)
+)(ArtistsUser);

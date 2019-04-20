@@ -10,6 +10,23 @@ const secret = require('../config/keys').keyOrSecret;
 
 const FM = new Lastfm();
 
+router.get(
+  '/info',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const user = await User.findById({ _id: req.user._id });
+    res.json({
+      email: user.email,
+      lastfm: user.lastfm,
+      id: user._id,
+      ratedAlbums: user.ratedAlbums,
+      reviews: user.reviews,
+      playlists: user.playlists,
+      followedAccounts: user.followedAccounts,
+    });
+  }
+);
+
 router.post(
   '/lastfm/:username',
   passport.authenticate('jwt', { session: false }),
@@ -34,8 +51,8 @@ router.post(
 
 router.post('/rate', async (req, res) => {
   try {
-    const { name, albumId } = req.body;
-    const user = await User.findOne({ username: name });
+    const { userid, albumId } = req.body;
+    const user = await User.findOne({ _id: userid });
     if (user) {
       const index = user.ratedAlbums.indexOf(albumId);
       if (index <= -1) user.ratedAlbums.push(albumId);

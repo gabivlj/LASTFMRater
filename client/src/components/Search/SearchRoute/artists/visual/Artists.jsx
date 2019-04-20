@@ -1,5 +1,5 @@
-import React from 'react'
-import Artist from './Artist'
+import React from 'react';
+import Artist from './Artist';
 
 export default function Artists({ artists }) {
   return (
@@ -9,5 +9,5 @@ export default function Artists({ artists }) {
         <Artist className="col-md-4 m-3" key={index} artist={artist} />
       ))}
     </div>
-  )
+  );
 }

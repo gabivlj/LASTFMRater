@@ -1,41 +1,43 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { getAlbum } from '../../actions/albumActions'
-import store from '../../store'
-import hourFormat from '../../utils/hourFormat'
-import AlbumRating from './AlbumRating'
-import PropTypes from 'prop-types'
-import { LinearProgress } from '@material-ui/core'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { LinearProgress } from '@material-ui/core';
+import { getAlbum } from '../../actions/albumActions';
+import store from '../../store';
+import hourFormat from '../../utils/hourFormat';
+import AlbumRating from './AlbumRating';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
   album: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired
-}
+  currentUser: PropTypes.object.isRequired,
+};
 
 class Album extends Component {
-  static propTypes = __propTypes
+  static propTypes = __propTypes;
+
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       artist: '',
-      album: null
-    }
+      album: null,
+    };
 
     // There is a delay with this.setState that'd bug the componentDidUpdate()
-    this.loadedAlbum = false
+    this.loadedAlbum = false;
   }
+
   componentWillUnmount() {
     store.dispatch({
-      type: 'CLEAR_ALBUM'
-    })
+      type: 'CLEAR_ALBUM',
+    });
   }
+
   componentDidMount() {
-    const { artist, albumname, mbid } = this.props.match.params
+    const { artist, albumname, mbid } = this.props.match.params;
     this.setState({
-      artist
-    })
-    console.log(this.props.currentUser.lastfm)
+      artist,
+    });
     this.props.getAlbum({
       artist,
       albumname,
@@ -43,21 +45,25 @@ class Album extends Component {
       username:
         this.props.currentUser && this.props.currentUser.lastfm
           ? this.props.currentUser.lastfm
-          : null
-    })
+          : null,
+    });
   }
+
   componentDidUpdate() {
     if (!this.loadedAlbum && this.props.album.album) {
       this.setState({
-        album: this.props.album.album.album
-      })
-      this.loadedAlbum = true
+        album: this.props.album.album.album,
+      });
+      this.loadedAlbum = true;
     }
   }
+
   render() {
-    const { album } = this.state
-    let tracks
-    let duration
+    let { album } = this.props;
+    if (album) album = album.album
+    if (album) album = album.album
+    let tracks;
+    let duration;
     if (album) {
       // Map through every track
       tracks = album.tracks.track.map((tr, index) => (
@@ -70,11 +76,11 @@ class Album extends Component {
             {hourFormat.fmtMSS(tr.duration)}
           </span>
         </li>
-      ))
+      ));
       duration = album.tracks.track.reduce(
         (total, current) => total + parseInt(current.duration),
         0
-      )
+      );
     }
 
     return (
@@ -90,7 +96,7 @@ class Album extends Component {
                     <p>{album.mbid}</p>
                     {album.userplaycount ? (
                       <h5>
-                        {this.props.currentUser.user}'s playcount:{' '}
+                        {this.props.currentUser ? this.props.currentUser.user : ''}'s playcount:{' '}
                         {album.userplaycount}
                       </h5>
                     ) : null}
@@ -118,7 +124,7 @@ class Album extends Component {
                 <div className="badge badge-primary ml-3">
                   Total duration: {hourFormat.fmtMSS(duration)}
                 </div>
-                {/*TODO: Pass album and currentUser props so it has better performance and it's more useful but whatever*/}
+                {/* TODO: Pass album and currentUser props so it has better performance and it's more useful but whatever */}
                 <AlbumRating />
               </div>
             ) : (
@@ -127,14 +133,14 @@ class Album extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 const mapStateToProps = state => ({
   album: state.album,
-  currentUser: state.auth.apiUser
-})
+  currentUser: state.auth.apiUser,
+});
 export default connect(
   mapStateToProps,
   { getAlbum }
-)(Album)
+)(Album);

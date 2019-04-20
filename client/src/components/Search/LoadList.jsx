@@ -1,56 +1,56 @@
-import React, { Component } from 'react'
-import { LinearProgress } from '@material-ui/core'
-import AlbumItem from './AlbumItem'
-import { searchThingsForSearchBar } from '../../actions/searchActions'
-import { connect } from 'react-redux'
-import store from '../../store'
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import { LinearProgress } from '@material-ui/core';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import AlbumItem from './AlbumItem';
+import { searchThingsForSearchBar } from '../../actions/searchActions';
+import store from '../../store';
 
 const __propTypes = {
   searchThingsForSearchBar: PropTypes.func.isRequired,
-  search: PropTypes.object.isRequired
-}
+  search: PropTypes.object.isRequired,
+};
 
 class LoadList extends Component {
-  static propTypes = __propTypes
+  static propTypes = __propTypes;
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      loading: false
-    }
-    this.timeout = null
+      loading: false,
+    };
+    this.timeout = null;
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.searchValue)
     if (nextProps.searchValue !== this.props.searchValue) {
-      this.search(nextProps.searchValue)
+      this.search(nextProps.searchValue);
     }
   }
+
   componentDidMount() {
-    this.search(this.props.searchValue)
+    this.search(this.props.searchValue);
   }
 
   search = searchValue => {
     store.dispatch({
-      type: 'SET_LOADING_SEARCH'
-    })
+      type: 'SET_LOADING_SEARCH',
+    });
     // Clear timeouts because we wanna send to api when
     // the user has stopped typing.
-    if (this.timeout) clearTimeout(this.timeout)
+    if (this.timeout) clearTimeout(this.timeout);
     // We check for empty values.
     if (searchValue && searchValue.trim() !== '')
       this.timeout = setTimeout(() => {
-        this.props.searchThingsForSearchBar(searchValue)
-      }, 800)
-  }
+        this.props.searchThingsForSearchBar(searchValue);
+      }, 800);
+  };
 
   render() {
-    const { className, search, searchValue } = this.props
-    const { albums, loading } = search
-    let albumsSearchResult
+    const { className, search, searchValue } = this.props;
+    const { albums, loading } = search;
+    let albumsSearchResult;
 
     if (albums.length > 0) {
       albumsSearchResult = albums.map((album, index) => (
@@ -63,7 +63,7 @@ class LoadList extends Component {
           name={album.name}
           img={album.image[3]}
         />
-      ))
+      ));
     }
     return (
       <div>
@@ -73,7 +73,7 @@ class LoadList extends Component {
             style={{ marginLeft: '', marginBottom: '0%' }}
           />
         ) : (
-          <div className={'row ' + className}>
+          <div className={`row ${className}`}>
             <Link
               to={`/search/${searchValue}`}
               onClick={() => store.dispatch({ type: 'CLEAN_SEARCH_PAGE' })}
@@ -91,14 +91,14 @@ class LoadList extends Component {
           </div>
         )}
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
-  search: state.search
-})
+  search: state.search,
+});
 export default connect(
   mapStateToProps,
   { searchThingsForSearchBar }
-)(LoadList)
+)(LoadList);
