@@ -1,40 +1,40 @@
-import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
-import Fab from '@material-ui/core/Fab'
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Fab from '@material-ui/core/Fab';
 
-import AddIcon from '@material-ui/icons/Add'
-import SearchIcon from '@material-ui/icons/Search'
-import { Input } from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add';
+import SearchIcon from '@material-ui/icons/Search';
+import { Input } from '@material-ui/core';
 
-import MoreIcon from '@material-ui/icons/MoreVert'
-import LoadList from './LoadList'
+import MoreIcon from '@material-ui/icons/MoreVert';
+import LoadList from './LoadList';
 import PopComponent from './Popup/Pop.component';
 
 const style = theme => ({
   text: {
     paddingTop: theme.spacing.unit * 2,
     paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2
+    paddingRight: theme.spacing.unit * 2,
   },
   paper: {
-    paddingBottom: 50
+    paddingBottom: 50,
   },
   list: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
   },
   subHeader: {
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   appBar: {
     top: 'auto',
-    bottom: 0
+    bottom: 0,
   },
   toolbar: {
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   fabButton: {
     position: 'absolute',
@@ -42,24 +42,28 @@ const style = theme => ({
     top: -30,
     left: 0,
     right: 0,
-    margin: '0 auto'
-  }
-})
+    margin: '0 auto',
+  },
+});
 
 class AppBarMine extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       extended: false,
-      valueSearch: ''
-    }    
+      valueSearch: '',
+    };
   }
+
   render() {
-    const { classes } = this.props
+    const { classes } = this.props;
     return (
-      <div style={{ paddinBottom: '30%'}} ref={(ref) => this.anchorElement = ref}>
-        <div >
-          <AppBar position="fixed" color="primary" className={classes.appBar} >
+      <div
+        style={{ paddinBottom: '30%' }}
+        ref={ref => (this.anchorElement = ref)}
+      >
+        <div>
+          <AppBar position="fixed" color="primary" className={classes.appBar}>
             {this.state.valueSearch.length > 0 ? (
               <LoadList
                 searchValue={this.state.valueSearch}
@@ -68,7 +72,7 @@ class AppBarMine extends Component {
               />
             ) : null}
             <Toolbar className={classes.toolbar}>
-              <PopComponent/>
+              <PopComponent />
 
               <Fab
                 color="secondary"
@@ -99,8 +103,8 @@ class AppBarMine extends Component {
           </AppBar>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default withStyles(style)(AppBarMine)
+export default withStyles(style)(AppBarMine);

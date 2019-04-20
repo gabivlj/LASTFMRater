@@ -1,7 +1,8 @@
-const Lastfm = require('../classes/Lastfm')
-const fm = new Lastfm(null)
-const router = require('express').Router()
-const Track = require('../models/Track')
+const router = require('express').Router();
+const Lastfm = require('../classes/Lastfm');
+const Track = require('../models/Track');
+
+const fm = new Lastfm(null);
 
 /**
  * @GET
@@ -10,26 +11,26 @@ const Track = require('../models/Track')
  */
 router.get('/tracks', async (req, res) => {
   try {
-    const { searchData } = req.query
-    const { tracks } = await fm.searchTracks(searchData)
+    const { searchData } = req.query;
+    const { tracks } = await fm.searchTracks(searchData);
     const apiTracks = await Track.find({
       // Search api tracks that atleast one of the params includes a string of the searchQuery
       // TODO! maybe sort by matches
       $or: [
         { name: { $regex: searchData, $options: 'i' } },
         { artist: { $regex: searchData, $options: 'i' } },
-        { album: { $regex: searchData, $options: 'i' } }
-      ]
-    })
+        { album: { $regex: searchData, $options: 'i' } },
+      ],
+    });
 
     return res.json({
       lastfm: tracks.track,
-      api: { tracks: apiTracks || [], matches: apiTracks.length }
-    })
+      api: { tracks: apiTracks || [], matches: apiTracks.length },
+    });
   } catch (err) {
-    console.log(err)
-    return res.status(400).json(err)
+    console.log(err);
+    return res.status(400).json(err);
   }
-})
+});
 
-module.exports = router
+module.exports = router;

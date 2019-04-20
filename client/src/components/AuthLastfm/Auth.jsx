@@ -1,23 +1,24 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { setUser } from '../../actions/authActions'
-import ArtistsUser from './ArtistsUser'
-import PropTypes from 'prop-types'
-import { LinearProgress } from '@material-ui/core'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { LinearProgress } from '@material-ui/core';
+import { setUser, getUser } from '../../actions/authActions';
+import ArtistsUser from './ArtistsUser';
+import Ratings from '../Profile/Ratings/Ratings';
 
 const __propTypes = {
   setUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
-}
+  auth: PropTypes.object.isRequired,
+};
 
 class Auth extends Component {
-  static propTypes = __propTypes
+  static propTypes = __propTypes;
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      user: { empty: true }
-    }
+      user: { empty: true },
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -27,8 +28,8 @@ class Auth extends Component {
       Object.keys(nextProps.auth.currentUser)
     ) {
       this.setState({
-        user: nextProps.auth.apiUser
-      })
+        user: nextProps.auth.apiUser,
+      });
     }
   }
 
@@ -39,13 +40,19 @@ class Auth extends Component {
       this.state.user.empty
     ) {
       this.setState({
-        user: this.props.auth.apiUser
-      })
+        user: this.props.auth.apiUser,
+      });
     }
   }
 
+  componentWillMount() {
+    if (this.props.auth.auth) {
+      this.props.getUser()
+    } 
+  }
+
   render() {
-    const { user } = this.state
+    const { user } = this.state;
     if (!user) {
     }
     return (
@@ -55,6 +62,12 @@ class Auth extends Component {
         ) : (
           <LinearProgress />
         )}
+        <div className="container pb-3 mt-3">
+          <h2 className="mt-3 mb-3">
+            Your ratings!
+          </h2>
+          <Ratings />
+        </div>
         {!user.lastfm || user.lastfm.trim() === '' ? (
           <h2>
             Pair your current Lastfm account with this account to get all the
@@ -64,13 +77,13 @@ class Auth extends Component {
           <ArtistsUser history={this.props.history} />
         )}
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = state => ({ auth: state.auth })
+const mapStateToProps = state => ({ auth: state.auth });
 
 export default connect(
   mapStateToProps,
-  { setUser }
-)(Auth)
+  { setUser, getUser }
+)(Auth);

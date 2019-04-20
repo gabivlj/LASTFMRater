@@ -1,8 +1,21 @@
 const router = require('express').Router();
+const passport = require('passport');
 const Album = require('../models/Album');
 const Lastfm = require('../classes/Lastfm');
 
 const FM = new Lastfm(null);
+
+/**
+ * @GET
+ * @PRIVATE
+ * @DESCRIPTION Get an album from database by id
+ */
+
+router.get('/:id', (req, res) => {
+  Album.findById({ _id: req.params.id })
+    .then(album => res.json(album))
+    .catch(err => res.status(400).catch({ error: 'Fatal error' }));
+});
 
 /**
  * @POST
@@ -72,37 +85,44 @@ router.get('/search/:name', async (req, res) => {
  * @DESCRIPTION Try to add a rating to the album with the user id, if it does already exist just update it.
  */
 
-router.post('/rate/:albumid', async (req, res) => {
-  try {
-    const album = await Album.findOne({
-      _id: req.params.albumid,
-    });
-    if (album) {
-      const index = album.ratings
-        .map(rating => rating.user)
-        .indexOf(req.body.userid);
-      if (index <= -1) {
-        album.ratings.push({
-          puntuation: req.body.puntuation,
-          user: req.body.userid,
-        });
+router.post(
+  '/rate/:albumid',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const album = await Album.findOne({
+        _id: req.params.albumid,
+      });
+      // const userPromise = User.findOne({ _id: req.user._id });
+      // const [user, album] = await Promise.all([userPromise, albumPromise]);
+
+      if (album) {
+        const index = album.ratings
+          .map(rating => rating.user)
+          .indexOf(req.body.userid);
+        if (index <= -1) {
+          album.ratings.push({
+            puntuation: req.body.puntuation,
+            user: req.body.userid,
+          });
+        } else {
+          album.ratings.splice(index, 1, {
+            puntuation: req.body.puntuation,
+            user: req.body.userid,
+          });
+        }
+        album
+          .save()
+          .then(res_ => res.json({ ratings: res_.ratings, __v: res_.__v }))
+          .catch(err => console.log(err));
       } else {
-        album.ratings.splice(index, 1, {
-          puntuation: req.body.puntuation,
-          user: req.body.userid,
-        });
+        return res.status(400).json('Error finding the album.');
       }
-      album
-        .save()
-        .then(res_ => res.json({ ratings: res_.ratings, __v: res_.__v }))
-        .catch(err => console.log(err));
-    } else {
-      return res.status(400).json('Error finding the album.');
+    } catch (err) {
+      return res.status(400).json('Error .');
     }
-  } catch (err) {
-    return res.status(400).json('Error .');
   }
-});
+);
 
 // @GET
 // @OPTIONALQUERYPARAMS username
@@ -127,7 +147,6 @@ router.get('/:albumname/:artistname', async (req, res) => {
       //   album__.tracks = find.tracks;
       // }
     }
-    console.log(find);
     album__.ratings = find.ratings;
     album__.reviews = find.reviews;
     album__._id = find._id;

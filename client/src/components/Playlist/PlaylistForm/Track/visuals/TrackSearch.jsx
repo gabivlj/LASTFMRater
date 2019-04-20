@@ -1,5 +1,5 @@
-import React from 'react'
-import TrackCard from './TrackCard'
+import React from 'react';
+import TrackCard from './TrackCard';
 
 /* <TrackCard
         className="col-md-3 m-2"
@@ -19,11 +19,11 @@ const TrackSearch = ({ tracks, addTrack }) => {
         'https://www.mompetit.com/wp-content/themes/holalady/img/img_placeholder.png'
       }
       mbid={track._id}
-      add={true}
+      add
       onClick={id => addTrack(track)}
     />
-  ))
-  return <div className="row">{showTracks}</div>
-}
+  ));
+  return <div className="row">{showTracks}</div>;
+};
 
-export default TrackSearch
+export default TrackSearch;

@@ -1,48 +1,68 @@
 import React from 'react'
 import purple from '@material-ui/core/colors/purple'
-import { withStyles, TextField } from '@material-ui/core'
+import { withStyles, TextField, Chip } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import FaceIcon from '@material-ui/icons/Face'
 
 const propTypes__ = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  multiline: PropTypes.bool.isRequired
+  multiline: PropTypes.bool.isRequired,
+  error: PropTypes.string
 }
 const InputBorderline = ({
   classes,
   label,
   name,
   value,
+  error,
   onChange,
+  cleanErrors,
   ...props
 }) => {
   return (
-    <TextField
-      className={classes.margin + ' ' + props.className}
-      InputLabelProps={{
-        classes: {
-          root: classes.cssLabel,
-          focused: classes.cssFocused
-        }
-      }}
-      InputProps={{
-        classes: {
-          root: classes.cssOutlinedInput,
-          focused: classes.cssFocused,
-          notchedOutline: classes.notchedOutline
-        }
-      }}
-      onChange={onChange}
-      value={value}
-      name={name}
-      label={label}
-      variant="outlined"
-      id="Borderline input"
-      multiline
-      {...props}
-    />
+    <div>
+      <div>
+        {error && error.trim().length > 0 ? (
+          <Chip
+            icon={<FaceIcon />}
+            label={error}
+            onDelete={() => cleanErrors()}
+            className={classes.chip}
+            color="secondary"
+          />
+        ) : null}
+      </div>
+
+      <div>
+        <TextField
+          className={classes.margin + ' ' + props.className}
+          InputLabelProps={{
+            classes: {
+              root: classes.cssLabel,
+              focused: classes.cssFocused
+            }
+          }}
+          fullWidth
+          InputProps={{
+            classes: {
+              root: classes.cssOutlinedInput,
+              focused: classes.cssFocused,
+              notchedOutline: classes.notchedOutline
+            }
+          }}
+          onChange={onChange}
+          value={value}
+          name={name}
+          label={label}
+          variant="outlined"
+          multiline
+          {...props}
+        />
+      </div>
+    </div>
   )
 }
 // proptypes
@@ -59,6 +79,9 @@ const styles = theme => ({
     flexWrap: 'wrap'
   },
   margin: {
+    margin: theme.spacing.unit
+  },
+  chip: {
     margin: theme.spacing.unit
   },
   cssLabel: {

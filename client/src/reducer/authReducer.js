@@ -6,52 +6,53 @@ export default (
     lastFmUser: '',
     apiUser: null,
     isLoading: false,
-    errors: {}
+    errors: {},
   },
   action
 ) => {
-  switch (action.type) {
+  switch (action.type) {    
+    case 'SET_ERRORS_LOGIN':
+      return {
+        ...state,
+        errors: action.payload
+      }
     case 'SET_USER':
       return {
         ...state,
-        auth:
-          action.payload && Object.keys(action.payload).length > 0
-            ? true
-            : false,
-        currentUser: action.payload
-      }
+        auth: !!(action.payload && Object.keys(action.payload).length > 0),
+        currentUser: action.payload,
+      };
     case 'SET_API_USER':
       return {
         ...state,
         auth: action.payload && Object.keys(action.payload).length > 0,
-        apiUser: action.payload,
-        isLoading: false
-      }
+        apiUser: { ...state.apiUser, ...action.payload },
+        isLoading: false,
+      };      
     case 'SET_LASTFM_USER':
       return {
         ...state,
-        lastFmUser: action.payload
-      }
+        lastFmUser: action.payload,
+      };
     case 'SET_RATING_USER':
-      console.log(action.payload);
       return {
         ...state,
         apiUser: {
           ...state.apiUser,
-          ratedAlbums: [...action.payload.ratedAlbums]
-        }
-      }
+          ratedAlbums: [...action.payload.ratedAlbums],
+        },
+      };
     case 'SET_USER_ARTISTS':
       return {
         ...state,
-        artists: action.payload
-      }
+        artists: action.payload,
+      };
     case 'SET_IS_LOADING_AUTH':
       return {
         ...state,
-        isLoading: !state.isLoading
-      }
+        isLoading: !state.isLoading,
+      };
     default:
-      return state
+      return state;
   }
-}
+};

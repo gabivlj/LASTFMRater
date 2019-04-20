@@ -1,30 +1,29 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import GeneralForm from './visuals/GeneralForm'
-import CurrentTracks from './Track/current/CurrentTracks'
-import TrackSearchComponent from './Track/TrackSearch.component'
-import { removeTrack } from '../../../actions/playlistActions'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import GeneralForm from './visuals/GeneralForm';
+import CurrentTracks from './Track/current/CurrentTracks';
+import TrackSearchComponent from './Track/TrackSearch.component';
+import { removeTrack } from '../../../actions/playlistActions';
 
 const propTypes_ = {
-  auth: PropTypes.object.isRequired
-}
+  auth: PropTypes.object.isRequired,
+};
 
 class PlaylistFormComponent extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       tracks: [], // pass it to visuals/TrackList.jsx
       name: '', // pass it to visuals/FormInfo
       description: '', // pass it to visuals/FormInfo
       user: null, // api purposes
-      img: '' // pass it to visuals/FormInfo (playlistCover)
-    }
+      img: '', // pass it to visuals/FormInfo (playlistCover)
+    };
   }
 
   // React.lifecycles
   componentDidMount() {
-    console.log(this.props.auth)
     if (!this.props.auth.apiUser && !this.props.auth.auth) {
       // TODO PUSH NOTIFICATION TO INFORM THAT HE HAS BEEN REDIRECTED !
       // this.props.history.push('/')
@@ -34,24 +33,24 @@ class PlaylistFormComponent extends Component {
   componentWillUpdate(nextProps) {
     if (nextProps.auth.apiUser && !this.state.user) {
       this.setState({
-        user: nextProps.auth.apiUser.id
-      })
+        user: nextProps.auth.apiUser.id,
+      });
     }
   }
 
   // Set the propTypes
-  static propTypes = propTypes_
+  static propTypes = propTypes_;
 
   // Pass this function to the form component visuals.
   onChange = e => {
     this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   render() {
-    const { name, description, img, tracks } = this.state
-    const { addedTracks } = this.props.playlist
+    const { name, description, img, tracks } = this.state;
+    const { addedTracks } = this.props.playlist;
     return (
       <div>
         <h3 className="ml-3 mt-4">Fill the data for your playlist!</h3>
@@ -74,16 +73,16 @@ class PlaylistFormComponent extends Component {
         {/* TrackForm pass: addTrack() */}
         <TrackSearchComponent />
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  playlist: state.playlist
-})
+  playlist: state.playlist,
+});
 
 export default connect(
   mapStateToProps,
   { removeTrack }
-)(PlaylistFormComponent)
+)(PlaylistFormComponent);

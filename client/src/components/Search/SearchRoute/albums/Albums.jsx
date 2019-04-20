@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { LinearProgress } from '@material-ui/core'
-import Album from './Album'
-import { IconButton } from '@material-ui/core'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import './album.style.css'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { LinearProgress, IconButton } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Album from './Album';
+
+import './album.style.css';
 
 const __propTypes = {
-  albums: PropTypes.object.isRequired
-}
+  albums: PropTypes.object.isRequired,
+};
 
 const Albums = ({ albums, ...props }) => {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(false);
   const albums__ = albums.list.map((element, index) => (
     <Album className="col-md-4 m-3" album={element} key={index} />
-  ))
+  ));
   return (
     <div className="mt-3">
       <h1 className="mt-2">Albums</h1>
@@ -27,16 +27,16 @@ const Albums = ({ albums, ...props }) => {
         <div className="row">{expanded ? albums__ : albums__.slice(0, 6)}</div>
       )}
       <IconButton
-        className={(expanded ? 'expanded' : 'notexpanded') + ' mt-2'}
+        className={`${expanded ? 'expanded' : 'notexpanded'} mt-2`}
         aria-label="Show more"
         onClick={() => setExpanded(!expanded)}
       >
         <ExpandMoreIcon />
       </IconButton>
     </div>
-  )
-}
+  );
+};
 
-Albums.propTypes = __propTypes
+Albums.propTypes = __propTypes;
 
-export default Albums
+export default Albums;

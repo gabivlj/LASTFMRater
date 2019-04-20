@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
-import { addTrack, searchTracks } from '../../../../actions/playlistActions'
-import InputBorderline from '../../../Common/InputBorderline'
-import TrackSearch from './visuals/TrackSearch'
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { addTrack, searchTracks } from '../../../../actions/playlistActions';
+import InputBorderline from '../../../Common/InputBorderline';
+import TrackSearch from './visuals/TrackSearch';
 
 const TrackSearchComponent = ({ ...props }) => {
-  const { searchedTracks } = props.playlist
+  const { searchedTracks } = props.playlist;
 
   function searchTrack(query) {
-    if (query.trim() !== '') props.searchTracks(query)
+    if (query.trim() !== '') props.searchTracks(query);
   }
 
   function onSubmit(e) {
-    e.preventDefault()
-    searchTrack(name)
+    e.preventDefault();
+    searchTrack(name);
   }
-  const [name, changeName] = useState('')
+  const [name, changeName] = useState('');
   return (
     <div className="container">
       <form onSubmit={onSubmit} style={{ paddingBottom: '10%' }}>
@@ -31,14 +31,14 @@ const TrackSearchComponent = ({ ...props }) => {
       </form>
       <TrackSearch tracks={searchedTracks} addTrack={props.addTrack} />
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = state => ({
-  playlist: state.playlist
-})
+  playlist: state.playlist,
+});
 
 export default connect(
   mapStateToProps,
   { addTrack, searchTracks }
-)(TrackSearchComponent)
+)(TrackSearchComponent);

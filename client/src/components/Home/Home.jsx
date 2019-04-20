@@ -1,7 +1,7 @@
-import React from 'react'
-import KEYS from '../../API'
-import logo from '../../logo.png'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import KEYS from '../../API';
+import logo from '../../logo.png';
 
 export default function Home() {
   return (
@@ -31,5 +31,5 @@ export default function Home() {
         </Link>
       </header>
     </div>
-  )
+  );
 }

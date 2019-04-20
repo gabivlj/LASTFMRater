@@ -1,8 +1,18 @@
-import React, { Component, useState } from 'react'
-import { Popper, Grow, Paper, ClickAwayListener, MenuList, MenuItem, withStyles, IconButton } from '@material-ui/core';
-import { Link } from 'react-router-dom'
-import MenuIcon from '@material-ui/icons/Menu'
-import { connect } from 'react-redux'
+import React, { Component, useState } from 'react';
+import {
+  Popper,
+  Grow,
+  Paper,
+  ClickAwayListener,
+  MenuList,
+  MenuItem,
+  withStyles,
+  IconButton,
+} from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import MenuIcon from '@material-ui/icons/Menu';
+import { connect } from 'react-redux';
+import { logOut } from '../../../actions/authActions'
 
 const styles = theme => ({
   root: {
@@ -13,16 +23,21 @@ const styles = theme => ({
   },
 });
 
-function PopComponent({ auth }) {
-  const [open, setOpen] = useState(false)
-  let anchorEl 
-  const handleClose = (e) => {          
-    setOpen(!open)    
-  }
+function PopComponent({ auth, logOut }) {
+  const [open, setOpen] = useState(false);
+  let anchorEl;
+  const handleClose = e => {
+    setOpen(!open);
+  };
 
   return (
     <>
-     <IconButton color="inherit" aria-label="Open drawer" onClick={handleClose} buttonRef={(ref) => anchorEl = ref}>
+      <IconButton
+        color="inherit"
+        aria-label="Open drawer"
+        onClick={handleClose}
+        buttonRef={ref => (anchorEl = ref)}
+      >
         <MenuIcon />
       </IconButton>
       <Popper open={open} anchorEl={anchorEl} transition disablePortal>
@@ -30,48 +45,57 @@ function PopComponent({ auth }) {
           <Grow
             {...TransitionProps}
             id="menu-list-grow"
-            style={{ margin: '0 0% 200% -20%'}}
+            style={{ margin: '0 0% 200% -20%' }}
           >
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MenuList>                                
-                  
-                  {auth.auth ? 
-                    <MenuItem                     
+                <MenuList>
+                  {auth.auth ? (
+                    <MenuItem
                       component={Link}
                       to="/me/profile"
                       onClick={handleClose}
                     >
                       Profile
-                    </MenuItem> :
-                    null
-                  }
+                    </MenuItem>
+                  ) : null}
 
-                  {auth.auth ? 
-                    <MenuItem 
-                    onClick={handleClose} 
-                    component={Link}
-                    to="/me/profile"
+                  {auth.auth ? (
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/me/configuration"
                     >
                       Configuration
-                    </MenuItem> : 
-                    <MenuItem 
-                    onClick={handleClose}component={Link}
-                    to="/auth/register"
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/auth/register"
                     >
                       Register
                     </MenuItem>
-                  }
-                  {auth.auth ? 
-                    <MenuItem onClick={handleClose}>Logout</MenuItem> : 
-                    <MenuItem 
-                      onClick={handleClose} 
+                  )}
+                  {auth.auth ? (
+                    <MenuItem onClick={(e) => { 
+                      handleClose(); 
+                      logOut();                      
+                    }}
+                    component={Link}
+                    to="/"
+                    >
+                      Logout
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      onClick={handleClose}
                       component={Link}
                       to="/auth/login"
                     >
                       Login
-                    </MenuItem> 
-                  }
+                    </MenuItem>
+                  )}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
@@ -79,11 +103,15 @@ function PopComponent({ auth }) {
         )}
       </Popper>
     </>
-  )
-  
+  );
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   auth: state.auth,
-})
-export default  connect(mapStateToProps, {})(withStyles(styles)(PopComponent))
+});
+export default connect(
+  mapStateToProps,
+  {
+    logOut
+  }
+)(withStyles(styles)(PopComponent));

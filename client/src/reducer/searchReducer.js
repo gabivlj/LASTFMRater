@@ -7,9 +7,9 @@ const initialState = {
     albums: { loading: false, list: [] },
     artists: { loading: false, list: [] },
     playlists: { loading: false, list: [] },
-    cleaned: false
-  }
-}
+    cleaned: false,
+  },
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -17,23 +17,23 @@ export default (state = initialState, action) => {
       return {
         ...state,
         albums: [...action.payload],
-        loading: false
-      }
+        loading: false,
+      };
     case 'SET_LOADING_SEARCH':
       return {
         ...state,
         albums: [],
-        loading: true
-      }
+        loading: true,
+      };
     case 'SEARCH_ALBUMS_FOR_SEARCH':
       return {
         ...state,
         loadingSearch: false,
         searchData: {
           ...state.searchData,
-          albums: { list: [...action.payload], loading: false }
-        }
-      }
+          albums: { list: [...action.payload], loading: false },
+        },
+      };
     case 'SEARCH_ARTISTS_FOR_SEARCH':
       return {
         ...state,
@@ -42,19 +42,19 @@ export default (state = initialState, action) => {
           ...state.searchData,
           artists: {
             list: [...(action.payload ? action.payload : [])],
-            loading: false
-          }
-        }
-      }
+            loading: false,
+          },
+        },
+      };
     case 'SEARCH_PLAYLISTS_FOR_SEARCH':
       return {
         ...state,
         loadingSearch: false,
         searchData: {
           ...state.searchData,
-          playlists: { list: [...action.payload], loading: false }
-        }
-      }
+          playlists: { list: [...action.payload], loading: false },
+        },
+      };
     case 'CLEAN_SEARCH_PAGE':
       return {
         ...state,
@@ -62,30 +62,30 @@ export default (state = initialState, action) => {
           albums: { loading: false, list: [] },
           artists: { loading: false, list: [] },
           playlists: { loading: false, list: [] },
-          cleaned: true
-        }
-      }
+          cleaned: true,
+        },
+      };
     case 'SET_LOADING_SEARCH_PAGE':
-      delete state.searchData[action.payload]
+      delete state.searchData[action.payload];
       return {
         ...state,
         searchData: {
           [action.payload]: {
             loading: true,
-            list: []
+            list: [],
           },
-          ...state.searchData
-        }
-      }
+          ...state.searchData,
+        },
+      };
     case 'POPULATE_SEARCH':
       return {
         ...state,
         searchData: {
           ...state.searchData,
-          cleaned: false
-        }
-      }
+          cleaned: false,
+        },
+      };
     default:
-      return state
+      return state;
   }
-}
+};
