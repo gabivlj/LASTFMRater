@@ -19,6 +19,7 @@ import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import LastfmAuth from './components/LastfmAuth/LastfmAuth';
 import Configuration from './components/Configuration/Configuration';
+import Playlist from './components/Playlist/PlaylistPage/Playlist';
 // Get user from localStorage.
 store.dispatch(logFromSession());
 
@@ -58,6 +59,11 @@ class App extends Component {
                 />
                 <PrivateRoute
                   exact
+                  path="/playlist/view/:id"
+                  component={Playlist}
+                />
+                <PrivateRoute
+                  exact
                   path="/me/configuration"
                   component={Configuration}
                 />
@@ -65,7 +71,7 @@ class App extends Component {
                   exact
                   path="/lastfm/connect"
                   component={LastfmAuth}
-                />
+                />                
                  <Route render={() => <Redirect to="/sorry/not-found" />} />
               </Switch>
              

@@ -2,6 +2,7 @@ const initialState = {
   searchedTracks: [],
   addedTracks: [],
   isLoading: false,
+  playlist: {}
 };
 
 export default (state = initialState, action) => {
@@ -42,6 +43,11 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: !state.isLoading,
       };
+    case 'SET_PLAYLIST':
+      return {
+        ...state,
+        playlist: action.payload
+      }
     default:
       return {
         ...state,

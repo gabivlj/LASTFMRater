@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import GeneralForm from './visuals/GeneralForm';
 import CurrentTracks from './Track/current/CurrentTracks';
 import TrackSearchComponent from './Track/TrackSearch.component';
-import { removeTrack } from '../../../actions/playlistActions';
+import { removeTrack, sendPlaylist } from '../../../actions/playlistActions';
+import { withRouter } from 'react-router-dom'
 
 const propTypes_ = {
   auth: PropTypes.object.isRequired,
@@ -30,10 +31,22 @@ class PlaylistFormComponent extends Component {
     }
   }
 
+  onSubmit = (e) => {
+    e.preventDefault();
+    this.props.sendPlaylist(
+      this.props.auth.apiUser.user,
+      this.state.name,
+      this.state.description,
+      this.state.img,
+      this.props.history,
+      this.props.playlist.addedTracks
+    );
+  }
+
   componentWillUpdate(nextProps) {
     if (nextProps.auth.apiUser && !this.state.user) {
       this.setState({
-        user: nextProps.auth.apiUser.id,
+        user: nextProps.auth.apiUser.user,
       });
     }
   }
@@ -69,9 +82,14 @@ class PlaylistFormComponent extends Component {
             tracks={addedTracks}
             deleteTrack={this.props.removeTrack}
           />
+          <form onSubmit={this.onSubmit}>
+            <input type="submit" value="Send" className="btn btn-primary"/>
+          </form>
         </div>
+        
         {/* TrackForm pass: addTrack() */}
         <TrackSearchComponent />
+        
       </div>
     );
   }
@@ -84,5 +102,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { removeTrack }
-)(PlaylistFormComponent);
+  { removeTrack, sendPlaylist }
+)(withRouter(PlaylistFormComponent));

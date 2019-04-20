@@ -41,3 +41,27 @@ export const removeTrack = track => dispatch => {
     payload: track,
   });
 };
+
+export const sendPlaylist = (user, playlistName, playlistDescription, playlistCover, history, tracks = []) => 
+    async dispatch => {
+  const sendToApi = { user, playlistName, playlistDescription, playlistCover, tracks };
+  const [errors, response] = await handleError(
+    axios.post('/api/playlist', sendToApi)
+  );
+  if (errors) {
+    return dispatch({ type: 'ERRORS_PLAYLIST_CREATION'});
+  } 
+  dispatch({
+    type: 'SUCCESFUL_API_CALL_PLAYLIST'
+  });
+  history.push('/me/profile');
+}
+
+export const getPlaylist = _id => async dispatch => {
+  const [playlist, error] = await handleError(axios.get(`/api/playlist/${_id}`));
+  if (error) console.log(error.response.data)
+  dispatch({
+    type: 'SET_PLAYLIST',
+    payload: playlist.data.playlist,
+  })
+}
