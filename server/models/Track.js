@@ -17,7 +17,7 @@ const TrackSchema = new Schema({
   },
   album: {
     type: String,
-    required: true,
+    default: 'None',
   },
 });
 

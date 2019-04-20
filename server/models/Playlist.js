@@ -10,6 +10,7 @@ const PlaylistModel = new Schema({
     type: String,
     required: true,
   },
+  tracksShow: [{}],
   tracks: [
     {
       trackId: {

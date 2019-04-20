@@ -1,15 +1,16 @@
-const APIKEYS = require('../config/api')
-const md5 = require('md5')
-const axios = require('axios')
+const md5 = require('md5');
+const axios = require('axios');
+const APIKEYS = require('../config/api');
+const handleError = require('../lib/handleError');
 
 class Lastfm {
   constructor(usersession = null) {
-    this.usersession = usersession
+    this.usersession = usersession;
     // Get API keys
-    this.API_KEY = APIKEYS.API_KEY
-    this.SECRET = APIKEYS.SECRET
-    this.API_SIGNATURE = null
-    this.LASTFMROUTE = 'http://ws.audioscrobbler.com/2.0'
+    this.API_KEY = APIKEYS.API_KEY;
+    this.SECRET = APIKEYS.SECRET;
+    this.API_SIGNATURE = null;
+    this.LASTFMROUTE = 'http://ws.audioscrobbler.com/2.0';
   }
 
   // Auth handle
@@ -17,22 +18,22 @@ class Lastfm {
     return new Promise(async (resolve, reject) => {
       this.API_SIGNATURE = md5(
         `api_key${this.API_KEY}methodauth.getSessiontoken${token}${this.SECRET}`
-      )
+      );
       try {
         const user = await axios.get(
           `${this.LASTFMROUTE}?token=${token}&api_key=${this.API_KEY}&api_sig=${
             this.API_SIGNATURE
           }&method=auth.getSession`
-        )
+        );
         if (!user.data || !user) {
-          resolve({ error: 'Error with Lasftm API', moreinfo: user })
+          resolve({ error: 'Error with Lasftm API', moreinfo: user });
         }
         // Maybe parse info though
-        resolve(user.data)
+        resolve(user.data);
       } catch (err) {
-        reject(err)
+        reject(err);
       }
-    })
+    });
   }
 
   async getUsersArtist(username) {
@@ -42,15 +43,15 @@ class Lastfm {
           `${this.LASTFMROUTE}/?method=library.getartists&api_key=${
             this.API_KEY
           }&user=${username}&format=json`
-        )
+        );
         if (!albums) {
-          resolve({ error: 'Error.', moreinfo: albums })
+          resolve({ error: 'Error.', moreinfo: albums });
         }
-        resolve(albums.data)
+        resolve(albums.data);
       } catch (err) {
-        reject(`ERROR WITH LAST'S FM API: ${err.response}`)
+        reject(`ERROR WITH LAST'S FM API: ${err.response}`);
       }
-    })
+    });
   }
 
   /**
@@ -60,24 +61,24 @@ class Lastfm {
    *                 album (Required) : The album name
    *                 --> Lastfm Class already provides it => api_key (Required) : A Last.fm API key.
    *                 }
-   **/
+   * */
 
   async getAlbums(params) {
     return new Promise(async (resolve, reject) => {
       try {
-        params.api_key = this.API_KEY
+        params.api_key = this.API_KEY;
         const albums = await axios.get(
           `${this.LASTFMROUTE}/?method=album.search&format=json`,
-          { params: params }
-        )
+          { params }
+        );
         if (!albums) {
-          resolve({ error: 'Error.', moreinfo: albums })
+          resolve({ error: 'Error.', moreinfo: albums });
         }
-        resolve(albums.data)
+        resolve(albums.data);
       } catch (err) {
-        reject(`ERROR WITH LAST'S FM API: ${err.response}`)
+        reject(`ERROR WITH LAST'S FM API: ${err.response}`);
       }
-    })
+    });
   }
 
   async getArtist(artist) {
@@ -89,15 +90,15 @@ class Lastfm {
           }/?method=artist.getinfo&artist=${artist}&api_key=${
             this.API_KEY
           }&format=json`
-        )
+        );
         if (!artist__) {
-          resolve({ error: 'Error.', moreinfo: artist__ })
+          resolve({ error: 'Error.', moreinfo: artist__ });
         }
-        resolve(artist__.data)
+        resolve(artist__.data);
       } catch (err) {
-        reject(`ERROR WITH LAST'S FM API: ${err.response}`)
+        reject(`ERROR WITH LAST'S FM API: ${err.response}`);
       }
-    })
+    });
   }
 
   /**
@@ -107,30 +108,30 @@ class Lastfm {
    *                  --> Lastfm Class already provides it => api_key (Required) : A Last.fm API key.
    *                  username (Optional): The current logged username
    *                 }
-   **/
+   * */
 
   async getAlbum(albumData) {
     return new Promise(async (resolve, reject) => {
-      let username
+      let username;
       try {
         if (albumData.username) {
-          username = `&username=${albumData.username}`
-        } else username = ''
+          username = `&username=${albumData.username}`;
+        } else username = '';
         const album = await axios.get(
           `${this.LASTFMROUTE}/?method=album.getinfo&api_key=${
             this.API_KEY
           }&artist=${albumData.artist}&album=${
             albumData.albumname
           }${username}&format=json`
-        )
+        );
         if (!album) {
-          resolve(null)
+          resolve(null);
         }
-        resolve(album.data)
+        resolve(album.data);
       } catch (err) {
-        resolve(null)
+        resolve(null);
       }
-    })
+    });
   }
 
   async searchAlbums(search = '', limit = 5, page = 1) {
@@ -142,10 +143,10 @@ class Lastfm {
           }&page=${page}&limit=${limit}&format=json`
         )
         .then(res => {
-          resolve(res.data.results.albummatches.album)
+          resolve(res.data.results.albummatches.album);
         })
-        .catch(err => reject(err))
-    })
+        .catch(err => reject(err));
+    });
   }
 
   async searchArtists(searchValue, limit = 5, page = 1) {
@@ -157,29 +158,45 @@ class Lastfm {
           }&artist=${searchValue}&page=${page}&limit=${limit}&format=json`
         )
         .then(res => {
-          resolve(res.data.results.artistmatches.artist)
+          resolve(res.data.results.artistmatches.artist);
         })
-        .catch(err => reject(err))
-    })
+        .catch(err => reject(err));
+    });
   }
 
-  async getArtist(searchValue) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(
-          `${
-            this.LASTFMROUTE
-          }/?method=artist.getinfo&artist=${searchValue}&api_key=${
+  // async getArtist(searchValue) {
+  //   return new Promise((resolve, reject) => {
+  //     axios
+  //       .get(
+  //         `${
+  //           this.LASTFMROUTE
+  //         }/?method=artist.getinfo&artist=${searchValue}&api_key=${
+  //           this.API_KEY
+  //         }&format=json`
+  //       )
+  //       .then(res => {
+  //         resolve(res.data);
+  //       })
+  //       .catch(err => {
+  //         reject(err);
+  //       });
+  //   });
+  // }
+
+  async getTrack(name, artist) {
+    return new Promise(async (resolve, reject) => {
+      const [error, track] = await handleError(
+        axios.get(
+          `${this.LASTFMROUTE}/?method=track.getInfo&api_key=${
             this.API_KEY
-          }&format=json`
+          }&artist=${artist}&track=${name}&format=json`
         )
-        .then(res => {
-          resolve(res.data)
-        })
-        .catch(err => {
-          reject(err)
-        })
-    })
+      );
+      if (error) {
+        return reject(new Error(error.response.data));
+      }
+      resolve(track.data.track);
+    });
   }
 
   async getArtistAlbums(artist) {
@@ -193,10 +210,10 @@ class Lastfm {
           }&format=json`
         )
         .then(res => {
-          resolve(res.data)
+          resolve(res.data);
         })
         .catch(err => console.log(err) && reject(err.response))
-    )
+    );
   }
 
   async searchTracks(search) {
@@ -206,17 +223,17 @@ class Lastfm {
           `${this.LASTFMROUTE}/?method=track.search&track=${search}&api_key=${
             this.API_KEY
           }&format=json`
-        )
+        );
 
-        resolve({ tracks: response.data.results.trackmatches })
+        resolve({ tracks: response.data.results.trackmatches });
       } catch (err) {
         reject({
           error: 'Error with Lastfm info. gathering.',
-          errorObject: err.response.data
-        })
+          errorObject: err.response.data,
+        });
       }
-    })
+    });
   }
 }
 
-module.exports = Lastfm
+module.exports = Lastfm;

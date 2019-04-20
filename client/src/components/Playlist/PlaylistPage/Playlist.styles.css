@@ -1,0 +1,12 @@
+.fa-trash {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: rgb(212, 64, 64);
+}
+
+.fa-trash:hover {
+  cursor: pointer;
+  color: rgb(172, 41, 41);
+}
