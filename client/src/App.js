@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 // TODO: Add private routes as well. Also, we must check if we can make authentification without Lastfm API.
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Home from './components/Home/Home';
 import Auth from './components/AuthLastfm/Auth';
@@ -66,8 +66,10 @@ class App extends Component {
                   path="/lastfm/connect"
                   component={LastfmAuth}
                 />
+                 <Route render={() => <Redirect to="/sorry/not-found" />} />
               </Switch>
-              <Route component={NotFound} exact path="/not-found" />
+             
+              <Route component={NotFound} exact path="/sorry/not-found" />
             </div>
             <AppBarMine />
           </div>

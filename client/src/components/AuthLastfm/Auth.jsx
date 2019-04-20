@@ -6,7 +6,7 @@ import { setUser, getUser } from '../../actions/authActions';
 import ArtistsUser from './ArtistsUser';
 import Ratings from '../Profile/Ratings/Ratings';
 
-const __propTypes = {
+const __propTypes = { // 
   setUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };

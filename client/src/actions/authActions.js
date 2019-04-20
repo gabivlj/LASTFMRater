@@ -16,11 +16,11 @@ export const setUser = (
   axios
     .post(`/api/user/${token}`, { username })
     .then(async res => {
-      const user = new User(res.data);
-      const apiUser = await axios.post(`/api/user/lastfm/${username}`, user);
       history.push('/auth/login');
-      deleteAuthTokenFromLS();
-      Auth.LogOut();
+      const user = new User(res.data);
+      const apiUser = await axios.post(`/api/user/lastfm/${username}`, user);      
+      deleteAuthTokenFromLS();      
+      dispatch(logOut())
     })
     .catch(err => console.log(err));
 };
