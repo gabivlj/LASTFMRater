@@ -6,6 +6,7 @@ import CurrentTracks from './Track/current/CurrentTracks';
 import TrackSearchComponent from './Track/TrackSearch.component';
 import { removeTrack, sendPlaylist } from '../../../actions/playlistActions';
 import { withRouter } from 'react-router-dom'
+import { LinearProgress } from '@material-ui/core';
 
 const propTypes_ = {
   auth: PropTypes.object.isRequired,
@@ -63,7 +64,7 @@ class PlaylistFormComponent extends Component {
 
   render() {
     const { name, description, img, tracks } = this.state;
-    const { addedTracks } = this.props.playlist;
+    const { addedTracks, sending } = this.props.playlist;
     return (
       <div>
         <h3 className="ml-3 mt-4">Fill the data for your playlist!</h3>
@@ -82,6 +83,7 @@ class PlaylistFormComponent extends Component {
             tracks={addedTracks}
             deleteTrack={this.props.removeTrack}
           />
+          { sending ? <LinearProgress /> : null}
           <form onSubmit={this.onSubmit}>
             <input type="submit" value="Send" className="btn btn-primary"/>
           </form>

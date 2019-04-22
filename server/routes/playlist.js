@@ -50,7 +50,7 @@ router.post(
     if (!user) {
       return res.status(400).json({ error: 'User not authentificated.' });
     }
-    if (!playlistName || !playlistDescription || !playlistCover) {
+    if (!playlistName || !playlistDescription) {
       return res.status(400).json({ error: 'Please, fill in all the fields.' });
     }
     try {
@@ -88,7 +88,8 @@ router.post('/:id', async (req, res) => {
     album,
   };
   // Make a simple check if the fields are all correct.
-  if (!duration || !name || !artist || !album)
+  console.log(req.body);
+  if (!name || !artist)
     return res.status(400).json({
       error:
         'Not all the fields are filled in, please make sure that you are passing everything right or there are no errors in the front end',
@@ -96,12 +97,12 @@ router.post('/:id', async (req, res) => {
 
   try {
     // Find the playlist
-    const pl = await Playlist.findOne({ user, id });
+    const pl = await Playlist.findOne({ user, _id: id });
     if (!pl) {
       return res.status(400).json({ error: 'Error finding the playlist.' });
     }
     // Add the track
-    const mongoTrack = await Track.findOne({ duration, name, artist, album });
+    const mongoTrack = await Track.findOne({ name, artist });
     if (!mongoTrack) {
       const trackMongo = await addTrack(
         track.duration,
@@ -112,29 +113,58 @@ router.post('/:id', async (req, res) => {
       );
       pl.tracks.push(trackMongo._id);
       const finalPlaylist_ = await pl.save();
-      return res.json(finalPlaylist_);
+      return res.json({ playlist: finalPlaylist_, newTrack: trackMongo });
     }
     pl.tracks.push(mongoTrack._id);
     const finalPlaylist = await pl.save();
-    return res.json(finalPlaylist);
+    return res.json({ playlist: finalPlaylist, newTrack: mongoTrack });
   } catch (err) {
     res.status(400).json({ error: 'Error posting the track.', errorinfo: err });
   }
 });
 
+/**
+ * @POST
+ * @PRIVATE
+ * @description Pass id of the playlist and the trackid and delete the track id from the tracks array or pass the index.
+ */
 router.post(
   '/delete/:id/:trackid',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const { id, trackid } = req.params;
-    const playlistToEdit = await Playlist.findOne({ _id: id });
-    playlistToEdit.tracks = playlistToEdit.tracks.filter(
-      track => track !== trackid
-    );
-    playlistToEdit
-      .save()
-      .then(pl => res.json(pl))
-      .catch(err => console.log(err));
+    try {
+      const { id, trackid } = req.params;
+      const { indexToDeleteFrom } = req.body;
+      const playlistToEdit = await Playlist.findOne({ _id: id });
+      if (
+        indexToDeleteFrom < 0 ||
+        indexToDeleteFrom >= playlistToEdit.tracks.length
+      ) {
+        console.log('iasijdasj');
+        const plId = playlistToEdit.tracks.map(track => String(track._id));
+        const index = plId.indexOf(trackid);
+        if (index >= 0)
+          playlistToEdit.tracks = [
+            ...playlistToEdit.tracks.slice(0, index),
+            ...playlistToEdit.tracks.slice(index + 1, playlistToEdit.length),
+          ];
+      } else {
+        playlistToEdit.tracks = [
+          ...playlistToEdit.tracks.slice(0, indexToDeleteFrom),
+          ...playlistToEdit.tracks.slice(
+            indexToDeleteFrom + 1,
+            playlistToEdit.length
+          ),
+        ];
+      }
+      playlistToEdit
+        .save()
+        .then(pl => res.json({ tracks: pl.tracks }))
+        .catch(err => console.log(err));
+    } catch (err) {
+      console.log(err);
+      return res.status(404).json({ error: 'Error ?' });
+    }
   }
 );
 

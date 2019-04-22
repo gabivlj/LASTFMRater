@@ -45,7 +45,10 @@ export const removeTrack = track => dispatch => {
 export const sendPlaylist = (user, playlistName, playlistDescription, playlistCover, history, tracks = []) => 
     async dispatch => {
   const sendToApi = { user, playlistName, playlistDescription, playlistCover, tracks };
-  const [errors, response] = await handleError(
+  dispatch({
+    type: 'SENDING_PLAYLIST'
+  })
+  const [response, errors] = await handleError(
     axios.post('/api/playlist', sendToApi)
   );
   if (errors) {
@@ -54,6 +57,7 @@ export const sendPlaylist = (user, playlistName, playlistDescription, playlistCo
   dispatch({
     type: 'SUCCESFUL_API_CALL_PLAYLIST'
   });
+  
   history.push('/me/profile');
 }
 
@@ -63,5 +67,41 @@ export const getPlaylist = _id => async dispatch => {
   dispatch({
     type: 'SET_PLAYLIST',
     payload: playlist.data.playlist,
+  })
+}
+
+export const deleteTrackFromPlaylist = (trackId, playlistId, index = null) => async dispatch => {
+  const [tracks, error] = await handleError(
+    axios.post(`/api/playlist/delete/${playlistId}/${trackId}`, { indexToDeleteFrom: index})
+  );
+  if (error) {
+    console.log(error);
+    return dispatch({
+      type: 'ERROR_DELETE_TRACK_FROM_PLAYLIST'
+    });
+  }
+  dispatch({
+    type: 'DELETE_TRACK_FROM_PLAYLIST',
+    payload: {
+      trackId, 
+      tracks: tracks.data.tracks,
+      index
+    }
+  });
+}
+
+export const addToPlaylistFromPlaylistEdit = (track, playlistId) => async dispatch => {
+  const [response, error] = await handleError(
+    axios.post(`/api/playlist/${playlistId}`, track)
+  );
+  if (error) {
+    return console.log(error);
+  } 
+  console.log(response.data);
+  dispatch({
+    type: 'ADD_TRACK_PLAYLIST_EDIT',
+    payload: {
+      newTrack: response.data.newTrack      
+    }
   })
 }
