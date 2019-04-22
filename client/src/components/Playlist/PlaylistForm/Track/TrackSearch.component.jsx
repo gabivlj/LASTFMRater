@@ -4,7 +4,7 @@ import { addTrack, searchTracks } from '../../../../actions/playlistActions';
 import InputBorderline from '../../../Common/InputBorderline';
 import TrackSearch from './visuals/TrackSearch';
 
-const TrackSearchComponent = ({ ...props }) => {
+const TrackSearchComponent = ({ addTrackOverride, ...props }) => {
   const { searchedTracks } = props.playlist;
 
   function searchTrack(query) {
@@ -29,7 +29,7 @@ const TrackSearchComponent = ({ ...props }) => {
         <br />
         <button className="btn-primary btn ml-3">Search</button>
       </form>
-      <TrackSearch tracks={searchedTracks} addTrack={props.addTrack} />
+      <TrackSearch tracks={searchedTracks} addTrack={addTrackOverride || props.addTrack} />
     </div>
   );
 };

@@ -2,16 +2,36 @@ const initialState = {
   searchedTracks: [],
   addedTracks: [],
   isLoading: false,
-  playlist: {}
+  playlist: {},
+  sending: false,
 };
+
+const filterDelete = (tracks, trackid, index = null) => {
+  let realIndex = index
+  if (index === null || index === undefined) {
+    const idTracks = tracks.map(track => track._id);
+    realIndex = idTracks.indexOf(trackid);
+  }
+  return [...tracks.slice(0, realIndex), ...tracks.slice(realIndex + 1, tracks.length)]
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'SENDING_PLAYLIST':
+      return {
+        ...state,
+        sending: !state.sending
+      }
     case 'ERROR_PLAYLIST':
       return {
         ...state,
         error: action.payload,
       };
+    case 'SUCCESFUL_API_CALL_PLAYLIST':
+      return {
+        ...state,
+        sending: false
+      }
     case 'ADD_TRACK_PLAYLIST':
       return {
         ...state,
@@ -47,6 +67,24 @@ export default (state = initialState, action) => {
       return {
         ...state,
         playlist: action.payload
+      }
+    case 'DELETE_TRACK_FROM_PLAYLIST':
+      return {
+        ...state,
+        playlist: { 
+          ...state.playlist, 
+          tracksShow: [...filterDelete(state.playlist.tracksShow, action.payload.trackId, action.payload.index)],
+          tracks: [...action.payload.tracks],
+        }
+      }
+    case 'ADD_TRACK_PLAYLIST_EDIT':
+      return {
+        ...state,
+        playlist: {
+          ...state.playlist,
+          tracksShow: [...state.playlist.tracksShow, action.payload.newTrack],
+          tracks: [...state.playlist.tracks, action.payload.newTrack._id]
+        }
       }
     default:
       return {

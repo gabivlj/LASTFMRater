@@ -20,13 +20,14 @@ module.exports = async function addTrack(duration, name, artist, album, Track) {
       album,
     };
     const [error, mongoTrack] = await handleError(
-      Track.findOne({ duration, name, artist, album })
+      Track.findOne({ name, artist })
     );
     if (error) reject(error);
     if (!mongoTrack) {
       const lastfmTrack = await Lastfm.getTrack(track.name, track.artist);
+      console.log(lastfmTrack);
       track.duration = lastfmTrack.duration;
-      track.album = lastfmTrack.album.title;
+      track.album = lastfmTrack.album ? lastfmTrack.album.title : 'No album';
       const T = new Track(track);
       const tr = await T.save();
       resolve(tr);
