@@ -149,6 +149,7 @@ router.post(
             ...playlistToEdit.tracks.slice(index + 1, playlistToEdit.length),
           ];
       } else {
+        console.log(playlistToEdit, indexToDeleteFrom);
         playlistToEdit.tracks = [
           ...playlistToEdit.tracks.slice(0, indexToDeleteFrom),
           ...playlistToEdit.tracks.slice(
@@ -156,6 +157,7 @@ router.post(
             playlistToEdit.length
           ),
         ];
+        console.log(playlistToEdit, indexToDeleteFrom);
       }
       playlistToEdit
         .save()
