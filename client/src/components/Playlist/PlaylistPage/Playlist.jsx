@@ -18,7 +18,7 @@ class Playlist extends Component {
 
   deleteTrack(trackId, index = null) {
     console.log(index);
-    this.props.deleteTrackFromPlaylist(trackId, this.props.playlist._id);
+    this.props.deleteTrackFromPlaylist(trackId, this.props.playlist._id, index);
   }
 
   render() {
