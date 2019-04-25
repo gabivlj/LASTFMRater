@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {} from '../../actions/authActions';
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  auth: PropTypes.object.isRequired,
+};
 
 class Register extends Component {
+  static propTypes = propTypes;
+
   state = {
     email: '',
     password: '',

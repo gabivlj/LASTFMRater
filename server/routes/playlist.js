@@ -134,13 +134,18 @@ router.post(
   async (req, res) => {
     try {
       const { id, trackid } = req.params;
-      const { indexToDeleteFrom } = req.body;
+      let { indexToDeleteFrom } = req.body;
       const playlistToEdit = await Playlist.findOne({ _id: id });
+      // If the index passed is null just set it to -1
+      if (indexToDeleteFrom === null || indexToDeleteFrom === undefined) {
+        console.warn('Remember to pass index to the route, faster processing.');
+        indexToDeleteFrom = -1;
+      }
+      // If the index is not valid just make a map indexOf slice. Else slice on index.
       if (
         indexToDeleteFrom < 0 ||
         indexToDeleteFrom >= playlistToEdit.tracks.length
       ) {
-        console.log('iasijdasj');
         const plId = playlistToEdit.tracks.map(track => String(track._id));
         const index = plId.indexOf(trackid);
         if (index >= 0)
@@ -149,7 +154,6 @@ router.post(
             ...playlistToEdit.tracks.slice(index + 1, playlistToEdit.length),
           ];
       } else {
-        console.log(playlistToEdit, indexToDeleteFrom);
         playlistToEdit.tracks = [
           ...playlistToEdit.tracks.slice(0, indexToDeleteFrom),
           ...playlistToEdit.tracks.slice(
@@ -157,7 +161,6 @@ router.post(
             playlistToEdit.length
           ),
         ];
-        console.log(playlistToEdit, indexToDeleteFrom);
       }
       playlistToEdit
         .save()
@@ -165,7 +168,9 @@ router.post(
         .catch(err => console.log(err));
     } catch (err) {
       console.log(err);
-      return res.status(404).json({ error: 'Error ?' });
+      return res
+        .status(404)
+        .json({ error: 'Bug with the system', message: err });
     }
   }
 );

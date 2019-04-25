@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-const buttonStyle = {
-  textDecoration: 'none',
-  border: 'none',
-  background: 'none',
-  cursor: 'pointer',
-};
+const propTypes = {
+  puntuation: PropTypes.number.isRequired,
+  generalScore: PropTypes.number.isRequired
+}
 
-export default function Stars({ puntuation, generalScore}) {
+function Stars({ puntuation, generalScore}) {
   let stars = []  
   for (let i = 0; i < generalScore; i++) {
     if (i >= puntuation) {
@@ -20,3 +19,7 @@ export default function Stars({ puntuation, generalScore}) {
     <div>{stars}</div>
   )
 }
+
+Stars.propTypes = propTypes;
+
+export default Stars;

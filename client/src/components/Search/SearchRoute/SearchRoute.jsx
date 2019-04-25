@@ -12,6 +12,7 @@ import ArtistsComponent from './artists/Artists.component';
 const __propTypes = {
   search: PropTypes.object.isRequired,
   searchAlbums: PropTypes.func.isRequired,
+  searchArtists: PropTypes.func.isRequired,
 };
 
 class SearchRoute extends Component {

@@ -1,7 +1,15 @@
 import React from 'react'
 import Stars from './Stars';
+import PropTypes from 'prop-types';
 
-export default function Rating({ rating, generalScore, artistName, albumName }) {
+const propTypes = {
+  rating: PropTypes.number.isRequired,
+  generalScore: PropTypes.number.isRequired,
+  artistName: PropTypes.string.isRequired,
+  albumName: PropTypes.string.isRequired,
+};
+
+function Rating({ rating, generalScore, artistName, albumName }) {
   return (
     <div>
       <div className="row">
@@ -19,3 +27,7 @@ export default function Rating({ rating, generalScore, artistName, albumName }) 
     </div>
   )
 }
+
+Rating.propTypes = propTypes;
+
+export default Rating;

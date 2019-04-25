@@ -13,6 +13,12 @@ import { Link } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from 'react-redux';
 import { logOut } from '../../../actions/authActions'
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  auth: PropTypes.object.isRequired,
+  logOut: PropTypes.func.isRequired,
+};
 
 const styles = theme => ({
   root: {
@@ -109,9 +115,10 @@ function PopComponent({ auth, logOut }) {
 const mapStateToProps = state => ({
   auth: state.auth,
 });
+
+PopComponent.propTypes = propTypes;
+
 export default connect(
   mapStateToProps,
-  {
-    logOut
-  }
+  { logOut }
 )(withStyles(styles)(PopComponent));

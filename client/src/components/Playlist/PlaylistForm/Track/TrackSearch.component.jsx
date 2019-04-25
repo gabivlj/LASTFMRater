@@ -3,6 +3,14 @@ import { connect } from 'react-redux';
 import { addTrack, searchTracks } from '../../../../actions/playlistActions';
 import InputBorderline from '../../../Common/InputBorderline';
 import TrackSearch from './visuals/TrackSearch';
+import PropTypes from 'prop-types'
+
+const propTypes = {
+  addTrackOverride: PropTypes.func,
+  addTrack: PropTypes.func.isRequired,
+  searchTracks: PropTypes.func.isRequired,
+  playlist: PropTypes.object.isRequired
+};
 
 const TrackSearchComponent = ({ addTrackOverride, ...props }) => {
   const { searchedTracks } = props.playlist;
@@ -37,6 +45,8 @@ const TrackSearchComponent = ({ addTrackOverride, ...props }) => {
 const mapStateToProps = state => ({
   playlist: state.playlist,
 });
+
+TrackSearchComponent.propTypes = propTypes;
 
 export default connect(
   mapStateToProps,

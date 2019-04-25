@@ -1,5 +1,12 @@
 import React from 'react';
 import InputBorderline from '../../../Common/InputBorderline';
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 const GeneralForm = ({
   name,
@@ -32,5 +39,7 @@ const GeneralForm = ({
     </div>
   </div>
 );
+
+GeneralForm.propTypes = propTypes;
 
 export default GeneralForm;

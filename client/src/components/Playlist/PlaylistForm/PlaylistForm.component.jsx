@@ -10,6 +10,9 @@ import { LinearProgress } from '@material-ui/core';
 
 const propTypes_ = {
   auth: PropTypes.object.isRequired,
+  playlist: PropTypes.object.isRequired,
+  sendPlaylist: PropTypes.func.isRequired,
+  removeTrack: PropTypes.func.isRequired,
 };
 
 class PlaylistFormComponent extends Component {
@@ -34,17 +37,19 @@ class PlaylistFormComponent extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.sendPlaylist(
-      this.props.auth.apiUser.user,
-      this.state.name,
-      this.state.description,
-      this.state.img,
-      this.props.history,
-      this.props.playlist.addedTracks
+    const { auth, history, playlist, sendPlaylist } = this.props;
+    const { name, description, img } = this.state;
+    sendPlaylist(
+      auth.apiUser.user,
+      name,
+      description,
+      img,
+      history,
+      playlist.addedTracks
     );
   }
 
-  componentWillUpdate(nextProps) {
+  componentWillUpdate(nextProps) {    
     if (nextProps.auth.apiUser && !this.state.user) {
       this.setState({
         user: nextProps.auth.apiUser.user,

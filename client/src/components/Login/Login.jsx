@@ -3,9 +3,17 @@ import { connect } from 'react-redux';
 import { logIn } from '../../actions/authActions';
 import InputBorderline from '../Common/InputBorderline';
 import logo from '../../logo.png';
-import store from '../../store'
+import store from '../../store';
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  auth: PropTypes.object.isRequired,
+  logIn: PropTypes.func.isRequired,
+};
 
 class Login extends Component {
+  static propTypes = propTypes;
+
   state = {
     email: '',
     password: '',

@@ -3,9 +3,6 @@ import logo from '../../logo.png';
 import { Link, withRouter } from 'react-router-dom';
 
 class NotFound extends React.Component {
-  componentDidMount() {
-    
-  }
   render() {
     return (
       <div className="container" style={{marginLeft: '37.5%'}}>

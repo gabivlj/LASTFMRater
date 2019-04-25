@@ -5,8 +5,17 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-
 import './trackSearch.styles.css';
+
+const propTypes = {
+  title: PropTypes.string.isRequired,
+  artist: PropTypes.string.isRequired,
+  className: PropTypes.string,
+  img: PropTypes.string,
+  add: PropTypes.bool,
+  onClick: PropTypes.func,
+  mbid: PropTypes.string,
+}
 
 const styles = theme => ({
   card: {
@@ -80,5 +89,7 @@ const TrackCard = ({
     </div>
   );
 };
+
+TrackCard.propTypes = propTypes;
 
 export default withStyles(styles, { withTheme: true })(TrackCard);
