@@ -54,7 +54,6 @@ class LoadList extends Component {
 
     if (albums.length > 0) {
       albumsSearchResult = albums.map((album, index) => (
-        // TODO: Basically, load artists, playlists, and users...
         <AlbumItem
           key={index}
           className="col-md-4 w-80"

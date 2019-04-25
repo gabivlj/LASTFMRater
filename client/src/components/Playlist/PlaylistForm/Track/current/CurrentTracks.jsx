@@ -1,6 +1,12 @@
 import React from 'react';
 import TrackCard from '../visuals/TrackCard';
 import './currentTracks.styles.css';
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  tracks: PropTypes.array.isRequired,
+  deleteTrack: PropTypes.func.isRequired,
+};
 
 const CurrentTracks = ({ tracks, deleteTrack, ...props }) => (
   <div className="row currentracks">
@@ -20,5 +26,7 @@ const CurrentTracks = ({ tracks, deleteTrack, ...props }) => (
     ))}
   </div>
 );
+
+CurrentTracks.propTypes = propTypes;
 
 export default CurrentTracks;

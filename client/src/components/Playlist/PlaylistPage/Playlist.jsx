@@ -2,12 +2,23 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { getPlaylist, deleteTrackFromPlaylist, addToPlaylistFromPlaylistEdit } from '../../../actions/playlistActions';
 import hourFormat from '../../../utils/hourFormat';
-import { LinearProgress, Button } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import './Playlist.styles.css'
 import TrackSearchComponent from '../PlaylistForm/Track/TrackSearch.component';
 import guiidGenerator from '../../../utils/idCreator';
+import PropTypes from 'prop-types';
+import TrackPlaylist from './TrackPlaylist/TrackPlaylist';
+
+const propTypes = {
+  user: PropTypes.string.isRequired,
+  playlist: PropTypes.object.isRequired,
+  getPlaylist: PropTypes.func.isRequired,
+  deleteTrackFromPlaylist: PropTypes.func.isRequired,
+  addToPlaylistFromPlaylistEdit: PropTypes.func.isRequired
+};
 
 class Playlist extends Component {
+  static propTypes = propTypes
   state = {
     edit: false
   }
@@ -29,28 +40,19 @@ class Playlist extends Component {
     let trackRender;
     if (tracksShow && tracksShow.length > 0) {
       trackRender = tracksShow.map((track, index) => 
-      <li
-        key={guiidGenerator()}
-        className="list-group-item d-flex justify-content-between align-items-center"
-        draggable={edit}
-      >
-        {track.name} by {track.artist}
-        <span>{edit ? 
-          <button             
-            className="fa fa-trash" onClick={() => this.deleteTrack(track._id, index)}/>
-           : null}</span>
-        <span className="badge badge-primary badge-pill">          
-          {hourFormat.fmtMS(track.duration)}
-        </span>
-      </li>
+        <TrackPlaylist 
+          key={guiidGenerator()}
+          name={track.name}
+          artist={track.artist}
+          deleteTrack={this.deleteTrack}
+          duration={hourFormat.fmtMS(track.duration)}
+          index={index}
+          id={track._id}
+          edit={edit}
+        />      
       );    
     }
-
-    // duration = playlist.tracks.reduce(
-    //   (total, current) => total + parseInt(current.duration),
-    //   0
-    // );
-    console.log(trackRender);
+    
     return (
       <div className="jumbotron">              
         <div className="container">
@@ -81,10 +83,14 @@ class Playlist extends Component {
             : <LinearProgress />            
         }
           <div>
-            <TrackSearchComponent addTrackOverride={(track) => { 
-              track.user = this.props.user;
-              this.props.addToPlaylistFromPlaylistEdit(track, this.props.playlist._id);
-              }} />
+            {
+            user === playlist.user ? 
+              <TrackSearchComponent addTrackOverride={(track) => { 
+                track.user = this.props.user;
+                this.props.addToPlaylistFromPlaylistEdit(track, this.props.playlist._id);
+               }} />
+              : null 
+            }
           </div>
         </div>
       </div>

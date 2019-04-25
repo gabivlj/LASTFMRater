@@ -1,11 +1,11 @@
 import React from 'react';
 import TrackCard from './TrackCard';
+import PropTypes from 'prop-types';
 
-/* <TrackCard
-        className="col-md-3 m-2"
-        artist="Arctic Monkeys"
-        title="Do I wanna know?"
-      /> */
+const propTypes = {
+  tracks: PropTypes.array.isRequired,
+  addTrack: PropTypes.func.isRequired
+}
 
 const TrackSearch = ({ tracks, addTrack }) => {
   const showTracks = tracks.map((track, index) => (
@@ -25,5 +25,7 @@ const TrackSearch = ({ tracks, addTrack }) => {
   ));
   return <div className="row">{showTracks}</div>;
 };
+
+TrackSearch.propTypes = propTypes;
 
 export default TrackSearch;

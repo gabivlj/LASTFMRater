@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import KEYS from '../../API';
+import PropTypes from 'prop-types';
 
+const propTypes = {
+  auth: PropTypes.object.isRequired
+};
 
 class Configuration extends Component {
   render() {
@@ -26,7 +30,10 @@ class Configuration extends Component {
   }
 }
 
+Configuration.propTypes = propTypes;
+
 const mapStateToProps = (state) => ({
   auth: state.auth
-})
+});
+
 export default connect(mapStateToProps, {})(Configuration)

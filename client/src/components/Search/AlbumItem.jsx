@@ -32,7 +32,20 @@ const styles = theme => ({
   },
 });
 
-function MediaControlCard(props) {
+const propTypes = {
+  classes: PropTypes.object.isRequired,
+  name: PropTypes.string.isRequired,
+  artist: PropTypes.string.isRequired,
+  className: PropTypes.string, 
+  img: PropTypes.object
+}
+
+const defaultProps = {
+  className: '',
+  img: { '#text': ''}
+};
+
+function AlbumItem(props) {
   const { classes, name, artist, style, className, img } = props;
 
   return (
@@ -56,9 +69,11 @@ function MediaControlCard(props) {
   );
 }
 
-MediaControlCard.propTypes = {
+AlbumItem.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(MediaControlCard);
+AlbumItem.defaultProps = defaultProps;
+
+export default withStyles(styles, { withTheme: true })(AlbumItem);

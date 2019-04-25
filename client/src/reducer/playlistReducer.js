@@ -4,6 +4,7 @@ const initialState = {
   isLoading: false,
   playlist: {},
   sending: false,
+  currentDragTrack: {},
 };
 
 const filterDelete = (tracks, trackid, index = null) => {
@@ -86,9 +87,16 @@ export default (state = initialState, action) => {
           tracks: [...state.playlist.tracks, action.payload.newTrack._id]
         }
       }
-    default:
+    case 'SET_CURRENT_TRACK_DRAG':
       return {
         ...state,
+        currentDragTrack: {
+          ...action.payload
+        }
+      }
+    default:
+      return {
+        ...state        
       };
   }
 };
