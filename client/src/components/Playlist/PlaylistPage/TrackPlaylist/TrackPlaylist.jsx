@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import './TrackPlaylist.styles.css';
 import store from '../../../../store';
 import { connect } from 'react-redux';
+import { interchangeTracks } from '../../../../actions/playlistActions';
 
 /**
  * @description Functional component that represents the track from the array and handles all the dragging
  */
-function TrackPlaylist({index, name, artist, duration, deleteTrack, id, edit, currentDragTrack}) {
+function TrackPlaylist({index, name, artist, duration, deleteTrack, id, edit, currentDragTrack, playlistId, interchangeTracks, tracksShow}) {
   const [classNameBorder, setClassNameBorder] = useState('');
+
+  function deleteT() {
+    deleteTrack(id, playlistId, index);
+  }
 
   function onDragStart() {
     // ? Set on Redux current dragging track. 
@@ -30,7 +35,8 @@ function TrackPlaylist({index, name, artist, duration, deleteTrack, id, edit, cu
    * */
   function onDrop(event) {
     setClassNameBorder('');
-    // TODO API Call to change.
+    console.log(currentDragTrack.index, index, playlistId, tracksShow);
+    interchangeTracks(currentDragTrack.index, index, playlistId, tracksShow);    
   }
 
   function onDragOver(event) {
@@ -56,7 +62,7 @@ function TrackPlaylist({index, name, artist, duration, deleteTrack, id, edit, cu
       {index + 1}. {'    '} {name} by {artist}
       <span>{edit ? 
         <button             
-          className="fa fa-trash" onClick={() => deleteTrack(id, index)}/>
+          className="fa fa-trash" onClick={deleteT}/>
           : null}</span>
       <span className="badge badge-primary badge-pill">          
         {duration}
@@ -73,15 +79,17 @@ TrackPlaylist.propTypes = {
   id: PropTypes.string.isRequired,
   deleteTrack: PropTypes.func.isRequired,
   edit: PropTypes.bool.isRequired,
-  currentDragTrack: PropTypes.object
+  currentDragTrack: PropTypes.object,
+  playlistId: PropTypes.string.isRequired,
+  interchangeTracks: PropTypes.func.isRequired,
 };
 
 TrackPlaylist.defaultProps = {
   currentDragTrack: undefined
-}
+};
 
 const mapStateToProps = (state) => ({
   currentDragTrack: state.playlist.currentDragTrack
-})
+});
 
-export default connect(mapStateToProps, {})(TrackPlaylist);
+export default connect(mapStateToProps, { interchangeTracks })(TrackPlaylist);

@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { LinearProgress } from '@material-ui/core';
-import { getAlbum } from '../../actions/albumActions';
+import { getAlbum, addAlbumRating } from '../../actions/albumActions';
 import store from '../../store';
 import hourFormat from '../../utils/hourFormat';
 import AlbumRating from './AlbumRating';
+import RatingsCommon from '../Common/RatingsCommon';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
@@ -126,6 +127,16 @@ class Album extends Component {
                 </div>
                 {/* TODO: Pass album and currentUser props so it has better performance and it's more useful but whatever */}
                 <AlbumRating />
+                <br/>
+                {/* testing */}
+                <RatingsCommon
+                  ratings={album.ratings} 
+                  auth={this.props.currentUser ? null : true} 
+                  elementWithRatings={album} 
+                  setRatings={this.props.addAlbumRating}
+                  username={!this.props.currentUser ? '' : this.props.currentUser.user}
+                  id={!this.props.currentUser ? '' :this.props.currentUser.id}
+                />
               </div>
             ) : (
               <LinearProgress />
@@ -139,8 +150,9 @@ class Album extends Component {
 const mapStateToProps = state => ({
   album: state.album,
   currentUser: state.auth.apiUser,
+  auth: state.auth,
 });
 export default connect(
   mapStateToProps,
-  { getAlbum }
+  { getAlbum, addAlbumRating }
 )(Album);

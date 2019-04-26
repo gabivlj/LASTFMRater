@@ -1,4 +1,4 @@
-1. Change order of tracks in a playlist dragging them.
+1. \*\*\*\* Change order of tracks in a playlist dragging them.
 2. \*\*\*\* Delete track in a playlist - DONE
 3. See your created playlists
 4. Search other's playlist in the search bar

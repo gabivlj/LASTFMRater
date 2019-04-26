@@ -94,6 +94,15 @@ export default (state = initialState, action) => {
           ...action.payload
         }
       }
+    case 'SET_TRACKS':  
+      return {
+        ...state,
+        playlist: {
+          ...state.playlist,
+          tracksShow: [...action.payload.tracksForShowing],
+          tracks: [...action.payload.tracksId],
+        },
+      }
     default:
       return {
         ...state        
