@@ -27,11 +27,6 @@ class Playlist extends Component {
     this.props.getPlaylist(this.props.match.params.id);
   }
 
-  deleteTrack(trackId, index = null) {
-    console.log(index);
-    this.props.deleteTrackFromPlaylist(trackId, this.props.playlist._id, index);
-  }
-
   render() {
     const { playlist } = this.props;
     const { tracksShow } = playlist;
@@ -44,11 +39,13 @@ class Playlist extends Component {
           key={guiidGenerator()}
           name={track.name}
           artist={track.artist}
-          deleteTrack={this.deleteTrack}
+          deleteTrack={this.props.deleteTrackFromPlaylist}
           duration={hourFormat.fmtMS(track.duration)}
           index={index}
           id={track._id}
           edit={edit}
+          playlistId={playlist._id}
+          tracksShow={tracksShow}
         />      
       );    
     }

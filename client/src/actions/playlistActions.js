@@ -105,3 +105,21 @@ export const addToPlaylistFromPlaylistEdit = (track, playlistId) => async dispat
     }
   })
 }
+
+export const interchangeTracks = (index1, index2, playlistId, tracksShow) => async dispatch => {
+  const [{ data }, error] = await handleError(
+    axios.post(`/api/playlist/change/${index1}/${index2}`, { playlistId, tracksShow })
+  );
+  if (error) {
+    console.warn(error);
+    return null;
+  }
+  dispatch({
+    type: 'SET_TRACKS',
+    payload: data
+  })
+}
+
+export const setTracks = (indexToInterchange, indexToSetFrom) => async dispatch => {
+
+}

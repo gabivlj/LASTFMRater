@@ -14,7 +14,7 @@ const FM = new Lastfm(null);
 router.get('/:id', (req, res) => {
   Album.findById({ _id: req.params.id })
     .then(album => res.json(album))
-    .catch(err => res.status(400).catch({ error: 'Fatal error' }));
+    .catch(err => res.status(404).catch({ error: 'Fatal error' }));
 });
 
 /**
@@ -72,7 +72,6 @@ router.get('/search/:name', async (req, res) => {
     // TODO Make our DB find albums like the lastfm api
     // const album = await Album.find({ name })
     const album__ = await FM.searchAlbums(name, limit, page);
-
     return res.json(album__);
   } catch (err) {
     res.status(400).json('Error finding albums');
@@ -100,12 +99,15 @@ router.post(
         const index = album.ratings
           .map(rating => rating.user)
           .indexOf(req.body.userid);
+        // If rating does not exist.
         if (index <= -1) {
+          // Add it.
           album.ratings.push({
             puntuation: req.body.puntuation,
             user: req.body.userid,
           });
         } else {
+          // else replace
           album.ratings.splice(index, 1, {
             puntuation: req.body.puntuation,
             user: req.body.userid,
@@ -119,7 +121,7 @@ router.post(
         return res.status(400).json('Error finding the album.');
       }
     } catch (err) {
-      return res.status(400).json('Error .');
+      return res.status(404).json('Error.');
     }
   }
 );

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 
+const handleError = require('../lib/handleError');
 const addTrack = require('../lib/addTrack');
 const Playlist = require('../models/Playlist');
 const Track = require('../models/Track');
@@ -172,6 +173,94 @@ router.post(
         .status(404)
         .json({ error: 'Bug with the system', message: err });
     }
+  }
+);
+
+/**
+ * @POST
+ * @PRIVATE
+ * @description Interchange 2 tracks between them by index.
+ * @param {String} playlistId Pass playlist id.
+ */
+
+router.post(
+  '/change/:index1/:indexToSet',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { index1, indexToSet } = req.params;
+    const { playlistId } = req.body;
+    const { tracksShow } = req.body;
+    const [error, playlist] = await handleError(
+      Playlist.findOne({ _id: playlistId })
+    );
+    console.log(index1, indexToSet);
+    if (error) {
+      return res
+        .status(400)
+        .json({ error: 'Playlist not found or error with server' });
+    }
+    const tracksShowReduced = tracksShow.reduce(
+      (prev, current, index) =>
+        index === parseInt(indexToSet)
+          ? (() => {
+              prev.push(tracksShow[index1], current);
+              return [...prev];
+            })()
+          : (() =>
+              parseInt(index1) === index ? [...prev] : [...prev, current])(),
+      []
+    );
+
+    playlist.tracks = playlist.tracks.reduce(
+      (prev, current, index) =>
+        index === parseInt(indexToSet)
+          ? (() => [...prev, playlist.tracks[index1], current])()
+          : (() =>
+              parseInt(index1) === index ? [...prev] : [...prev, current])(),
+      []
+    );
+    console.log('!!!!!', tracksShowReduced, tracksShow);
+    playlist
+      .save()
+      .then(pl =>
+        res.json({ tracksId: pl.tracks, tracksForShowing: tracksShowReduced })
+      )
+      .catch(err =>
+        res.status(404).json({ error: 'Error with server', msg: err })
+      );
+  }
+);
+
+router.post(
+  '/interchange/:index1/:index2',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { index1, index2 } = req.params;
+    const { playlistId } = req.body;
+    const { tracksShow } = req.body;
+    const [error, playlist] = await handleError(
+      Playlist.findOne({ _id: playlistId })
+    );
+    if (error) {
+      return res
+        .status(400)
+        .json({ error: 'Playlist not found or error with server' });
+    }
+
+    const subs = playlist.tracks[index1];
+    playlist.tracks[index1] = playlist.tracks[index2];
+    playlist.tracks[index2] = subs;
+    const subs1 = tracksShow[index1];
+    tracksShow[index1] = tracksShow[index2];
+    tracksShow[index2] = subs1;
+    playlist
+      .save()
+      .then(pl =>
+        res.json({ tracksId: pl.tracks, tracksForShowing: tracksShow })
+      )
+      .catch(err =>
+        res.status(404).json({ error: 'Error with server', msg: err })
+      );
   }
 );
 
