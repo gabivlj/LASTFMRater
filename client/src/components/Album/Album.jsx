@@ -126,16 +126,16 @@ class Album extends Component {
                   Total duration: {hourFormat.fmtMSS(duration)}
                 </div>
                 {/* TODO: Pass album and currentUser props so it has better performance and it's more useful but whatever */}
-                <AlbumRating />
+                {/* <AlbumRating /> */}
                 <br/>
-                {/* testing */}
+                {/* TODO: We are cuerrently testing this component for reusable. */}
                 <RatingsCommon
                   ratings={album.ratings} 
-                  auth={this.props.currentUser ? null : true} 
+                  auth={this.props.currentUser || null} 
                   elementWithRatings={album} 
                   setRatings={this.props.addAlbumRating}
                   username={!this.props.currentUser ? '' : this.props.currentUser.user}
-                  id={!this.props.currentUser ? '' :this.props.currentUser.id}
+                  elementId={album._id}                  
                 />
               </div>
             ) : (
