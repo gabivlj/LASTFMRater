@@ -1,5 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
+// Array of ratings
+  /**
+   * @param {Array} ratings { puntuation, id }
+   * @param {Object} auth userApi: {auth, username, id ...}
+   * @param {Object} elementWithRatings { __v }
+   * @param {Function} setRatings (elementId, i, username, auth.id)
+   * @param {String} elementId
+   * @param {String} username 
+   * 
+   */
+const propTypes = {  
+  ratings: PropTypes.array.isRequired,
+  auth: PropTypes.object.isRequired,
+  elementWithRatings: PropTypes.object.isRequired,
+  setRatings: PropTypes.func.isRequired,
+  elementId: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+}
 
 const buttonStyle = {
   textDecoration: 'none',
@@ -8,7 +27,7 @@ const buttonStyle = {
   cursor: 'pointer',
 };
 
-function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, id, username }) {
+function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementId, username }) {
   const [state, setState] = useState({
     rating: 0,
     actualRating: 0,
@@ -24,14 +43,11 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, id, user
   function handleClick(i) {
     if (auth) {
       setState((prevState) => ({ ...state, actualRating: i }));
-      /**
-       * FIXME: THIS IS BAD CHANGE. TODO TODO TODO
-       */
       setRatings(
-        id,
+        elementId,
         i,
         username,
-        auth.apiUser.id
+        auth.id
       );
     } else {
       setState((prev) => ({
@@ -112,5 +128,6 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, id, user
   )
 }
 
+RatingsCommon.propTypes = propTypes;
 
 export default RatingsCommon;
