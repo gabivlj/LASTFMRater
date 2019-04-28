@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { LinearProgress } from '@material-ui/core';
+import React, { Component } from './node_modules/react';
+import { connect } from './node_modules/react-redux';
+import PropTypes from './node_modules/prop-types';
+import { LinearProgress } from './node_modules/@material-ui/core';
 import { setUser, getUser } from '../../actions/authActions';
 import ArtistsUser from './ArtistsUser';
 import Ratings from '../Profile/Ratings/Ratings';
+import PlaylistShowcase from '../Profile/Playlist/PlaylistShowcase';
 
 const __propTypes = { // 
   setUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
 class Auth extends Component {
@@ -53,6 +55,7 @@ class Auth extends Component {
 
   render() {
     const { user } = this.state;
+    const { profile } = this.props;
     if (!user) {
     }
     return (
@@ -76,12 +79,18 @@ class Auth extends Component {
         ) : (
           <ArtistsUser history={this.props.history} />
         )}
+        { profile.isLoadingPlaylists ? ( 
+          <LinearProgress /> 
+        ) : ( 
+          <PlaylistShowcase 
+            playlists={profile.playlists} 
+          />)}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({ auth: state.auth });
+const mapStateToProps = state => ({ auth: state.auth, profile: state.profile });
 
 export default connect(
   mapStateToProps,

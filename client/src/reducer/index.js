@@ -4,6 +4,7 @@ import artistReducer from './artistReducer';
 import albumReducer from './albumReducer';
 import searchReducer from './searchReducer';
 import playlistReducer from './playlistReducer';
+import profileReducer from './profileReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   album: albumReducer,
   search: searchReducer,
   playlist: playlistReducer,
+  profile: profileReducer,
 });
