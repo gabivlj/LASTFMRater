@@ -11,6 +11,7 @@ const user = require('./routes/user');
 const artist = require('./routes/artist');
 const playlist = require('./routes/playlist');
 const track = require('./routes/track');
+const profile = require('./routes/profile');
 
 const passportConfig = require('./config/passport');
 
@@ -40,6 +41,7 @@ app.use('/api/user', user);
 app.use('/api/artist', artist);
 app.use('/api/playlist', playlist);
 app.use('/api/track', track);
+app.use('/api/profile', profile);
 
 // Port listening
 const PORT = process.env.PORT || 8000;
