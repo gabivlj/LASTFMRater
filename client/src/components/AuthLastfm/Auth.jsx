@@ -1,8 +1,9 @@
-import React, { Component } from './node_modules/react';
-import { connect } from './node_modules/react-redux';
-import PropTypes from './node_modules/prop-types';
-import { LinearProgress } from './node_modules/@material-ui/core';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { LinearProgress } from '@material-ui/core';
 import { setUser, getUser } from '../../actions/authActions';
+import { getPlaylists } from '../../actions/profileActions';
 import ArtistsUser from './ArtistsUser';
 import Ratings from '../Profile/Ratings/Ratings';
 import PlaylistShowcase from '../Profile/Playlist/PlaylistShowcase';
@@ -48,9 +49,11 @@ class Auth extends Component {
   }
 
   componentWillMount() {
-    if (this.props.auth.auth) {
-      this.props.getUser()
-    } 
+    const { auth, apiUser} = this.props.auth;
+    if (auth) {
+      this.props.getUser();
+      this.props.getPlaylists(apiUser.user);
+    }
   }
 
   render() {
@@ -65,12 +68,25 @@ class Auth extends Component {
         ) : (
           <LinearProgress />
         )}
-        <div className="container pb-3 mt-3">
-          <h2 className="mt-3 mb-3">
-            Your ratings!
-          </h2>
-          <Ratings />
+        <div className="pb-3 mt-3">
+          <div className="row">
+            <div className="col-md-6 playlistsZone mb-3 mt-3 container">
+            { profile.isLoadingPlaylists ? ( 
+              <div className="mt-3"><LinearProgress /></div>
+            ) : ( 
+              <PlaylistShowcase 
+                playlists={profile.playlists} 
+              />)}   
+            </div>
+            <div className="col-md-6">
+              <h2 className="mt-3 mb-3">
+              Your ratings!
+              </h2>
+              <Ratings /> 
+            </div>
+          </div>                    
         </div>
+             
         {!user.lastfm || user.lastfm.trim() === '' ? (
           <h2>
             Pair your current Lastfm account with this account to get all the
@@ -78,13 +94,7 @@ class Auth extends Component {
           </h2>
         ) : (
           <ArtistsUser history={this.props.history} />
-        )}
-        { profile.isLoadingPlaylists ? ( 
-          <LinearProgress /> 
-        ) : ( 
-          <PlaylistShowcase 
-            playlists={profile.playlists} 
-          />)}
+        )}        
       </div>
     );
   }
@@ -94,5 +104,5 @@ const mapStateToProps = state => ({ auth: state.auth, profile: state.profile });
 
 export default connect(
   mapStateToProps,
-  { setUser, getUser }
+  { setUser, getUser, getPlaylists }
 )(Auth);
