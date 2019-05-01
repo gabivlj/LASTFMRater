@@ -2,9 +2,10 @@
 2. \*\*\*\* Delete track in a playlist - DONE
 3. \*\*\*\* See your created playlists
 4. Search other's playlist in the search bar
-5. Rate playlists.
+5. \*\*\*\* Rate playlists. - moretodo: -> add ratings of playlist to user ratings database
 6. Review albums
 7. Review playlists
 8. Comment albums and playlists
 9. \*\*\*\* Add track to a playlist - DONE
 10. Clean when submitting playlist/create
+11.

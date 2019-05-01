@@ -14,7 +14,8 @@ function PlaylistRating({ playlist, auth, addPlaylistRating}) {
         elementWithRatings={playlist}
         setRatings={addPlaylistRating}
         elementId={playlist._id}
-        username={auth.user}
+        username={auth.apiUser.user}
+        comparisonInRatingUpdate={auth.apiUser.id}
       />
     </div>
   )
