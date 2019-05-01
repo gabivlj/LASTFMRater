@@ -19,11 +19,13 @@ const PlaylistModel = new Schema({
       },
     },
   ],
-  playlistRating: {
-    type: Number,
-    default: 0,
-  },
-  playlistComments: [
+  ratings: [
+    {
+      user: { type: Schema.Types.ObjectId, ref: 'users' },
+      puntuation: { type: Number },
+    },
+  ],
+  comments: [
     {
       text: { type: String },
       userName: { type: String, required: true },
