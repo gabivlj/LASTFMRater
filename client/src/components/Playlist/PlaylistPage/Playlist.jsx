@@ -106,7 +106,7 @@ class Playlist extends Component {
 const mapStateToProps = (state) => ({
   playlist: state.playlist.playlist,
   user: state.auth.apiUser.user,
-  auth: state.auth.apiUser,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { getPlaylist, deleteTrackFromPlaylist, addToPlaylistFromPlaylistEdit })(Playlist)

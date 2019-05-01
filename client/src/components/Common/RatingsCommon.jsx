@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // Array of ratings
   /**
    * @param {Array} ratings { puntuation, id }
-   * @param {Object} auth userApi: {auth, username, id ...}
+   * @param {Object} auth {user, id ...}
    * @param {Object} elementWithRatings { __v }
    * @param {Function} setRatings (elementId, i, username, auth.id)
    * @param {String} elementId
@@ -18,6 +18,11 @@ const propTypes = {
   setRatings: PropTypes.func.isRequired,
   elementId: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
+  comparisonInRatingUpdate: PropTypes.string,
+}
+
+const defaultProptypes = {
+  comparisonInRatingUpdate: null
 }
 
 const buttonStyle = {
@@ -27,7 +32,7 @@ const buttonStyle = {
   cursor: 'pointer',
 };
 
-function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementId, username }) {
+function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementId, username, comparisonInRatingUpdate }) {
   const [state, setState] = useState({
     rating: 0,
     actualRating: 0,
@@ -57,6 +62,7 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
       setTimeout(() => setState((prev) => ({ ...state, error: null })), 2000);
     }
   }
+
   function ratingUpdate() {    
     if (
       ratings &&
@@ -68,11 +74,15 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
         actualRating += rating.puntuation;
       }
       actualRating /= ratings.length;
-      let userRating = null
-      if (auth.auth)
+      let userRating = null; 
+      // Check if it's auth
+      if (auth !== null && typeof auth === 'object' && auth !== undefined) {
+        if (!comparisonInRatingUpdate && auth) comparisonInRatingUpdate = auth.user;
         userRating = ratings.filter(
-          element => element.user === auth.apiUser.user
+          element => String(element.user) === String(comparisonInRatingUpdate)
         );
+      }
+      console.log(userRating);
       if (userRating && userRating.length > 0) userRating = userRating[0].puntuation;
       else {
         userRating = actualRating;
@@ -85,6 +95,7 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
       });      
     }
   }
+  
   const stars = [];
   if (ratings && ratings.length >= 0) {
     for (let i = 0; i < 10; i++) {
