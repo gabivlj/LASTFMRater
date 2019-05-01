@@ -132,23 +132,14 @@ export const setTracks = (indexToInterchange, indexToSetFrom) => async dispatch 
  * @todo TODO: We need to make tbis work still.
  */
 export const addPlaylistRating = (playlistId, puntuation, username, userid) => dispatch => {
-  const infoToSendToApi = { puntuation, userid: username };
+  const infoToSendToApi = { puntuation, userId: username };
   axios
     .post(`/api/playlist/rate/${playlistId}`, infoToSendToApi)
     .then(res => {      
       dispatch({
-        type: 'ADD_PLAYLIST',
+        type: 'ADD_PLAYLIST_RATING',
         payload: res.data,
       });
     })
-    .catch(err => console.log(err));
-  axios
-    .post('/api/user/rate', { userid, playlistId })
-    .then(res => {
-      dispatch({
-        type: 'SET_RATING_USER',
-        payload: res.data,
-      });
-    })
-    .catch(err => console.log(err));
+    .catch(err => console.log(err));  
 };

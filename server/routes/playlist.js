@@ -5,6 +5,7 @@ const handleError = require('../lib/handleError');
 const addTrack = require('../lib/addTrack');
 const Playlist = require('../models/Playlist');
 const Track = require('../models/Track');
+const RatingHelper = require('../lib/RatingHelper');
 
 /**
  * @GET
@@ -261,6 +262,42 @@ router.post(
       .catch(err =>
         res.status(404).json({ error: 'Error with server', msg: err })
       );
+  }
+);
+
+/**
+ * @POST
+ * @PRIVATE
+ * @description Add a rating to a playlist.
+ * @param {String} userId, Optional if doing auth
+ * @param {String} playlistId
+ * @param {Number} puntuation, (body)
+ */
+
+router.post(
+  '/rate/:playlistId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { id } = req.user;
+    const { playlistId } = req.params;
+    const { puntuation } = req.body;
+    const parsedPuntuation = puntuation ? parseInt(puntuation) : 0;
+    const ratingHelper = new RatingHelper(Playlist);
+    const [error, PlaylistToReturn] = await handleError(
+      ratingHelper.addRating(id, playlistId, parsedPuntuation)
+    );
+    if (error) {
+      return res
+        .status(404)
+        .json({ error: 'Error handling the puntuation...' });
+    }
+    res.json({
+      rating: PlaylistToReturn.ratings,
+      // We predict the next version of playlist, so React knows when playlist has REALLY changed.
+      __v: PlaylistToReturn.__v + 1,
+    });
+    // We save later because I want a fast response.
+    PlaylistToReturn.save();
   }
 );
 

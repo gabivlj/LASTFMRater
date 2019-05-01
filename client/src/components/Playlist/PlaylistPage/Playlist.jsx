@@ -8,9 +8,11 @@ import TrackSearchComponent from '../PlaylistForm/Track/TrackSearch.component';
 import guiidGenerator from '../../../utils/idCreator';
 import PropTypes from 'prop-types';
 import TrackPlaylist from './TrackPlaylist/TrackPlaylist';
+import PlaylistRating from './PlaylistRating/PlaylistRating';
 
 const propTypes = {
   user: PropTypes.string.isRequired,
+  auth: PropTypes.object.isRequired,
   playlist: PropTypes.object.isRequired,
   getPlaylist: PropTypes.func.isRequired,
   deleteTrackFromPlaylist: PropTypes.func.isRequired,
@@ -30,7 +32,7 @@ class Playlist extends Component {
   render() {
     const { playlist } = this.props;
     const { tracksShow } = playlist;
-    const { user } = this.props;
+    const { user, auth } = this.props;
     const { edit } = this.state;
     let trackRender;
     if (tracksShow && tracksShow.length > 0) {
@@ -74,11 +76,17 @@ class Playlist extends Component {
                 </div>
                 <div className="col-md-10">
                   {trackRender}
+                  <div>
+                    <PlaylistRating
+                      playlist={playlist}
+                      auth={auth}
+                    />
+                  </div>                  
                 </div>
               </div>
             </div>
             : <LinearProgress />            
-        }
+        }          
           <div>
             {
             user === playlist.user ? 
@@ -97,6 +105,8 @@ class Playlist extends Component {
 
 const mapStateToProps = (state) => ({
   playlist: state.playlist.playlist,
-  user: state.auth.apiUser.user
+  user: state.auth.apiUser.user,
+  auth: state.auth.apiUser,
 });
+
 export default connect(mapStateToProps, { getPlaylist, deleteTrackFromPlaylist, addToPlaylistFromPlaylistEdit })(Playlist)

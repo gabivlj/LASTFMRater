@@ -103,6 +103,15 @@ export default (state = initialState, action) => {
           tracks: [...action.payload.tracksId],
         },
       }
+    case 'ADD_PLAYLIST_RATING':
+      return {
+        ...state,
+        playlist: {
+          ...state.playlist,
+          __v: action.payload.__v,
+          ratings: [...action.payload.rating],
+        }
+      }
     default:
       return {
         ...state        
