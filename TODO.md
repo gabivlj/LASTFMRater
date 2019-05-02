@@ -8,4 +8,5 @@
 8. Comment albums and playlists
 9. \*\*\*\* Add track to a playlist - DONE
 10. Clean when submitting playlist/create
-11.
+11. Search profiles
+12. can see other peoples profile and follow them, be notified in feed what they say and what they review or rate.

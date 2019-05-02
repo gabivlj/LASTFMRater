@@ -30,7 +30,8 @@ function Ratings({ ratings, username }) {
       (rating.rating ? <Rating
         albumName={rating.name} 
         artistName={rating.artist} key={rating._id} 
-        rating={rating.rating.puntuation} 
+        rating={rating.rating.puntuation}
+        mbid={rating.mbid ? rating.mbid : 0}
         generalScore={10}
       /> : null)) : <div className="m-3"><CircularProgress /></div> }
     </div>

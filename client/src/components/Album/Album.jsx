@@ -7,6 +7,7 @@ import store from '../../store';
 import hourFormat from '../../utils/hourFormat';
 import AlbumRating from './AlbumRating';
 import RatingsCommon from '../Common/RatingsCommon';
+import { Link } from 'react-router-dom';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
@@ -92,7 +93,11 @@ class Album extends Component {
               <div>
                 <div className="row">
                   <div className="col-md-4 " style={{ marginTop: '10%' }}>
-                    <h1 className="display-6">{this.state.artist}</h1>
+                    <h1 className="display-6">
+                      <Link to={`/artist/${this.state.artist}`}>
+                        {this.state.artist}
+                      </Link>
+                    </h1>
                     <h2 className="display-3">{album.name}</h2>
                     <p>{album.mbid}</p>
                     {album.userplaycount ? (
@@ -114,7 +119,7 @@ class Album extends Component {
                 <ul className="list-group mt-3 w-50">
                   {tracks && tracks.length > 0
                     ? tracks
-                    : 'There are no tracks listed on this album, wanna add one? Colaborate!'}
+                    : 'There are no tracks listed on this album, wanna add one? Collaborate!'}
                 </ul>
                 <div className="badge badge-primary">
                   Playcount: {album.playcount}
@@ -125,8 +130,6 @@ class Album extends Component {
                 <div className="badge badge-primary ml-3">
                   Total duration: {hourFormat.fmtMSS(duration)}
                 </div>
-                {/* TODO: Pass album and currentUser props so it has better performance and it's more useful but whatever */}
-                {/* <AlbumRating /> */}
                 <br/>
                 {/* TODO: We are cuerrently testing this component for reusable. */}
                 <RatingsCommon
