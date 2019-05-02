@@ -1,20 +1,22 @@
 import React from 'react'
 import Stars from './Stars';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const propTypes = {
   rating: PropTypes.number.isRequired,
   generalScore: PropTypes.number.isRequired,
   artistName: PropTypes.string.isRequired,
   albumName: PropTypes.string.isRequired,
+  mbid: PropTypes.string,
 };
 
-function Rating({ rating, generalScore, artistName, albumName }) {
+function Rating({ rating, generalScore, artistName, albumName, mbid }) {
   return (
     <div>
       <div className="row">
         <div className="col-md-4">
-          {albumName} by {artistName}
+          <Link to={`/album/${artistName}/${albumName}/${mbid}`}>{albumName}</Link> by {artistName}
         </div>
         <div className="col-md-8">
           <Stars 

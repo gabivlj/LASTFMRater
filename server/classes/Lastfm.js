@@ -36,6 +36,10 @@ class Lastfm {
     });
   }
 
+  /**
+   * @param { String }, username
+   * @description Find related user's artists.
+   */
   async getUsersArtist(username) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -49,7 +53,7 @@ class Lastfm {
         }
         resolve(albums.data);
       } catch (err) {
-        reject(`ERROR WITH LAST'S FM API: ${err.response}`);
+        return reject(new Error(`ERROR WITH LAST'S FM API: ${err.response}`));
       }
     });
   }
