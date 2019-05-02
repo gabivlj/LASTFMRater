@@ -6,24 +6,31 @@ import PropTypes from 'prop-types';
 import { CircularProgress } from '@material-ui/core';
 
 const propTypes = {
+  // A rating has: { name, artist, rating: { puntuation, id }, mbid}
   ratings: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
+  ratingsProps: PropTypes.array,
 };
 
-function Ratings({ ratings, username }) {
-  const [albums, setAlbums] = useState([])
+const defaultProps = {
+  ratingsProps: null,
+}
+
+function Ratings({ ratings, username, ratingsProps }) {
+  const [albums, setAlbums] = useState([]);
+  const _ratings = ratingsProps || ratings;
 
   useEffect(() => {
     (async () => {
       let promiseRating = []
-      for (let rating of ratings) {
+      for (let rating of _ratings) {
         promiseRating.push(axios.get(`/api/album/${rating}`))        
       }
       let albumsSet = (await Promise.all(promiseRating)).map(promise => promise.data)      
       albumsSet.forEach(album => album.rating = album.ratings.filter(r => r.user === username)[0])
       setAlbums(albumsSet)
     })()
-  }, [ratings])
+  }, [ratings, ratingsProps])
   return (
     <div>
       {albums && albums.length > 0 ? albums.map(rating => 
@@ -39,6 +46,7 @@ function Ratings({ ratings, username }) {
 }
 
 Ratings.propTypes = propTypes;
+Ratings.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => ({
   ratings: state.auth.apiUser.ratedAlbums,

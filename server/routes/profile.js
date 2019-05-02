@@ -18,16 +18,12 @@ router.get('/', (req, res) => {});
  */
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const profile = {};
   const [error, user] = await handleError(User.findById({ _id: id }));
   if (error) {
     console.log(error);
     return res.status(404).json({ error: 'Error finding the profile ' });
   }
   const playlists = Playlist.find({ user: user.username });
-  profile.user = user.username;
-  // Find real ratings...
-  profile.ratedAlbums = user.ratedAlbums;
 
   const lastFm = new LastFm();
   const albums = lastFm.getUsersArtist(user.username);
@@ -38,8 +34,13 @@ router.get('/:id', async (req, res) => {
     console.log(errorPromise);
     return res.status(404).json({ error: 'Error providind profile' });
   }
-  profile.playlists = playlistsFinal;
-  profile.albums = albumsFinal;
+
+  const profile = {
+    albums: albumsFinal,
+    playlists: playlistsFinal,
+    ratedAlbums: user.ratedAlbums,
+    user: user.username,
+  };
   res.json({ profile });
 });
 
