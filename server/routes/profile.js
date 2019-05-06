@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Playlist = require('../models/Playlist');
 const handleError = require('../lib/handleError');
 const LastFm = require('../classes/Lastfm');
+const Authenticator = require('../classes/Authenticator');
 
 /**
  * @GET
@@ -26,9 +27,11 @@ router.get('/:id', async (req, res) => {
   const playlists = Playlist.find({ user: user.username });
 
   const lastFm = new LastFm();
-  const albums = lastFm.getUsersArtist(user.username);
-  const [errorPromise, [playlistsFinal, albumsFinal]] = handleError(
-    await Promise.all([playlists, albums])
+  const albums = !Authenticator.isEmpty(user.lastfm)
+    ? lastFm.getUsersArtist(user.lastfm)
+    : null;
+  const [errorPromise, [playlistsFinal, albumsFinal]] = await handleError(
+    Promise.all([playlists, albums || null])
   );
   if (errorPromise) {
     console.log(errorPromise);

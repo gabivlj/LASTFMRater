@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 import PlaylistShowcase from '../Playlist/PlaylistShowcase';
 import { LinearProgress } from '@material-ui/core';
 import Ratings from '../Ratings/Ratings';
+import { getProfile } from '../../../actions/profileActions';
 
 /**
  * @todo I think we will be changing Auth.jsx to this, Or separate or i don't know, but we must do profile page again.
  */
-function Profile({ profile, ...props }) {
+function Profile({ profile, getProfile, ...props }) {
   useEffect(() => {
-    const { id } = props.match;
-    // api call for profile information.
+    const { id } = props.match.params;
+    getProfile(id);
   }, []);
   
   return (
@@ -38,5 +39,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-
+  {
+    getProfile
+  }
 )(Profile);

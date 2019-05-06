@@ -53,6 +53,7 @@ class Lastfm {
         }
         resolve(albums.data);
       } catch (err) {
+        console.log(err);
         return reject(new Error(`ERROR WITH LAST'S FM API: ${err.response}`));
       }
     });
