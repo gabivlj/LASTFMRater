@@ -20,6 +20,7 @@ import Register from './components/Register/Register';
 import LastfmAuth from './components/LastfmAuth/LastfmAuth';
 import Configuration from './components/Configuration/Configuration';
 import Playlist from './components/Playlist/PlaylistPage/Playlist';
+import Profile from './components/Profile/Profile/Profile';
 // Get user from localStorage.
 store.dispatch(logFromSession());
 
@@ -51,6 +52,7 @@ class App extends Component {
                 />
                 <Route exact path="/auth/login" component={Login} />
                 <Route exact path="/auth/register" component={Register} />
+                <Route exact path="/profile/:id" component={Profile} />
                 <PrivateRoute exact path="/me/profile" component={Auth} />
                 <PrivateRoute
                   exact

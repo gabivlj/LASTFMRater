@@ -7,7 +7,8 @@
 
 const initialState = {
   playlists: null,
-  isLoadingPlaylists: false
+  isLoadingPlaylists: false,
+  profile: null,
 }
 
 export default (state = initialState, action) => {
@@ -18,6 +19,11 @@ export default (state = initialState, action) => {
         playlists: action.payload,
         isLoadingPlaylists: false
       };
+    case 'GET_PROFILE_FULL':
+      return {
+        ...state,
+        profile: action.payload.profile,
+      }
     case 'LOADING_PLAYLISTS_PROFILE':
       return {
         ...state,

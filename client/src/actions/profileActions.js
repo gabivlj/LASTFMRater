@@ -23,3 +23,24 @@ export const getPlaylists = userName => async dispatch => {
     payload: playlists,
   });
 }
+
+export const getProfile = (id) => async dispatch => {
+  dispatch({
+    type: 'LOADING_PROFILE'
+  });
+  const [response , error] = await handleError(
+    axios.get(`/api/profile/${id}`)
+  );
+
+  if (error) {
+    return dispatch({
+      type: 'ERROR_LOADING_PROFILE',
+      payload: error.response.data
+    });
+  }
+  const { data } = response;
+  dispatch({
+    type: 'GET_PROFILE_FULL',
+    payload: data,
+  });
+}
