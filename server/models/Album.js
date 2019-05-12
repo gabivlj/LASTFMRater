@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-;
-const {Schema} = mongoose;
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
 
 const AlbumSchema = new Schema({
   name: {
@@ -55,7 +55,7 @@ const AlbumSchema = new Schema({
   ],
   comments: [
     {
-      text: { type: String },
+      text: { type: String, required: true },
       userName: { type: String, required: true },
       user: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
       likes: [

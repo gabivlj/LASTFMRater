@@ -7,30 +7,35 @@ import { CircularProgress } from '@material-ui/core';
 
 const propTypes = {
   // A rating has: { name, artist, rating: { puntuation, id }, mbid}
-  ratings: PropTypes.array.isRequired,
-  username: PropTypes.string.isRequired,
+  ratings: PropTypes.array,
+  username: PropTypes.string,
   ratingsProps: PropTypes.array,
 };
 
 const defaultProps = {
   ratingsProps: null,
+  ratings: [],
+  username: '',
 }
 
-function Ratings({ ratings, username, ratingsProps }) {
+function Ratings({ ratings, username, ratingsProps, usernameProps }) {
   const [albums, setAlbums] = useState([]);
   const _ratings = ratingsProps || ratings;
+  const _username = usernameProps || username;
 
   useEffect(() => {
     (async () => {
-      let promiseRating = []
-      for (let rating of _ratings) {
-        promiseRating.push(axios.get(`/api/album/${rating}`))        
+      let promiseRating = [];
+      if (_ratings) {
+        for (let rating of _ratings) {
+          promiseRating.push(axios.get(`/api/album/${rating}`));
+        }
+        let albumsSet = (await Promise.all(promiseRating)).map(promise => promise.data);
+        albumsSet.forEach(album => album.rating = album.ratings.filter(r => String(r.user) === String(_username))[0]);
+        setAlbums(albumsSet);        
       }
-      let albumsSet = (await Promise.all(promiseRating)).map(promise => promise.data)      
-      albumsSet.forEach(album => album.rating = album.ratings.filter(r => r.user === username)[0])
-      setAlbums(albumsSet)
     })()
-  }, [ratings, ratingsProps])
+  }, [ratings, ratingsProps]);
   return (
     <div>
       {albums && albums.length > 0 ? albums.map(rating => 
@@ -49,8 +54,8 @@ Ratings.propTypes = propTypes;
 Ratings.defaultProps = defaultProps;
 
 const mapStateToProps = (state) => ({
-  ratings: state.auth.apiUser.ratedAlbums,
-  username: state.auth.apiUser.user
+  ratings: state.auth.apiUser ? state.auth.apiUser.ratedAlbums : null,
+  username: state.auth.apiUser ? state.auth.apiUser.user : null
 });
 
 export default connect(mapStateToProps, {})(Ratings)

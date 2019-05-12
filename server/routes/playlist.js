@@ -19,7 +19,6 @@ router.get('/:id', async (req, res) => {
       const playlist = pl;
       const tracks = pl.tracks.map(track => Track.findOne({ _id: track }));
       playlist.tracksShow = await Promise.all(tracks);
-      console.log(playlist.tracksShow);
       return res.json({ playlist });
     })
     .catch(err => res.status(400).json({ error: 'Playlist not found.' }));

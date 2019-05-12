@@ -120,27 +120,3 @@ export const setUsersArtists = name => dispatch => {
       })
       .catch(err => console.log(err.response.data));
 };
-// http://ws.audioscrobbler.com/2.0/?method=library.getartists&api_key=${
-//   API_KEYS.API_KEY
-// }&user=${name}&format=json
-// export const setFullUserFromSession = () => async dispatch => {
-//   try {
-//     const localStorageSession = JSON.parse(localStorage.getItem('session'))
-//     dispatch({ type: 'SET_IS_LOADING_AUTH' })
-//     const apiUser = await axios.post('/api/user', localStorageSession)
-//     dispatch({ type: 'SET_USER', payload: localStorageSession })
-//     dispatch({
-//       type: 'SET_API_USER',
-//       payload: apiUser.data
-//     })
-//   } catch (err) {
-//     dispatch({
-//       type: 'SET_USER',
-//       payload: {}
-//     })
-//     dispatch({
-//       type: 'SET_API_USER',
-//       payload: {}
-//     })
-//   }
-// }

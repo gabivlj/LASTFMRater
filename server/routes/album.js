@@ -2,6 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const Album = require('../models/Album');
 const Lastfm = require('../classes/Lastfm');
+const handleError = require('../lib/handleError');
 
 const FM = new Lastfm(null);
 
@@ -143,6 +144,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
       artist: album__.artist,
       name: album__.name,
     });
+    // ?????
     if (album__ && album__.tracks.track.length <= 0) {
       // Find Album Tracks in our database incase we have them...
       // if (tracks && tracks.length > 0) {
@@ -164,5 +166,33 @@ router.get('/:albumname/:artistname', async (req, res) => {
   }
   return res.json({ album });
 });
+
+/**
+ * @POST
+ * @PRIVATE
+ * @BODY text, username
+ * @PARAM id: album id
+ */
+router.post(
+  '/comment/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { text, username } = req.body;
+    const { id } = req.params;
+    const [error, album] = await handleError(Album.findById(id));
+    if (error) {
+      return res.status(404).json({ error: 'Album not found.' });
+    }
+    const comment = {
+      text,
+      username,
+      user: req.user.id,
+      likes: [],
+    };
+    album.comments = [comment, ...album.comments];
+    album.save();
+    res.json({ comments: album.comments });
+  }
+);
 
 module.exports = router;

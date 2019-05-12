@@ -10,6 +10,9 @@ const UserSchema = new Schema({
   lastfm: {
     type: String,
   },
+  img: {
+    type: String,
+  },
   password: {
     type: String,
     required: true,
@@ -29,6 +32,13 @@ const UserSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'users',
+    },
+  ],
+  followers: [
+    {
+      ref: 'users',
+      type: Schema.Types.ObjectId,
+      required: true,
     },
   ],
   playlists: [
