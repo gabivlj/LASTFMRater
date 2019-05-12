@@ -10,3 +10,4 @@
 10. Clean when submitting playlist/create
 11. Search profiles
 12. can see other peoples profile and follow them, be notified in feed what they say and what they review or rate.
+13. from lastfm to discogs, because lastfm is literally f\*\*\*\* us

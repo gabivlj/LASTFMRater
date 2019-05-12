@@ -44,3 +44,17 @@ export const getProfile = (id) => async dispatch => {
     payload: data,
   });
 }
+
+export const setListenedArtists = (lastfm) => async dispatch => {
+  if (lastfm) {
+    const [response, error] = await handleError(
+      axios.get(`/api/user/artists/${lastfm}`)
+    );
+    if (error) {
+      return dispatch({ type: 'ERROR_LOADING_ARTISTS '});
+    }
+    return dispatch({
+      type: 'GET_ARTISTS_PROFILE',
+    })
+  }
+}

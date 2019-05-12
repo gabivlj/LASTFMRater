@@ -23,6 +23,8 @@ router.get(
       reviews: user.reviews,
       playlists: user.playlists,
       followedAccounts: user.followedAccounts,
+      profileImage: user.img,
+      followers: user.followers || 0,
     });
   }
 );
@@ -46,6 +48,26 @@ router.post(
     } catch (err) {
       res.status(400).json('Error processing');
     }
+  }
+);
+
+router.post(
+  '/image',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const user = await User.findById({ _id: req.user.id });
+    const { img } = '';
+    if (!img) {
+      return res
+        .status(400)
+        .json({ error: 'Image link is needed for the request.' });
+    }
+    if (!user) {
+      return res.status(404).json({ error: 'User not found ' });
+    }
+    user.img = img;
+    user.save();
+    return res.json({ success: true });
   }
 );
 
@@ -77,14 +99,14 @@ router.post(
   async (req, res) => {
     const user_ = await User.findOne({ username: req.body.username });
     if (!user_) {
-      res.status(400).json({ error: 'User not found' });
+      res.status(404).json({ error: 'User not found' });
     }
 
     FM.setUser(req.params.token)
       .then(user => {
         res.json(user);
       })
-      .catch(err => res.status(400).json('ERROR WITH API'));
+      .catch(err => res.status(500).json('ERROR WITH API'));
   }
 );
 
@@ -115,6 +137,7 @@ router.post('/auth/login', async (req, res) => {
         email,
         user: user.username,
         lastfm: user.lastfm,
+        // todo: delete all of this to be honest, we just gonna put this to a profile schema or something.
         id: user.id,
         ratedAlbums: user.ratedAlbums,
         reviews: user.reviews,
