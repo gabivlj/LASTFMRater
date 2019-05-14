@@ -10,7 +10,7 @@ export default function Home() {
         <img src={logo} className="App-logo" alt="logo" />
         <p style={{ color: '#ff0000' }}>
           Rate the music that you listen on Last.fm! Make reviews and check what
-          others rating of your favorite artist!
+          is the community rating of your favorite album or playlist!
         </p>
         <Link
           className="App-link"

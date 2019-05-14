@@ -27,7 +27,6 @@ router.get('/:id', async (req, res) => {
     return res.status(404).json({ error: 'Error finding the profile.' });
   }
   if (!user) {
-    console.log('???');
     return res.status(400).json({ error: 'Error finding the profile.' });
   }
   console.log(user);

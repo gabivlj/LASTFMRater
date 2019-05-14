@@ -10,17 +10,24 @@ import ProfileArtists from './ProfileArtist/ProfileArtists';
 /**
  * @todo I think we will be changing Auth.jsx to this, Or separate or i don't know, but we must do profile page again.
  */
-function Profile({ profile, getProfile, ...props }) {
+function Profile({ profile, getProfile, auth, ...props }) {
+  // WillMount
   useEffect(() => {
     const { id } = props.match.params;
     getProfile(id);
   }, []);
-  
+  // Unmount
   useEffect(() => {
     cleanErrors();
   }, []);
+  // Check if user is the same as the profile.
+  const loged = auth.auth;
+  const sameProfile = 
+      loged && 
+      auth.apiUser.user && 
+      profile.profile && 
+      auth.apiUser.user === profile.profile.user;
   const { error } = profile;
-  console.log(error);
   // If there is an error finding profile redirect to not found or sth
   if (error !== null) {
     props.history.push('/not/found');
@@ -40,7 +47,7 @@ function Profile({ profile, getProfile, ...props }) {
               <div className="col-md-4">
                 <PlaylistShowcase 
                   playlists={profile.profile.playlists}
-                  authentified={false}
+                  authentified={sameProfile}
                 />
               </div>
               <div className="col-md-8">
@@ -72,6 +79,7 @@ function Profile({ profile, getProfile, ...props }) {
 
 const mapStateToProps = (state) => ({
   profile: state.profile,
+  auth: state.auth
 });
 
 export default connect(
