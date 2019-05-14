@@ -25,13 +25,17 @@ class Login extends Component {
 
   componentDidMount() {
     if (this.props.auth.auth) {
-      this.props.history.push('/me/profile');
+      const { apiUser } = this.props.auth;
+      const { user } = apiUser;
+      this.props.history.push(`/profile/${user}`);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.auth) {
-      this.props.history.push('/me/profile');
+      const { apiUser } = nextProps.auth;
+      const { user } = apiUser;
+      this.props.history.push(`/profile/${user}`);
     }
   }
 

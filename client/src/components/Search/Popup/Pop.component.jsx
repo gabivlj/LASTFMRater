@@ -59,7 +59,7 @@ function PopComponent({ auth, logOut }) {
                   {auth.auth ? (
                     <MenuItem
                       component={Link}
-                      to="/me/profile"
+                      to={`/profile/${auth.apiUser.user}`}
                       onClick={handleClose}
                     >
                       Profile
