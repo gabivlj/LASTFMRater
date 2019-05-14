@@ -9,6 +9,7 @@ import guiidGenerator from '../../../utils/idCreator';
 import PropTypes from 'prop-types';
 import TrackPlaylist from './TrackPlaylist/TrackPlaylist';
 import PlaylistRating from './PlaylistRating/PlaylistRating';
+import { Link } from 'react-router-dom';
 
 const propTypes = {
   user: PropTypes.string.isRequired,
@@ -69,7 +70,7 @@ class Playlist extends Component {
                     </button> 
                     : null}
                   <h2>{playlist.playlistName.toUpperCase()}</h2> 
-                  Created by: <h5>{playlist.user}</h5>
+                  Created by: <Link to={`/profile/${playlist.user}`}><h5>{playlist.user}</h5></Link>
                   Description: 
                   <p>{playlist.playlistDescription}</p>
                   

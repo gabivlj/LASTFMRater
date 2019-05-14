@@ -23,7 +23,7 @@ function PlaylistShowcase({ playlists, authentified, ...props }) {
     render = messages.errorNoPlaylists;
   }
   return (
-    <div style={{ paddingLeft: '15%'}}>
+    <div style={{ }}>
       <h2>
         Playlists:
       </h2>      

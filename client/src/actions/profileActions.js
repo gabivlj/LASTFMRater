@@ -34,8 +34,8 @@ export const getProfile = (id) => async dispatch => {
 
   if (error) {
     return dispatch({
-      type: 'ERROR_LOADING_PROFILE',
-      payload: error.response.data
+      type: 'ERROR_GETTING_PROFILE',
+      payload: error.response.data.error
     });
   }
   const { data } = response;
@@ -57,4 +57,10 @@ export const setListenedArtists = (lastfm) => async dispatch => {
       type: 'GET_ARTISTS_PROFILE',
     })
   }
+}
+
+export const cleanErrors = () => dispatch => {
+  return dispatch({
+    type: 'CLEAN_ERRORS'
+  })
 }
