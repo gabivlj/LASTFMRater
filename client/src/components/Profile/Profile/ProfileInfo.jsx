@@ -18,7 +18,7 @@ function ProfileInfo({ name, lastfm, followers, img }) {
             <div className="showInfo">
               <h2>{name}</h2>
               <h3>{lastfm === '' ? null : `Known in Lastfm as: ${lastfm}`}</h3>
-              <h4>Followers: {followers}</h4>
+              <h4>Followers: {Array.isArray(followers) ? followers.length : 0}</h4>
               <p>
                 Standard bio for everything.
 
@@ -33,7 +33,7 @@ function ProfileInfo({ name, lastfm, followers, img }) {
 
 ProfileInfo.propTypes = {
   name: PropTypes.string.isRequired,
-  followers: PropTypes.number.isRequired,
+  followers: PropTypes.array.isRequired,
   lastfm: PropTypes.string,
   img: PropTypes.string,
 }

@@ -10,14 +10,19 @@ function ProfileArtists({ artists }) {
       <Link className="card-profile 1" key={guidGenerator()} to={`/artist/${artist.name}`}>
         <div className="card-image-profile"><img src={artist.image[4]['#text']} /></div>
         <div className="card-title-profile title-white">
-          <p>{artist.name}</p>
+          <p className="title-black">
+            {artist.name}              
+          </p>
+          <span className="badge badge-primary">
+            Played: {artist.playcount > 1 ? `${artist.playcount} times` : `${artist.playcount} time`} 
+          </span>    
         </div>
       </Link>
     );
   }
   return (
-    <div>
-      <h1>
+    <div className="mt-3">
+      <h1 className="container">
       Most listened artists!
       </h1>
       <div className="cards-list-profile"> 

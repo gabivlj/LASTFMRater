@@ -1,0 +1,21 @@
+.box-rating {
+  border: solid 1px black;
+  margin: 10px 0 10px 0;
+  width: 380px;
+}
+
+.padding-box {
+  padding: 10px;
+}
+
+@media (max-width: 500px) {
+  .box-rating {
+    border: solid 1px black;
+    margin: 10px 0 10px 0;
+    width: 250px;
+  }
+  
+  .padding-box {
+    padding: 5px;
+  }
+} 

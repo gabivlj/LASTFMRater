@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import './RatingsCommon.styles.css';
 
 // Array of ratings
   /**
@@ -9,7 +10,7 @@ import PropTypes from 'prop-types';
    * @param {Function} setRatings (elementId, i, username, auth.id)
    * @param {String} elementId
    * @param {String} username 
-   * 
+   * @param {Boolean} showTitleGeneral
    */
 const propTypes = {  
   ratings: PropTypes.array.isRequired,
@@ -19,10 +20,12 @@ const propTypes = {
   elementId: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   comparisonInRatingUpdate: PropTypes.string,
+  showTitleGeneral: PropTypes.bool,
 }
 
 const defaultProptypes = {
-  comparisonInRatingUpdate: null
+  comparisonInRatingUpdate: null,
+  showTitleGeneral: true,
 }
 
 const buttonStyle = {
@@ -32,7 +35,7 @@ const buttonStyle = {
   cursor: 'pointer',
 };
 
-function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementId, username, comparisonInRatingUpdate }) {
+function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementId, username, comparisonInRatingUpdate, showTitleGeneral }) {
   const [state, setState] = useState({
     rating: 0,
     actualRating: 0,
@@ -130,8 +133,14 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
   }
   return (    
     <div>
-      {stars}{' '}
-      <div className="badge badge-primary">{state.generalRating}</div>
+      {showTitleGeneral ? 
+        <div className="box-rating">
+          <h3 className="m-3 padding-box">
+            Total Score: {state.generalRating.toFixed(2)} / 10
+          </h3>
+        </div> : null}
+      {stars}{' '}      
+      <div className="badge badge-primary">{state.actualRating}</div>
       {state.error ? (
         <div className="badge badge-danger ml-3">{state.error}</div>
       ) : null}
@@ -140,5 +149,6 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
 }
 
 RatingsCommon.propTypes = propTypes;
+RatingsCommon.defaultProps = defaultProptypes;
 
 export default RatingsCommon;

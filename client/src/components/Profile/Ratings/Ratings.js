@@ -36,6 +36,12 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
       }
     })()
   }, [ratings, ratingsProps]);
+  const renderError = !albums ? (
+    <div className="m-3">
+      <CircularProgress />
+    </div> ) : (
+      <h3>This user hasn't got any ratings yet!</h3>
+    );
   return (
     <div>
       {albums && albums.length > 0 ? albums.map(rating => 
@@ -45,7 +51,7 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
         rating={rating.rating.puntuation}
         mbid={rating.mbid ? rating.mbid : 0}
         generalScore={10}
-      /> : null)) : <div className="m-3"><CircularProgress /></div> }
+      /> : null)) : <div className="m-3">{renderError}</div> }
     </div>
   )
 }

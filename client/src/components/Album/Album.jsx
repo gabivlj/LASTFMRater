@@ -115,23 +115,6 @@ class Album extends Component {
                     />
                   </div>
                 </div>
-                <h5 className="mt-3 ">Track list:</h5>
-                <ul className="list-group mt-3 w-50">
-                  {tracks && tracks.length > 0
-                    ? tracks
-                    : 'There are no tracks listed on this album, wanna add one? Collaborate!'}
-                </ul>
-                <div className="badge badge-primary">
-                  Playcount: {album.playcount}
-                </div>
-                <div className="badge badge-primary ml-3">
-                  Listeners: {album.listeners}
-                </div>
-                <div className="badge badge-primary ml-3">
-                  Total duration: {hourFormat.fmtMSS(duration)}
-                </div>
-                <br/>
-                {/* TODO: We are cuerrently testing this component for reusable. */}
                 <RatingsCommon
                   ratings={album.ratings} 
                   auth={this.props.currentUser || null} 
@@ -140,6 +123,24 @@ class Album extends Component {
                   username={!this.props.currentUser ? '' : this.props.currentUser.user}
                   elementId={album._id}                  
                 />
+                <h5 className="mt-3 ">Track list:</h5>
+                <ul className="list-group mt-3 w-100">
+                  {tracks && tracks.length > 0
+                    ? tracks
+                    : 'There are no tracks listed on this album, wanna add one? Collaborate!'}
+                </ul>
+                <div className="badge badge-primary mt-3">
+                  Playcount: {album.playcount}
+                </div>
+                <div className="badge badge-primary ml-3 mt-3">
+                  Listeners: {album.listeners}
+                </div>
+                <div className="badge badge-primary ml-3 mt-3">
+                  Total duration: {hourFormat.fmtMSS(duration)}
+                </div>
+                <br/>
+                {/* TODO: We are cuerrently testing this component for reusable. */}
+                
               </div>
             ) : (
               <LinearProgress />

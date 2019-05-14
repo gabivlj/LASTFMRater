@@ -24,8 +24,13 @@ router.get('/:id', async (req, res) => {
   const [error, user] = await handleError(User.findOne({ username: id }));
   if (error) {
     console.log(error);
-    return res.status(404).json({ error: 'Error finding the profile ' });
+    return res.status(404).json({ error: 'Error finding the profile.' });
   }
+  if (!user) {
+    console.log('???');
+    return res.status(400).json({ error: 'Error finding the profile.' });
+  }
+  console.log(user);
   const playlists = Playlist.find({ user: user.username });
 
   const lastFm = new LastFm();
@@ -33,7 +38,7 @@ router.get('/:id', async (req, res) => {
     ? lastFm.getUsersArtist(user.lastfm)
     : null;
   const [errorPromise, [playlistsFinal, artistsFinal]] = await handleError(
-    Promise.all([playlists, artists || null])
+    Promise.all([playlists, artists || []])
   );
   if (errorPromise) {
     console.log(errorPromise);

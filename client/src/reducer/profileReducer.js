@@ -9,6 +9,7 @@ const initialState = {
   playlists: null,
   isLoadingPlaylists: false,
   profile: null,
+  error: null,
 }
 
 export default (state = initialState, action) => {
@@ -23,6 +24,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profile: action.payload.profile,
+      }
+    case 'ERROR_GETTING_PROFILE':
+      return {
+        ...state,
+        error: action.payload
+      }
+    case 'CLEAN_ERRORS':
+      return {
+        ...state,
+        error: null,
       }
     case 'LOADING_PLAYLISTS_PROFILE':
       return {

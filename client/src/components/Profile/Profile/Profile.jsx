@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PlaylistShowcase from '../Playlist/PlaylistShowcase';
 import { LinearProgress } from '@material-ui/core';
 import Ratings from '../Ratings/Ratings';
-import { getProfile } from '../../../actions/profileActions';
+import { getProfile, cleanErrors } from '../../../actions/profileActions';
 import ProfileInfo from './ProfileInfo';
 import ProfileArtists from './ProfileArtist/ProfileArtists';
 
@@ -16,6 +16,15 @@ function Profile({ profile, getProfile, ...props }) {
     getProfile(id);
   }, []);
   
+  useEffect(() => {
+    cleanErrors();
+  }, []);
+  const { error } = profile;
+  console.log(error);
+  // If there is an error finding profile redirect to not found or sth
+  if (error !== null) {
+    props.history.push('/not/found');
+  }
   return (
     <div style={{marginTop: '100px', paddingBottom: '200px'}}>
       { profile.isLoading || !profile.profile ? <LinearProgress/> : ( 
@@ -26,22 +35,33 @@ function Profile({ profile, getProfile, ...props }) {
             lastfm={profile.profile.lastfm}
             followers={profile.profile.followers}
           />
-          <PlaylistShowcase 
-            playlists={profile.profile.playlists}
-            authentified={false}
-          />
           <div className="container">
-            <div style={{marginTop: '50px'}}>
-              <h2>Ratings made by {profile.profile.user}</h2>
-              <Ratings 
-                usernameProps={profile.profile.user}
-                ratingsProps={profile.profile.ratedAlbums}
-              />
+            <div className="row">
+              <div className="col-md-4">
+                <PlaylistShowcase 
+                  playlists={profile.profile.playlists}
+                  authentified={false}
+                />
+              </div>
+              <div className="col-md-8">
+                <div>
+                  <div style={{marginTop: ''}}>
+                    <h2>Ratings made by {profile.profile.user}</h2>
+                    <Ratings 
+                      usernameProps={profile.profile.user}
+                      ratingsProps={profile.profile.ratedAlbums}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="container">
-            <ProfileArtists artists={profile.profile.artists.artists.artist}/>
-          </div>
+          { profile.profile.lastfm && profile.profile.lastfm.length !== '' ? 
+            <div>
+              <ProfileArtists artists={profile.profile.artists.artists.artist}/>
+            </div>
+            : null
+          }
         </div>
         )
       }
@@ -57,6 +77,7 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   {
-    getProfile
+    getProfile,
+    cleanErrors
   }
 )(Profile);
