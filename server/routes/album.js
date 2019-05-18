@@ -153,6 +153,11 @@ router.get('/:albumname/:artistname', async (req, res) => {
     }
     album__.ratings = find.ratings;
     album__.reviews = find.reviews;
+    album__.comments = album__.comments.map(comment => ({
+      ...comment,
+      likes: comment.likes.length,
+      dislikes: comment.dislikes.length,
+    }));
     album__._id = find._id;
     album__.__v = find.__v;
     return res.json({ album: album__ });
@@ -188,10 +193,11 @@ router.post(
       username,
       user: req.user.id,
       likes: [],
+      dislikes: [],
     };
     album.comments = [comment, ...album.comments];
-    album.save();
-    res.json({ comments: album.comments });
+    const saved = await album.save();
+    res.json({ comments: saved.album.comments });
   }
 );
 

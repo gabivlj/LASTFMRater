@@ -187,36 +187,40 @@ router.post(
   '/change/:index1/:indexToSet',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
+    function ifIndexEqualsAdd(currentIndex, badIndex, prev, current) {
+      return parseInt(badIndex) === currentIndex
+        ? [...prev]
+        : [...prev, current];
+    }
     const { index1, indexToSet } = req.params;
     const { playlistId } = req.body;
     const { tracksShow } = req.body;
     const [error, playlist] = await handleError(
       Playlist.findOne({ _id: playlistId })
     );
-    console.log(index1, indexToSet);
     if (error) {
       return res
         .status(400)
         .json({ error: 'Playlist not found or error with server' });
     }
+
+    // Make these 2 reduce in one.
     const tracksShowReduced = tracksShow.reduce(
       (prev, current, index) =>
         index === parseInt(indexToSet)
-          ? (() => {
-              prev.push(tracksShow[index1], current);
-              return [...prev];
-            })()
-          : (() =>
-              parseInt(index1) === index ? [...prev] : [...prev, current])(),
+          ? // If it's the index we are setting to just add the track and then the track that was there.
+            [...prev, tracksShow[index1], current]
+          : // If the index1 is equal to index, don't add the track, else do it because it's not the track we are filtering out.
+            ifIndexEqualsAdd(index, index1, prev, current),
       []
     );
 
+    // TODO. Or make this a map lol.
     playlist.tracks = playlist.tracks.reduce(
       (prev, current, index) =>
         index === parseInt(indexToSet)
-          ? (() => [...prev, playlist.tracks[index1], current])()
-          : (() =>
-              parseInt(index1) === index ? [...prev] : [...prev, current])(),
+          ? [...prev, playlist.tracks[index1], current]
+          : ifIndexEqualsAdd(index, index1, prev, current),
       []
     );
     console.log('!!!!!', tracksShowReduced, tracksShow);
@@ -241,6 +245,7 @@ router.post(
     const [error, playlist] = await handleError(
       Playlist.findOne({ _id: playlistId })
     );
+
     if (error) {
       return res
         .status(400)
@@ -299,5 +304,27 @@ router.post(
     PlaylistToReturn.save();
   }
 );
+
+/**
+ * @GET
+ * @PUBLIC
+ * @DESCRIPTION Returns the searched query related to playlists
+ * @param { String } query
+ */
+router.get('/search/:query', async (req, res) => {
+  const { query } = req.params;
+  if (query === null || query === undefined || query.trim() === '') {
+    return res.json({ playlists: [] });
+  }
+  const [error, playlists] = await handleError(
+    Playlist.find({
+      $or: [{ playlistName: { $regex: query, $options: 'i' } }],
+    })
+  );
+  if (error) {
+    return res.status(400).json({ error: 'Error finding the playlists. ' });
+  }
+  res.json({ playlists });
+});
 
 module.exports = router;
