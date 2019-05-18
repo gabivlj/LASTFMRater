@@ -21,6 +21,26 @@ export default (state = initialState, action) => {
           },
         },
       };
+    case 'ADD_COMMENT_ALBUM':
+      return {
+        ...state,
+        album: {
+          album: {
+            ...state.album.album,
+            comments: [...action.payload.comments],
+          }
+        }
+      }
+    case 'LIKE_COMMENT_ALBUM':
+      return {
+        ...state,
+        album: {
+          album: {
+            ...state.album.album,
+            comments: [...action.payload.comments],                        
+          }
+        }
+      }
     case 'CLEAR_ALBUM':
       return {
         album: null,

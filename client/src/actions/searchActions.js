@@ -1,5 +1,6 @@
 import axios from 'axios';
 import API_KEYS from '../API';
+import handleError from '../utils/handleError';
 
 export const searchThingsForSearchBar = searchValue => dispatch => {
   axios
@@ -21,11 +22,6 @@ export const searchThingsForSearchBar = searchValue => dispatch => {
 export const searchAlbums = (search, limit = 5, page = 1) => async dispatch => {
   if (page <= 0) page = 1;
   try {
-    // const response = await axios.get(
-    //   `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${search}&api_key=${
-    //     API_KEYS.API_KEY
-    //   }&page=${page}&limit=${limit}&format=json`
-    // )
     const response = await axios.get(`/api/album/search/${search}`, {
       params: {
         limit,
@@ -57,3 +53,20 @@ export const searchArtists = (name, limit = 5, page = 1) => async dispatch => {
     console.log(err);
   }
 };
+
+export const searchPlaylists = (query, limit = 5, page = 1) => async dispatch => {
+  page = page <= 0 ? 1 : page;
+  const [response, error] = await handleError(
+    axios.get(`/api/playlist/search/${query}`)
+  );
+  if (error) {
+    return dispatch({
+      type: 'ERROR_FINDING_PLAYLIST_SEARCH'
+    })
+  }
+  const { data } = response;
+  dispatch({
+    type: 'SEARCH_PLAYLISTS_FOR_SEARCH',
+    payload: data.playlists,
+  })
+}

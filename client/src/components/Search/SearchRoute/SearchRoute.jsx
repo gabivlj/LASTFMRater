@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { searchAlbums, searchArtists } from '../../../actions/searchActions';
+import { searchAlbums, searchArtists, searchPlaylists } from '../../../actions/searchActions';
 import store from '../../../store';
 import Albums from './albums/Albums';
 import Search from '../../../utils/searchFunctions';
@@ -20,7 +20,7 @@ class SearchRoute extends Component {
 
   constructor() {
     super();
-    this.state = { albums: { currentItems: 0 }, artists: { currentItems: 0 } };
+    this.state = { albums: { currentItems: 0 }, artists: { currentItems: 0 }, playlists: { currentItems: 0 } };
     this.searchHandler = null;
   }
 
@@ -31,6 +31,7 @@ class SearchRoute extends Component {
     store.dispatch({ type: 'POPULATE_SEARCH' });
     this.add('albums', this.props.searchAlbums);
     this.add('artists', this.props.searchArtists);
+    this.add('playlists', this.props.searchPlaylists);
   }
 
   componentWillReceiveProps(next) {
@@ -44,14 +45,12 @@ class SearchRoute extends Component {
       // Find albums
       this.add('albums', this.props.searchAlbums);
       this.add('artists', this.props.searchArtists);
+      this.add('playlists', this.props.searchPlaylists);
     }
   }
 
   // Add the items corresponding to their object in the state.
   add = (type, functionprops) => {
-    if (type === 'albums') {
-      // console.log(this.state, this.state[type].currentItems)
-    }
     this.searchHandler.search(
       type,
       this.state[type].currentItems + 10,
@@ -69,7 +68,7 @@ class SearchRoute extends Component {
 
   render() {
     const { searchquery } = this.props.match.params;
-    const { albums, artists } = this.props.search;
+    const { albums, artists, playlists } = this.props.search;
     return (
       <div className="container">
         <h1>
@@ -100,7 +99,15 @@ class SearchRoute extends Component {
           <AddIcon />
         </Fab>
         {/* Playlists */}
-
+        <Fab
+          color="primary"
+          aria-label="Add"
+          onClick={() => {
+            this.add('playlists', this.props.searchPlaylists);
+          }}
+        >
+          <AddIcon />
+        </Fab>
         {/* Users */}
 
         <div style={{ paddingBottom: '13%' }} />
@@ -114,5 +121,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { searchAlbums, searchArtists }
+  { searchAlbums, searchArtists, searchPlaylists }
 )(SearchRoute);

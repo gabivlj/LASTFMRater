@@ -7,6 +7,7 @@ const initialState = {
     albums: { loading: false, list: [] },
     artists: { loading: false, list: [] },
     playlists: { loading: false, list: [] },
+    profiles: { loading: false, list: [] },
     cleaned: false,
   },
 };

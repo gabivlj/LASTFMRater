@@ -38,3 +38,19 @@ export const addAlbumRating = (albumId, puntuation, username, userid) => dispatc
     })
     .catch(err => console.log(err));
 };
+
+export const addComment = (user, album, text) => async dispatch => {
+  const [error, response] = 
+    await axios.post(`/api/album/comment/${album}`, { text, username: user });
+  if (error) {
+    return dispatch({
+      type: 'ERROR_ADDING_COMMENT_ALBUM',
+    });
+  }
+
+  dispatch({
+    type: 'ADD_COMMENT_ALBUM',
+    payload: response.data,
+  });
+
+}
