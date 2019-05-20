@@ -1,4 +1,5 @@
 import axios from 'axios';
+import handleError from '../utils/handleError';
 
 export const getAlbum = albumData => dispatch => {
   const username = albumData.username ? `?username=${albumData.username}` : '';
@@ -40,8 +41,9 @@ export const addAlbumRating = (albumId, puntuation, username, userid) => dispatc
 };
 
 export const addComment = (user, album, text) => async dispatch => {
-  const [error, response] = 
-    await axios.post(`/api/album/comment/${album}`, { text, username: user });
+  const [response, error] = await handleError(
+    axios.post(`/api/album/comment/${album}`, { text, username: user })
+  );
   if (error) {
     return dispatch({
       type: 'ERROR_ADDING_COMMENT_ALBUM',

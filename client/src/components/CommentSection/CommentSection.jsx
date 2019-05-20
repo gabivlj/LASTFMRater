@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import Comment from './Comment';
+import CommentForm from './CommentForm';
 
-function CommentSection({ user, addComment, comments, likeComment, dislikeComment }) {
+function CommentSection({ user, addComment, comments, likeComment, dislikeComment, objectId }) {
   function onLike(id) {
     return () => {
       likeComment(id, user ? user._id : null);
@@ -12,6 +13,13 @@ function CommentSection({ user, addComment, comments, likeComment, dislikeCommen
   function onDislike(id) {
     return () => {
       likeComment(id, user ? user._id : null);
+    }
+  }
+
+  function onSubmit(txt) {
+    console.log(user);
+    if (user && typeof user === 'object') { 
+      addComment(user.user, objectId, txt);
     }
   }
 
@@ -30,6 +38,9 @@ function CommentSection({ user, addComment, comments, likeComment, dislikeCommen
   return (
     <div>
       <h1>Comments</h1>
+      <CommentForm 
+        onSubmit={onSubmit}
+      />
       {commentsRender}
     </div>
   )
@@ -41,6 +52,8 @@ CommentSection.propTypes = {
   likeComment: PropTypes.func.isRequired,
   dislikeComment: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
+  // Object related id.
+  objectId: PropTypes.string.isRequired
 }
 
 CommentSection.defaultProps = {
