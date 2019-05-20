@@ -3,6 +3,7 @@ const passport = require('passport');
 const Album = require('../models/Album');
 const Lastfm = require('../classes/Lastfm');
 const handleError = require('../lib/handleError');
+const albumHelper = require('../classes/Album');
 
 const FM = new Lastfm(null);
 
@@ -153,11 +154,9 @@ router.get('/:albumname/:artistname', async (req, res) => {
     }
     album__.ratings = find.ratings;
     album__.reviews = find.reviews;
-    album__.comments = album__.comments.map(comment => ({
-      ...comment,
-      likes: comment.likes.length,
-      dislikes: comment.dislikes.length,
-    }));
+    // TO be honest this is so bad I just cannot believe we are doing this haha.
+    album__.comments = find.comments.map(comment => comment._doc);
+    album__.comments = albumHelper.mapLikesDislikes(album__.comments);
     album__._id = find._id;
     album__.__v = find.__v;
     return res.json({ album: album__ });
@@ -196,8 +195,10 @@ router.post(
       dislikes: [],
     };
     album.comments = [comment, ...album.comments];
-    const saved = await album.save();
-    res.json({ comments: saved.album.comments });
+    const save = await album.save();
+    const returner = album;
+    returner.comments = albumHelper.mapLikesDislikes(returner.comments);
+    res.json({ comments: returner.comments });
   }
 );
 

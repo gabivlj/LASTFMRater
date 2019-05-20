@@ -24,7 +24,9 @@ function CommentForm({ onSubmit, classes }) {
           margin="normal"
           variant="outlined"
       />
-      <Button color="primary" onSubmit={(e) => { e.preventDefault(); onSubmit(text); }} />
+      <Button color="primary" onClick={(e) => { e.preventDefault(); onSubmit(text); }}>
+        Submit
+      </Button>
     </div>
   )
 }

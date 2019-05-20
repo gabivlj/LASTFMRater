@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { LinearProgress } from '@material-ui/core';
-import { getAlbum, addAlbumRating } from '../../actions/albumActions';
+import { getAlbum, addAlbumRating, addComment } from '../../actions/albumActions';
 import store from '../../store';
 import hourFormat from '../../utils/hourFormat';
 import AlbumRating from './AlbumRating';
 import RatingsCommon from '../Common/RatingsCommon';
 import { Link } from 'react-router-dom';
+import CommentSection from '../CommentSection/CommentSection';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
@@ -62,6 +63,7 @@ class Album extends Component {
 
   render() {
     let { album } = this.props;
+    const { currentUser, addComment } = this.props;
     if (album) album = album.album
     if (album) album = album.album
     let tracks;
@@ -140,7 +142,14 @@ class Album extends Component {
                 </div>
                 <br/>
                 {/* TODO: We are cuerrently testing this component for reusable. */}
-                
+                <CommentSection
+                  user={currentUser}
+                  addComment={addComment}
+                  comments={album.comments}
+                  likeComment={() => console.log("nope")}
+                  dislikeComment={() => console.log("nope")}
+                  objectId={album._id}
+                />
               </div>
             ) : (
               <LinearProgress />
@@ -158,5 +167,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { getAlbum, addAlbumRating }
+  { getAlbum, addAlbumRating, addComment }
 )(Album);

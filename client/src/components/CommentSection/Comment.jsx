@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Fab } from '@material-ui/core';
 import { ThumbUp, ThumbDown } from '@material-ui/icons';
 import ProfileImage from '../../images/profile.png'
+import './Comment.styles.css'
 
 function Comment({img, user, like, dislike, likes, loged, text}) {
   const disabled = loged == null ? true : false;
@@ -18,7 +19,7 @@ function Comment({img, user, like, dislike, likes, loged, text}) {
             { text }
           </p>
           <div className="comment-likes">
-            <Fab disabled={disabled} onClick={like}>
+            <Fab disabled={disabled} onClick={like} className="fab-left">
               <ThumbUp />              
             </Fab>
             <span className="likes-span">{likes}</span>
