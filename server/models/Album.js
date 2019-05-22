@@ -12,6 +12,7 @@ const CommentSchema = new Schema({
     default: Date.now(),
   },
 });
+
 const AlbumSchema = new Schema({
   name: {
     type: String,

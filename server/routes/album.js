@@ -4,6 +4,8 @@ const Album = require('../models/Album');
 const Lastfm = require('../classes/Lastfm');
 const handleError = require('../lib/handleError');
 const albumHelper = require('../classes/Album');
+const Comment = require('../classes/Comment');
+const CommentSchema = require('../classes/CommentSchema');
 
 const FM = new Lastfm(null);
 
@@ -187,17 +189,15 @@ router.post(
     if (error) {
       return res.status(404).json({ error: 'Album not found.' });
     }
-    const comment = {
-      text,
-      username,
-      user: req.user.id,
-      likes: [],
-      dislikes: [],
-    };
-    album.comments = [comment, ...album.comments];
-    const save = await album.save();
-    const returner = album;
-    returner.comments = albumHelper.mapLikesDislikes(returner.comments);
+    const comment = new CommentSchema(req.user.id, username, text);
+    const [errorReturn, returner] = await handleError(
+      Comment.postComment(album, comment)
+    );
+
+    if (errorReturn) {
+      return res.status(500).json({ error: 'Error with the server.' });
+    }
+
     res.json({ comments: returner.comments });
   }
 );
