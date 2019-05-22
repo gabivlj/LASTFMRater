@@ -22,9 +22,11 @@ function CommentForm({ onSubmit, classes }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           margin="normal"
+          fullWidth
+          multiline
           variant="outlined"
       />
-      <Button color="primary" onClick={(e) => { e.preventDefault(); onSubmit(text); }}>
+      <Button color="primary" variant="contained" component="span" onClick={(e) => { e.preventDefault(); onSubmit(text); }}>
         Submit
       </Button>
     </div>

@@ -22,7 +22,11 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
   const [albums, setAlbums] = useState([]);
   const _ratings = ratingsProps || ratings;
   const _username = usernameProps || username;
-
+  function albumsSetForEach(album) {
+    if (album) {
+      album.rating = album.ratings ? album.ratings.filter(r => String(r.user) === String(_username))[0] : null;
+    }
+  }
   useEffect(() => {
     (async () => {
       let promiseRating = [];
@@ -31,12 +35,12 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
           promiseRating.push(axios.get(`/api/album/${rating}`));
         }
         let albumsSet = (await Promise.all(promiseRating)).map(promise => promise.data);
-        albumsSet.forEach(album => album.rating = album.ratings.filter(r => String(r.user) === String(_username))[0]);
+        albumsSet.forEach(albumsSetForEach);
         setAlbums(albumsSet);        
       }
     })()
   }, [ratings, ratingsProps]);
-  const renderError = !albums ? (
+  const renderError = albums.length === 0 ? (
     <div className="m-3">
       <CircularProgress />
     </div> ) : (
@@ -45,7 +49,7 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
   return (
     <div>
       {albums && albums.length > 0 ? albums.map(rating => 
-      (rating.rating ? <Rating
+      (rating && rating.rating ? <Rating
         albumName={rating.name} 
         artistName={rating.artist} key={rating._id} 
         rating={rating.rating.puntuation}

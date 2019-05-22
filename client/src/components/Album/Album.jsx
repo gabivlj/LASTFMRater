@@ -18,7 +18,7 @@ const __propTypes = {
 
 class Album extends Component {
   static propTypes = __propTypes;
-
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -142,14 +142,16 @@ class Album extends Component {
                 </div>
                 <br/>
                 {/* TODO: We are cuerrently testing this component for reusable. */}
-                <CommentSection
-                  user={currentUser}
-                  addComment={addComment}
-                  comments={album.comments}
-                  likeComment={() => console.log("nope")}
-                  dislikeComment={() => console.log("nope")}
-                  objectId={album._id}
-                />
+                <div style={{margin: '50px 0 20px 0'}}>
+                  <CommentSection
+                    user={currentUser}
+                    addComment={addComment}
+                    comments={album.comments}
+                    likeComment={() => console.log("nope")}
+                    dislikeComment={() => console.log("nope")}
+                    objectId={album._id}
+                  />
+                </div>
               </div>
             ) : (
               <LinearProgress />
