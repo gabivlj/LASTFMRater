@@ -121,7 +121,10 @@ class CommentHandler {
           finalIndex = index;
           SchemaInstance.comments[finalIndex] = comment;
         }
-        await SchemaInstance.save();
+        const [error, _] = await handleError(SchemaInstance.save());
+        if (error) {
+          return reject(error);
+        }
         return resolve({
           [type]: SchemaInstance.comments[finalIndex][type].length,
           index: finalIndex,
