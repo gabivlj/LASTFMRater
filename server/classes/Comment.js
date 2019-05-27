@@ -2,6 +2,10 @@ const handleError = require('../lib/handleError');
 const Comment = require('./CommentSchema');
 const albumHelper = require('./Album');
 
+function addOpinionToComment(userId, comment, type) {
+  comment[type].map(opinions => String(opinions.user)).indexOf(String(userId));
+}
+
 function areParamsRight(model, comment) {
   if (!model || !comment) return false;
   return true;
@@ -28,7 +32,7 @@ class CommentHandler {
         returner.comments = albumHelper.mapLikesDislikes(returner.comments);
         return resolve(returner.comments);
       } catch (err) {
-        reject(err);
+        return reject(err);
       }
     });
   }

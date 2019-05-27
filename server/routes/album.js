@@ -202,4 +202,25 @@ router.post(
   }
 );
 
+/**
+ * @POST
+ * @PRIVATE
+ * @PARAM id, commentId, fastIndex.
+ */
+router.post(
+  '/comment/like/:albumId/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { id, albumId } = req.params;
+    const { fastIndex } = req.body;
+    const userId = req.user.id;
+    // todo: handle error
+    const album = await Album.findById({ _id: albumId });
+    if (!album) {
+      return res.status(404).json({ error: 'Album not found.' });
+    }
+    await Comment.addOpinionToComment(album, 'likes', id, fastIndex, userId);
+  }
+);
+
 module.exports = router;
