@@ -2,22 +2,41 @@ const handleError = require('../lib/handleError');
 const Comment = require('./CommentSchema');
 const albumHelper = require('./Album');
 
-function addOpinionToComment(userId, comment, type) {
-  comment[type].map(opinions => String(opinions.user)).indexOf(String(userId));
+/**
+ * @param {String} userId
+ * @param {Comment} comment
+ * @param {String} type
+ * @returns {Commment} comment changed
+ */
+function addOpinionToSpecific(userId, comment, type) {
+  const index = comment[type]
+    .map(opinions => String(opinions.user))
+    .indexOf(String(userId));
+  if (index > -1) {
+    // If it finds it delete.
+    comment[type].splice(index, 1);
+    return comment;
+  }
+  comment[type][index].push({ user: userId });
+  return comment;
 }
 
 /**
  * @param {Array} comments, Comments array.
  * @param {String} id, Id to find
  * @param {Callback} fn, What do you wanna do to that comment.
+ * @returns {[index, comment]} index and the comment changed.
  */
 function findComment(comments, id, fn) {
-  for (const comment of comments) {
+  let index = 0;
+  for (let comment of comments) {
     if (String(comment._id) === String(id)) {
-      fn(comment);
-      break;
+      comment = fn(comment);
+      return [index, comment];
     }
+    index += 1;
   }
+  return -1;
 }
 
 function addOpinion(comment) {}
@@ -82,17 +101,30 @@ class CommentHandler {
         // Do fastIndex
       }
       try {
+        // Check fast index so we check there are no new comments when pushing like
         if (checkFastIndex()) {
-          SchemaInstance.comments[fastIndex][type].push({
-            user: userGivingOpinion,
-          });
           finalIndex = fastIndex;
+          // if fast index worked, no need to worry, we addOpinionToSpecific directly.
+          addOpinionToSpecific(
+            userGivingOpinion,
+            SchemaInstance.comments[fastIndex][type],
+            type
+          );
         } else {
-          findComment(SchemaInstance.comments, commentId);
+          // if fast index didn't work, just find the comment and addOpinionToSpecific.
+          const [index, comment] = findComment(
+            SchemaInstance.comments,
+            commentId,
+            _comment_ =>
+              addOpinionToSpecific(userGivingOpinion, _comment_, type)
+          );
+          finalIndex = index;
+          SchemaInstance.comments[finalIndex] = comment;
         }
         await SchemaInstance.save();
         return resolve({
           [type]: SchemaInstance.comments[finalIndex][type].length,
+          index: finalIndex,
         });
       } catch (err) {
         console.log(err);

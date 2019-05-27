@@ -219,7 +219,16 @@ router.post(
     if (!album) {
       return res.status(404).json({ error: 'Album not found.' });
     }
-    await Comment.addOpinionToComment(album, 'likes', id, fastIndex, userId);
+    album.comments = albumHelper.mapLikesDislikes(album.comments);
+    const obj = await Comment.addOpinionToComment(
+      album,
+      'likes',
+      id,
+      fastIndex,
+      userId
+    );
+    album.comments[obj.index].likes = obj.likes;
+    res.json({ comments: [...album.comments] });
   }
 );
 
