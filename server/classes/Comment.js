@@ -9,15 +9,22 @@ const albumHelper = require('./Album');
  * @returns {Commment} comment changed
  */
 function addOpinionToSpecific(userId, comment, type) {
-  const index = comment[type]
-    .map(opinions => String(opinions.user))
-    .indexOf(String(userId));
+  let index = -1;
+  if (Array.isArray(comment[type])) {
+    index = comment[type]
+      .map(opinions => String(opinions.user))
+      .indexOf(String(userId));
+  } else {
+    comment[type] = [{ user: userId }];
+    console.log(comment[type], comment);
+    return comment;
+  }
   if (index > -1) {
     // If it finds it delete.
     comment[type].splice(index, 1);
     return comment;
   }
-  comment[type][index].push({ user: userId });
+  comment[type].push({ user: userId });
   return comment;
 }
 
@@ -62,8 +69,7 @@ class CommentHandler {
       }
       try {
         modelInstance.comments = [comment, ...modelInstance.comments];
-        await modelInstance.save();
-        const returner = modelInstance;
+        const returner = await modelInstance.save();
         returner.comments = albumHelper.mapLikesDislikes(returner.comments);
         return resolve(returner.comments);
       } catch (err) {
@@ -105,11 +111,12 @@ class CommentHandler {
         if (checkFastIndex()) {
           finalIndex = fastIndex;
           // if fast index worked, no need to worry, we addOpinionToSpecific directly.
-          addOpinionToSpecific(
+          SchemaInstance.comments[fastIndex] = addOpinionToSpecific(
             userGivingOpinion,
-            SchemaInstance.comments[fastIndex][type],
+            SchemaInstance.comments[fastIndex],
             type
           );
+          console.log(SchemaInstance.comments[fastIndex]);
         } else {
           // if fast index didn't work, just find the comment and addOpinionToSpecific.
           const [index, comment] = findComment(
@@ -121,13 +128,14 @@ class CommentHandler {
           finalIndex = index;
           SchemaInstance.comments[finalIndex] = comment;
         }
-        const [error, _] = await handleError(SchemaInstance.save());
+        const [error, instanceSaved] = await handleError(SchemaInstance.save());
         if (error) {
           return reject(error);
         }
         return resolve({
           [type]: SchemaInstance.comments[finalIndex][type].length,
           index: finalIndex,
+          instanceSaved,
         });
       } catch (err) {
         console.log(err);

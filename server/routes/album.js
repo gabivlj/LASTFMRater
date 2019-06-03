@@ -198,7 +198,7 @@ router.post(
       return res.status(500).json({ error: 'Error with the server.' });
     }
 
-    res.json({ comments: returner.comments });
+    res.json({ comments: returner });
   }
 );
 
@@ -206,6 +206,7 @@ router.post(
  * @POST
  * @PRIVATE
  * @PARAM id, commentId, fastIndex.
+ * @RETURNS The array with the new comment like...
  */
 router.post(
   '/comment/like/:albumId/:id',
@@ -219,7 +220,6 @@ router.post(
     if (!album) {
       return res.status(404).json({ error: 'Album not found.' });
     }
-    album.comments = albumHelper.mapLikesDislikes(album.comments);
     const obj = await Comment.addOpinionToComment(
       album,
       'likes',
@@ -227,8 +227,8 @@ router.post(
       fastIndex,
       userId
     );
-    album.comments[obj.index].likes = obj.likes;
-    res.json({ comments: [...album.comments] });
+
+    res.json({ comments: [...obj.instanceSaved.comments] });
   }
 );
 
