@@ -54,5 +54,10 @@ export const addComment = (user, album, text) => async dispatch => {
     type: 'ADD_COMMENT_ALBUM',
     payload: response.data,
   });
+}
 
+export const likeComment = (albumId, commentId, fastIndex) => async dispatch => {
+  const [response, error] = await handleError(
+    axios.post(`/api/album/comment/like/${albumId}/${commentId}`, { fastIndex })
+  );
 }

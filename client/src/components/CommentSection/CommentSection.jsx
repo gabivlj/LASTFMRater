@@ -4,15 +4,15 @@ import Comment from './Comment';
 import CommentForm from './CommentForm';
 
 function CommentSection({ user, addComment, comments, likeComment, dislikeComment, objectId }) {
-  function onLike(id) {
+  function onLike(commentId, fastIndex) {
     return () => {
-      likeComment(id, user ? user._id : null);
+      likeComment(objectId, commentId, fastIndex);
     }
   }
 
-  function onDislike(id) {
+  function onDislike(commentId, fastIndex) {
     return () => {
-      likeComment(id, user ? user._id : null);
+      dislikeComment(objectId, commentId, fastIndex);
     }
   }
 
@@ -23,15 +23,15 @@ function CommentSection({ user, addComment, comments, likeComment, dislikeCommen
     }
   }
 
-  const commentsRender = comments.map(comment => 
+  const commentsRender = comments.map((comment, index) => 
       <Comment
         key={comment._id}
         user={comment.username}
         text={comment.text}
         likes={comment.likes - comment.dislikes}
         loged={user}
-        like={onLike(comment._id)}
-        dislike={onDislike(comment._id)}
+        like={onLike(comment._id, index)}
+        dislike={onDislike(comment._id, index)}
         img={comment.img}
       /> 
     )

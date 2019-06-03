@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { LinearProgress } from '@material-ui/core';
-import { getAlbum, addAlbumRating, addComment } from '../../actions/albumActions';
+import { getAlbum, addAlbumRating, addComment, likeComment } from '../../actions/albumActions';
 import store from '../../store';
 import hourFormat from '../../utils/hourFormat';
 import AlbumRating from './AlbumRating';
@@ -63,7 +63,7 @@ class Album extends Component {
 
   render() {
     let { album } = this.props;
-    const { currentUser, addComment } = this.props;
+    const { currentUser, addComment, likeComment } = this.props;
     if (album) album = album.album
     if (album) album = album.album
     let tracks;
@@ -147,7 +147,7 @@ class Album extends Component {
                     user={currentUser}
                     addComment={addComment}
                     comments={album.comments}
-                    likeComment={() => console.log("nope")}
+                    likeComment={likeComment}
                     dislikeComment={() => console.log("nope")}
                     objectId={album._id}
                   />
@@ -169,5 +169,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { getAlbum, addAlbumRating, addComment }
+  { getAlbum, addAlbumRating, addComment, likeComment }
 )(Album);
