@@ -1,5 +1,6 @@
 import axios from 'axios';
 import handleError from '../utils/handleError';
+import mapLikesDislikes from '../utils/mapLikesDislikes';
 
 export const getAlbum = albumData => dispatch => {
   const username = albumData.username ? `?username=${albumData.username}` : '';
@@ -49,15 +50,36 @@ export const addComment = (user, album, text) => async dispatch => {
       type: 'ERROR_ADDING_COMMENT_ALBUM',
     });
   }
-
+  const { data } = response;
+  const comments = mapLikesDislikes(data.comments);
   dispatch({
     type: 'ADD_COMMENT_ALBUM',
-    payload: response.data,
+    payload: { comments },
   });
 }
 
+/**
+ * @param {String} albumId 
+ * @param {String} commentId 
+ * @param {Number} fastIndex 
+ */
 export const likeComment = (albumId, commentId, fastIndex) => async dispatch => {
   const [response, error] = await handleError(
     axios.post(`/api/album/comment/like/${albumId}/${commentId}`, { fastIndex })
   );
+  if (error) {
+    dispatch({
+      type: 'ERROR_LIKING_COMMENT'
+    })
+  }
+  const { data } = response;
+  // Now mapLikesDislikes the comments.
+  const comments = mapLikesDislikes(data.comments);
+  dispatch({
+    // Maybe generalize this ?? 
+    type: 'ADD_COMMENT_ALBUM',
+    payload: {
+      comments
+    }
+  });
 }
