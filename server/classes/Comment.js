@@ -70,7 +70,7 @@ class CommentHandler {
       try {
         modelInstance.comments = [comment, ...modelInstance.comments];
         const returner = await modelInstance.save();
-        returner.comments = albumHelper.mapLikesDislikes(returner.comments);
+        // returner.comments = albumHelper.mapLikesDislikes(returner.comments);
         return resolve(returner.comments);
       } catch (err) {
         reject(err);
