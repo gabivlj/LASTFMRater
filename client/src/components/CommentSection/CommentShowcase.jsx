@@ -5,15 +5,17 @@ import PropTypes from 'prop-types';
 import CommentSection from './CommentSection';
 
 function CommentShowcase({ auth, comments, objectId, addComment, actionToComment, type, ...props }) {
+  const id = auth.apiUser ? auth.apiUser.id : null;
   return (
     <div>
       <CommentSection 
-        user={auth.user}
+        user={auth.apiUser ? auth.apiUser.user : null}
         comments={comments}
         objectId={objectId}
-        addComment={(user, objectId, text) => addComment(type, user, objectId, text)}
-        addLike={(objectId, commentId, fastIndex) => actionToComment(objectId, 'like', type, commentId, fastIndex)}
-        addDislike={(objectId, commentId, fastIndex) => actionToComment(objectId, 'dislike', type, commentId, fastIndex)}
+        addComment={(user, objectId, text) => addComment(type, user, objectId, text, id)}
+        // (id, typeofOpinion, type, commentId, fastIndex)
+        likeComment={(objectId, commentId, fastIndex) => actionToComment(objectId, 'like', type, commentId, fastIndex, id)}
+        dislikeComment={(objectId, commentId, fastIndex) => actionToComment(objectId, 'dislike', type, commentId, fastIndex, id)}
       />
     </div>
   )

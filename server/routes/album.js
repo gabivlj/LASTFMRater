@@ -131,9 +131,9 @@ router.post(
 );
 
 // @GET
-// @OPTIONALQUERYPARAMS username
+// @OPTIONALQUERYPARAMS username, userId
 router.get('/:albumname/:artistname', async (req, res) => {
-  const { username } = req.query;
+  const { username, userId } = req.query;
   const AlbumData = {
     albumname: req.params.albumname,
     username,
@@ -147,17 +147,16 @@ router.get('/:albumname/:artistname', async (req, res) => {
       artist: album__.artist,
       name: album__.name,
     });
-    // ?????
-    if (album__ && album__.tracks.track.length <= 0) {
-      // Find Album Tracks in our database incase we have them...
-      // if (tracks && tracks.length > 0) {
-      //   album__.tracks = find.tracks;
-      // }
-    }
+
     album__.ratings = find.ratings;
     album__.reviews = find.reviews;
     // TO be honest this is so bad I just cannot believe we are doing this haha.
     album__.comments = find.comments.map(comment => comment._doc);
+    if (userId)
+      album__.comments = albumHelper.getIfUserLikedOrNot(
+        album__.comments,
+        userId
+      );
     album__.comments = albumHelper.mapLikesDislikes(album__.comments);
     album__._id = find._id;
     album__.__v = find.__v;
@@ -223,6 +222,36 @@ router.post(
     const obj = await Comment.addOpinionToComment(
       album,
       'likes',
+      id,
+      fastIndex,
+      userId
+    );
+
+    res.json({ comments: [...obj.instanceSaved.comments] });
+  }
+);
+
+/**
+ * @POST
+ * @PRIVATE
+ * @PARAM id, commentId, fastIndex.
+ * @RETURNS The array with the new comment like...
+ */
+router.post(
+  '/comment/dislike/:albumId/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { id, albumId } = req.params;
+    const { fastIndex } = req.body;
+    const userId = req.user.id;
+    // todo: handle error
+    const album = await Album.findById({ _id: albumId });
+    if (!album) {
+      return res.status(404).json({ error: 'Album not found.' });
+    }
+    const obj = await Comment.addOpinionToComment(
+      album,
+      'dislikes',
       id,
       fastIndex,
       userId

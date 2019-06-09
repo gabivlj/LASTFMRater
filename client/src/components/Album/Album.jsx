@@ -9,6 +9,7 @@ import AlbumRating from './AlbumRating';
 import RatingsCommon from '../Common/RatingsCommon';
 import { Link } from 'react-router-dom';
 import CommentSection from '../CommentSection/CommentSection';
+import CommentShowcase from '../CommentSection/CommentShowcase';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
@@ -45,6 +46,10 @@ class Album extends Component {
       artist,
       albumname,
       mbid,
+      userId: 
+        this.props.currentUser
+          ? this.props.currentUser.id
+          : null,
       username:
         this.props.currentUser && this.props.currentUser.lastfm
           ? this.props.currentUser.lastfm
@@ -143,13 +148,18 @@ class Album extends Component {
                 <br/>
                 {/* TODO: We are cuerrently testing this component for reusable. */}
                 <div style={{margin: '50px 0 20px 0'}}>
-                  <CommentSection
+                  {/* <CommentSection
                     user={currentUser}
                     addComment={addComment}
                     comments={album.comments}
                     likeComment={likeComment}
                     dislikeComment={() => console.log("nope")}
                     objectId={album._id}
+                  /> */}
+                  <CommentShowcase
+                    comments={album.comments}
+                    objectId={album._id}
+                    type={'album'}                    
                   />
                 </div>
               </div>

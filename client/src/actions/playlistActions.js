@@ -61,8 +61,9 @@ export const sendPlaylist = (user, playlistName, playlistDescription, playlistCo
   history.push('/me/profile');
 }
 
-export const getPlaylist = _id => async dispatch => {
-  const [playlist, error] = await handleError(axios.get(`/api/playlist/${_id}`));
+export const getPlaylist = (_id, userId) => async dispatch => {
+  const query = userId ? `?userId=${userId}` : '';
+  const [playlist, error] = await handleError(axios.get(`/api/playlist/${_id}${query}`));
   if (error) console.log(error.response.data)
   dispatch({
     type: 'SET_PLAYLIST',

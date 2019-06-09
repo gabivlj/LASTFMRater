@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const CommentSchema = new Schema({
+  text: { type: String, required: true },
+  username: { type: String, required: true },
+  user: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
+  likes: [{ user: { type: Schema.Types.ObjectId, ref: 'users' } }],
+  dislikes: [{ user: { type: Schema.Types.ObjectId, ref: 'users' } }],
+  date: {
+    type: Date,
+    default: Date.now(),
+  },
+});
+
 /**
  * @PLAYLISTMODEL only tracks are here.
  */
@@ -25,20 +37,7 @@ const PlaylistModel = new Schema({
       puntuation: { type: Number },
     },
   ],
-  comments: [
-    {
-      text: { type: String },
-      userName: { type: String, required: true },
-      user: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
-      likes: [
-        { user: { type: Schema.Types.ObjectId, required: true, ref: 'users' } },
-      ],
-      Date: {
-        type: Date,
-        default: Date.now(),
-      },
-    },
-  ],
+  comments: [CommentSchema],
   playlistName: {
     type: String,
     default: '',
