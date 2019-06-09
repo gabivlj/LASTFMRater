@@ -152,12 +152,12 @@ router.get('/:albumname/:artistname', async (req, res) => {
     album__.reviews = find.reviews;
     // TO be honest this is so bad I just cannot believe we are doing this haha.
     album__.comments = find.comments.map(comment => comment._doc);
-    if (userId)
-      album__.comments = albumHelper.getIfUserLikedOrNot(
-        album__.comments,
-        userId
-      );
-    album__.comments = albumHelper.mapLikesDislikes(album__.comments);
+    // if (userId)
+    //   album__.comments = albumHelper.getIfUserLikedOrNot(
+    //     album__.comments,
+    //     userId
+    //   );
+    // album__.comments = albumHelper.mapLikesDislikes(album__.comments);
     album__._id = find._id;
     album__.__v = find.__v;
     return res.json({ album: album__ });
