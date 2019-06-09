@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import TrackPlaylist from './TrackPlaylist/TrackPlaylist';
 import PlaylistRating from './PlaylistRating/PlaylistRating';
 import { Link } from 'react-router-dom';
+import CommentShowcase from '../../CommentSection/CommentShowcase';
 
 const propTypes = {
   user: PropTypes.string.isRequired,
@@ -26,8 +27,14 @@ class Playlist extends Component {
     edit: false
   }
 
-  componentWillMount() {
-    this.props.getPlaylist(this.props.match.params.id);
+  componentDidMount() {
+    this.props.getPlaylist(this.props.match.params.id, this.props.auth.apiUser ? this.props.auth.apiUser.id : null);
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.auth.apiUser && !this.props.auth.auth) {
+      this.props.getPlaylist(this.props.match.params.id, this.props.auth.apiUser ? this.props.auth.apiUser.id : null);
+    }
   }
 
   render() {
@@ -82,7 +89,7 @@ class Playlist extends Component {
                       playlist={playlist}
                       auth={auth}
                     />
-                  </div>                  
+                  </div>         
                 </div>
               </div>
             </div>
@@ -97,6 +104,11 @@ class Playlist extends Component {
                }} />
               : null 
             }
+            <CommentShowcase
+                comments={playlist.comments}
+                objectId={playlist._id}
+                type={'playlist'}                    
+            />
           </div>
         </div>
       </div>

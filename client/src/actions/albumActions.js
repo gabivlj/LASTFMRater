@@ -2,8 +2,8 @@ import axios from 'axios';
 import handleError from '../utils/handleError';
 import mapLikesDislikes from '../utils/mapLikesDislikes';
 
-export const getAlbum = albumData => dispatch => {
-  const username = albumData.username ? `?username=${albumData.username}` : '';
+export const getAlbum = (albumData) => dispatch => {
+  const username = albumData.username ? `?username=${albumData.username}&userId=${albumData.userId}` : '';
   axios
     .get(`/api/album/${albumData.albumname}/${albumData.artist}${username}`)
     .then(res => {

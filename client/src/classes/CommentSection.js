@@ -1,6 +1,7 @@
 import axios from 'axios';
 import mapLikesDislikes from '../utils/mapLikesDislikes';
 import handleError from '../utils/handleError';
+import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
 
 // List of things that have comments. (INFO)
 const ALBUM = 'ALBUM';
@@ -12,8 +13,8 @@ const getStringsForActions = (type) => {
   return {
     addDispatch: `ADD_COMMENT_${type.toUpperCase()}`,
     errorDispatch: `ERROR_ADDING_COMMENT_${type.toUpperCase()}`,
-    queryAddingComment: (id) => `/${type.toLowerCase()}/comment/${id}`,
-    queryAddingOpinion: (id, opinion, commentId) => `${type}/comment/${opinion}/${id}/${commentId}`,
+    queryAddingComment: (id) => `/api/${type.toLowerCase()}/comment/${id}`,
+    queryAddingOpinion: (id, opinion, commentId) => `/api/${type}/comment/${opinion}/${id}/${commentId}`,
   }
 }
 
@@ -29,7 +30,7 @@ class CommentSection {
    * @param {String} username, username
    * @param {String} text, comment
    */
-  static addComment(dispatch, element, elementId, username, text) {
+  static async addComment(dispatch, element, elementId, username, text, userId) {
     const actions = getStringsForActions(element);
 
     if (typeof username !== 'string' || username.length === 0 || typeof text !== 'string' || text.length < 1) {
@@ -49,7 +50,8 @@ class CommentSection {
     }
 
     const { data } = response;
-    const comments = mapLikesDislikes(data.comments);
+    let comments = getIfUserLikedOrNot(data.comments, userId)
+    comments = mapLikesDislikes(comments);
 
     dispatch({
       type: actions.addDispatch,
@@ -58,7 +60,7 @@ class CommentSection {
 
   }
 
-  static opinionComment(dispatch, typeofOpinion, element, elementId, commentId, fastIndex) {
+  static async opinionComment(dispatch, typeofOpinion, element, elementId, commentId, fastIndex, userId) {
     const actions = getStringsForActions(element);
 
     const [response, error] = await handleError(
@@ -70,13 +72,15 @@ class CommentSection {
       )
     );
     if (error) {
-      dispatch({
+      console.log(error);
+      return dispatch({
         type: 'ERROR_LIKING_COMMENT'
       })
     }
     const { data } = response;
     // Now mapLikesDislikes the comments.
-    const comments = mapLikesDislikes(data.comments);
+    let comments = getIfUserLikedOrNot(data.comments, userId)
+    comments = mapLikesDislikes(comments);
     dispatch({
       // Maybe generalize this ?? 
       type: actions.addDispatch,

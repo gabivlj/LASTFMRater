@@ -17,13 +17,13 @@ function CommentSection({ user, addComment, comments, likeComment, dislikeCommen
   }
 
   function onSubmit(txt) {
-    console.log(user);
-    if (user && typeof user === 'object') { 
-      addComment(user.user, objectId, txt);
+    
+    if (typeof user === 'string' && user.length > 3) { 
+      addComment(user, objectId, txt);
     }
   }
 
-  const commentsRender = comments.map((comment, index) => 
+  const commentsRender = comments ? comments.map((comment, index) => 
       <Comment
         key={comment._id}
         user={comment.username}
@@ -33,8 +33,10 @@ function CommentSection({ user, addComment, comments, likeComment, dislikeCommen
         like={onLike(comment._id, index)}
         dislike={onDislike(comment._id, index)}
         img={comment.img}
+        liked={comment.liked}
+        disliked={comment.disliked}
       /> 
-    )
+    ) : null;
   return (
     <div>
       <h1>Comments</h1>
@@ -47,13 +49,13 @@ function CommentSection({ user, addComment, comments, likeComment, dislikeCommen
 }
 
 CommentSection.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.string,
   addComment: PropTypes.func.isRequired,
   likeComment: PropTypes.func.isRequired,
   dislikeComment: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
   // Object related id.
-  objectId: PropTypes.string.isRequired
+  objectId: PropTypes.string.isRequired,
 }
 
 CommentSection.defaultProps = {

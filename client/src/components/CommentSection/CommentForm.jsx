@@ -18,7 +18,6 @@ function CommentForm({ onSubmit, classes }) {
       <TextField
           id="outlined-bare"
           className={classes.textField}
-          defaultValue="Insert something..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           margin="normal"

@@ -5,8 +5,13 @@ import { ThumbUp, ThumbDown } from '@material-ui/icons';
 import ProfileImage from '../../images/profile.png'
 import './Comment.styles.css'
 
-function Comment({img, user, like, dislike, likes, loged, text}) {
+function Comment({img, user, like, dislike, likes, loged, text, liked, disliked}) {
   const disabled = loged == null ? true : false;
+  const red = '#f23077';
+  const blue = '#5476f2';
+  const likedDisp = liked ? blue : 'black';
+  const dislikedDisp = disliked ? red : 'black';
+
   return (
     <div className="comment">
       <div className="row">
@@ -20,11 +25,11 @@ function Comment({img, user, like, dislike, likes, loged, text}) {
           </p>
           <div className="comment-likes">
             <Fab disabled={disabled} onClick={like} className="fab-left">
-              <ThumbUp />              
+              <ThumbUp style={{color: likedDisp}} />              
             </Fab>
             <span className="likes-span">{likes}</span>
             <Fab disabled={disabled} onClick={dislike}>
-              <ThumbDown />
+              <ThumbDown style={{color: dislikedDisp}} />
             </Fab>
           </div>
         </div>
@@ -36,6 +41,8 @@ function Comment({img, user, like, dislike, likes, loged, text}) {
 Comment.propTypes = {
   img: PropTypes.string,
   loged: PropTypes.string,
+  liked: PropTypes.bool,
+  disliked: PropTypes.bool,
   like: PropTypes.func.isRequired,
   dislike: PropTypes.func.isRequired,
   user: PropTypes.string.isRequired,
@@ -45,7 +52,9 @@ Comment.propTypes = {
 
 Comment.defaultProps = {
   img: ProfileImage,
-  loged: null
+  loged: null,
+  liked: false,
+  disliked: false,
 }
 
 export default Comment;

@@ -6,19 +6,32 @@ const addTrack = require('../lib/addTrack');
 const Playlist = require('../models/Playlist');
 const Track = require('../models/Track');
 const RatingHelper = require('../lib/RatingHelper');
+const albumHelper = require('../classes/Album');
+const CommentSchema = require('../classes/CommentSchema');
+const Comment = require('../classes/Comment');
 
 /**
  * @GET
  * @PUBLIC
  * @description Get a playlist by id
+ * @OPTIONAL userId,
  */
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
+  const { userId } = req.query;
   Playlist.findById({ _id: id })
     .then(async pl => {
       const playlist = pl;
       const tracks = pl.tracks.map(track => Track.findOne({ _id: track }));
       playlist.tracksShow = await Promise.all(tracks);
+      // album__.comments = find.comments.map(comment => comment._doc);
+      playlist.comments = albumHelper.getIfUserLikedOrNot(
+        playlist.comments ? playlist.comments : [],
+        userId
+      );
+      playlist.comments = albumHelper.mapLikesDislikes(
+        playlist.comments ? playlist.comments : []
+      );
       return res.json({ playlist });
     })
     .catch(err => res.status(400).json({ error: 'Playlist not found.' }));
@@ -326,5 +339,94 @@ router.get('/search/:query', async (req, res) => {
   }
   res.json({ playlists });
 });
+
+/**
+ * @POST
+ * @PRIVATE
+ * @PARAM id, commentId, fastIndex.
+ * @RETURNS The array with the new comment like...
+ */
+router.post(
+  '/comment/like/:playlistId/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { id, playlistId } = req.params;
+    const { fastIndex } = req.body;
+    const userId = req.user.id;
+    // todo: handle error
+    const playlist = await Playlist.findById({ _id: playlistId });
+    if (!playlist) {
+      return res.status(404).json({ error: 'Playlist not found.' });
+    }
+    const obj = await Comment.addOpinionToComment(
+      playlist,
+      'likes',
+      id,
+      fastIndex,
+      userId
+    );
+
+    res.json({ comments: [...obj.instanceSaved.comments] });
+  }
+);
+
+/**
+ * @POST
+ * @PRIVATE
+ * @PARAM id, commentId, fastIndex.
+ * @RETURNS The array with the new comment like...
+ */
+router.post(
+  '/comment/dislike/:playlistId/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { id, playlistId } = req.params;
+    const { fastIndex } = req.body;
+    const userId = req.user.id;
+    // todo: handle error
+    const playlist = await Playlist.findById({ _id: playlistId });
+    if (!playlist) {
+      return res.status(404).json({ error: 'Playlist not found.' });
+    }
+    const obj = await Comment.addOpinionToComment(
+      playlist,
+      'dislikes',
+      id,
+      fastIndex,
+      userId
+    );
+
+    res.json({ comments: [...obj.instanceSaved.comments] });
+  }
+);
+
+/**
+ * @POST
+ * @PRIVATE
+ * @BODY text, username
+ * @PARAM id: album id
+ */
+router.post(
+  '/comment/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { text, username } = req.body;
+    const { id } = req.params;
+    const [error, playlist] = await handleError(Playlist.findById(id));
+    if (error) {
+      return res.status(404).json({ error: 'playlist not found.' });
+    }
+    const comment = new CommentSchema(req.user.id, username, text);
+    const [errorReturn, returner] = await handleError(
+      Comment.postComment(playlist, comment)
+    );
+
+    if (errorReturn) {
+      return res.status(500).json({ error: 'Error with the server.' });
+    }
+
+    res.json({ comments: returner });
+  }
+);
 
 module.exports = router;
