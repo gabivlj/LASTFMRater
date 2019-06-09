@@ -1,12 +1,17 @@
 import axios from 'axios';
 import handleError from '../utils/handleError';
 import mapLikesDislikes from '../utils/mapLikesDislikes';
+import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
 
 export const getAlbum = (albumData) => dispatch => {
   const username = albumData.username ? `?username=${albumData.username}&userId=${albumData.userId}` : '';
   axios
     .get(`/api/album/${albumData.albumname}/${albumData.artist}${username}`)
     .then(res => {
+      console.log(res.data.album);
+      let comments = getIfUserLikedOrNot(res.data.album.comments, albumData.userId);
+      comments = mapLikesDislikes(comments);
+      res.data.album.comments = comments;
       dispatch({
         type: 'GET_ALBUM',
         payload: res.data,

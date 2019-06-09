@@ -25,13 +25,13 @@ router.get('/:id', async (req, res) => {
       const tracks = pl.tracks.map(track => Track.findOne({ _id: track }));
       playlist.tracksShow = await Promise.all(tracks);
       // album__.comments = find.comments.map(comment => comment._doc);
-      playlist.comments = albumHelper.getIfUserLikedOrNot(
-        playlist.comments ? playlist.comments : [],
-        userId
-      );
-      playlist.comments = albumHelper.mapLikesDislikes(
-        playlist.comments ? playlist.comments : []
-      );
+      // playlist.comments = albumHelper.getIfUserLikedOrNot(
+      //   playlist.comments ? playlist.comments : [],
+      //   userId
+      // );
+      // playlist.comments = albumHelper.mapLikesDislikes(
+      //   playlist.comments ? playlist.comments : []
+      // );
       return res.json({ playlist });
     })
     .catch(err => res.status(400).json({ error: 'Playlist not found.' }));

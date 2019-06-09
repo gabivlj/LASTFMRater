@@ -1,6 +1,8 @@
 import axios from 'axios';
 import handleError from '../utils/handleError';
 import guidGenerator from '../utils/idCreator';
+import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
+import mapLikesDislikes from '../utils/mapLikesDislikes';
 
 export const searchTracks = query => async dispatch => {
   const [response, error] = await handleError(
@@ -64,7 +66,10 @@ export const sendPlaylist = (user, playlistName, playlistDescription, playlistCo
 export const getPlaylist = (_id, userId) => async dispatch => {
   const query = userId ? `?userId=${userId}` : '';
   const [playlist, error] = await handleError(axios.get(`/api/playlist/${_id}${query}`));
-  if (error) console.log(error.response.data)
+  if (error) console.log(error.response.data);
+  let comments = getIfUserLikedOrNot(playlist.data.playlist.comments, userId);
+  comments = mapLikesDislikes(playlist.data.playlist.comments);
+  playlist.data.playlist.comments = comments;
   dispatch({
     type: 'SET_PLAYLIST',
     payload: playlist.data.playlist,
