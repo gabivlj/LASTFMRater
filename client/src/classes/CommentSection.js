@@ -3,12 +3,6 @@ import mapLikesDislikes from '../utils/mapLikesDislikes';
 import handleError from '../utils/handleError';
 import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
 
-// List of things that have comments. (INFO)
-const ALBUM = 'ALBUM';
-const PLAYLIST = 'PLAYLIST';
-const ARTIST = 'ARTIST';
-const PROFILE = 'PROFILE';
-
 const getStringsForActions = (type) => {
   return {
     addDispatch: `ADD_COMMENT_${type.toUpperCase()}`,

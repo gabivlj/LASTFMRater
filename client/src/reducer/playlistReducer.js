@@ -92,7 +92,7 @@ export default (state = initialState, action) => {
         ...state,
         currentDragTrack: {
           ...action.payload
-        }
+        },
       }
     case 'SET_TRACKS':  
       return {
@@ -110,8 +110,24 @@ export default (state = initialState, action) => {
           ...state.playlist,
           __v: action.payload.__v,
           ratings: [...action.payload.rating],
-        }
+        },
       }
+    case 'ADD_COMMENT_PLAYLIST':
+      return {
+        ...state,
+        playlist: {
+          ...state.playlist,
+          comments: [...action.payload.comments],
+        },
+      }
+    case 'LIKE_COMMENT_PLAYLIST':
+      return {
+        ...state,
+        playlist: {
+          ...state.playlist,
+          comments: [...action.payload.comments],
+        },
+      };
     default:
       return {
         ...state        

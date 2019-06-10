@@ -19,7 +19,7 @@ export const getAlbum = (albumData) => dispatch => {
     })
     .catch(err => console.log(err));
   axios
-    .post('/api/album', albumData)
+    .post('/api/album', albumData);
 };
 
 export const addAlbumRating = (albumId, puntuation, username, userid) => dispatch => {
