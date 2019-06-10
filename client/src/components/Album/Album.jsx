@@ -5,10 +5,8 @@ import { LinearProgress } from '@material-ui/core';
 import { getAlbum, addAlbumRating, addComment, likeComment } from '../../actions/albumActions';
 import store from '../../store';
 import hourFormat from '../../utils/hourFormat';
-import AlbumRating from './AlbumRating';
 import RatingsCommon from '../Common/RatingsCommon';
 import { Link } from 'react-router-dom';
-import CommentSection from '../CommentSection/CommentSection';
 import CommentShowcase from '../CommentSection/CommentShowcase';
 
 const __propTypes = {
