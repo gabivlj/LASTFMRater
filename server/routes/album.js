@@ -73,8 +73,7 @@ router.get('/search/:name', async (req, res) => {
   const { name } = req.params;
 
   try {
-    // TODO Make our DB find albums like the lastfm api
-    // const album = await Album.find({ name })
+    // const album = await Album.find({ $or: [ { name: { '$regex': name, options: '$i' } }]  }).sort( { name: -1 } );
     const album__ = await FM.searchAlbums(name, limit, page);
     return res.json(album__);
   } catch (err) {

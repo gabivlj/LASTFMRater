@@ -56,6 +56,15 @@ export default (state = initialState, action) => {
           playlists: { list: [...action.payload], loading: false },
         },
       };
+    case 'SEARCH_PLAYLISTS_FOR_SEARCH':
+      return {
+        ...state,
+        loadingSearch: false,
+        searchData: {
+          ...state.searchData,
+          profiles: { list: [...(action.payload ? action.payload : [])], loading: false },
+        },
+      }; 
     case 'CLEAN_SEARCH_PAGE':
       return {
         ...state,

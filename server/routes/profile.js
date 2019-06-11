@@ -125,4 +125,51 @@ router.get(
   }
 );
 
+/**
+ * @GET
+ * @PUBLIC
+ * @DESCRIPTION Returns the searched query related to profiles
+ * @param { String } query
+ * @queryparam { Number } numberOfElements. (OPTIONAL)
+ */
+router.get('/search/:query', async (req, res) => {
+  const { query } = req.params;
+  const { numberOfElements = 9 } = req.query;
+  const parsedElements = parseInt(numberOfElements, 10);
+  let finalProfiles;
+
+  if (query === null || query === undefined || query.trim() === '') {
+    return res.json({ profiles: [] });
+  }
+
+  const [error, profiles] = await handleError(
+    User.find({
+      $or: [{ username: { $regex: query, $options: 'i' } }],
+    }).sort({ name: -1 })
+  );
+
+  if (error) {
+    res.status(404).json({ error: 'Error finding profiles ', profiles: [] });
+  }
+
+  const secureProfiles = profiles.map(profile => ({
+    user: profile.username,
+    lastfm: profile.lastfm,
+    img: profile.img || '',
+    followers: profile.followers || 0,
+    _id: profile._id,
+  }));
+
+  if (
+    Array.isArray(secureProfiles) &&
+    secureProfiles.length >= parsedElements
+  ) {
+    finalProfiles = secureProfiles.slice(0, parsedElements + 1);
+  } else {
+    finalProfiles = secureProfiles;
+  }
+
+  res.json({ profiles: finalProfiles });
+});
+
 module.exports = router;
