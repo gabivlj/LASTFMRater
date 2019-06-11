@@ -7,6 +7,9 @@ import Auth, {
   deleteAuthTokenFromLS,
 } from '../utils/Auth';
 
+/**
+ * @description This action is called when lastfm auth is done.
+ */
 export const setUser = (
   token,
   username,

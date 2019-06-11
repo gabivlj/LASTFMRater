@@ -70,3 +70,20 @@ export const searchPlaylists = (query, limit = 5, page = 1) => async dispatch =>
     payload: data.playlists,
   })
 }
+
+export const searchProfiles = (query, limit = 5, page = 1) => async dispatch => {
+  page = page <= 0 ? 1 : page;
+  const [response, error] = await handleError(
+    axios.get(`/api/profile/search/${query}`)
+  );
+  if (error) {
+    return dispatch({
+      type: 'ERROR_FINDING_PLAYLIST_SEARCH'
+    })
+  }
+  const { data } = response;
+  dispatch({
+    type: 'SEARCH_PROFILES_FOR_SEARCH',
+    payload: data.profiles,
+  })
+}

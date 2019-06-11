@@ -24,14 +24,6 @@ router.get('/:id', async (req, res) => {
       const playlist = pl;
       const tracks = pl.tracks.map(track => Track.findOne({ _id: track }));
       playlist.tracksShow = await Promise.all(tracks);
-      // album__.comments = find.comments.map(comment => comment._doc);
-      // playlist.comments = albumHelper.getIfUserLikedOrNot(
-      //   playlist.comments ? playlist.comments : [],
-      //   userId
-      // );
-      // playlist.comments = albumHelper.mapLikesDislikes(
-      //   playlist.comments ? playlist.comments : []
-      // );
       return res.json({ playlist });
     })
     .catch(err => res.status(400).json({ error: 'Playlist not found.' }));
@@ -323,21 +315,34 @@ router.post(
  * @PUBLIC
  * @DESCRIPTION Returns the searched query related to playlists
  * @param { String } query
+ * @queryparam { String } numberOfElements (OPTIONAL)
  */
 router.get('/search/:query', async (req, res) => {
   const { query } = req.params;
+  const { numberOfElements = 9 } = req.query;
+  const parsedElements = parseInt(numberOfElements, 10);
+  let finalPlaylists;
+
   if (query === null || query === undefined || query.trim() === '') {
     return res.json({ playlists: [] });
   }
   const [error, playlists] = await handleError(
     Playlist.find({
       $or: [{ playlistName: { $regex: query, $options: 'i' } }],
-    })
+    }).sort({ playlistName: -1 })
   );
+
   if (error) {
     return res.status(400).json({ error: 'Error finding the playlists. ' });
   }
-  res.json({ playlists });
+
+  if (Array.isArray(playlists) && playlists.length >= parsedElements) {
+    finalPlaylists = playlists.slice(0, parsedElements + 1);
+  } else {
+    finalPlaylists = playlists;
+  }
+
+  res.json({ playlists: finalPlaylists });
 });
 
 /**
