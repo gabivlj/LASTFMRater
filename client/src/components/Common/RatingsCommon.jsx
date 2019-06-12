@@ -2,30 +2,32 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './RatingsCommon.styles.css';
 
-// Array of ratings
-  /**
-   * @param {Array} ratings { puntuation, id }
-   * @param {Object} auth {user, id ...}
-   * @param {Object} elementWithRatings { __v }
-   * @param {Function} setRatings (elementId, i, username, auth.id)
-   * @param {String} elementId
-   * @param {String} username 
-   * @param {Boolean} showTitleGeneral
-   */
+/**
+ * @param {Array} ratings { puntuation, id }
+ * @param {Object} auth {user, id ...}
+ * @param {Object} elementWithRatings { __v }
+ * @param {Function} setRatings (elementId, i, username, auth.id)
+ * @param {String} elementId
+ * @param {String} username 
+ * @param {Boolean} showTitleGeneral
+ */
 const propTypes = {  
-  ratings: PropTypes.array.isRequired,
-  auth: PropTypes.object.isRequired,
   elementWithRatings: PropTypes.object.isRequired,
   setRatings: PropTypes.func.isRequired,
   elementId: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
   comparisonInRatingUpdate: PropTypes.string,
+  auth: PropTypes.object,
   showTitleGeneral: PropTypes.bool,
+  ratings: PropTypes.array,
 }
 
 const defaultProptypes = {
   comparisonInRatingUpdate: null,
   showTitleGeneral: true,
+  auth: null,
+  username: '',
+  ratings: [],
 }
 
 const buttonStyle = {
@@ -35,6 +37,17 @@ const buttonStyle = {
   cursor: 'pointer',
 };
 
+/**
+ * @PARAMS_DESCRIPTION
+ * @param {Array} Ratings Array
+ * @param {Object} Auth Object (In Grumpy social network redux it's apiUser)
+ * @param {Object} elementWithRatings Is the mongodb object, with __v and _id.
+ * @param {Callback} setRatings Is a function that sets the ratings, params: ( item_id, rating, username, user_id )
+ * @param {String} elementId
+ * @param {String} username
+ * @param {String} comparisonInRatingUpdate What you wanna compare .user to.
+ * @param {Boolean} showTitleGeneral If you wanna show the total score
+ */
 function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementId, username, comparisonInRatingUpdate, showTitleGeneral }) {
   const [state, setState] = useState({
     rating: 0,
@@ -48,6 +61,10 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
     ratingUpdate();
   }, [ratings, elementWithRatings, state]);
 
+  /**
+   * @param {Number} i, puntuation
+   * @description Handles a click on a star.
+   */
   function handleClick(i) {
     if (auth) {
       setState((prevState) => ({ ...state, actualRating: i }));
@@ -57,26 +74,31 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
         username,
         auth.id
       );
-    } else {
-      setState((prev) => ({
-        ...prev,
-        error: 'You cannot rate an album if you are not logged!',
-      }));
-      setTimeout(() => setState((prev) => ({ ...state, error: null })), 2000);
+      return;
     }
+    // If not loged. TODO: Maybe make a possibility of executing a passed callback right here?
+    setState((prev) => ({
+      ...prev,
+      error: 'You cannot rate an album if you are not logged!',
+    }));
+    setTimeout(() => setState((prev) => ({ ...state, error: null })), 2000);
   }
 
+  /**
+   * @description Updates the rating if there is any changes.
+   */
   function ratingUpdate() {    
     if (
       ratings &&
       ratings.length > 0 &&
+      // Checkes the version of the database and the current version.
       elementWithRatings.__v !== state.currentVersion
     ) {
-      let actualRating = 0;
+      let generalRating = 0;
       for (const rating of ratings) {
-        actualRating += rating.puntuation;
+        generalRating += rating.puntuation;
       }
-      actualRating /= ratings.length;
+      generalRating /= ratings.length;
       let userRating = null; 
       // Check if it's auth
       if (auth !== null && typeof auth === 'object' && auth !== undefined) {
@@ -88,12 +110,16 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
       console.log(userRating);
       if (userRating && userRating.length > 0) userRating = userRating[0].puntuation;
       else {
-        userRating = actualRating;
+        userRating = generalRating;
       }
       setState({
-        generalRating: actualRating,
+        // The general rating (What the social network thinks of this.)
+        generalRating,
+        // The user rating for checking the current stars
         rating: userRating,
+        // The actual rating of the user.
         actualRating: userRating,
+        // Updates the current database version on component's state.
         currentVersion: elementWithRatings.__v,
       });      
     }
@@ -106,8 +132,10 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
         stars.push(
           <button
             style={buttonStyle}
+            // It sets this star as the current star.
             onPointerEnter={() => setState({ ...state, rating: i + 1 })}
             onPointerLeave={() =>
+              // When it leaves it sets it as before.
               setState({ ...state, rating: state.actualRating })
             }
             key={i}
