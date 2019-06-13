@@ -23,7 +23,7 @@ function Profile({ profile, classes, className }) {
 		<div>
 			<Card className={`${classes.card} ${className}`}>
 				<CardActionArea
-					onClick={() => (window.location.href = `/profile/${profile._id}`)}
+					onClick={() => (window.location.href = `/profile/${profile.user}`)}
 				>
 					<CardMedia
 						className={classes.media}
@@ -31,14 +31,15 @@ function Profile({ profile, classes, className }) {
 							profile.img ||
 							'https://www.mompetit.com/wp-content/themes/holalady/img/img_placeholder.png'
 						}
-						title={playlist.name}
+						title={profile.user}
 					/>
 					<CardContent>
 						<Typography gutterBottom variant="h5" component="h2">
 							{profile.user}
 						</Typography>
 						<Typography component="p">
-							Followers: {profile.followers || 0}
+							Followers: {profile.followers.length || 0}
+							<br />
 							{typeof profile.lastfm === 'string' && profile.lastfm.length > 0
 								? `Lastfm: ${profile.lastfm}`
 								: 'Has no Lastfm account linked.'}

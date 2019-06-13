@@ -5,6 +5,7 @@ import store from '../../../../store';
 import { connect } from 'react-redux';
 import { interchangeTracks } from '../../../../actions/playlistActions';
 
+// source https://stackoverflow.com/questions/49328382/browser-detection-in-reactjs
 const IS_FIREFOX = typeof InstallTrigger !== 'undefined';
 
 /**
@@ -29,6 +30,8 @@ function TrackPlaylist({
 		deleteTrack(id, playlistId, index);
 	}
 
+	// UseEffect for checking if the browser is firefox.
+	// more information: https://stackoverflow.com/questions/3977596/how-to-make-divs-in-html5-draggable-for-firefox
 	useEffect(() => {
 		if (edit && IS_FIREFOX) {
 			dragElement.current.addEventListener('dragstart', e => {
