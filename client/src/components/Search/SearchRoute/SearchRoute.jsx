@@ -18,6 +18,9 @@ const __propTypes = {
   searchProfiles: PropTypes.func.isRequired,
 };
 
+/**
+ * @description The search route, handles everything of /search/:query.
+ */
 class SearchRoute extends Component {
   static propTypes = __propTypes;
 
@@ -27,15 +30,18 @@ class SearchRoute extends Component {
     this.searchHandler = null;
   }
 
+  // REACT LIFECYCLE
+
+  componentWillUnmount() {
+    store.dispatch({ type: 'CLEAN_SEARCH_PAGE' });
+  }
+
   componentDidMount() {
     const { searchquery } = this.props.match.params;
     this.searchHandler = new Search(searchquery, store);
     // We set cleaned: false to inform that we populated lists.
     store.dispatch({ type: 'POPULATE_SEARCH' });
-    this.add('albums', this.props.searchAlbums);
-    this.add('artists', this.props.searchArtists);
-    this.add('playlists', this.props.searchPlaylists);
-    this.add('profiles', this.props.searchProfiles);
+    this.searchEverything();
   }
 
   componentWillReceiveProps(next) {
@@ -46,15 +52,26 @@ class SearchRoute extends Component {
       store.dispatch({ type: 'POPULATE_SEARCH' });
       // Change the query param in the Search class.
       this.searchHandler.searchquery = next.match.params.searchquery;
-      // Find albums
-      this.add('albums', this.props.searchAlbums);
-      this.add('artists', this.props.searchArtists);
-      this.add('playlists', this.props.searchPlaylists);
-      this.add('profiles', this.props.searchProfiles);
+      // Populate searchData.
+      this.searchEverything();
     }
   }
 
-  // Add the items corresponding to their object in the state.
+   // COMPONENT METHODS
+
+  /**
+   * @description Searches every element of the search page.
+   */
+  searchEverything = () => {
+    this.add('albums', this.props.searchAlbums);
+    this.add('artists', this.props.searchArtists);
+    this.add('playlists', this.props.searchPlaylists);
+    this.add('profiles', this.props.searchProfiles);
+  }
+
+  /**
+   * @description Add the items corresponding to their object in the state, and makes the api call.
+   */
   add = (type, functionprops) => {
     this.searchHandler.search(
       type,
@@ -66,10 +83,6 @@ class SearchRoute extends Component {
       [type]: { currentItems: this.state[type].currentItems + 10 },
     });
   };
-
-  componentWillUnmount() {
-    store.dispatch({ type: 'CLEAN_SEARCH_PAGE' });
-  }
 
   render() {
     const { searchquery } = this.props.match.params;
@@ -114,7 +127,7 @@ class SearchRoute extends Component {
         >
           <AddIcon />
         </Fab>
-        {/* Users */}
+        {/* TODO: Users */}
         <Fab
           color="primary"
           aria-label="Add"
@@ -133,6 +146,7 @@ class SearchRoute extends Component {
 const mapStateToProps = state => ({
   search: state.search.searchData,
 });
+
 export default connect(
   mapStateToProps,
   { searchAlbums, searchArtists, searchPlaylists, searchProfiles }
