@@ -138,7 +138,7 @@ class SearchRoute extends Component {
 				>
 					<AddIcon />
 				</Fab>
-				{/* TODO: Users */}
+				{/* Users */}
 				<Profiles profiles={profiles} />
 				<Fab
 					color="primary"
