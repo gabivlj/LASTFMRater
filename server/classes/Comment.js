@@ -63,8 +63,6 @@ function findComment(comments, id, fn) {
 	return -1;
 }
 
-function addOpinion(comment) {}
-
 function areParamsRight(model, comment) {
 	if (!model || !comment) return false;
 	return true;
