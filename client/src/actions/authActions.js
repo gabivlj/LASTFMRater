@@ -87,8 +87,8 @@ export const register = (
 	username,
 	history
 ) => async dispatch => {
-	const [error, userRegister] = handleError(
-		await axios.post('/api/user/register', {
+	const [error, userRegister] = await handleError(
+		axios.post('/api/user/auth/register', {
 			email,
 			password,
 			password2,
@@ -99,9 +99,10 @@ export const register = (
 		history.push('/auth/login');
 		return;
 	} // dispatch errors
+	console.log(error);
 	dispatch({
 		type: 'SET_ERRORS_REGISTER',
-		payload: error.errors
+		payload: error.response.data
 	});
 };
 
