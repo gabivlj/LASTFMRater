@@ -88,12 +88,15 @@ class Register extends Component {
 						label="Your password"
 						multiline={false}
 						fullWidth
+						error={errors['password'] || ''}
+						cleanErrors={this.cleanErrors}
 					/>
 					<InputBorderline
 						type="password"
 						name="password2"
 						value={this.state.password2}
 						onChange={this.onChange}
+						error={errors['password2'] || ''}
 						label="Repeat your password"
 						multiline={false}
 						fullWidth
