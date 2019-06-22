@@ -138,28 +138,22 @@ router.get('/:albumname/:artistname', async (req, res) => {
 		username,
 		artist: req.params.artistname
 	};
-	let album__ = await FM.getAlbum(AlbumData);
+	let albumFM = await FM.getAlbum(AlbumData);
 
-	if (album__) {
-		album__ = album__.album;
-		const find = await Album.findOne({
-			artist: album__.artist,
-			name: album__.name
+	if (albumFM) {
+		albumFM = albumFM.album;
+		const albumDB = await Album.findOne({
+			artist: albumFM.artist,
+			name: albumFM.name
 		});
-
-		album__.ratings = find.ratings;
-		album__.reviews = find.reviews;
-		// TO be honest this is so bad I just cannot believe we are doing this haha.
-		album__.comments = find.comments.map(comment => comment._doc);
-		// if (userId)
-		//   album__.comments = albumHelper.getIfUserLikedOrNot(
-		//     album__.comments,
-		//     userId
-		//   );
-		// album__.comments = albumHelper.mapLikesDislikes(album__.comments);
-		album__._id = find._id;
-		album__.__v = find.__v;
-		return res.json({ album: album__ });
+		albumFM.ratings = albumDB.ratings;
+		albumFM.reviews = albumDB.reviews;
+		// NOTE: TODO WHEN WE USE ANOTHER LANGUAGE OR SERVER FOR COMMENTS, WE ARE GONNA SHUT THIS THING DOWN.
+		albumFM.comments = albumDB.comments.slice(0, 15);
+		/*************************************************/
+		albumFM._id = albumDB._id;
+		albumFM.__v = albumDB.__v;
+		return res.json({ album: albumFM });
 	}
 	const album = await Album.findOne({
 		name: req.params.albumname,
