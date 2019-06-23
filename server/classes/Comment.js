@@ -76,6 +76,7 @@ class CommentHandler {
 	 * @param {SchemaInstance} model
 	 * @param {Comment} comment
 	 * @returns {Promise} comments
+	 * @deprecated
 	 */
 	static postComment(modelInstance, comment) {
 		return new Promise(async (resolve, reject) => {
@@ -101,6 +102,7 @@ class CommentHandler {
 	 * @param {Number} fastIndex
 	 * @param {StringId} userGivingOpinion
 	 * @returns {Object} { whatTypeOfOpinionYouPassed: numberOfPeopleInThatOpinion }
+	 * @deprecated
 	 */
 	static addOpinionToComment(
 		SchemaInstance,
@@ -169,6 +171,15 @@ class CommentHandler {
 		});
 	}
 
+	/**
+	 *
+	 * @param {CommentSchema} comment
+	 * @param {String} userId
+	 * @param {String} type
+	 * @param {String} otherType
+	 * @returns {CommentSchema} commentModified
+	 * @description Adds an opinion to the comment (A Like or a Dislike.)
+	 */
 	static addOpinionToSingleComment(comment, userId, type, otherType) {
 		const index = comment[type]
 			.map(op => String(op.user))
