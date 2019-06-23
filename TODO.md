@@ -2,7 +2,7 @@
 5. Make a feed of actions from people that you follow
 6. Review albums
 7. Review playlists
-8. /**\*\*\*** Comment albums and playlists
-9. Pass the comment api to GoLang
-10. can see other peoples profile and follow them, be notified in feed what they say and what they review or rate.
-11. from lastfm to discogs, because lastfm is literally f\*\*\*\* us
+8. Update the front-end from the over-engineered and bad comment system to the new comment system.
+9. can see other peoples profile and follow them, be notified in feed what they say and what they review or rate.
+10. from lastfm to discogs, because lastfm is literally f\*\*\*\* us
+11. Notification system in the top of the screen
