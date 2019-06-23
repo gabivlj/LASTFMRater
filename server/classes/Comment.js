@@ -168,6 +168,18 @@ class CommentHandler {
 			}
 		});
 	}
+
+	static addOpinionToSingleComment(comment, userId, type, otherType) {
+		const index = comment[type]
+			.map(op => String(op.user))
+			.indexOf(String(userId));
+		if (index > -1) {
+			comment[type].splice(index, 1);
+			return comment;
+		}
+		comment[type].push({ user: userId });
+		return checkOtherOpinionArrayAndDelete(userId, otherType, comment);
+	}
 }
 
 module.exports = CommentHandler;
