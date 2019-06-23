@@ -349,6 +349,7 @@ router.get('/search/:query', async (req, res) => {
  * @PRIVATE
  * @PARAM id, commentId, fastIndex.
  * @RETURNS The array with the new comment like...
+ * @deprecated
  */
 router.post(
 	'/comment/like/:playlistId/:id',
@@ -380,6 +381,7 @@ router.post(
  * @PRIVATE
  * @PARAM id, commentId, fastIndex.
  * @RETURNS The array with the new comment like...
+ * @deprecated
  */
 router.post(
 	'/comment/dislike/:playlistId/:id',
@@ -411,6 +413,7 @@ router.post(
  * @PRIVATE
  * @BODY text, username
  * @PARAM id: album id
+ * @deprecated
  */
 router.post(
 	'/comment/:id',

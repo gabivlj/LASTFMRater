@@ -1,8 +1,4 @@
 /**
- * @NOTE_ I THINK WE ARE NOT GONNA USE THIS, BUT I JUST LET IT EXIST JUST IN CASE,
- * I THINK WE ARE GONNA LET THE COMMENT SECTION MANAGER API TO ANOTHER LANGUAGE LIKE
- * RUST, GO, OR PYTHON. ( I think go is the go-to language to this task )
- *
  * @@@@ UPDATE: Ok so I think we are definitely using this.
  */
 const express = require('express');
@@ -11,8 +7,14 @@ const CommentLib = require('../classes/Comment');
 const passport = require('passport');
 const Comment = require('../models/Comment');
 
+/**
+ * @GET
+ * @PUBLIC
+ * @DESCRIPTION Returns all the comments sorted by date
+ */
 router.get('/:id', async (req, res) => {
 	const { id } = req.params;
+	const { limit = 50 } = req.query;
 	try {
 		let commentSection = await Comment.find({ objectId: id }).sort({
 			date: -1
@@ -20,6 +22,9 @@ router.get('/:id', async (req, res) => {
 		if (!commentSection) {
 			return res.status(404).json({ error: 'Comment section not found.' });
 		}
+		// NOTE (GABI): Prob. slice with the Mongodb .project() ?
+		// @https://stackoverflow.com/questions/46348860/nodejs-mongodb-perform-slice-operation-on-an-array-field
+		commentSection = commentSection.slice(0, limit);
 		const comments = [];
 		for (let comment of commentSection) {
 			const commentP = {
@@ -41,6 +46,11 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
+/**
+ * @POST
+ * @PRIVATE
+ * @DESCRIPTION Posts a comment to the comment database. (This is the good one)
+ */
 router.post(
 	'/:objectId',
 	passport.authenticate('jwt', { session: false }),
@@ -60,6 +70,11 @@ router.post(
 	}
 );
 
+/**
+ * @POST
+ * @PRIVATE
+ * @DESCRIPTION Posts a like to the specified id comment.
+ */
 router.post(
 	'/like/:comment_id',
 	passport.authenticate('jwt', { session: false }),
@@ -91,6 +106,11 @@ router.post(
 	}
 );
 
+/**
+ * @POST
+ * @PRIVATE
+ * @DESCRIPTION Posts a dislike to the specified id comment.
+ */
 router.post(
 	'/dislike/:comment_id',
 	passport.authenticate('jwt', { session: false }),
@@ -119,48 +139,5 @@ router.post(
 		res.json({ comment: finalComment });
 	}
 );
-
-// /**
-//  * @GET
-//  * @param comment section id
-//  * @param
-//  */
-// router.get('/:id', async (req, res) => {
-// 	const { id } = req.params;
-// 	try {
-// 		const commentSection = await CommentSection.findById({ _id: id });
-// 		if (!commentSection) {
-// 			return res.status(404).json({ error: 'Comment section not found.' });
-// 		}
-// 		commentSection.comments = Array.from(commentSection.comments);
-// 		commentSection.comments = mapLikesDislikes(commentSection.comments);
-// 		res.json({ comments: commentSection.comments });
-// 	} catch (err) {
-// 		return res.status(404).json({ error: 'Comment section not found.' });
-// 	}
-// });
-
-// router.post(
-// 	'/:id',
-// 	passport.authenticate('jwt', { session: false }),
-// 	async (req, res) => {
-// 		const { text, username } = req.body;
-// 		const { id } = req.params;
-// 		const [error, comments] = await handleError(CommentSection.findById(id));
-// 		if (error || !comments) {
-// 			return res.status(404).json({ error: 'Comment section not found.' });
-// 		}
-// 		const comment = new CommentSchema(req.user.id, username, text);
-// 		const [errorReturn, returner] = await handleError(
-// 			Comment.postComment(comments, comment)
-// 		);
-
-// 		if (errorReturn) {
-// 			return res.status(500).json({ error: 'Error with the server.' });
-// 		}
-
-// 		res.json({ comments: returner });
-// 	}
-// );
 
 module.exports = router;
