@@ -40,25 +40,81 @@ export const comment = (
 	);
 	if (error) {
 		// todo: dispatch
-		return;
+		return dispatch({
+			type: 'ERROR_COMMENTING'
+		});
 	}
 	return dispatch({
-		type: 'COMMENT_ADD',
+		type: 'ADD_COMMENT',
 		payload: res.data.comment
 	});
 };
 
-export const getComments = (objectId, limit = 50) => async dispatch => {
+export const getComments = (
+	objectId,
+	limit = 50,
+	userId = null
+) => async dispatch => {
 	const [res, error] = await handleError(
-		axios.get(`/api/comment/${objectId}`, { params: { limit } })
+		axios.get(`/api/comment/${objectId}`, { params: { limit, userId } })
 	);
 	if (error) {
 		// todo: dispatch error
-		return;
+		return dispatch({
+			type: 'ERROR_GETTING_COMMENTS'
+		});
 	}
 
 	return dispatch({
 		type: 'SET_COMMENTS',
 		payload: res.data.comments
+	});
+};
+
+export const setLoading = () => dispatch => {
+	return dispatch({
+		type: 'SET_LOADING_COMMENTS'
+	});
+};
+
+export const setComments = comments => dispatch => {
+	return dispatch({
+		type: SET_COMMENTS,
+		payload: comments
+	});
+};
+
+/**
+ * @param {String} type, 'like' or 'dislike'
+ * @param {String} commentId
+ */
+export const addOpinionToComment = (
+	type,
+	commentId,
+	index
+) => async dispatch => {
+	if (type !== 'like' || type !== 'dislike') {
+		console.error(
+			`Please, pass a valid parameter in type, you passed: ${type}, and it should be like or dislike`
+		);
+		return dispatch({
+			type: 'ERROR_LIKING'
+		});
+	}
+	const [res, error] = await handleError(
+		axios.post(`/api/comment/${type}/${commentId}`)
+	);
+	if (error) {
+		return dispatch({
+			type: 'ERROR_LIKING_DISLIKING'
+		});
+	}
+
+	return dispatch({
+		type: 'REPLACE_COMMENT',
+		payload: {
+			comment: res.data.comment,
+			index
+		}
 	});
 };

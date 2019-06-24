@@ -14,7 +14,7 @@ const Comment = require('../models/Comment');
  */
 router.get('/:id', async (req, res) => {
 	const { id } = req.params;
-	const { limit = 50 } = req.query;
+	const { limit = 50, userId } = req.query;
 	try {
 		let commentSection = await Comment.find({ objectId: id }).sort({
 			date: -1
@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
 		commentSection = commentSection.slice(0, limit);
 		const comments = [];
 		for (let comment of commentSection) {
-			const commentP = {
+			let commentP = {
 				text: comment.text,
 				username: comment.username,
 				user: comment.user,
@@ -36,6 +36,7 @@ router.get('/:id', async (req, res) => {
 				dislikes: parseInt(comment.dislikes.length, 10),
 				objectId: comment.objectId
 			};
+			commentP = CommentLib.setHasLikedOrDislikedProperty(commentP, userId);
 			comments.push(commentP);
 		}
 		res.json({ comments });
@@ -85,14 +86,13 @@ router.post(
 		if (!comment) {
 			return res.status(404).json({ error: 'Comment not found ' });
 		}
-		console.log(comment);
 		const returnedComment = CommentLib.addOpinionToSingleComment(
 			comment,
 			id,
 			'likes',
 			'dislikes'
 		);
-		const finalComment = {
+		let finalComment = {
 			text: returnedComment.text,
 			username: returnedComment.username,
 			user: returnedComment.user,
@@ -101,6 +101,10 @@ router.post(
 			dislikes: parseInt(returnedComment.dislikes.length, 10),
 			objectId: returnedComment.objectId
 		};
+		finalComment = CommentLib.setHasLikedOrDislikedProperty(
+			returnedComment,
+			id
+		);
 		returnedComment.save();
 		res.json({ comment: finalComment });
 	}
@@ -127,7 +131,7 @@ router.post(
 			'dislikes',
 			'likes'
 		);
-		const finalComment = {
+		let finalComment = {
 			text: returnedComment.text,
 			username: returnedComment.username,
 			user: returnedComment.user,
@@ -136,6 +140,12 @@ router.post(
 			dislikes: parseInt(returnedComment.dislikes.length, 10),
 			objectId: returnedComment.objectId
 		};
+
+		finalComment = CommentLib.setHasLikedOrDislikedProperty(
+			returnedComment,
+			id
+		);
+
 		res.json({ comment: finalComment });
 	}
 );
