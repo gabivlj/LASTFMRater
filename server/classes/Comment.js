@@ -191,6 +191,18 @@ class CommentHandler {
 		comment[type].push({ user: userId });
 		return checkOtherOpinionArrayAndDelete(userId, otherType, comment);
 	}
+
+	static setHasLikedOrDislikedProperty(comment, userId) {
+		if (userId === undefined || userId === null) return comment;
+		const commentR = comment;
+		commentR.liked =
+			comment.likes.map(likes => String(likes.user)).indexOf(userId) > -1;
+		commentR.disliked = false;
+		if (commentR.liked) return commentR;
+		commentR.disliked =
+			comment.dislikes.map(likes => String(likes.user)).indexOf(userId) > -1;
+		return commentR;
+	}
 }
 
 module.exports = CommentHandler;
