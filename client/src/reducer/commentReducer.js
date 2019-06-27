@@ -34,5 +34,9 @@ export default (state = initialState, action) => {
 				...state,
 				loaded: !state.loaded
 			};
+		default: 
+			return {
+				...state
+			}
 	}
 };

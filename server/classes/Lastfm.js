@@ -107,12 +107,12 @@ class Lastfm {
   }
 
   /**
-   * @param params : Object: {
    *                  artist (Required): The artist's name
    *                  albumname (Required) : The album name
    *                  --> Lastfm Class already provides it => api_key (Required) : A Last.fm API key.
    *                  username (Optional): The current logged username
    *                 }
+   * @param albumData
    * */
 
   async getAlbum(albumData) {

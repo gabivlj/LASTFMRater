@@ -5,6 +5,7 @@ import albumReducer from './albumReducer';
 import searchReducer from './searchReducer';
 import playlistReducer from './playlistReducer';
 import profileReducer from './profileReducer';
+import commentReducer from './commentReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -13,4 +14,5 @@ export default combineReducers({
   search: searchReducer,
   playlist: playlistReducer,
   profile: profileReducer,
+  comments: commentReducer
 });

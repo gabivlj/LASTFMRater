@@ -8,6 +8,7 @@ import {
 	setLoading,
 	setComments
 } from '../../../actions/commentActions';
+import CommentSection from '../CommentSection';
 
 /**
  * @description Component that you only have to pass the objectId and it will handle the rest for your comment section. It's very
@@ -25,28 +26,42 @@ function CommentComponent({
 	setComments
 }) {
 	// Variable declarations
-	const [currentNumberOfComments, setNumberOfComments] = useState(0);
 	const numberOfCommentsAdd = 50;
+	// Redux refactoring.
 	const userId = auth.apiUser ? auth.apiUser.id : null;
-	const { loaded, comments } = comments;
+	const userName = auth.apiUser ? auth.apiUser.user : null;
+	const { loaded } = comments;
 
 	// Before useEffect function declarations
 	function checkBottom() {
-		if (
-			window.innerHeight + window.scrollY >= document.body.offsetHeight &&
-			loaded
-		) {
-			setNumberOfComments(currentNumberOfComments + numberOfCommentsAdd);
-			setLoading();
-			getComments(objectId, currentNumberOfComments, userId);
+		// Private local variable of the function.
+		let timeoutForLoading = false;
+		let currentNumberOfComments = 0;
+		return () => {
+			// When scrolling to the bottom of the component, reload comments.
+			if (
+				window.innerHeight + window.scrollY >= document.body.offsetHeight &&
+				loaded && !timeoutForLoading
+			) {
+				setLoading();
+				// Adding to the local variable.
+				currentNumberOfComments += numberOfCommentsAdd;
+				// API Call.
+				getComments(objectId, currentNumberOfComments, userId);
+				// Tell the browser not to load again in 3s.
+				timeoutForLoading = true;
+				setTimeout(() =>  timeoutForLoading = false, 3000);
+			}
 		}
 	}
 
 	// UseEffect
 	useEffect(() => {
-		document.addEventListener('wheel', checkBottom);
+		// todo: Check for other scroll actions.
+		document.addEventListener('wheel', checkBottom());
+		// Remove the EventListener
 		return () => {
-			document.removeEventListener('wheel', checkBottom);
+			document.removeEventListener('wheel', checkBottom());
 			setComments([]);
 		};
 	}, []);
@@ -68,10 +83,20 @@ function CommentComponent({
 	 * @description passed fn. to CommentSection (Check component for more information).
 	 */
 	function commentSubmit(user, _, txt) {
-		comment(user, objectId, txt);
+		console.log(objectId);
+		comment(user,  txt, objectId);
 	}
 
-	return <div />;
+	return (
+		<CommentSection
+			addComment={commentSubmit}
+			likeComment={like}
+			dislikeComment={dislike}
+			objectId={objectId}
+			comments={comments.comments}
+			user={userName}
+		/>
+	);
 }
 
 const mapStateToProps = state => ({
@@ -80,7 +105,7 @@ const mapStateToProps = state => ({
 });
 
 CommentComponent.propTypes = {
-	objectId: PropTypes.string.isRequird,
+	objectId: PropTypes.string.isRequired,
 	auth: PropTypes.object.isRequired,
 	comment: PropTypes.func.isRequired,
 	addOpinionToComment: PropTypes.func.isRequired,
