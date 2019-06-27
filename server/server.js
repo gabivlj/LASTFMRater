@@ -14,14 +14,14 @@ const track = require('./routes/track');
 const profile = require('./routes/profile');
 const comments = require('./routes/commentSection');
 
-const addRoutes = require('./lib/routes').addRoutes;
+const {addRoutes} = require('./lib/routes');
 
 const passportConfig = require('./config/passport');
 
 // Database connection
 mongoose.connect(db, { useNewUrlParser: true }, err => {
-	if (err) throw err;
-	console.log(`Connected to database! Welcome: ${db.split(':')[1].slice(2)}`);
+  if (err) throw err;
+  console.log(`Connected to database! Welcome: ${db.split(':')[1].slice(2)}`);
 });
 
 // BodyParser Init.
@@ -35,24 +35,24 @@ passportConfig(passport);
 
 // Route for auth. Lastfm
 app.get('/api/token', (req, res) => {
-	const { token } = req.query;
-	res.redirect(`http://localhost:3000/${token}`);
+  const { token } = req.query;
+  res.redirect(`http://localhost:3000/${token}`);
 });
 
 // Use routes
 addRoutes(
-	app,
-	['/api/album', album],
-	['/api/user', user],
-	['/api/artist', artist],
-	['/api/playlist', playlist],
-	['/api/track', track],
-	['/api/profile', profile],
-	['/api/comments', comments]
+  app,
+  ['/api/album', album],
+  ['/api/user', user],
+  ['/api/artist', artist],
+  ['/api/playlist', playlist],
+  ['/api/track', track],
+  ['/api/profile', profile],
+  ['/api/comments', comments]
 );
 
 // Port listening
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, err =>
-	err ? console.log(err) : console.log('Port connected')
+  err ? console.log(err) : console.log('Port connected')
 );

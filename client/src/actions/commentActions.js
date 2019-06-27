@@ -28,15 +28,13 @@ export const actionToComment = (
 export const comment = (
 	username,
 	text,
-	commentId,
 	objectId
 ) => async dispatch => {
-	if (!username || text == '' || !!commentId || !!objectId) {
+	if (!username || text == '' || !objectId) {
 		return;
 	}
 	const [res, error] = await handleError(
-		axios.post(`/api/comment/${objectId}`),
-		{ username, text, commentId }
+		axios.post(`/api/comments/${objectId}`, { username, text })
 	);
 	if (error) {
 		// todo: dispatch
@@ -55,8 +53,9 @@ export const getComments = (
 	limit = 50,
 	userId = null
 ) => async dispatch => {
+	console.log(limit);
 	const [res, error] = await handleError(
-		axios.get(`/api/comment/${objectId}`, { params: { limit, userId } })
+		axios.get(`/api/comments/${objectId}`, { params: { limit, userId } })
 	);
 	if (error) {
 		// todo: dispatch error
@@ -79,7 +78,7 @@ export const setLoading = () => dispatch => {
 
 export const setComments = comments => dispatch => {
 	return dispatch({
-		type: SET_COMMENTS,
+		type: 'SET_COMMENTS',
 		payload: comments
 	});
 };
@@ -93,7 +92,7 @@ export const addOpinionToComment = (
 	commentId,
 	index
 ) => async dispatch => {
-	if (type !== 'like' || type !== 'dislike') {
+	if (type != 'like' && type != 'dislike') {
 		console.error(
 			`Please, pass a valid parameter in type, you passed: ${type}, and it should be like or dislike`
 		);
@@ -101,8 +100,9 @@ export const addOpinionToComment = (
 			type: 'ERROR_LIKING'
 		});
 	}
+	console.log(commentId);
 	const [res, error] = await handleError(
-		axios.post(`/api/comment/${type}/${commentId}`)
+		axios.post(`/api/comments/${type}/${commentId}`)
 	);
 	if (error) {
 		return dispatch({
