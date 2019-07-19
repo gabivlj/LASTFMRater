@@ -5,52 +5,52 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
+    required: true
   },
   lastfm: {
-    type: String,
+    type: String
   },
   img: {
-    type: String,
+    type: String
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
   ratedAlbums: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'album',
-    },
+      ref: 'album'
+    }
   ],
-  reviews: [{ type: Schema.Types.ObjectId, ref: 'album' }],
+  reviews: [{ type: String, required: true }],
   followedAccounts: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'users',
-    },
+      ref: 'users'
+    }
   ],
   followers: [
     {
       ref: 'users',
       type: Schema.Types.ObjectId,
-      required: true,
-    },
+      required: true
+    }
   ],
   playlists: [
     {
       playlistid: {
         type: Schema.Types.ObjectId,
         ref: 'playlists',
-        required: true,
+        required: true
       },
-      name: { type: String, required: true },
-    },
-  ],
+      name: { type: String, required: true }
+    }
+  ]
 });
 
-module.exports = User = mongoose.model('users', UserSchema);
+module.exports = mongoose.model('users', UserSchema);

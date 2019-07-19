@@ -10,8 +10,8 @@ const CommentSchema = new Schema({
   dislikes: [{ user: { type: Schema.Types.ObjectId, ref: 'users' } }],
   date: {
     type: Date,
-    default: Date.now(),
-  },
+    default: Date.now()
+  }
 });
 
 /**
@@ -20,36 +20,36 @@ const CommentSchema = new Schema({
 const PlaylistModel = new Schema({
   user: {
     type: String,
-    required: true,
+    required: true
   },
   tracksShow: [{}],
   tracks: [
     {
       trackId: {
         ref: 'tracks',
-        type: Schema.Types.ObjectId,
-      },
-    },
+        type: Schema.Types.ObjectId
+      }
+    }
   ],
   ratings: [
     {
       user: { type: Schema.Types.ObjectId, ref: 'users' },
-      puntuation: { type: Number },
-    },
+      puntuation: { type: Number }
+    }
   ],
   comments: [CommentSchema],
   playlistName: {
     type: String,
-    default: '',
+    default: ''
   },
   playlistDescription: {
     type: String,
-    default: '',
+    default: ''
   },
   playlistCover: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 });
 
-module.exports = Playlist = mongoose.model('playlists', PlaylistModel);
+module.exports = mongoose.model('playlists', PlaylistModel);

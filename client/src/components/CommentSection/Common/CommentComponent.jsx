@@ -9,6 +9,7 @@ import {
 	setComments
 } from '../../../actions/commentActions';
 import CommentSection from '../CommentSection';
+import { LinearProgress } from '@material-ui/core';
 
 /**
  * @description Component that you only have to pass the objectId and it will handle the rest for your comment section. It's very
@@ -17,6 +18,7 @@ import CommentSection from '../CommentSection';
  */
 function CommentComponent({
 	objectId,
+	numberOfCommentsAdd,
 	auth,
 	comments,
 	comment,
@@ -25,8 +27,6 @@ function CommentComponent({
 	setLoading,
 	setComments
 }) {
-	// Variable declarations
-	const numberOfCommentsAdd = 50;
 	// Redux refactoring.
 	const userId = auth.apiUser ? auth.apiUser.id : null;
 	const userName = auth.apiUser ? auth.apiUser.user : null;
@@ -47,7 +47,7 @@ function CommentComponent({
 				// Adding to the local variable.
 				currentNumberOfComments += numberOfCommentsAdd;
 				// API Call.
-				getComments(objectId, currentNumberOfComments, userId);
+				getComments(objectId, 0, currentNumberOfComments, userId);
 				// Tell the browser not to load again in 3s.
 				timeoutForLoading = true;
 				setTimeout(() =>  timeoutForLoading = false, 3000);
@@ -83,20 +83,18 @@ function CommentComponent({
 	 * @description passed fn. to CommentSection (Check component for more information).
 	 */
 	function commentSubmit(user, _, txt) {
-		console.log(objectId);
-		comment(user,  txt, objectId);
+		comment(user, txt, objectId);
 	}
 
-	return (
-		<CommentSection
-			addComment={commentSubmit}
-			likeComment={like}
-			dislikeComment={dislike}
-			objectId={objectId}
-			comments={comments.comments}
-			user={userName}
-		/>
-	);
+	return (<><CommentSection
+				addComment={commentSubmit}
+				likeComment={like}
+				dislikeComment={dislike}
+				objectId={objectId}
+				comments={comments.comments}
+				user={userName}
+				/> 
+		 { !loaded ? (<LinearProgress />) : null}</>);
 }
 
 const mapStateToProps = state => ({
@@ -112,11 +110,13 @@ CommentComponent.propTypes = {
 	getComments: PropTypes.func.isRequired,
 	setLoading: PropTypes.func.isRequired,
 	setComments: PropTypes.func.isRequired,
-	comments: PropTypes.array
+	comments: PropTypes.array,
+	numberOfCommentsAdd: PropTypes.number,
 };
 
 CommentComponent.defaultProps = {
-	comments: []
+	comments: [],
+	numberOfCommentsAdd: 20,
 };
 
 export default connect(

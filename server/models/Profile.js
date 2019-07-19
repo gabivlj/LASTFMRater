@@ -4,12 +4,12 @@ const { Schema } = mongoose;
 
 const ProfileSchema = new Schema({
   img: {
-    type: String,
+    type: String
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
-  },
+    ref: 'users'
+  }
 });
 
 const Profile = mongoose.model('profile', ProfileSchema);

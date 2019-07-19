@@ -9,62 +9,62 @@ const CommentSchema = new Schema({
   dislikes: [{ user: { type: Schema.Types.ObjectId, ref: 'users' } }],
   date: {
     type: Date,
-    default: Date.now(),
-  },
+    default: Date.now()
+  }
 });
 
 const AlbumSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   artist: {
     type: String,
-    required: true,
+    required: true
   },
   tracks: [
     {
       trackId: {
         ref: 'tracks',
-        type: Schema.Types.ObjectId,
-      },
-    },
+        type: Schema.Types.ObjectId
+      }
+    }
   ],
   mbid: {
-    type: String,
+    type: String
   },
   ratings: [
     {
       puntuation: {
         type: Number,
-        required: true,
+        required: true
       },
       user: {
         type: String,
-        required: true,
-      },
-    },
+        required: true
+      }
+    }
   ],
   reviews: [
     {
       text: {
         type: String,
-        required: true,
+        required: true
       },
       author: {
         type: String,
-        isRequired: true,
+        isRequired: true
       },
       title: {
         type: String,
-        isRequired: true,
+        isRequired: true
       },
       puntuation: {
-        type: Number,
-      },
-    },
+        type: Number
+      }
+    }
   ],
-  comments: [CommentSchema],
+  comments: [CommentSchema]
 });
 
-module.exports = User = mongoose.model('albums', AlbumSchema);
+module.exports = mongoose.model('albums', AlbumSchema);

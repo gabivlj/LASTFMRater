@@ -17,7 +17,6 @@ function CommentSection({ user, addComment, comments, likeComment, dislikeCommen
   }
 
   function onSubmit(txt) {
-    
     if (typeof user === 'string' && user.length > 3) { 
       addComment(user, objectId, txt);
     }

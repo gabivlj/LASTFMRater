@@ -5,20 +5,20 @@ const { Schema } = mongoose;
 const TrackSchema = new Schema({
   duration: {
     type: Number,
-    required: true,
+    required: true
   },
   name: {
     type: String,
-    required: true,
+    required: true
   },
   artist: {
     type: String,
-    required: true,
+    required: true
   },
   album: {
     type: String,
-    default: 'None',
-  },
+    default: 'None'
+  }
 });
 
-module.exports = Track = mongoose.model('tracks', TrackSchema);
+module.exports = mongoose.model('tracks', TrackSchema);
