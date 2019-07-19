@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const __propTypes = {
+const propTypes = {
   album: PropTypes.array.isRequired,
   image: PropTypes.string,
-  artist: PropTypes.string,
+  artist: PropTypes.string
 };
 
 const ArtistAlbums = ({ album, image, artist, ...props }) => (
@@ -13,7 +13,7 @@ const ArtistAlbums = ({ album, image, artist, ...props }) => (
     {album
       ? album.map((element, index) =>
           element.name !== '(null)' ? (
-            <div className="card col-md-4" key={index}>
+            <div className="card col-md-4" key={element.playcount || index}>
               {/* Sometimes the image doesn't work because Lastfm api... We must find another way */}
               <img
                 className="card-img-top"
@@ -27,8 +27,10 @@ const ArtistAlbums = ({ album, image, artist, ...props }) => (
               <div className="card-body">
                 <h5 className="card-title">{element.name}</h5>
                 <p className="card-text">
-                  Made by: {element.artist.name} <br />
-                  Playcounts:{' '}
+                  Made by:
+                  {element.artist.name}
+                  <br />
+                  Playcounts:
                   <span className="badge badge-primary">
                     {element.playcount}
                   </span>
@@ -39,7 +41,7 @@ const ArtistAlbums = ({ album, image, artist, ...props }) => (
                   }`}
                   className="btn btn-primary"
                 >
-                  Go to album's profile
+                  {`Go to album's profile`}
                 </Link>
               </div>
             </div>
@@ -49,6 +51,6 @@ const ArtistAlbums = ({ album, image, artist, ...props }) => (
   </div>
 );
 
-ArtistAlbums.propTypes = __propTypes;
+ArtistAlbums.propTypes = propTypes;
 
 export default ArtistAlbums;
