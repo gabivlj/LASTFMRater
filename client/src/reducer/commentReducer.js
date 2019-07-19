@@ -11,6 +11,12 @@ export default (state = initialState, action) => {
 				comments: [...action.payload],
 				loaded: true
 			};
+		case 'ADD_COMMENTS':
+			return {
+				...state,
+				comments: [...state.comments, ...action.payload],
+				loaded: true
+			}	
 		case 'REPLACE_COMMENT':
 			return {
 				...state,

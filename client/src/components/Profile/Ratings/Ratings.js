@@ -37,6 +37,8 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
 			if (_ratings) {
 				setLoading(true);
 				for (let rating of _ratings) {
+					// Maybe just make one api CALL for this or smth
+					// TODO. PERFORMANCE ISSUES ON THIS...
 					promiseRating.push(axios.get(`/api/album/${rating}`));
 				}
 				let albumsSet = (await Promise.all(promiseRating)).map(

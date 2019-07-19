@@ -15,7 +15,7 @@ const Comment = require('../models/Comment');
  */
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const { limit = 50, userId } = req.query;
+  const { current = 0, limit = 50, userId } = req.query;
   try {
     let commentSection = await Comment.find({ objectId: id }).sort({
       date: -1,
@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
     }
     // NOTE (GABI): Prob. slice with the Mongodb .project() ?
     // @https://stackoverflow.com/questions/46348860/nodejs-mongodb-perform-slice-operation-on-an-array-field
-    commentSection = commentSection.slice(0, limit);
+    commentSection = commentSection.slice(current, limit);
     const comments = [];
     for (const comment of commentSection) {
       const commentP = {

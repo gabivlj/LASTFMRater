@@ -50,12 +50,12 @@ export const comment = (
 
 export const getComments = (
 	objectId,
+	current = 0,
 	limit = 50,
 	userId = null
 ) => async dispatch => {
-	console.log(limit);
 	const [res, error] = await handleError(
-		axios.get(`/api/comments/${objectId}`, { params: { limit, userId } })
+		axios.get(`/api/comments/${objectId}`, { params: { current, limit, userId } })
 	);
 	if (error) {
 		// todo: dispatch error

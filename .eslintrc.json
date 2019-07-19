@@ -1,0 +1,27 @@
+{
+  "extends": ["airbnb", "prettier", "plugin:react/recommended"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "func-names": "off",
+    "no-unused-vars": "warn",
+    "no-console": "off",
+    "no-process-exit": "off",
+    "class-methods-use-this": "off",
+    "no-shadow": "off",
+    "react/prop-types": "off",
+    "no-multi-assign": "off"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2019
+  },
+  "ecmaFeatures": {
+    "jsx": true,
+    "modules": true
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jasmine": true
+  }
+}

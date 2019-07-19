@@ -14,8 +14,8 @@ import PropTypes from 'prop-types';
 import TrackPlaylist from './TrackPlaylist/TrackPlaylist';
 import PlaylistRating from './PlaylistRating/PlaylistRating';
 import UserRoute from './Util/UserRoute';
-import CommentShowcase from '../../CommentSection/CommentShowcase';
 import InvisibleInput from '../../Common/InvisibleInput';
+import CommentComponent from '../../CommentSection/Common/CommentComponent';
 
 const propTypes = {
 	user: PropTypes.string.isRequired,
@@ -164,10 +164,8 @@ class Playlist extends Component {
 								}}
 							/>
 						) : null}
-						<CommentShowcase
-							comments={playlist.comments}
+						<CommentComponent 
 							objectId={playlist._id}
-							type={'playlist'}
 						/>
 					</div>
 				</div>
