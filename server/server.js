@@ -14,7 +14,7 @@ const track = require('./routes/track');
 const profile = require('./routes/profile');
 const comments = require('./routes/commentSection');
 
-const {addRoutes} = require('./lib/routes');
+const { addRoutes } = require('./lib/routes');
 
 const passportConfig = require('./config/passport');
 

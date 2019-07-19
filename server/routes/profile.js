@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 const User = require('../models/User');
+const Album = require('../models/Album');
 const Playlist = require('../models/Playlist');
 const Profile = require('../models/Profile');
 const handleError = require('../lib/handleError');
@@ -31,9 +32,8 @@ router.get('/:id', async (req, res) => {
   if (!user) {
     return res.status(400).json({ error: 'Error finding the profile.' });
   }
-  console.log(user);
+  delete user.password;
   const playlists = Playlist.find({ user: user.username });
-
   const lastFm = new LastFm();
   const artists = !Authenticator.isEmpty(user.lastfm)
     ? lastFm.getUsersArtist(user.lastfm)
@@ -53,9 +53,9 @@ router.get('/:id', async (req, res) => {
     ratedAlbums: user.ratedAlbums,
     profileImage: user.img,
     followers: user.followers || 0,
-    lastfm: user.lastfm || '',
+    lastfm: user.lastfm || ''
   };
-  res.json({ profile });
+  return res.json({ profile });
 });
 
 /**
@@ -89,17 +89,17 @@ router.post(
       return res.status(400).json({ error: 'Pass an image profile please' });
     }
     const user = await User.findById({
-      _id: req.user.id,
+      _id: req.user.id
     });
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
     const profile = await Profile.findOne({
-      user: user._id,
+      user: user._id
     });
     if (!profile) {
       const profileSchema = new Profile({
-        img,
+        img
       });
       profileSchema.save();
       return res.json({ success: true });
@@ -146,7 +146,7 @@ router.get('/search/:query', async (req, res) => {
 
   const [error, profiles] = await handleError(
     User.find({
-      $or: [{ username: { $regex: query, $options: 'i' } }],
+      $or: [{ username: { $regex: query, $options: 'i' } }]
     }).sort({ name: -1 })
   );
 
@@ -159,7 +159,7 @@ router.get('/search/:query', async (req, res) => {
     lastfm: profile.lastfm,
     img: profile.img || '',
     followers: profile.followers || 0,
-    _id: profile._id,
+    _id: profile._id
   }));
 
   if (
@@ -172,6 +172,33 @@ router.get('/search/:query', async (req, res) => {
   }
 
   res.json({ profiles: finalProfiles });
+});
+
+/**
+ * @GET
+ * @PUBLIC
+ * @description Gets all the ratings formatted fine for the client.
+ */
+router.get('/ratings/:user', async (req, res) => {
+  const { user } = req.params;
+  const userdb = await User.findOne({ username: user });
+  if (!userdb) {
+    return res.status(404).json({ error: 'No user found.' });
+  }
+  const orArray = userdb.ratedAlbums.map(album => ({ _id: album }));
+  const albumsdb = await Album.find({
+    $or: orArray
+  });
+  const albumShortened = albumsdb.map(album => ({
+    name: album.name,
+    artist: album.artist,
+    rating: album.ratings.filter(
+      rating => String(rating.user) === String(user)
+    )[0],
+    mbid: album.mbid,
+    _id: album._id
+  }));
+  return res.json({ puntuations: albumShortened });
 });
 
 module.exports = router;

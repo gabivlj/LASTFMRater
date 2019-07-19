@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb", "prettier", "plugin:react/recommended"],
+  "extends": ["airbnb", "prettier"],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
@@ -10,7 +10,12 @@
     "class-methods-use-this": "off",
     "no-shadow": "off",
     "react/prop-types": "off",
-    "no-multi-assign": "off"
+    "react/require-default-props": "off",
+    "no-multi-assign": "off",
+    "react/forbid-prop-types": "warn",
+    "no-underscore-dangle": "off",
+    // This let us use for of without warnings. for of performance and readibility >>>>> forEach...
+    "no-restricted-syntax": "off"
   },
   "parserOptions": {
     "ecmaVersion": 2019

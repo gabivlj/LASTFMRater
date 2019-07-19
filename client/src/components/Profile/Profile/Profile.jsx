@@ -13,7 +13,7 @@ import ProfileArtists from './ProfileArtist/ProfileArtists';
 function Profile({ cleanErrors, profile, getProfile, auth, match, ...props }) {
   // WillMount
   useEffect(() => {
-    const { id } = props.match.params;
+    const { id } = match.params;
     getProfile(id);
   }, []);
   // Unmount
@@ -57,7 +57,7 @@ function Profile({ cleanErrors, profile, getProfile, auth, match, ...props }) {
                   <div style={{ marginTop: '' }}>
                     <h2>
                       Ratings made by
-                      {profile.profile.user}
+                      {` ${profile.profile.user}`}
                     </h2>
                     <Ratings
                       usernameProps={profile.profile.user}
