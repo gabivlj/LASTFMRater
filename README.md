@@ -27,6 +27,7 @@ I don't know, when it has the features that I think it needs as a MINIMUM, I wil
 ## More information
 
 - Made by Gabriel Villalonga Simón
+- Logo made by Alvaro Tomás Lozano @AbsydeAuberon
 - If you wanna contribute to this project contact me, I'd love to collaborate with anyone.
 - Any questions regarding code or something, just ask me.
 
