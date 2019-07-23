@@ -21,7 +21,9 @@ const passportConfig = require('./config/passport');
 // Database connection
 mongoose.connect(db, { useNewUrlParser: true }, err => {
   if (err) throw err;
-  console.log(`Connected to database! Welcome: ${db.split(':')[1].slice(2)}`);
+  console.log(
+    `Connected to database! Welcome 🐋: ${db.split(':')[1].slice(2)} 🐋`
+  );
 });
 
 // BodyParser Init.
@@ -54,5 +56,7 @@ addRoutes(
 // Port listening
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, err =>
-  err ? console.log(err) : console.log('Port connected')
+  err
+    ? console.log(err)
+    : console.log(`🐋  Grampy localhost:${PORT} Connected! 🐋`)
 );

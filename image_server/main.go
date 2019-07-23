@@ -12,10 +12,11 @@ func main() {
 	port := "2222"
 	router := mux.NewRouter()
 	router.Use(server.Cors)
+	// When in the future we use .env variables...
 	if port == "" {
 		port = "2222" //localhost
 	}
-	fmt.Print(port)
+	fmt.Println("Port connected! Golang server up and runnin... 🐋 🐋 🐋 🐋 Port: " + port)
 	router.HandleFunc("/api/image/{id}", server.ServeImage).Methods("GET")
 	router.HandleFunc("/api/image", server.GetImage).Methods("POST")
 	err := http.ListenAndServe(":"+port, router)
