@@ -13,7 +13,7 @@ I chose this tech stack because it's what I'm confortable with.
 A: Because current music pages for that purpose are not that good.
 Sonemic is not gonna be released anytime soon, of course I chose this project because I like music and challenges.
 
-### When will be this available for use?
+### When will it be available for use?
 
 I don't know, when it has the features that I think it needs as a MINIMUM, I will publish it.
 
@@ -30,7 +30,7 @@ I don't know, when it has the features that I think it needs as a MINIMUM, I wil
 - If you wanna contribute to this project contact me, I'd love to collaborate with anyone.
 - Any questions regarding code or something, just ask me.
 
-## Screenshots
+## Screenshots ( OUTDATED )
 
 <img src="./capture1.png" alt="Logolastfm" width="600" >
 <img src="./capture2.png" alt="Logolastfm" width="600" >
