@@ -4,11 +4,18 @@
 
 ## Rate your favorite music, share your reviews and rating with other people!
 
-### Using LASTFM Api. Node.js, Express, Mongodb and React.js.
+### Using Lastfm database, Go/mux, Node.js, Express.js, Mongodb and React.js.
+
+I chose this tech stack because it's what I'm confortable with.
 
 ### Why a music rater?
 
 A: Because current music pages for that purpose are not that good.
+Sonemic is not gonna be released anytime soon, of course I chose this project because I like music and challenges.
+
+### When will be this available for use?
+
+I don't know, when it has the features that I think it needs as a MINIMUM, I will publish it.
 
 ## Installation
 
