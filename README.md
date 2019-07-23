@@ -1,4 +1,4 @@
-# LASTFMRater
+# Grampy, a music social network!
 
 <img src="./client/src/logo.png" alt="Logolastfm" width="250" height="250">
 
