@@ -16,12 +16,13 @@ func main() {
 	if port == "" {
 		port = "2222" //localhost
 	}
-	fmt.Println("Port connected! Golang server up and runnin... 🐋 🐋 🐋 🐋 Port: " + port)
 	router.HandleFunc("/api/image/{id}", server.ServeImage).Methods("GET")
 	router.HandleFunc("/api/image", server.GetImage).Methods("POST")
 	err := http.ListenAndServe(":"+port, router)
 	if err != nil {
 		fmt.Print(err)
+		return
 	}
+	fmt.Println("Port connected! Golang server up and runnin... 🐋 🐋 🐋 🐋 Port: " + port)
 
 }
