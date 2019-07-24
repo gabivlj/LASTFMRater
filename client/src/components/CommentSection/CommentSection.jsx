@@ -1,29 +1,37 @@
-import React from 'react'
+import React from 'react';
 import PropTypes from 'prop-types';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
 
-function CommentSection({ user, addComment, comments, likeComment, dislikeComment, objectId }) {
+function CommentSection({
+  user,
+  addComment,
+  comments,
+  likeComment,
+  dislikeComment,
+  objectId
+}) {
   function onLike(commentId, fastIndex) {
     return () => {
       likeComment(objectId, commentId, fastIndex);
-    }
+    };
   }
 
   function onDislike(commentId, fastIndex) {
     return () => {
       dislikeComment(objectId, commentId, fastIndex);
-    }
+    };
   }
 
   function onSubmit(txt) {
-    if (typeof user === 'string' && user.length > 3) { 
+    if (typeof user === 'string' && user.length > 3) {
       addComment(user, objectId, txt);
     }
   }
 
-  const commentsRender = comments ? comments.map((comment, index) => 
-      <Comment
+  const commentsRender = comments
+    ? comments.map((comment, index) => (
+        <Comment
         key={comment._id}
         user={comment.username}
         text={comment.text}
@@ -34,17 +42,16 @@ function CommentSection({ user, addComment, comments, likeComment, dislikeCommen
         img={comment.img}
         liked={comment.liked}
         disliked={comment.disliked}
-      /> 
-    ) : null;
+      />
+      ))
+    : null;
   return (
     <div>
       <h1>Comments</h1>
-      <CommentForm 
-        onSubmit={onSubmit}
-      />
+      <CommentForm onSubmit={onSubmit} />
       {commentsRender}
     </div>
-  )
+  );
 }
 
 CommentSection.propTypes = {
@@ -54,11 +61,11 @@ CommentSection.propTypes = {
   dislikeComment: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
   // Object related id.
-  objectId: PropTypes.string.isRequired,
-}
+  objectId: PropTypes.string.isRequired
+};
 
 CommentSection.defaultProps = {
-  user: null,
-}
+  user: null
+};
 
 export default CommentSection;

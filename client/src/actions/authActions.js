@@ -2,108 +2,112 @@ import axios from 'axios';
 
 import User from '../classes/User';
 import Auth, {
-	handleError,
-	deleteAuthTokenAxios,
-	deleteAuthTokenFromLS
+  handleError,
+  deleteAuthTokenAxios,
+  deleteAuthTokenFromLS
 } from '../utils/Auth';
+import { notifyError, notifyNormality } from './notifyActions';
+
+export const logOut = () => dispatch => {
+  Auth.LogOut();
+  dispatch({
+    type: 'SET_API_USER',
+    payload: {}
+  });
+};
 
 /**
  * @description This action is called when lastfm auth is done.
  */
 export const setUser = (
-	token,
-	username,
-	history = null,
-	typeoflogin = null
+  token,
+  username,
+  history = null,
+  typeoflogin = null
 ) => async dispatch => {
-	axios
-		.post(`/api/user/${token}`, { username })
-		.then(async res => {
-			history.push('/auth/login');
-			const user = new User(res.data);
-			const apiUser = await axios.post(`/api/user/lastfm/${username}`, user);
-			deleteAuthTokenFromLS();
-			dispatch(logOut());
-		})
-		.catch(err => console.log(err));
+  axios
+    .post(`/api/user/${token}`, { username })
+    .then(async res => {
+      history.push('/auth/login');
+      const user = new User(res.data);
+      const apiUser = await axios.post(`/api/user/lastfm/${username}`, user);
+      deleteAuthTokenFromLS();
+      dispatch(logOut());
+    })
+    .catch(err => console.log(err));
 };
 
 export const logFromSession = () => dispatch => {
-	const user = Auth.LogUserFromLS();
-	if (!user) return;
-	if (user.exp < Date.now() / 1000) {
-		return;
-	}
-	dispatch({
-		type: 'SET_API_USER',
-		payload: user
-	});
+  const user = Auth.LogUserFromLS();
+  if (!user) return;
+  if (user.exp < Date.now() / 1000) {
+    return;
+  }
+  dispatch({
+    type: 'SET_API_USER',
+    payload: user
+  });
 
-	// axios.get('/api/user/info').then(res => {
-	//   dispatch({
-	//     type: 'SET_API_USER',
-	//     payload: res.data
-	//   })
-	// }).catch(err => console.log(err))
+  // axios.get('/api/user/info').then(res => {
+  //   dispatch({
+  //     type: 'SET_API_USER',
+  //     payload: res.data
+  //   })
+  // }).catch(err => console.log(err))
 };
 
 export const logIn = user_ => async dispatch => {
-	const user = await Auth.LogUserFromLogin(user_);
-	if (user.error) {
-		// dispatch error
-		dispatch({
-			type: 'SET_ERRORS_LOGIN',
-			payload: user.error.errors
-		});
-		return;
-	}
-	dispatch({
-		type: 'SET_API_USER',
-		payload: user
-	});
-};
-
-export const logOut = () => dispatch => {
-	Auth.LogOut();
-	dispatch({
-		type: 'SET_API_USER',
-		payload: {}
-	});
+  const user = await Auth.LogUserFromLogin(user_);
+  if (user.error) {
+    dispatch(notifyError('Error authenticating credentials...', 2000));
+    // dispatch error
+    dispatch({
+      type: 'SET_ERRORS_LOGIN',
+      payload: user.error.errors
+    });
+    return;
+  }
+  dispatch(notifyNormality('Welcome to Grampy!'), 3000);
+  dispatch({
+    type: 'SET_API_USER',
+    payload: user
+  });
 };
 
 export const getUser = () => async dispatch => {
-	const [error, user] = await handleError(axios.get('/api/user/info'));
-	if (error) return;
-	dispatch({
-		type: 'SET_API_USER',
-		payload: user.data
-	});
+  const [error, user] = await handleError(axios.get('/api/user/info'));
+  if (error) return;
+  dispatch({
+    type: 'SET_API_USER',
+    payload: user.data
+  });
 };
 
 export const register = (
-	email,
-	password,
-	password2,
-	username,
-	history
+  email,
+  password,
+  password2,
+  username,
+  history
 ) => async dispatch => {
-	const [error, userRegister] = await handleError(
-		axios.post('/api/user/auth/register', {
-			email,
-			password,
-			password2,
-			username
-		})
-	);
-	if (!error) {
-		history.push('/auth/login');
-		return;
-	} // dispatch errors
-	console.log(error);
-	dispatch({
-		type: 'SET_ERRORS_REGISTER',
-		payload: error.response.data
-	});
+  const [error, userRegister] = await handleError(
+    axios.post('/api/user/auth/register', {
+      email,
+      password,
+      password2,
+      username
+    })
+  );
+  if (!error) {
+    dispatch(notifyNormality('Account created succesfuly! Log in!', 3000));
+    history.push('/auth/login');
+    return;
+  } // dispatch errors
+  console.log(error);
+  dispatch({
+    type: 'SET_ERRORS_REGISTER',
+    payload: error.response.data
+  });
 };
 
 /**
@@ -111,14 +115,14 @@ export const register = (
  */
 
 export const setUsersArtists = name => dispatch => {
-	if (name)
-		axios
-			.get(`/api/user/artists/${name}`)
-			.then(res => {
-				dispatch({
-					type: 'SET_USER_ARTISTS',
-					payload: res.data
-				});
-			})
-			.catch(err => console.log(err.response.data));
+  if (name)
+    axios
+      .get(`/api/user/artists/${name}`)
+      .then(res => {
+        dispatch({
+          type: 'SET_USER_ARTISTS',
+          payload: res.data
+        });
+      })
+      .catch(err => console.log(err.response.data));
 };

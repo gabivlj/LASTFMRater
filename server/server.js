@@ -13,6 +13,7 @@ const playlist = require('./routes/playlist');
 const track = require('./routes/track');
 const profile = require('./routes/profile');
 const comments = require('./routes/commentSection');
+const following = require('./routes/following');
 
 const { addRoutes } = require('./lib/routes');
 
@@ -50,7 +51,8 @@ addRoutes(
   ['/api/playlist', playlist],
   ['/api/track', track],
   ['/api/profile', profile],
-  ['/api/comments', comments]
+  ['/api/comments', comments],
+  ['/api/following', following]
 );
 
 // Port listening

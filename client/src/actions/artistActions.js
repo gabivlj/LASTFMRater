@@ -20,10 +20,10 @@ export const getArtist = artist => dispatch => {
 export const cleanArtist = () => dispatch => {
   dispatch({
     type: 'SET_ARTIST',
-    payload: null,
+    payload: null
   });
   dispatch({
     type: 'SET_ARTIST_ALBUMS',
-    payload: null,
+    payload: null
   });
 };

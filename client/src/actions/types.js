@@ -1,0 +1,4 @@
+export const NOTIFY_SUCCESS = 'NOTIFY_SUCCESS';
+export const NOTIFY_NORMALITY = 'NOTIFY_NORMALITY';
+export const NOTIFY_ERROR = 'NOTIFY_ERROR';
+export const NOTIFY_CLEAN = 'NOTIFY_CLEAN';
