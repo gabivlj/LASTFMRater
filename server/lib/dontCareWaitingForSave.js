@@ -10,8 +10,9 @@ module.exports = async function dontCareWaitingForSave(
   instance,
   careAboutError = true
 ) {
-  const [_, err] = await handleError(instance.save());
+  const [err, _] = await handleError(instance.save());
   if (err && careAboutError) throw err;
   if (err && !careAboutError) return err;
+  // console.log(_);
   return _;
 };

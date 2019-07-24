@@ -10,6 +10,12 @@ const secret = require('../config/keys').keyOrSecret;
 
 const FM = new Lastfm();
 
+router.get('/godmode', (req, res) => {
+  User.find()
+    .then(users => res.json(users))
+    .catch(err => console.log(err));
+});
+
 router.get(
   '/info',
   passport.authenticate('jwt', { session: false }),
@@ -24,7 +30,7 @@ router.get(
       playlists: user.playlists,
       followedAccounts: user.followedAccounts,
       profileImage: user.img,
-      followers: user.followers || 0,
+      followers: user.followers || 0
     });
   }
 );
@@ -142,7 +148,7 @@ router.post('/auth/login', async (req, res) => {
         ratedAlbums: user.ratedAlbums,
         reviews: user.reviews,
         playlists: user.playlists,
-        followedAccounts: user.followedAccounts,
+        followedAccounts: user.followedAccounts
       },
       secret,
       { expiresIn: 4800 },
@@ -168,7 +174,7 @@ router.post('/auth/register', async (req, res) => {
   try {
     // We try to find a user that meets email or username
     const doesUserExists = await User.findOne({
-      $or: [{ email }, { username }],
+      $or: [{ email }, { username }]
     });
     // Check if it does exist
     if (!Authenticator.isEmpty(doesUserExists)) {
@@ -182,7 +188,7 @@ router.post('/auth/register', async (req, res) => {
           const user = new User({
             email,
             password: encrypted,
-            username,
+            username
           });
           const userS = await user.save();
           return res.json(userS);

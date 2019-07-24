@@ -37,8 +37,7 @@ const UserSchema = new Schema({
   followers: [
     {
       ref: 'users',
-      type: Schema.Types.ObjectId,
-      required: true
+      type: Schema.Types.ObjectId
     }
   ],
   playlists: [
