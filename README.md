@@ -1,3 +1,5 @@
+<img src="./logo/grampy.png" width="100px" height="100px"></img>
+
 # Grampy - The non-boring musical social network!
 
 <img src="./logo/grampy-logo.png" width="400px" height="400px"></img>
