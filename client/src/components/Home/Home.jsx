@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import KEYS from '../../API';
-import logo from '../../logo.png';
+import logo from '../../images/grampy-logo.png';
 
 export default function Home() {
   return (
@@ -9,8 +9,8 @@ export default function Home() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p style={{ color: '#ff0000' }}>
-          Rate the music that you listen on Last.fm! Make reviews and check what
-          is the community rating of your favorite album or playlist!
+          Rate the music that you listen! Make reviews and check what is the
+          community rating of your favorite album or playlist!
         </p>
         <Link
           className="App-link"
