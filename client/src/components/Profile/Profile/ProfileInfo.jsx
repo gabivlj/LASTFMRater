@@ -10,6 +10,7 @@ function ProfileInfo({ name, lastfm, followers, img }) {
           <div className="col-md-4">
             <img
               src={img} // "http://localhost:2222/api/image/1"
+              // src="http://localhost:2222/api/image/4"
               className="profileImage borderProfile"
               alt="The profile caption"
             />

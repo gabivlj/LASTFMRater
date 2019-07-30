@@ -1,20 +1,17 @@
-import handleError from '../../client/src/utils/handleError';
-
+const handleError = require('../lib/handleError');
 const ActivityModel = require('../models/Activity');
 
-export const ALBUM_RATING = 'ALBUM_RATING';
-export const PLAYLIST_RATING = 'PLAYLIST_RATING';
-export const COMMENT = 'COMMENT';
-export const CREATED_PLAYLIST = 'CREATED_PLAYLIST';
-
-const checkActivityIsRight = activity =>
-  activity === ALBUM_RATING ||
-  activity === PLAYLIST_RATING ||
-  COMMENT === activity ||
-  CREATED_PLAYLIST === activity;
-
 class Activity {
-  static async addAlbumRatingActivity(
+  constructor() {
+    this.ALBUM_RATING = 'ALBUM_RATING';
+
+    this.PLAYLIST_RATING = 'PLAYLIST_RATING';
+    this.COMMENT = 'COMMENT';
+    this.CREATED_PLAYLIST = 'CREATED_PLAYLIST';
+    this.FOLLOWED_USER = 'FOLLOWED_USER';
+  }
+
+  async addAlbumRatingActivity(
     { albumName, id, mbid = '', artistName },
     user,
     userId
@@ -34,7 +31,7 @@ class Activity {
     return activityReturn;
   }
 
-  static async getActivityFromUsersFollowers(followingArray) {
+  async getActivityFromUsersFollowers(followingArray) {
     const followingOr = followingArray.map(following => ({ user: following }));
     const activity = await ActivityModel.find({ $or: followingOr }).sort({
       date: -1
@@ -42,15 +39,61 @@ class Activity {
     return activity;
   }
 
-  static async addSomethingActivity(information, type, user, userName) {
-    if (!checkActivityIsRight(type)) {
+  async addSomethingActivity({ information, type, user, userName }) {
+    if (!this.checkActivityIsRight(type)) {
       throw new Error('Error, activity not defined in the activity vars.');
     }
-    const activity = new ActivityModel({ information, type, user, userName });
-    const [activitySave, err] = await handleError(activity.save());
+    const activity = new ActivityModel({
+      information,
+      type,
+      user,
+      username: userName
+    });
+    const [err, activitySave] = await handleError(activity.save());
     if (err) throw err;
     return activitySave;
   }
+
+  checkActivityIsRight(activity) {
+    return (
+      activity === this.ALBUM_RATING ||
+      activity === this.PLAYLIST_RATING ||
+      this.COMMENT === activity ||
+      this.FOLLOWED_USER === activity ||
+      this.CREATED_PLAYLIST === activity
+    );
+  }
+
+  createFollowedInformation(userFollowed, userFollows) {
+    return {
+      information: {
+        followed: { id: userFollowed._id, userName: userFollowed.username },
+        follows: { id: userFollows._id, userName: userFollows.username }
+      },
+      type: this.FOLLOWED_USER,
+      user: userFollowed._id,
+      userName: userFollowed.username
+    };
+  }
+
+  createCommentedInformation(
+    userCommented,
+    text,
+    objectCommented,
+    answered = null
+  ) {
+    return {
+      information: {
+        objectCommented,
+        text
+      },
+      type: this.COMMENT,
+      userName: userCommented.username,
+      user: userCommented._id
+    };
+  }
 }
 
-module.exports = Activity;
+const ActivityInstance = new Activity();
+
+module.exports = ActivityInstance;
