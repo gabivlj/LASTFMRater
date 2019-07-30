@@ -7,6 +7,7 @@ const User = require('../models/User');
 const Lastfm = require('../classes/Lastfm');
 const Authenticator = require('../classes/Authenticator');
 const secret = require('../config/keys').keyOrSecret;
+const activity = require('../classes/Activity');
 
 const FM = new Lastfm();
 
@@ -15,6 +16,18 @@ router.get('/godmode', (req, res) => {
     .then(users => res.json(users))
     .catch(err => console.log(err));
 });
+
+router.get(
+  '/activity',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const user = await User.findById(req.user.id);
+    const activities = await activity.getActivityFromUsersFollowers(
+      user.followedAccounts
+    );
+    return res.json({ activity: activities });
+  }
+);
 
 router.get(
   '/info',

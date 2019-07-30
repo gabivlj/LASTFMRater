@@ -1,11 +1,16 @@
 const router = require('express').Router();
 const passport = require('passport');
 
-const mongoose = require('mongoose');
+const Activity = require('../classes/Activity');
 const User = require('../models/User');
 const dontCareWaitingForSave = require('../lib/dontCareWaitingForSave');
 const handleError = require('../lib/handleError');
 
+/**
+ * @POST
+ * @PRIVATE
+ * @description Follows (or unfollows) the user that is passed in the route's id.
+ */
 router.post(
   '/follow/:id',
   passport.authenticate('jwt', { session: false }),
@@ -15,6 +20,7 @@ router.post(
       const userId = req.user.id;
       const user = await User.findById(userId);
       const index = user.followedAccounts.indexOf(id);
+      //
       if (index < 0) {
         // const followed = [...user.followedAccounts, id];
         // user.followedAccounts = followed;
@@ -32,6 +38,9 @@ router.post(
         if (errAnotherTime) throw errAnotherTime;
         returnedUser.password = null;
         user.password = null;
+        Activity.addSomethingActivity(
+          Activity.createFollowedInformation(theUserItsGonnaFollow, user)
+        );
         return res.json({ profile: returnedUser, me: user });
       }
       const followed = user.followedAccounts.filter(
