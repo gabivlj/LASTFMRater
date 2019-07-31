@@ -71,7 +71,7 @@ function Profile({
                 ? profile.profile.images[currentImg].lg
                 : ProfileImg
             }
-            goImg={profile.profile.images[currentImg]}
+            goImg={!!profile.profile.images[currentImg]}
             imgLazy={
               profile.profile.images[currentImg]
                 ? profile.profile.images[currentImg].lz
