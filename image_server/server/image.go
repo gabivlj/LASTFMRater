@@ -72,16 +72,6 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 	defer f.Close()
 	image, _, err := image.Decode(file)
 
-	// if err != nil {
-	// 	image, err = jpeg.Decode(file)
-	// }
-	// if err != nil {
-	// 	image, err = png.Decode(file)
-	// }
-	// if err != nil {
-	// 	image, err = jpg.Decode(file)
-	// }
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := map[string]interface{}{"line": 53, "status": false, "message": err.Error()}
