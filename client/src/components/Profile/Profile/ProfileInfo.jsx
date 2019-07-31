@@ -1,19 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Profile.styles.css';
+import ImageUploader from '../../Common/ImageUploader';
+import GoImage from '../../Common/GoImage';
 
-function ProfileInfo({ name, lastfm, followers, img }) {
+function ProfileInfo({
+  name,
+  lastfm,
+  followers,
+  img,
+  submit,
+  next,
+  back,
+  goImg
+}) {
   return (
     <div className="profileInfoWrapper">
       <div className="container borderProfile">
         <div className="row wrapperProfile">
           <div className="col-md-4">
-            <img
-              src={img} // "http://localhost:2222/api/image/1"
-              // src="http://localhost:2222/api/image/4"
+            <GoImage
+              goImg={goImg}
+              src={img}
               className="profileImage borderProfile"
               alt="The profile caption"
             />
+            <div>
+              <button
+                className="btn btn-primary m-2"
+                type="button"
+                onClick={back}
+              >
+                {'<'}
+              </button>
+              <button
+                className="btn btn-primary m-2"
+                onClick={next}
+                type="button"
+              >
+                {'>'}
+              </button>
+            </div>
           </div>
           <div className="col-md-6">
             <div className="showInfo">
@@ -24,6 +51,7 @@ function ProfileInfo({ name, lastfm, followers, img }) {
                 {Array.isArray(followers) ? followers.length : 0}
               </h4>
               <p>Standard bio for everything.</p>
+              <ImageUploader submit={submit} />
             </div>
           </div>
         </div>

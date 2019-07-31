@@ -2,16 +2,21 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	server "github.com/gabivlj/grumpy_image_server/server"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	port := "2222"
 	router := mux.NewRouter()
-	router.Use(server.Cors)
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Origin", "Content-Type", "X-Auth-Token", "Authorization"})
+	originsOk := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+
 	// When in the future we use .env variables...
 	if port == "" {
 		port = "2222" //localhost
@@ -20,10 +25,6 @@ func main() {
 
 	router.HandleFunc("/api/image/{id}", server.ServeImage).Methods("GET")
 	router.HandleFunc("/api/image", server.GetImage).Methods("POST")
-	err := http.ListenAndServe(":"+port, router)
-	if err != nil {
-		fmt.Print(err)
-		return
-	}
+	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 
 }

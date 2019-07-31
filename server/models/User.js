@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const Image = require('./Image');
+
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -13,6 +15,7 @@ const UserSchema = new Schema({
   img: {
     type: String
   },
+  images: [Image],
   password: {
     type: String,
     required: true

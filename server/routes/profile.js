@@ -8,6 +8,13 @@ const handleError = require('../lib/handleError');
 const LastFm = require('../classes/Lastfm');
 const Authenticator = require('../classes/Authenticator');
 
+router.get('/god/delete/image', (req, res) => {
+  User.findOne({ _id: '5cb88d162cd2833752b67fba' }).then(usr => {
+    usr.images = [];
+    usr.save().then(res => console.log('...'));
+  });
+});
+
 /**
  * @GET
  * @PUBLIC
@@ -53,7 +60,9 @@ router.get('/:id', async (req, res) => {
     ratedAlbums: user.ratedAlbums,
     profileImage: user.img,
     followers: user.followers || 0,
-    lastfm: user.lastfm || ''
+    lastfm: user.lastfm || '',
+    images: user.images || [],
+    _id: user._id
   };
   return res.json({ profile });
 });
@@ -74,41 +83,41 @@ router.get('/playlists/:username', async (req, res) => {
   return res.json({ playlists });
 });
 
-/**
- * @POST
- * @PRIVATE
- * @description Posts a image to a profile, or updates it.
- * @param { String } img Link to the image.
- */
-router.post(
-  '/image',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    const { img } = req.body;
-    if (!img) {
-      return res.status(400).json({ error: 'Pass an image profile please' });
-    }
-    const user = await User.findById({
-      _id: req.user.id
-    });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
-    }
-    const profile = await Profile.findOne({
-      user: user._id
-    });
-    if (!profile) {
-      const profileSchema = new Profile({
-        img
-      });
-      profileSchema.save();
-      return res.json({ success: true });
-    }
-    profile.img = img;
-    profile.save();
-    return res.json({ success: true });
-  }
-);
+// /**
+//  * @POST
+//  * @PRIVATE
+//  * @description Posts a image to a profile, or updates it.
+//  * @param { String } img Link to the image.
+//  */
+// router.post(
+//   '/image',
+//   passport.authenticate('jwt', { session: false }),
+//   async (req, res) => {
+//     const { img } = req.body;
+//     if (!img) {
+//       return res.status(400).json({ error: 'Pass an image profile please' });
+//     }
+//     const user = await User.findById({
+//       _id: req.user.id
+//     });
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found.' });
+//     }
+//     const profile = await Profile.findOne({
+//       user: user._id
+//     });
+//     if (!profile) {
+//       const profileSchema = new Profile({
+//         img
+//       });
+//       profileSchema.save();
+//       return res.json({ success: true });
+//     }
+//     profile.img = img;
+//     profile.save();
+//     return res.json({ success: true });
+//   }
+// );
 
 /**
  * @GET
@@ -200,5 +209,22 @@ router.get('/ratings/:user', async (req, res) => {
   }));
   return res.json({ puntuations: albumShortened });
 });
+
+router.post(
+  '/image',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { lz, sm, md, lg } = req.body;
+    const { id } = req.user;
+    const [err, user] = await handleError(User.findById(id));
+    if (err) return res.status(403).json({ error: 'Error finding user' });
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    if (user.images.length > 5)
+      return res.status(400).json({ error: 'Not more than 5 images.' });
+    user.images = [...user.images, { lz, sm, md, lg }];
+    await user.save();
+    return res.json({ user });
+  }
+);
 
 module.exports = router;
