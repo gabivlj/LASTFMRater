@@ -9,8 +9,8 @@ const initialState = {
   playlists: null,
   isLoadingPlaylists: false,
   profile: null,
-  error: null,
-}
+  error: null
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -23,26 +23,34 @@ export default (state = initialState, action) => {
     case 'GET_PROFILE_FULL':
       return {
         ...state,
-        profile: action.payload.profile,
-      }
+        profile: action.payload.profile
+      };
+    case 'UPDATE_PROFILE':
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          ...action.payload
+        }
+      };
     case 'ERROR_GETTING_PROFILE':
       return {
         ...state,
         error: action.payload
-      }
+      };
     case 'CLEAN_ERRORS':
       return {
         ...state,
-        error: null,
-      }
+        error: null
+      };
     case 'LOADING_PLAYLISTS_PROFILE':
       return {
         ...state,
         isLoadingPlaylists: true
-      }
+      };
     default:
       return {
-        ...state,
-      }
+        ...state
+      };
   }
-}
+};

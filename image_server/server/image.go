@@ -2,10 +2,13 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"image"
 	"image/color"
 	"image/jpeg"
-	"image/png"
+
+	// yes
+	_ "image/png"
 	"io"
 	"net/http"
 	"os"
@@ -33,11 +36,15 @@ func ServeImage(w http.ResponseWriter, r *http.Request) {
 
 // GetImage ...
 func GetImage(w http.ResponseWriter, r *http.Request) {
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
+	// w.Header().Set("Access-Control-Allow-Methods", "POST")
+	// w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	file, handler, err := r.FormFile("grumpy-file")
 	w.Header().Add("Content-Type", "application/json")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := map[string]interface{}{"status": false, "message": err.Error()}
+		fmt.Println(response)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -54,17 +61,31 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 	flz, err := os.Create("./temp/" + nameLz)
 
 	if err != nil {
+
 		w.WriteHeader(http.StatusInternalServerError)
 		response := map[string]interface{}{"line": 46, "status": false, "message": err.Error()}
+		fmt.Println(response)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	defer f.Close()
-	// decode the file TODO: Maybe change this to all kind of images...
-	image, err := png.Decode(file)
+	image, _, err := image.Decode(file)
+
+	// if err != nil {
+	// 	image, err = jpeg.Decode(file)
+	// }
+	// if err != nil {
+	// 	image, err = png.Decode(file)
+	// }
+	// if err != nil {
+	// 	image, err = jpg.Decode(file)
+	// }
+
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		response := map[string]interface{}{"line": 53, "status": false, "message": err.Error()}
+		fmt.Println(response)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -79,7 +100,8 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 	wg.Wait()
 
 	defer file.Close()
-	response := map[string]interface{}{"status": true, "message": "Image uploaded succesfuly"}
+
+	response := map[string]interface{}{"status": true, "message": "Image uploaded succesfuly", "lz": nameLz, "md": nameMd, "lg": nameOriginal, "sm": nameSm}
 	json.NewEncoder(w).Encode(response)
 	return
 }
@@ -103,6 +125,9 @@ func resize(in image.Image, newWidth int) *image.NRGBA {
 	bounds := in.Bounds()
 	// get the radio dividing with by the newWidth
 	ratio := bounds.Dx() / newWidth
+	if ratio == 0 {
+		ratio = 1
+	}
 	// new RGBA with the new resolution
 	out := image.NewNRGBA(image.Rect(bounds.Min.X/ratio, bounds.Min.X/ratio, bounds.Max.X/ratio, bounds.Max.Y/ratio))
 	// algorithm
