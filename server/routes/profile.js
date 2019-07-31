@@ -8,12 +8,12 @@ const handleError = require('../lib/handleError');
 const LastFm = require('../classes/Lastfm');
 const Authenticator = require('../classes/Authenticator');
 
-router.get('/god/delete/image', (req, res) => {
-  User.findOne({ _id: '5cb88d162cd2833752b67fba' }).then(usr => {
-    usr.images = [];
-    usr.save().then(res => console.log('...'));
-  });
-});
+// router.get('/god/delete/image', (req, res) => {
+//   User.findOne({ _id: '5cb88d162cd2833752b67fba' }).then(usr => {
+//     usr.images = [];
+//     usr.save().then(res => console.log('...'));
+//   });
+// });
 
 /**
  * @GET
