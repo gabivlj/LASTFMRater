@@ -34,13 +34,12 @@ func ServeImage(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, img)
 }
 
-// GetImage ...
+// GetImage : Gets the image from the client and saves 4 resolutions (high, medium, low, lazyloadingmode) with the goroutine way.
 func GetImage(w http.ResponseWriter, r *http.Request) {
-	// w.Header().Set("Access-Control-Allow-Origin", "*")
-	// w.Header().Set("Access-Control-Allow-Methods", "POST")
-	// w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	file, handler, err := r.FormFile("grumpy-file")
+	// Header for json
 	w.Header().Add("Content-Type", "application/json")
+	// Open grumpy-file form
+	file, handler, err := r.FormFile("grumpy-file")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := map[string]interface{}{"status": false, "message": err.Error()}
@@ -48,28 +47,8 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	splitted := strings.Split(handler.Filename, ".")[0]
-	// Name declarations.
-	nameOriginal := splitted + "-0.jpeg"
-	nameMd := splitted + "-1.jpeg"
-	nameSm := splitted + "-2.jpeg"
-	nameLz := splitted + "-3.jpeg"
 
-	f, err := os.Create("./temp/" + nameOriginal)
-	fmd, err := os.Create("./temp/" + nameMd)
-	fsm, err := os.Create("./temp/" + nameSm)
-	flz, err := os.Create("./temp/" + nameLz)
-
-	if err != nil {
-
-		w.WriteHeader(http.StatusInternalServerError)
-		response := map[string]interface{}{"line": 46, "status": false, "message": err.Error()}
-		fmt.Println(response)
-		json.NewEncoder(w).Encode(response)
-		return
-	}
-
-	defer f.Close()
+	// Decodes original file image.
 	image, _, err := image.Decode(file)
 
 	if err != nil {
@@ -80,15 +59,42 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Start saving the decodified image file.
+	splitted := strings.Split(handler.Filename, ".")[0]
+	// Name declarations.
+	nameOriginal := splitted + "-0.jpeg"
+	nameMd := splitted + "-1.jpeg"
+	nameSm := splitted + "-2.jpeg"
+	nameLz := splitted + "-3.jpeg"
+
+	// Create files.
+	f, err := os.Create("./temp/" + nameOriginal)
+	fmd, err := os.Create("./temp/" + nameMd)
+	fsm, err := os.Create("./temp/" + nameSm)
+	flz, err := os.Create("./temp/" + nameLz)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := map[string]interface{}{"line": 46, "status": false, "message": err.Error()}
+		fmt.Println(response)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	// Remember to close image files.
+	defer f.Close()
+	defer fmd.Close()
+	defer fsm.Close()
+	defer flz.Close()
+
+	// Concurrent save image
 	var wg sync.WaitGroup
 	wg.Add(4)
-	// save image in the file. TODO: Later we will refactoring to concurrency.
 	go saveImage(image, f, 650, true, w, &wg)
 	go saveImage(image, fmd, 500, true, w, &wg)
 	go saveImage(image, fsm, 200, true, w, &wg)
 	go saveImage(image, flz, 50, true, w, &wg)
 	wg.Wait()
-
 	defer file.Close()
 
 	response := map[string]interface{}{"status": true, "message": "Image uploaded succesfuly", "lz": nameLz, "md": nameMd, "lg": nameOriginal, "sm": nameSm}
