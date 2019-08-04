@@ -223,7 +223,7 @@ router.post(
       return res.status(400).json({ error: 'Not more than 5 images.' });
     user.images = [...user.images, { lz, sm, md, lg }];
     await user.save();
-    return res.json({ user });
+    return res.json({ images: user.images });
   }
 );
 

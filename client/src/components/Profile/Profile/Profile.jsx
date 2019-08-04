@@ -6,7 +6,8 @@ import Ratings from '../Ratings/Ratings';
 import {
   getProfile,
   cleanErrors,
-  uploadImage
+  uploadImage,
+  cleanProfile
 } from '../../../actions/profileActions';
 import ProfileInfo from './ProfileInfo';
 import ProfileArtists from './ProfileArtist/ProfileArtists';
@@ -16,6 +17,7 @@ import ProfileImg from '../../../images/profile.png';
  */
 function Profile({
   cleanErrors,
+  cleanProfile,
   profile,
   getProfile,
   auth,
@@ -45,7 +47,10 @@ function Profile({
   }, []);
   // Unmount
   useEffect(() => {
-    return () => cleanErrors();
+    return () => {
+      cleanErrors();
+      cleanProfile();
+    };
   }, []);
   // Check if user is the same as the profile.
   const loged = auth.auth;
@@ -131,6 +136,7 @@ export default connect(
   {
     getProfile,
     cleanErrors,
-    uploadImage
+    uploadImage,
+    cleanProfile
   }
 )(Profile);

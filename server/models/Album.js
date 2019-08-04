@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Image = require('./Image');
 
 const { Schema } = mongoose;
 const CommentSchema = new Schema({
@@ -22,6 +23,7 @@ const AlbumSchema = new Schema({
     type: String,
     required: true
   },
+  images: [Image],
   tracks: [
     {
       trackId: {

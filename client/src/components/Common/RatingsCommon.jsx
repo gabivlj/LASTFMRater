@@ -107,7 +107,6 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
           element => String(element.user) === String(comparisonInRatingUpdate)
         );
       }
-      console.log(userRating);
       if (userRating && userRating.length > 0) userRating = userRating[0].puntuation;
       else {
         userRating = generalRating;

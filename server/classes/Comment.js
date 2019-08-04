@@ -32,7 +32,6 @@ function addOpinionToSpecific(userId, comment, type) {
       .indexOf(String(userId));
   } else {
     comment[type] = [{ user: userId }];
-    console.log(comment[type], comment);
     return comment;
   }
 

@@ -2,7 +2,9 @@ import axios from 'axios';
 import handleError from '../utils/handleError';
 import mapLikesDislikes from '../utils/mapLikesDislikes';
 import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
-import { notifyNormality } from './notifyActions';
+import { notifyNormality, notifyError } from './notifyActions';
+import goImage from '../utils/goImage';
+import uploadImageRoute from '../utils/uploadImageRoute';
 
 export const getAlbum = albumData => dispatch => {
   const username = albumData.username
@@ -11,7 +13,6 @@ export const getAlbum = albumData => dispatch => {
   axios
     .get(`/api/album/${albumData.albumname}/${albumData.artist}${username}`)
     .then(res => {
-      console.log(res.data.album);
       let comments = getIfUserLikedOrNot(
         res.data.album.comments,
         albumData.userId
@@ -101,4 +102,23 @@ export const likeComment = (
       comments
     }
   });
+};
+
+export const uploadImage = (file, id) => async dispatch => {
+  const [res, error] = await goImage(file);
+  if (error) {
+    notifyError('Error adding image to the server...', 3000);
+    return console.log('error');
+  }
+  const { data } = res;
+  const _ = await uploadImageRoute(
+    `/api/profile/image/upload/${id}`,
+    dispatch,
+    images => ({
+      type: 'UPDATE_ALBUM',
+      payload: { images }
+    }),
+    data
+  );
+  return _;
 };

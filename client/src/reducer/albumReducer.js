@@ -1,6 +1,6 @@
 const initialState = {
   album: null,
-  albumDB: null,
+  albumDB: null
 };
 
 export default (state = initialState, action) => {
@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
     case 'GET_ALBUM':
       return {
         ...state,
-        album: action.payload,
+        album: action.payload
       };
     case 'ADD_ALBUM':
       return {
@@ -17,9 +17,9 @@ export default (state = initialState, action) => {
           album: {
             ...state.album.album,
             __v: action.payload.__v,
-            ratings: action.payload.ratings,
-          },
-        },
+            ratings: action.payload.ratings
+          }
+        }
       };
     case 'ADD_COMMENT_ALBUM':
       return {
@@ -27,24 +27,34 @@ export default (state = initialState, action) => {
         album: {
           album: {
             ...state.album.album,
-            comments: [...action.payload.comments],
+            comments: [...action.payload.comments]
           }
         }
-      }
+      };
     case 'LIKE_COMMENT_ALBUM':
       return {
         ...state,
         album: {
           album: {
             ...state.album.album,
-            comments: [...action.payload.comments],                        
+            comments: [...action.payload.comments]
           }
         }
-      }
+      };
     case 'CLEAR_ALBUM':
       return {
         album: null,
-        albumDB: null,
+        albumDB: null
+      };
+    case 'UPDATE_ALBUM':
+      return {
+        ...state,
+        album: {
+          album: {
+            ...state.album.album,
+            ...state.action.payload
+          }
+        }
       };
     default:
       return state;

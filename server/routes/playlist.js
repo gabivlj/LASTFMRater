@@ -213,7 +213,7 @@ router.post(
     // Make these 2 reduce in one.
     const tracksShowReduced = tracksShow.reduce(
       (prev, current, index) =>
-        index === parseInt(indexToSet)
+        index === parseInt(indexToSet, 10)
           ? // If it's the index we are setting to just add the track and then the track that was there.
             [...prev, tracksShow[index1], current]
           : // If the index1 is equal to index, don't add the track, else do it because it's not the track we are filtering out.
@@ -224,12 +224,11 @@ router.post(
     // TODO. Or make this a map lol.
     playlist.tracks = playlist.tracks.reduce(
       (prev, current, index) =>
-        index === parseInt(indexToSet)
+        index === parseInt(indexToSet, 10)
           ? [...prev, playlist.tracks[index1], current]
           : ifIndexEqualsAdd(index, index1, prev, current),
       []
     );
-    console.log('!!!!!', tracksShowReduced, tracksShow);
     playlist
       .save()
       .then(pl =>
