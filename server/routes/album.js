@@ -142,6 +142,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
 
   if (albumFM) {
     albumFM = albumFM.album;
+    // TODO: Please check this better.
     const albumDB = await Album.findOne({
       artist: albumFM.artist,
       name: albumFM.name
@@ -153,6 +154,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
     /** ********************************************** */
     albumFM._id = albumDB._id;
     albumFM.__v = albumDB.__v;
+    albumFM.images = albumDB.images;
     return res.json({ album: albumFM });
   }
   const album = await Album.findOne({
@@ -256,6 +258,24 @@ router.post(
     );
 
     res.json({ comments: [...obj.instanceSaved.comments] });
+  }
+);
+
+router.post(
+  '/image/upload/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { lz, sm, md, lg } = req.body;
+    // !! FATAL ERROR IF WE ARE NOT CHECKING LZ SM MD LG PARAMS TODO
+    const { id } = req.params;
+    const [err, album] = await handleError(Album.findById(id));
+    if (err) return res.status(403).json({ error: 'Error finding album' });
+    if (!album) return res.status(404).json({ error: 'Album not found.' });
+    if (album.images.length > 5)
+      return res.status(400).json({ error: 'Not more than 5 images.' });
+    album.images = [...album.images, { lz, sm, md, lg }];
+    await album.save();
+    return res.json({ images: album.images });
   }
 );
 

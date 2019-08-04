@@ -25,6 +25,11 @@ export default (state = initialState, action) => {
         ...state,
         profile: action.payload.profile
       };
+    case 'CLEAN_PROFILE':
+      return {
+        ...state,
+        profile: null
+      };
     case 'UPDATE_PROFILE':
       return {
         ...state,

@@ -1,7 +1,9 @@
 import axios from 'axios';
 import uuid from 'uuid/v1';
 import handleError from '../utils/handleError';
-import { notifySuccess } from './notifyActions';
+import { notifySuccess, notifyError } from './notifyActions';
+import goImage from '../utils/goImage';
+import uploadImageRoute from '../utils/uploadImageRoute';
 
 export const getPlaylists = userName => async dispatch => {
   dispatch({
@@ -67,26 +69,26 @@ export const cleanErrors = () => dispatch => {
 };
 
 export const uploadImage = file => async dispatch => {
-  const fileData = new FormData();
-  fileData.append('grumpy-file', file, uuid());
-  const config = {
-    headers: {
-      'content-type': 'multipart/form-data'
-    }
-  };
-  const [res, error] = await handleError(
-    axios.post('http://localhost:2222/api/image', fileData, config)
-  );
-  if (error) return console.log('error');
+  const [res, error] = await goImage(file);
+  if (error) {
+    notifyError('Error adding image to the server...', 3000);
+    return console.log('error');
+  }
   const { data } = res;
-  const { lz, md, lg, sm } = data;
-  const [final, err] = await handleError(
-    axios.post('/api/profile/image', { lz, md, lg, sm })
+  const _ = await uploadImageRoute(
+    '/api/profile/image',
+    dispatch,
+    images => ({
+      type: 'UPDATE_PROFILE',
+      payload: { images }
+    }),
+    data
   );
-  if (err) return console.log('error2');
-  dispatch(notifySuccess('Image uploaded succesfuly!', 2000));
+  return _;
+};
+
+export const cleanProfile = () => dispatch => {
   return dispatch({
-    type: 'UPDATE_PROFILE',
-    payload: { images: final.data.user.images }
+    type: 'CLEAN_PROFILE'
   });
 };

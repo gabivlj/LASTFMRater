@@ -4,7 +4,7 @@ import handleError from '../utils/handleError';
 import guidGenerator from '../utils/idCreator';
 import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
 import mapLikesDislikes from '../utils/mapLikesDislikes';
-import { notifyNormality, notifySuccess } from './notifyActions';
+import { notifyNormality, notifySuccess, notifyError } from './notifyActions';
 
 export const searchTracks = query => async dispatch => {
   const [response, error] = await handleError(
@@ -144,16 +144,17 @@ export const interchangeTracks = (
   playlistId,
   tracksShow
 ) => async dispatch => {
-  const [{ data }, error] = await handleError(
+  const [res, error] = await handleError(
     axios.post(`/api/playlist/change/${index1}/${index2}`, {
       playlistId,
       tracksShow
     })
   );
   if (error) {
-    console.warn(error);
+    notifyError('Error! Try to reload the page!', 5000);
     return null;
   }
+  const { data } = res;
   return dispatch({
     type: 'SET_TRACKS',
     payload: data
