@@ -25,6 +25,7 @@ import Register from './components/Register/Register';
 import LastfmAuth from './components/LastfmAuth/LastfmAuth';
 import Configuration from './components/Configuration/Configuration';
 import Playlist from './components/Playlist/PlaylistPage/Playlist';
+import Socket from './components/Chat/Socket';
 import Profile from './components/Profile/Profile/Profile';
 import Notify from './components/Notifications/Notify';
 // Get user from localStorage.
@@ -37,7 +38,7 @@ function App() {
         <div>
           <div>
             {/* Create a Not found page... */}
-
+            <Socket />
             <Switch>
               <Route exact path="/" component={Home} />
               {/* Change this route */}
