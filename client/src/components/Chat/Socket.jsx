@@ -9,10 +9,10 @@ function Socket({ auth, sendMessage, receiveMessage, ...props }) {
     if (!auth) {
       return () => {};
     }
-    SocketInstance.socket = new SocketClass(auth.id, receiveMessage);
+    SocketInstance.socket = new SocketClass(auth.id, receiveMessage, auth.user);
     return () => {
       SocketInstance.socket.close();
-      delete SocketInstance.socket;
+      // delete SocketInstance.socket;
     };
   }, []);
   const send = () => {

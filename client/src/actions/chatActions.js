@@ -19,8 +19,18 @@ export const sendMessage = ({ message, to, username }) => dispatch => {
  */
 export const receiveMessage = e => dispatch => {
   const json = JSON.parse(e.data);
+  const { message, from, type, username } = json;
   console.log(json);
-  const { message, from } = json;
-  // TODO: Handle redux.
-  dispatch(notifyNormality(`${message} from ${from}`), 10000);
+  switch (type) {
+    // TODO: Handle redux.
+    case 'Message':
+      dispatch(notifyNormality(`${message} from ${from}`), 10000);
+      break;
+    case 'ListOfFriends':
+      // dispatch(notifyNormality("Go"))
+      break;
+    case 'NewFriendConnected':
+      return dispatch(notifyNormality(`${username} connected!`));
+    default:
+  }
 };
