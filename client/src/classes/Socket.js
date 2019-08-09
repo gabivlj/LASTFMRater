@@ -1,10 +1,17 @@
 class Socket {
-  constructor(userId, receiveMessage) {
+  constructor(userId, receiveMessage, username, friends = []) {
     this.socket = new WebSocket('ws://localhost:12345/ws');
     this.userId = userId;
+    this.username = username;
     this.socket.onopen = () => {
       this.socket.send(
-        JSON.stringify({ userId, message: 'Connected!', type: 'Open' })
+        JSON.stringify({
+          username,
+          userId,
+          message: 'Connected!',
+          type: 'Open',
+          friends: ['5cb88d162cd2833752b67fba']
+        })
       );
     };
     this.socket.onclose = () => {};
@@ -25,7 +32,6 @@ class Socket {
       from: username
     };
     const json = JSON.stringify(data);
-    console.log(data);
     this.socket.send(json);
   }
 }
