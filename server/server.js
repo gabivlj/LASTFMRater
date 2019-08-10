@@ -14,6 +14,7 @@ const track = require('./routes/track');
 const profile = require('./routes/profile');
 const comments = require('./routes/commentSection');
 const following = require('./routes/following');
+const chat = require('./routes/chat');
 
 const { addRoutes } = require('./lib/routes');
 
@@ -52,7 +53,8 @@ addRoutes(
   ['/api/track', track],
   ['/api/profile', profile],
   ['/api/comments', comments],
-  ['/api/following', following]
+  ['/api/following', following],
+  ['/api/chat', chat]
 );
 
 // Port listening

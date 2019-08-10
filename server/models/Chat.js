@@ -7,6 +7,7 @@ const message = {
     type: Schema.Types.ObjectId,
     ref: 'users'
   },
+  username: String,
   text: String,
   date: { type: Date, default: Date.now() }
 };

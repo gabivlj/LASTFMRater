@@ -7,6 +7,7 @@ import playlistReducer from './playlistReducer';
 import profileReducer from './profileReducer';
 import commentReducer from './commentReducer';
 import notifyReducer from './notifyReducer';
+import chatReducer from './chatReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
   playlist: playlistReducer,
   profile: profileReducer,
   comments: commentReducer,
-  notify: notifyReducer
+  notify: notifyReducer,
+  chat: chatReducer
 });
