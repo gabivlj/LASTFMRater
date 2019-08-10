@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import PlaylistShowcase from '../Playlist/PlaylistShowcase';
 import Ratings from '../Ratings/Ratings';
 import {
@@ -12,6 +13,8 @@ import {
 import ProfileInfo from './ProfileInfo';
 import ProfileArtists from './ProfileArtist/ProfileArtists';
 import ProfileImg from '../../../images/profile.png';
+import { setChatUsername } from '../../../actions/chatActions';
+
 /**
  * @todo I think we will be changing Auth.jsx to this, Or separate or i don't know, but we must do profile page again.
  */
@@ -89,6 +92,12 @@ function Profile({
             next={nextImage}
             back={backImage}
           />
+          <Link
+            to={`/chat/${profile.profile._id}`}
+            onClick={() => setChatUsername(profile.profile.user)}
+          >
+            Go
+          </Link>
           <div className="container">
             <div className="row">
               <div className="col-md-4">

@@ -28,6 +28,7 @@ import Playlist from './components/Playlist/PlaylistPage/Playlist';
 import Socket from './components/Chat/Socket';
 import Profile from './components/Profile/Profile/Profile';
 import Notify from './components/Notifications/Notify';
+import Chat from './components/Chat/Chat/Chat';
 // Get user from localStorage.
 store.dispatch(logFromSession());
 
@@ -65,6 +66,7 @@ function App() {
                 path="/playlist/create"
                 component={PlaylistFormComponent}
               />
+              <PrivateRoute exact path="/chat/:id" component={Chat} />
               <PrivateRoute
                 exact
                 path="/playlist/view/:id"
