@@ -57,7 +57,7 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
       </div>
     </div>
   );
-  const title = chat.currentChatInfo ? chat.currentChatInfo.username : null;
+  const otherUser = chat.currentChatInfo ? chat.currentChatInfo.username : null;
   const profileImg = chat.currentChatInfo
     ? chat.currentChatInfo.profileImage
     : null;
@@ -65,9 +65,9 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
     <div>
       <DialogMe
         Render={Messages}
-        propsRender={{ messages }}
+        propsRender={{ messages, otherUser }}
         renderActions={actions}
-        title={title}
+        title={otherUser}
         image={
           <GoImage
             style={{ height: '60px', width: '60px' }}

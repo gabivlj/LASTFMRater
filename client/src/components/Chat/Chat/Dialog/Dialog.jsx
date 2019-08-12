@@ -48,11 +48,7 @@ export default function DialogMe({
             Close
           </Button>
         </DialogTitle>
-        <DialogContent
-          style={{ paddingTop: '80%' }}
-          modal="false"
-          dividers="true"
-        >
+        <DialogContent modal="false" dividers="true">
           <Render {...propsRender} />
         </DialogContent>
         <DialogActions style={{ borderTop: '1px solid #dce7f2' }}>
