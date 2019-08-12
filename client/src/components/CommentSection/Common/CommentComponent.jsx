@@ -61,10 +61,10 @@ function CommentComponent({
   // UseEffect
   useEffect(() => {
     // todo: Check for other scroll actions.
-    document.addEventListener('wheel', checkBottom());
+    document.addEventListener('scroll', checkBottom());
     // Remove the EventListener
     return () => {
-      document.removeEventListener('wheel', checkBottom());
+      document.removeEventListener('scroll', checkBottom());
       cleanComments();
     };
   }, [objectId]);
