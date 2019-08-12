@@ -13,7 +13,11 @@ import {
 import ProfileInfo from './ProfileInfo';
 import ProfileArtists from './ProfileArtist/ProfileArtists';
 import ProfileImg from '../../../images/profile.png';
-import { setChatUsername } from '../../../actions/chatActions';
+import {
+  setChatUsername,
+  open,
+  setChatInfo
+} from '../../../actions/chatActions';
 
 /**
  * @todo I think we will be changing Auth.jsx to this, Or separate or i don't know, but we must do profile page again.
@@ -26,6 +30,9 @@ function Profile({
   auth,
   match,
   uploadImage,
+  open,
+  setChatInfo,
+  setChatUsername,
   ...props
 }) {
   const [currentImg, setCurrentImage] = useState(0);
@@ -47,7 +54,7 @@ function Profile({
   useEffect(() => {
     const { id } = match.params;
     getProfile(id);
-  }, []);
+  }, [match]);
   // Unmount
   useEffect(() => {
     return () => {
@@ -67,6 +74,10 @@ function Profile({
   if (error !== null) {
     props.history.push('/not/found');
   }
+  const profileImage =
+    profile.profile && !profile.isLoading && profile.profile.images[currentImg]
+      ? profile.profile.images[currentImg].lg
+      : ProfileImg;
   return (
     <div style={{ marginTop: '100px', paddingBottom: '200px' }}>
       {profile.isLoading || !profile.profile ? (
@@ -74,11 +85,7 @@ function Profile({
       ) : (
         <div>
           <ProfileInfo
-            img={
-              profile.profile.images[currentImg]
-                ? profile.profile.images[currentImg].lg
-                : ProfileImg
-            }
+            img={profileImage}
             goImg={!!profile.profile.images[currentImg]}
             imgLazy={
               profile.profile.images[currentImg]
@@ -92,12 +99,21 @@ function Profile({
             next={nextImage}
             back={backImage}
           />
-          <Link
-            to={`/chat/${profile.profile._id}`}
-            onClick={() => setChatUsername(profile.profile.user)}
+          <button
+            type="button"
+            // to={`/chat/${profile.profile._id}`}
+            onClick={() => {
+              setChatUsername(profile.profile.user);
+              setChatInfo({
+                username: profile.profile.user,
+                id: profile.profile._id,
+                profileImage
+              });
+              open();
+            }}
           >
             Go
-          </Link>
+          </button>
           <div className="container">
             <div className="row">
               <div className="col-md-4">
@@ -146,6 +162,9 @@ export default connect(
     getProfile,
     cleanErrors,
     uploadImage,
-    cleanProfile
+    cleanProfile,
+    setChatInfo,
+    setChatUsername,
+    open
   }
 )(Profile);

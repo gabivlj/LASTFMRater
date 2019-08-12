@@ -29,6 +29,7 @@ import Socket from './components/Chat/Socket';
 import Profile from './components/Profile/Profile/Profile';
 import Notify from './components/Notifications/Notify';
 import Chat from './components/Chat/Chat/Chat';
+import ChatDialog from './components/Chat/Chat/ChatDialog';
 // Get user from localStorage.
 store.dispatch(logFromSession());
 
@@ -87,6 +88,7 @@ function App() {
 
             <Route component={NotFound} exact path="/sorry/not-found" />
           </div>
+          <ChatDialog />
           <Notify />
           <AppBarMine />
         </div>

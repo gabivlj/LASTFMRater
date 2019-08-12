@@ -78,10 +78,11 @@ export const uploadImage = file => async dispatch => {
   const _ = await uploadImageRoute(
     '/api/profile/image',
     dispatch,
-    images => ({
-      type: 'UPDATE_PROFILE',
-      payload: { images }
-    }),
+    images =>
+      dispatch({
+        type: 'UPDATE_PROFILE',
+        payload: { images }
+      }),
     data
   );
   return _;

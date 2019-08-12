@@ -201,7 +201,13 @@ router.post('/auth/register', async (req, res) => {
           const user = new User({
             email,
             password: encrypted,
-            username
+            username,
+            ratedAlbums: [],
+            lastfm: null,
+            reviews: [],
+            followedAccounts: [],
+            followers: [],
+            playlists: []
           });
           const userS = await user.save();
           return res.json(userS);

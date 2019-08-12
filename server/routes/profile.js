@@ -219,7 +219,7 @@ router.post(
     const [err, user] = await handleError(User.findById(id));
     if (err) return res.status(403).json({ error: 'Error finding user' });
     if (!user) return res.status(404).json({ error: 'User not found.' });
-    if (user.images.length > 5)
+    if (user.images.length > 20)
       return res.status(400).json({ error: 'Not more than 5 images.' });
     user.images = [...user.images, { lz, sm, md, lg }];
     await user.save();
