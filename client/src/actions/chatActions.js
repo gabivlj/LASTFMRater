@@ -28,10 +28,19 @@ export const sendMessage = ({
   if (err) {
     return dispatch(notifyError('Error sending message...', 500));
   }
-  dispatch({
-    type: 'SEND_MESSAGE',
-    payload: res.data.chat.messages[res.data.chat.messages.length - 1]
-  });
+  // CHECK IF FIRST MESSAGE, IF IT IS FIRST MESSAGE UPDATE WHOLE CHAT, BECAUSE AT FIRST WE DON'T GET THE ENTIRE INFORMATION OF THE CHAT.
+  if (res.data.chat.messages.length === 1) {
+    dispatch({
+      type: 'GET_CHAT',
+      payload: res.data.chat
+    });
+  } else {
+    dispatch({
+      type: 'SEND_MESSAGE',
+      payload: res.data.chat.messages[res.data.chat.messages.length - 1]
+    });
+  }
+
   return dispatch(notifySuccess('Message sent succesfuly...', 1000));
 };
 
@@ -41,9 +50,14 @@ export const getChat = otherId => async dispatch => {
     return dispatch(notifyError('Error getting chat...', 500));
   }
   const { data } = res;
+  // Check if it exists, if it doesn't probably the user hasn't talked to that guy yet...
+  const chat = data.chat || {
+    messages: [],
+    users: {}
+  };
   return dispatch({
     type: 'GET_CHAT',
-    payload: data.chat
+    payload: chat
   });
 };
 
@@ -54,6 +68,20 @@ export const setChatUsername = username => dispatch => {
   });
 };
 
+export const open = (doOpen = false) => dispatch =>
+  dispatch({ type: 'OPEN', payload: doOpen });
+
+export const setChatInfo = ({ username, id, profileImage }) => dispatch => {
+  return dispatch({
+    type: 'SET_CHAT_INFO',
+    payload: {
+      username,
+      id,
+      profileImage
+    }
+  });
+};
+
 /**
  * @param {EventHandler} e
  * @description Pass this function to new Socket() so it executes it.
@@ -61,7 +89,6 @@ export const setChatUsername = username => dispatch => {
 export const receiveMessage = e => dispatch => {
   const json = JSON.parse(e.data);
   const { message, from, type, username, to, userId } = json;
-  console.log(json);
   switch (type) {
     // TODO: Handle redux.
     case 'Message':
