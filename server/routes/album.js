@@ -3,6 +3,7 @@ const passport = require('passport');
 const Album = require('../models/Album');
 const Lastfm = require('../classes/Lastfm');
 const handleError = require('../lib/handleError');
+const dontCareWaitingForSave = require('../lib/dontCareWaitingForSave');
 const albumHelper = require('../classes/Album');
 const Comment = require('../classes/Comment');
 const CommentSchema = require('../classes/CommentSchema');
@@ -130,36 +131,53 @@ router.post(
 );
 
 // @GET
-// @OPTIONALQUERYPARAMS username, userId
+// TODO This should be a PUT request please.
+// @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
-  const { username, userId } = req.query;
+  const { username, userId, mbid } = req.query;
   const AlbumData = {
     albumname: req.params.albumname,
     username,
-    artist: req.params.artistname
+    artist: req.params.artistname,
+    mbid
   };
   let albumFM = await FM.getAlbum(AlbumData);
 
-  if (albumFM) {
+  if (albumFM && albumFM.album) {
     albumFM = albumFM.album;
     // TODO: Please check this better.
-    const albumDB = await Album.findOne({
+    let albumDB = await Album.findOne({
       artist: albumFM.artist,
       name: albumFM.name
     });
+    if (!albumDB.lastfmSource) {
+      albumDB.lastfmSource = true;
+      dontCareWaitingForSave(albumDB, false);
+    }
+    if (!albumDB) {
+      const newAlbum = new Album({
+        artist: albumFM.artist,
+        name: albumFM.name,
+        mbid: albumFM.mbid,
+        lastfmSource: true
+      });
+      const saved = await newAlbum.save();
+      albumDB = saved;
+    }
+
     albumFM.ratings = albumDB.ratings;
     albumFM.reviews = albumDB.reviews;
-    // NOTE: TODO WHEN WE USE ANOTHER LANGUAGE OR SERVER FOR COMMENTS, WE ARE GONNA SHUT THIS THING DOWN.
-    albumFM.comments = albumDB.comments.slice(0, 15);
-    /** ********************************************** */
     albumFM._id = albumDB._id;
     albumFM.__v = albumDB.__v;
     albumFM.images = albumDB.images;
+    albumFM.lastfmSource = albumDB.lastfmSource;
     return res.json({ album: albumFM });
   }
   const album = await Album.findOne({
     name: req.params.albumname,
-    artist: req.params.artistname
+    artist: req.params.artistname,
+    _id: mbid,
+    lastfmSource: false
   });
   if (!album) {
     return res.status(400).json('Album not found!');

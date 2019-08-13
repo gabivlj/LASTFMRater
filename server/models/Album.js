@@ -15,6 +15,7 @@ const CommentSchema = new Schema({
 });
 
 const AlbumSchema = new Schema({
+  lastfmSource: Boolean,
   name: {
     type: String,
     required: true

@@ -6,26 +6,21 @@ import { notifyNormality, notifyError } from './notifyActions';
 import goImage from '../utils/goImage';
 import uploadImageRoute from '../utils/uploadImageRoute';
 
-export const getAlbum = albumData => dispatch => {
+export const getAlbum = albumData => async dispatch => {
+  if (albumData.mbid === '0') albumData.mbid = null;
   const username = albumData.username
-    ? `?username=${albumData.username}&userId=${albumData.userId}`
+    ? `?username=${albumData.username}&userId=${albumData.userId}&mbid=${albumData.mbid}`
     : '';
+
   axios
     .get(`/api/album/${albumData.albumname}/${albumData.artist}${username}`)
     .then(res => {
-      let comments = getIfUserLikedOrNot(
-        res.data.album.comments,
-        albumData.userId
-      );
-      comments = mapLikesDislikes(comments);
-      res.data.album.comments = comments;
       dispatch({
         type: 'GET_ALBUM',
         payload: res.data
       });
     })
     .catch(err => console.log(err));
-  axios.post('/api/album', albumData);
 };
 
 export const addAlbumRating = (
