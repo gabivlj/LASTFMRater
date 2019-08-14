@@ -2,6 +2,7 @@ import Axios from 'axios';
 import SocketInstance from '../classes/SocketInstance';
 import { notifySuccess, notifyNormality, notifyError } from './notifyActions';
 import handleError from '../utils/handleError';
+import testTime from '../utils/testTime';
 
 export const ROUTES = {
   FRIENDS: 'FRIENDS',
@@ -124,4 +125,16 @@ export const receiveMessage = e => dispatch => {
     default:
       return null;
   }
+};
+
+export const getChats = () => async dispatch => {
+  const t = testTime();
+  const [res, err] = await handleError(Axios.get('/api/chat'));
+  if (err) {
+    console.log(err);
+    return dispatch(notifyError('Error retrieving chats...', 3000));
+  }
+  console.log(res.data);
+  t();
+  return dispatch(notifySuccess('DEBUG: GOOD', 10000));
 };
