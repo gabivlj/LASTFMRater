@@ -13,7 +13,7 @@
 - Link your Lastfm account and enjoy having what you listen related to the social network!
 - Chat with whoever you want in real time!
 - Do you wanna receive feedback of your own music? Publish here albums that you've made and see how people rate it, review it and comment it.
-- And the easiest way of descubering music that you like with the charts and lists made by people or the app!
+- And the easiest way of discovering music that you like with the charts and lists made by people or the app!
 
 ## Tech stack
 
