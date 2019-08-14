@@ -165,7 +165,10 @@ class Album extends Component {
                     objectId={album._id}
                     type={'album'}
                 /> */}
-                  <CommentComponent objectId={album._id} />
+                  <CommentComponent
+                    objectId={album._id}
+                    numberOfCommentsAdd={20}
+                  />
                 </div>
               </div>
             ) : (

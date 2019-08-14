@@ -2,7 +2,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
-import { getChat, sendMessage, open } from '../../../actions/chatActions';
+import {
+  getChat,
+  sendMessage,
+  open,
+  ROUTES
+} from '../../../actions/chatActions';
 import DialogMe from './Dialog/Dialog';
 import InputBorderline from '../../Common/InputBorderline';
 import GoImage from '../../Common/GoImage';
@@ -13,9 +18,21 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
   function onChange(e) {
     setText(e.target.value);
   }
+  let Render;
   useEffect(() => {
     if (chat.open) {
-      getChat(chat.currentChatInfo.id);
+      switch (chat.route) {
+        case ROUTES.CHAT:
+          getChat(chat.currentChatInfo.id);
+          Render = Messages;
+          break;
+        case ROUTES.CHATS:
+          break;
+        case ROUTES.FRIENDS:
+          break;
+        default:
+          break;
+      }
     }
   }, [chat.open]);
   function sendMessageSubm() {
@@ -35,9 +52,9 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
     }
   }
   let messages;
-  if (chat.chat && chat.chat.messages) {
-    messages = chat.chat.messages;
-  }
+  // if (chat.chat && chat.chat.messages && chat.route === ROUTES.CHAT) {
+  //   messages = chat.chat.messages;
+  // } else if ()
   const actions = (
     <div className="row">
       <div className="col-md-8">
@@ -64,7 +81,7 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
   return (
     <div>
       <DialogMe
-        Render={Messages}
+        Render={Render}
         propsRender={{ messages, otherUser }}
         renderActions={actions}
         title={otherUser}

@@ -26,20 +26,19 @@ function CommentComponent({
   addOpinionToComment,
   getComments,
   setLoading,
-  setComments,
   cleanComments
 }) {
   // Redux refactoring.
   const userId = auth.apiUser ? auth.apiUser.id : null;
   const userName = auth.apiUser ? auth.apiUser.user : null;
   const { loaded } = comments;
-
+  const [, setCurrentNOfComments] = useState(0);
+  let timeoutForLoading = false;
   // Before useEffect function declarations
-  function checkBottom() {
-    // Private local variable of the function.
-    let timeoutForLoading = false;
-    let currentNumberOfComments = 0;
-    return () => {
+
+  // UseEffect
+  useEffect(() => {
+    function checkBottom() {
       // When scrolling to the bottom of the component, reload comments.
       if (
         window.innerHeight + window.scrollY >= document.body.offsetHeight &&
@@ -47,24 +46,26 @@ function CommentComponent({
         !timeoutForLoading
       ) {
         setLoading();
-        // Adding to the local variable.
-        currentNumberOfComments += numberOfCommentsAdd;
+        // We do the update of the comments here because otherwise I don't know how we will get the prev value.
+        setCurrentNOfComments(prev => {
+          getComments(objectId, 0, prev + numberOfCommentsAdd, userId);
+          // Tell the browser not to load again in 3s.
+          timeoutForLoading = true;
+          setTimeout(() => {
+            timeoutForLoading = false;
+          }, 1000);
+          // Update.
+          return prev + numberOfCommentsAdd;
+        });
         // API Call.
-        getComments(objectId, 0, currentNumberOfComments, userId);
-        // Tell the browser not to load again in 3s.
-        timeoutForLoading = true;
-        setTimeout(() => (timeoutForLoading = false), 3000);
       }
-    };
-  }
-
-  // UseEffect
-  useEffect(() => {
-    // todo: Check for other scroll actions.
-    document.addEventListener('scroll', checkBottom());
+    }
+    document.addEventListener('scroll', checkBottom);
     // Remove the EventListener
     return () => {
-      document.removeEventListener('scroll', checkBottom());
+      // Destroy
+      setCurrentNOfComments(0);
+      document.removeEventListener('scroll', checkBottom);
       cleanComments();
     };
   }, [objectId]);
@@ -116,9 +117,11 @@ CommentComponent.propTypes = {
   addOpinionToComment: PropTypes.func.isRequired,
   getComments: PropTypes.func.isRequired,
   setLoading: PropTypes.func.isRequired,
-  setComments: PropTypes.func.isRequired,
   cleanComments: PropTypes.func.isRequired,
-  comments: PropTypes.array,
+  comments: PropTypes.shape({
+    comments: PropTypes.array.isRequired,
+    loaded: PropTypes.bool.isRequired
+  }),
   numberOfCommentsAdd: PropTypes.number
 };
 
