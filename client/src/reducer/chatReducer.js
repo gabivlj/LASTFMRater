@@ -3,16 +3,28 @@ const initialState = {
   chat: null,
   currentChatUsername: 'gabivlj4',
   currentChatInfo: null,
-  open: false
+  open: false,
+  route: 'FRIENDS',
+  friends: null
 };
 
 // page: (chat list : 'mutual list') = > enterchat => SET_CHAT_USER => _chat_
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_CHATS':
+      return {
+        ...state,
+        chats: action.payload
+      };
     case 'OPEN':
       return {
         ...state,
         open: !state.open
+      };
+    case 'SET_CHAT_ROUTE':
+      return {
+        ...state,
+        route: action.payload
       };
     case 'SET_CHAT_INFO':
       return {

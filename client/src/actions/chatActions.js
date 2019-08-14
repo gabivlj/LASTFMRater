@@ -3,6 +3,12 @@ import SocketInstance from '../classes/SocketInstance';
 import { notifySuccess, notifyNormality, notifyError } from './notifyActions';
 import handleError from '../utils/handleError';
 
+export const ROUTES = {
+  FRIENDS: 'FRIENDS',
+  CHATS: 'CHATS',
+  CHAT: 'CHAT'
+};
+
 /**
  * @param {object} , message, to, username
  * @description Call this function when you wanna send a message.
@@ -58,6 +64,13 @@ export const getChat = otherId => async dispatch => {
   return dispatch({
     type: 'GET_CHAT',
     payload: chat
+  });
+};
+
+export const setChatRoute = route => dispatch => {
+  return dispatch({
+    type: 'SET_CHAT_ROUTE',
+    payload: route
   });
 };
 
