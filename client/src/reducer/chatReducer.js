@@ -4,7 +4,7 @@ const initialState = {
   currentChatUsername: 'gabivlj4',
   currentChatInfo: null,
   open: false,
-  route: 'FRIENDS',
+  route: 'CHATS',
   friends: null
 };
 

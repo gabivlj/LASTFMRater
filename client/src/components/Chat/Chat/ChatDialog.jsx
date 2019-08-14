@@ -1,25 +1,36 @@
 /* eslint-disable react/jsx-wrap-multilines */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 import {
   getChat,
   sendMessage,
   open,
-  ROUTES
+  ROUTES,
+  getChats,
+  setChatRoute
 } from '../../../actions/chatActions';
 import DialogMe from './Dialog/Dialog';
 import InputBorderline from '../../Common/InputBorderline';
 import GoImage from '../../Common/GoImage';
 import Messages from './Dialog/Messages';
 
-function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
+function ChatDialog({
+  auth,
+  chat,
+  getChat,
+  getChats,
+  sendMessage,
+  open,
+  setChatRoute
+}) {
   const [text, setText] = useState('');
   function onChange(e) {
     setText(e.target.value);
   }
-  let Render;
+  let Render = Messages;
   useEffect(() => {
+    console.log(chat.route);
     if (chat.open) {
       switch (chat.route) {
         case ROUTES.CHAT:
@@ -27,6 +38,9 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
           Render = Messages;
           break;
         case ROUTES.CHATS:
+          getChats();
+
+          Render = InputBorderline;
           break;
         case ROUTES.FRIENDS:
           break;
@@ -34,7 +48,21 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
           break;
       }
     }
-  }, [chat.open]);
+  }, [chat.open, chat.route]);
+
+  function handleBack() {
+    if (chat.route === ROUTES.CHATS) {
+      return open();
+    }
+    if (chat.route === ROUTES.CHAT) {
+      return setChatRoute(ROUTES.CHATS);
+    }
+    if (chat.route === ROUTES.FRIENDS) {
+      return open();
+    }
+    return null;
+  }
+
   function sendMessageSubm() {
     sendMessage({
       message: text,
@@ -45,16 +73,19 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
     });
     setText('');
   }
+
   function onEnter(e) {
     const keyCode = e.keyCode || e.which;
+    // enter keycode
     if (keyCode === 13) {
       sendMessageSubm();
     }
   }
+
   let messages;
-  // if (chat.chat && chat.chat.messages && chat.route === ROUTES.CHAT) {
-  //   messages = chat.chat.messages;
-  // } else if ()
+  if (chat.chat && chat.chat.messages && chat.route === ROUTES.CHAT) {
+    messages = chat.chat.messages;
+  }
   const actions = (
     <div className="row">
       <div className="col-md-8">
@@ -82,20 +113,28 @@ function ChatDialog({ auth, chat, getChat, sendMessage, open }) {
     <div>
       <DialogMe
         Render={Render}
-        propsRender={{ messages, otherUser }}
+        propsRender={{
+          messages,
+          otherUser
+        }}
         renderActions={actions}
-        title={otherUser}
+        title={ROUTES.CHAT === chat.route ? otherUser : ''}
         image={
-          <GoImage
-            style={{ height: '60px', width: '60px' }}
-            goImg
-            src={profileImg}
-            className="profileImage borderProfile mr-3"
-            alt="The profile caption"
-          />
+          chat.route === ROUTES.CHAT ? (
+            <GoImage
+              style={{ height: '60px', width: '60px' }}
+              goImg
+              src={profileImg}
+              className="profileImage borderProfile mr-3"
+              alt="The profile caption"
+            />
+          ) : (
+            <></>
+          )
         }
         open={chat.open}
         handleClose={() => open()}
+        handleBack={handleBack}
       />
     </div>
   );
@@ -111,6 +150,8 @@ export default connect(
   {
     getChat,
     sendMessage,
-    open
+    open,
+    getChats,
+    setChatRoute
   }
 )(ChatDialog);

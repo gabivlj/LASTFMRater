@@ -16,7 +16,9 @@ import ProfileImg from '../../../images/profile.png';
 import {
   setChatUsername,
   open,
-  setChatInfo
+  setChatInfo,
+  setChatRoute,
+  ROUTES
 } from '../../../actions/chatActions';
 
 /**
@@ -33,6 +35,7 @@ function Profile({
   open,
   setChatInfo,
   setChatUsername,
+  setChatRoute,
   ...props
 }) {
   const [currentImg, setCurrentImage] = useState(0);
@@ -110,6 +113,7 @@ function Profile({
                 profileImage
               });
               open();
+              setChatRoute(ROUTES.CHAT);
             }}
           >
             Go
@@ -165,6 +169,7 @@ export default connect(
     cleanProfile,
     setChatInfo,
     setChatUsername,
+    setChatRoute,
     open
   }
 )(Profile);
