@@ -15,7 +15,8 @@ const message = {
 const ChatSchema = new Schema({
   // Dictionary. // { "id_string": { username: --, id: --, images: [??]}}
   users: Object,
-  messages: [message]
+  messages: [message],
+  lastTalked: { type: Date, default: Date.now() }
 });
 
 module.exports = mongoose.model('chats', ChatSchema);
