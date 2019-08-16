@@ -27,13 +27,14 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
   const trueUsername = usernameProps || username;
   useEffect(() => {
     (async () => {
-      if (trueRatings) {
+      if (trueRatings && trueRatings.length > 0) {
         setLoading(true);
         const [res, error] = await handleError(
           axios.get(`/api/profile/ratings/${trueUsername}`)
         );
         if (error) {
-          setLoading(true);
+          console.log(error);
+          setLoading(false);
           // todo check error
           return;
         }
@@ -42,10 +43,11 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
         setAlbums(puntuations);
         setLoading(false);
       }
+      setLoading(false);
     })();
   }, [ratings, ratingsProps]);
   const renderError =
-    albums.length === 0 && loading ? (
+    albums.length === 0 && loading === true ? (
       <div className="m-3">
         <CircularProgress />
       </div>

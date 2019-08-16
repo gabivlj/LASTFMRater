@@ -28,11 +28,13 @@ export const getPlaylists = userName => async dispatch => {
   });
 };
 
-export const getProfile = id => async dispatch => {
+export const getProfile = (id, userId = '') => async dispatch => {
   dispatch({
     type: 'LOADING_PROFILE'
   });
-  const [response, error] = await handleError(axios.get(`/api/profile/${id}`));
+  const [response, error] = await handleError(
+    axios.get(`/api/profile/${id}?userId=${userId}`)
+  );
 
   if (error) {
     return dispatch({

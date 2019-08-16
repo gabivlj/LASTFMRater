@@ -56,7 +56,11 @@ function Profile({
   // WillMount
   useEffect(() => {
     const { id } = match.params;
-    getProfile(id);
+    let userId = '';
+    if (auth.apiUser) {
+      userId = auth.apiUser.id;
+    }
+    getProfile(id, userId);
   }, [match]);
   // Unmount
   useEffect(() => {

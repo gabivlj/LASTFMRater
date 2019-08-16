@@ -3,6 +3,13 @@ const ActivityModel = require('../models/Activity');
 
 class Activity {
   constructor() {
+    this.ACTIVITIES = {
+      ALBUM_RATING: 'ALBUM_RATING',
+      PLAYLIST_RATING: 'PLAYLIST_RATING',
+      COMMENT: 'COMMENT',
+      CREATED_PLAYLIST: 'CREATED_PLAYLIST',
+      FOLLOWED_USER: 'FOLLOWED_USER'
+    };
     this.ALBUM_RATING = 'ALBUM_RATING';
 
     this.PLAYLIST_RATING = 'PLAYLIST_RATING';
@@ -55,13 +62,7 @@ class Activity {
   }
 
   checkActivityIsRight(activity) {
-    return (
-      activity === this.ALBUM_RATING ||
-      activity === this.PLAYLIST_RATING ||
-      this.COMMENT === activity ||
-      this.FOLLOWED_USER === activity ||
-      this.CREATED_PLAYLIST === activity
-    );
+    return !!this.ACTIVITIES[activity];
   }
 
   createFollowedInformation(userFollowed, userFollows) {
@@ -70,9 +71,27 @@ class Activity {
         followed: { id: userFollowed._id, userName: userFollowed.username },
         follows: { id: userFollows._id, userName: userFollows.username }
       },
-      type: this.FOLLOWED_USER,
+      type: this.ACTIVITIES.FOLLOWED_USER,
       user: userFollowed._id,
       userName: userFollowed.username
+    };
+  }
+
+  createRatedInformation(
+    { albumId, albumName, score, artist, mbid },
+    { username, userId }
+  ) {
+    return {
+      information: {
+        albumId,
+        albumName,
+        score,
+        artist,
+        mbid
+      },
+      type: this.ACTIVITIES.ALBUM_RATING,
+      userName: username,
+      user: userId
     };
   }
 
@@ -87,7 +106,7 @@ class Activity {
         objectCommented,
         text
       },
-      type: this.COMMENT,
+      type: this.ACTIVITIES.COMMENT,
       userName: userCommented.username,
       user: userCommented._id
     };

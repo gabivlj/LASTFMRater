@@ -17,8 +17,7 @@ function Chat({ auth, chat, match, getChat, sendMessage }) {
     });
   }
   let messages;
-  console.log(chat);
-  console.log(match);
+
   if (chat.chat && chat.chat.messages) {
     messages = chat.chat.messages.map(msg => (
       <div>{`${msg.username}: ${msg.text}`}</div>

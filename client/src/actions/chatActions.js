@@ -51,13 +51,14 @@ export const sendMessage = ({
   return dispatch(notifySuccess('Message sent succesfuly...', 1000));
 };
 
-export const getChat = otherId => async dispatch => {
-  const [res, err] = await handleError(Axios.get(`/api/chat/${otherId}`));
+export const getChat = (otherId, get = '') => async dispatch => {
+  const [res, err] = await handleError(Axios.get(`/api/chat/${get}${otherId}`));
   if (err) {
     return dispatch(notifyError('Error getting chat...', 500));
   }
   const { data } = res;
   // Check if it exists, if it doesn't probably the user hasn't talked to that guy yet...
+  console.log(data);
   const chat = data.chat || {
     messages: [],
     users: {}
@@ -128,13 +129,14 @@ export const receiveMessage = e => dispatch => {
 };
 
 export const getChats = () => async dispatch => {
-  const t = testTime();
   const [res, err] = await handleError(Axios.get('/api/chat'));
   if (err) {
     console.log(err);
     return dispatch(notifyError('Error retrieving chats...', 3000));
   }
-  console.log(res.data);
-  t();
-  return dispatch(notifySuccess('DEBUG: GOOD', 10000));
+  const { data } = res;
+  return dispatch({
+    type: 'SET_CHATS',
+    payload: data.chats
+  });
 };

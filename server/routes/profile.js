@@ -30,6 +30,8 @@ router.get('/', async (req, res) => {
  * @description Get all data for the profile.
  */
 router.get('/:id', async (req, res) => {
+  // OPTIONAL.
+  const { userId } = req.query;
   const { id } = req.params;
   const [error, user] = await handleError(User.findOne({ username: id }));
   if (error) {
@@ -40,6 +42,22 @@ router.get('/:id', async (req, res) => {
     return res.status(400).json({ error: 'Error finding the profile.' });
   }
   delete user.password;
+  // Additional information...
+  const itsUser = String(userId) === String(user._id);
+  const initialChecking = !!(
+    userId &&
+    !itsUser &&
+    userId.length > 0 &&
+    typeof userId === 'string'
+  );
+  const followed = !!(
+    initialChecking && user.followers.indexOf(String(userId)) > -1
+  );
+  const follows = !!(
+    initialChecking && user.followedAccounts.indexOf(String(userId)) > -1
+  );
+  const mutuals = !!(followed && follows);
+
   const playlists = Playlist.find({ user: user.username });
   const lastFm = new LastFm();
   const artists = !Authenticator.isEmpty(user.lastfm)
@@ -55,14 +73,18 @@ router.get('/:id', async (req, res) => {
 
   const profile = {
     user: user.username,
-    artists: artistsFinal,
-    playlists: playlistsFinal,
-    ratedAlbums: user.ratedAlbums,
+    artists: artistsFinal || [],
+    playlists: playlistsFinal || [],
+    ratedAlbums: user.ratedAlbums || [],
     profileImage: user.img,
     followers: user.followers || 0,
     lastfm: user.lastfm || '',
     images: user.images || [],
-    _id: user._id
+    _id: user._id,
+    followed,
+    follows,
+    mutuals,
+    itsUser
   };
   return res.json({ profile });
 });
