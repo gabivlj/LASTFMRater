@@ -35,9 +35,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.disable('x-powered-by');
+
 passportConfig(passport);
 
-// Route for auth. Lastfm
+// Route for Lastfm (test)
 app.get('/api/token', (req, res) => {
   const { token } = req.query;
   res.redirect(`http://localhost:3000/${token}`);

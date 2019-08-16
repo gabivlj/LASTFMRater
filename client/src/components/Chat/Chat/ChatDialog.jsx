@@ -8,12 +8,14 @@ import {
   open,
   ROUTES,
   getChats,
-  setChatRoute
+  setChatRoute,
+  setChatInfo
 } from '../../../actions/chatActions';
 import DialogMe from './Dialog/Dialog';
 import InputBorderline from '../../Common/InputBorderline';
 import GoImage from '../../Common/GoImage';
 import Messages from './Dialog/Messages';
+import Chats from './Chats/Chats';
 
 function ChatDialog({
   auth,
@@ -22,25 +24,34 @@ function ChatDialog({
   getChats,
   sendMessage,
   open,
-  setChatRoute
+  setChatRoute,
+  setChatInfo
 }) {
+  function returnRightRender(n) {
+    switch (n) {
+      case 0:
+        return Messages;
+      case 1:
+        return Chats;
+      default:
+        return <></>;
+    }
+  }
   const [text, setText] = useState('');
+  const [render, setRender] = useState(0);
   function onChange(e) {
     setText(e.target.value);
   }
-  let Render = Messages;
   useEffect(() => {
-    console.log(chat.route);
     if (chat.open) {
       switch (chat.route) {
         case ROUTES.CHAT:
           getChat(chat.currentChatInfo.id);
-          Render = Messages;
+          setRender(0);
           break;
         case ROUTES.CHATS:
           getChats();
-
-          Render = InputBorderline;
+          setRender(1);
           break;
         case ROUTES.FRIENDS:
           break;
@@ -112,10 +123,13 @@ function ChatDialog({
   return (
     <div>
       <DialogMe
-        Render={Render}
+        Render={returnRightRender(render)}
         propsRender={{
           messages,
-          otherUser
+          otherUser,
+          chats: chat.chats,
+          setChatRoute,
+          setChatInfo
         }}
         renderActions={actions}
         title={ROUTES.CHAT === chat.route ? otherUser : ''}
@@ -152,6 +166,7 @@ export default connect(
     sendMessage,
     open,
     getChats,
-    setChatRoute
+    setChatRoute,
+    setChatInfo
   }
 )(ChatDialog);

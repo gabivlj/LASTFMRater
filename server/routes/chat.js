@@ -31,17 +31,19 @@ router.get(
 
     if (profiles) {
       chatsResponse = chats.map((chat, index) => ({
+        _id: chat._id,
         users: chat.users,
         messages: chat.messages,
         images: profiles.filter(
           profile => String(profile._id) === String(users[index])
-        )[0].images
+        )[0].images,
+        otherUser: users[index]
       }));
     }
     if (err) {
       return res.status(404).json({ error: 'Error retrieving chats.' });
     }
-    return res.json({ chatsResponse });
+    return res.json({ chats: chatsResponse });
   }
 );
 
@@ -118,7 +120,7 @@ router.get(
  * @description Route for getting the chat. Returns chat: null and a message if it doesn't exist.
  */
 router.get(
-  '/:id',
+  '/get/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const { id } = req.user;
