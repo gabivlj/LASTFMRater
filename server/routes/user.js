@@ -34,6 +34,9 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const user = await User.findById({ _id: req.user._id });
+    const listOfFriends = user.followedAccounts.filter(followed =>
+      user.followers.includes(String(followed))
+    );
     res.json({
       email: user.email,
       lastfm: user.lastfm,
@@ -43,7 +46,8 @@ router.get(
       playlists: user.playlists,
       followedAccounts: user.followedAccounts,
       profileImage: user.img,
-      followers: user.followers || 0
+      followers: user.followers || 0,
+      listOfFriends
     });
   }
 );

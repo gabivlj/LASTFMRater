@@ -15,7 +15,7 @@ router.get(
     const [err, chats] = await handleError(
       Chat.find({
         [`users.${id}.id`]: id
-      })
+      }).sort({ lastTalked: -1 })
     );
     const users = [];
     chats.forEach(chat => {
@@ -57,6 +57,7 @@ router.post(
     const { text, from, to } = req.body;
     const userIdFrom = from._id;
     const userIdTo = to._id;
+    // todo: check if both of the users follow each other.
     const [err, chat] = await handleError(
       Chat.findOne({
         [`users.${userIdFrom}.id`]: userIdFrom,
@@ -72,7 +73,8 @@ router.post(
           [userIdFrom]: { id: userIdFrom, username: from.username },
           [userIdTo]: { id: userIdTo, username: to.username }
         },
-        messages: [{ text, user: userIdFrom, username: from.username }]
+        messages: [{ text, user: userIdFrom, username: from.username }],
+        lastTalked: Date.now()
       });
       const newChat = await Ch.save();
       return res.json({ chat: newChat });
@@ -82,6 +84,7 @@ router.post(
       { text, user: userIdFrom, username: from.username }
     ];
     chat.messages = msgs;
+    chat.lastTalked = Date.now();
     dontCareWaitingForSave(chat, true);
     return res.json({ chat });
   }

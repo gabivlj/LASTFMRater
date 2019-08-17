@@ -83,8 +83,8 @@ function Profile({
   }
   const profileImage =
     profile.profile && !profile.isLoading && profile.profile.images[currentImg]
-      ? profile.profile.images[currentImg].lg
-      : ProfileImg;
+      ? { image: profile.profile.images[currentImg].lg, go: true }
+      : { image: ProfileImg, go: false };
   return (
     <div style={{ marginTop: '100px', paddingBottom: '200px' }}>
       {profile.isLoading || !profile.profile ? (
@@ -92,7 +92,7 @@ function Profile({
       ) : (
         <div>
           <ProfileInfo
-            img={profileImage}
+            img={profileImage.image}
             goImg={!!profile.profile.images[currentImg]}
             imgLazy={
               profile.profile.images[currentImg]

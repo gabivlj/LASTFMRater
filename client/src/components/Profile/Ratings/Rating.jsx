@@ -18,13 +18,18 @@ function Rating({ rating, generalScore, artistName, albumName, mbid }) {
         <div className="col-md-4">
           <Link to={`/album/${artistName}/${albumName}/${mbid}`}>
             {albumName}
-          </Link>{' '}
-          by {artistName}
+          </Link>
+{' '}
+          by 
+{' '}
+{artistName}
         </div>
         <div className="col-md-8">
           <Stars generalScore={generalScore} puntuation={rating} />
-          {rating} /
-{generalScore}
+          {rating}
+{' '}
+/
+          {generalScore}
         </div>
       </div>
     </div>
