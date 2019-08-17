@@ -134,11 +134,11 @@ function ChatDialog({
         renderActions={actions}
         title={ROUTES.CHAT === chat.route ? otherUser : ''}
         image={
-          chat.route === ROUTES.CHAT ? (
+          chat.route === ROUTES.CHAT && profileImg ? (
             <GoImage
               style={{ height: '60px', width: '60px' }}
-              goImg
-              src={profileImg}
+              goImg={profileImg.go}
+              src={profileImg.image}
               className="profileImage borderProfile mr-3"
               alt="The profile caption"
             />

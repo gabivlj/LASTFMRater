@@ -37,7 +37,12 @@ function ChatItem({ chat, classes, setChatRoute, setChatInfo }) {
       onClick={() => {
         setChatInfo({
           username: chat.users[chat.otherUser].username,
-          profileImage: imageMd || profile,
+          profileImage: imageMd
+            ? { image: imageMd, go: true }
+            : {
+                image: profile,
+                go: false
+              },
           id: chat.users[chat.otherUser].id
         });
         setChatRoute(ROUTES.CHAT);
