@@ -32,16 +32,19 @@ router.post(
         if (err) throw err;
         const newFollowers = [...theUserItsGonnaFollow.followers, userId];
         theUserItsGonnaFollow.followers = newFollowers;
-        const [errAnotherTime, returnedUser] = await handleError(
-          theUserItsGonnaFollow.save()
-        );
-        if (errAnotherTime) throw errAnotherTime;
-        returnedUser.password = null;
+        // const [errAnotherTime, returnedUser] = await handleError(
+        //   theUserItsGonnaFollow.save()
+        // );
+        dontCareWaitingForSave(theUserItsGonnaFollow, false);
+        // if (errAnotherTime) throw errAnotherTime;
+        // returnedUser.password = null;
         user.password = null;
+        // todo: check that someone cannot spam this activity.
         Activity.addSomethingActivity(
           Activity.createFollowedInformation(theUserItsGonnaFollow, user)
         );
-        return res.json({ profile: returnedUser, me: user });
+
+        return res.json({ followed: true, followers: newFollowers });
       }
       const followed = user.followedAccounts.filter(
         followed => String(followed) !== String(id)
@@ -55,13 +58,14 @@ router.post(
         follower => String(follower) !== String(userId)
       );
       theUserItsGonnaFollow.followers = newFollowers;
-      const [errAnotherTime, saved] = await handleError(
-        theUserItsGonnaFollow.save()
-      );
-      if (errAnotherTime) throw errAnotherTime;
-      saved.password = null;
+      // const [errAnotherTime, saved] = await handleError(
+      //   theUserItsGonnaFollow.save()
+      // );
+      dontCareWaitingForSave(theUserItsGonnaFollow, false);
+      // if (errAnotherTime) throw errAnotherTime;
+      // saved.password = null;
       user.password = null;
-      return res.json({ profile: saved, me: user });
+      return res.json({ followed: false, followers: newFollowers });
     } catch (err) {
       // console.log(err);
       return res.status(404).json({ error: 'Error un/following the user...' });

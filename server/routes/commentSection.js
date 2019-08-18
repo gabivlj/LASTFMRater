@@ -2,11 +2,22 @@
  * @@@@ UPDATE: Ok so I think we are definitely using this.
  */
 const express = require('express');
+const passport = require('passport');
 
 const router = express.Router();
-const passport = require('passport');
+
+// const time = require('../lib/time');
 const CommentLib = require('../classes/Comment');
 const Comment = require('../models/Comment');
+
+// router.get('/test/comment', async (req, res) => {
+//   // Comment.ensureIndexes({ objectId: 1 });
+//   const t = time();
+//   const comment = await Comment.find({ objectId: '5cb8910228215838207d08a9' });
+//   console.log(comment.length);
+//   t();
+//   return res.json(comment);
+// });
 
 /**
  * @GET

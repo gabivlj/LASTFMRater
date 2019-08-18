@@ -1,13 +1,13 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import PlaylistShowcase from '../Playlist/PlaylistShowcase';
 import Ratings from '../Ratings/Ratings';
 import {
   getProfile,
   cleanErrors,
   uploadImage,
+  followUser,
   cleanProfile
 } from '../../../actions/profileActions';
 import ProfileInfo from './ProfileInfo';
@@ -36,6 +36,7 @@ function Profile({
   setChatInfo,
   setChatUsername,
   setChatRoute,
+  followUser,
   ...props
 }) {
   const [currentImg, setCurrentImage] = useState(0);
@@ -85,6 +86,7 @@ function Profile({
     profile.profile && !profile.isLoading && profile.profile.images[currentImg]
       ? { image: profile.profile.images[currentImg].lg, go: true }
       : { image: ProfileImg, go: false };
+
   return (
     <div style={{ marginTop: '100px', paddingBottom: '200px' }}>
       {profile.isLoading || !profile.profile ? (
@@ -105,6 +107,13 @@ function Profile({
             submit={uploadImage}
             next={nextImage}
             back={backImage}
+            follows={profile.profile.follows}
+            followed={profile.profile.followed}
+            mutuals={profile.profile.mutuals}
+            isUser={profile.profile.itsUser}
+            follow={() => {
+              followUser(profile.profile._id);
+            }}
           />
           <button
             type="button"
@@ -174,6 +183,7 @@ export default connect(
     setChatInfo,
     setChatUsername,
     setChatRoute,
-    open
+    open,
+    followUser
   }
 )(Profile);
