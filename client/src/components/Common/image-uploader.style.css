@@ -1,0 +1,29 @@
+.input-grumpy  {
+  font-size: 1.25em;
+  font-weight: 700;
+  color: rgb(238, 229, 248);
+  background-color: rgb(43, 82, 255);
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 15%;
+  margin: 0 0 0 20px;
+}
+
+.profile-buttons {
+  margin: 0 0 0 15%;
+}
+
+.input-grumpy:focus ,
+.input-grumpy:hover {
+  background-color: rgb(25, 0, 255);
+  
+}
+
+.grumpy-file {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}

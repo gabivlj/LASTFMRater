@@ -95,3 +95,20 @@ export const cleanProfile = () => dispatch => {
     type: 'CLEAN_PROFILE'
   });
 };
+
+export const followUser = id => async dispatch => {
+  const [response, error] = await handleError(
+    axios.post(`/api/following/follow/${id}`)
+  );
+  if (error) {
+    return dispatch(notifyError('Error following user!', 2000));
+  }
+  if (response.data.followed) dispatch(notifySuccess('User followed!', 1000));
+  return dispatch({
+    type: 'UPDATE_PROFILE',
+    payload: {
+      followed: response.data.followed,
+      followers: response.data.followers
+    }
+  });
+};
