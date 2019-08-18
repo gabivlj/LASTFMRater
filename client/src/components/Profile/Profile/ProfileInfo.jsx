@@ -16,14 +16,15 @@ function ProfileInfo({
   followed,
   isUser,
   goImg,
-  follow
+  follow,
+  chatButton
 }) {
   const followButton = !followed ? (
-    <button className="btn btn-primary mt-3" type="button" onClick={follow}>
+    <button className="btn btn-primary" type="button" onClick={follow}>
       Follow
     </button>
   ) : (
-    <button className="btn btn-success mt-3" type="button" onClick={follow}>
+    <button className="btn btn-success" type="button" onClick={follow}>
       <i className="fas fa-check mr-3" />
       Followed
     </button>
@@ -67,8 +68,12 @@ function ProfileInfo({
               </h4>
               {follows ? <h6>Follows you.</h6> : null}
               <p>Standard bio for everything.</p>
-
-              {isUser ? null : followButton}
+              {isUser ? null : (
+                <div className="row">
+                  <div className="col-md-2">{chatButton}</div>
+                  <div className="col-md-2">{followButton}</div>
+                </div>
+              )}
             </div>
           </div>
         </div>

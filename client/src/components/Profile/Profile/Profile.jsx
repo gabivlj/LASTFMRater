@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { LinearProgress } from '@material-ui/core';
@@ -114,23 +116,26 @@ function Profile({
             follow={() => {
               followUser(profile.profile._id);
             }}
+            chatButton={
+              <button
+                type="button"
+                // to={`/chat/${profile.profile._id}`}
+                className="btn btn-primary"
+                onClick={() => {
+                  setChatUsername(profile.profile.user);
+                  setChatInfo({
+                    username: profile.profile.user,
+                    id: profile.profile._id,
+                    profileImage
+                  });
+                  open();
+                  setChatRoute(ROUTES.CHAT);
+                }}
+              >
+                <i className="fa fa-paper-plane" aria-hidden="true" />
+              </button>
+            }
           />
-          <button
-            type="button"
-            // to={`/chat/${profile.profile._id}`}
-            onClick={() => {
-              setChatUsername(profile.profile.user);
-              setChatInfo({
-                username: profile.profile.user,
-                id: profile.profile._id,
-                profileImage
-              });
-              open();
-              setChatRoute(ROUTES.CHAT);
-            }}
-          >
-            Go
-          </button>
           <div className="container">
             <div className="row">
               <div className="col-md-4">

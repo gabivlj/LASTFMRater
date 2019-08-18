@@ -5,12 +5,18 @@ const initialState = {
   currentChatInfo: null,
   open: false,
   route: 'CHATS',
-  friends: null
+  friends: null,
+  notification: false
 };
 
 // page: (chat list : 'mutual list') = > enterchat => SET_CHAT_USER => _chat_
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_NOTIFICATION':
+      return {
+        ...state,
+        notification: action.payload
+      };
     case 'SET_CHATS':
       return {
         ...state,

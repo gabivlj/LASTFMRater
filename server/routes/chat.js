@@ -70,8 +70,16 @@ router.post(
     if (!chat) {
       const Ch = new Chat({
         users: {
-          [userIdFrom]: { id: userIdFrom, username: from.username },
-          [userIdTo]: { id: userIdTo, username: to.username }
+          [userIdFrom]: {
+            id: userIdFrom,
+            username: from.username,
+            notification: false
+          },
+          [userIdTo]: {
+            id: userIdTo,
+            username: to.username,
+            notification: true
+          }
         },
         messages: [{ text, user: userIdFrom, username: from.username }],
         lastTalked: Date.now()
@@ -83,11 +91,25 @@ router.post(
       ...chat.messages,
       { text, user: userIdFrom, username: from.username }
     ];
+    chat.users[userIdTo].notification = true;
     chat.messages = msgs;
     chat.lastTalked = Date.now();
     dontCareWaitingForSave(chat, true);
     return res.json({ chat });
   }
+);
+
+// todo
+router.post(
+  '/deleteNotification',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {}
+);
+
+router.get(
+  '/get/notification',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {}
 );
 
 /**
