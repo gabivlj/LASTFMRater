@@ -13,7 +13,7 @@ const message = {
 };
 
 const ChatSchema = new Schema({
-  // Dictionary. // { "id_string": { username: --, id: --, images: [??]}}
+  // Dictionary. // { "id_string": { username: --, id: --, images: [??], notification false }}
   users: Object,
   messages: [message],
   lastTalked: { type: Date, default: Date.now() }
