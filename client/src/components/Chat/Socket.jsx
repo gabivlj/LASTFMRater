@@ -9,12 +9,19 @@ function Socket({ auth, receiveMessage, ...props }) {
     if (!auth) {
       return () => {};
     }
-    SocketInstance.socket = new SocketClass(auth.id, receiveMessage, auth.user);
+    // This means that auth has not loaded fully yet.
+    if (!auth.listOfFriends) return () => {};
+    SocketInstance.socket = new SocketClass(
+      auth.id,
+      receiveMessage,
+      auth.user,
+      auth.listOfFriends
+    );
     return () => {
       SocketInstance.socket.close();
       // delete SocketInstance.socket;
     };
-  }, []);
+  }, [auth]);
   return <></>;
 }
 

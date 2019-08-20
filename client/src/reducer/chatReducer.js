@@ -5,7 +5,7 @@ const initialState = {
   currentChatInfo: null,
   open: false,
   route: 'CHATS',
-  friends: null,
+  friendsConnected: null,
   notification: false
 };
 
@@ -16,6 +16,19 @@ export default (state = initialState, action) => {
       return {
         ...state,
         notification: action.payload
+      };
+    case 'SET_FRIENDS_CONNECTED':
+      return {
+        ...state,
+        friendsConnected: action.payload
+      };
+    case 'SET_FRIEND_CONNECTION':
+      return {
+        ...state,
+        friendsConnected: {
+          ...state.friendsConnected,
+          [action.payload.user]: action.payload.connected
+        }
       };
     case 'SET_CHATS':
       return {

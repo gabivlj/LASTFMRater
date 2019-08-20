@@ -43,8 +43,14 @@ router.post(
         Activity.addSomethingActivity(
           Activity.createFollowedInformation(theUserItsGonnaFollow, user)
         );
+        const followsUser =
+          theUserItsGonnaFollow.followedAccounts.indexOf(String(userId)) > -1;
 
-        return res.json({ followed: true, followers: newFollowers });
+        return res.json({
+          followed: true,
+          followers: newFollowers,
+          followsUser
+        });
       }
       const followed = user.followedAccounts.filter(
         followed => String(followed) !== String(id)
@@ -62,10 +68,14 @@ router.post(
       //   theUserItsGonnaFollow.save()
       // );
       dontCareWaitingForSave(theUserItsGonnaFollow, false);
-      // if (errAnotherTime) throw errAnotherTime;
-      // saved.password = null;
+      const followsUser =
+        theUserItsGonnaFollow.followedAccounts.indexOf(String(userId)) > -1;
       user.password = null;
-      return res.json({ followed: false, followers: newFollowers });
+      return res.json({
+        followed: false,
+        followers: newFollowers,
+        followsUser
+      });
     } catch (err) {
       // console.log(err);
       return res.status(404).json({ error: 'Error un/following the user...' });

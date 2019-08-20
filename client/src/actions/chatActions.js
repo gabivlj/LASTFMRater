@@ -103,7 +103,7 @@ export const setChatInfo = ({ username, id, profileImage }) => dispatch => {
  */
 export const receiveMessage = e => dispatch => {
   const json = JSON.parse(e.data);
-  const { message, from, type, username, to, userId } = json;
+  const { message, from, type, username, to, userId, friends } = json;
   switch (type) {
     // TODO: Handle redux.
     case 'Message':
@@ -119,9 +119,27 @@ export const receiveMessage = e => dispatch => {
         }
       });
     case 'ListOfFriends':
-      // dispatch(notifyNormality("Go"))
-      break;
+      console.log(friends);
+      return dispatch({
+        type: 'SET_FRIENDS_CONNECTED',
+        payload: friends
+      });
+    case 'NewFriendDisconnected':
+      return dispatch({
+        type: 'SET_FRIEND_CONNECTION',
+        payload: {
+          user: userId,
+          connected: false
+        }
+      });
     case 'NewFriendConnected':
+      dispatch({
+        type: 'SET_FRIEND_CONNECTION',
+        payload: {
+          user: userId,
+          connected: true
+        }
+      });
       return dispatch(notifyNormality(`${username} connected!`));
     default:
       return null;

@@ -7,6 +7,7 @@ import Auth, {
 } from '../utils/Auth';
 import { notifyError, notifyNormality } from './notifyActions';
 import handleError from '../utils/handleError';
+import socket from '../classes/SocketInstance';
 
 export const logOut = () => dispatch => {
   Auth.LogOut();
@@ -68,6 +69,7 @@ export const logFromSession = () => async dispatch => {
     dispatch(notifyError('Error retrieving updated data.'));
     return;
   }
+  // socket.socket.updateListOfFriends(res.payload.listOfFriends);
   dispatch(res);
 };
 

@@ -104,11 +104,24 @@ export const followUser = id => async dispatch => {
     return dispatch(notifyError('Error following user!', 2000));
   }
   if (response.data.followed) dispatch(notifySuccess('User followed!', 1000));
+  const { data } = response;
+  const { followed, followers, followsUser } = data;
+  if (followsUser && !followed) {
+    dispatch({
+      type: 'SLICE_OFF_FRIEND_LIST',
+      payload: id
+    });
+  } else if (followsUser && followed) {
+    dispatch({
+      type: 'ADD_TO_FRIEND_LIST',
+      payload: id
+    });
+  }
   return dispatch({
     type: 'UPDATE_PROFILE',
     payload: {
-      followed: response.data.followed,
-      followers: response.data.followers
+      followed,
+      followers
     }
   });
 };

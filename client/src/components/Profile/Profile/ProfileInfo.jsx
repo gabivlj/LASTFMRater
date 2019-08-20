@@ -66,7 +66,9 @@ function ProfileInfo({
                 Followers:
                 {Array.isArray(followers) ? followers.length : 0}
               </h4>
-              {follows ? <h6>Follows you.</h6> : null}
+              {follows ? (
+                <h6 className="badge badge-primary">Follows you.</h6>
+              ) : null}
               <p>Standard bio for everything.</p>
               {isUser ? null : (
                 <div className="row">

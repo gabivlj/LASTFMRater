@@ -10,13 +10,21 @@ class Socket {
           userId,
           message: 'Connected!',
           type: 'Open',
-          friends: ['5cb88d162cd2833752b67fba']
+          friends
         })
       );
     };
     this.socket.onclose = () => {};
     this.receiveMessage = receiveMessage;
     this.socket.onmessage = this.receiveMessage;
+  }
+
+  updateListOfFriends(listOfFriends) {
+    const json = JSON.stringify({
+      friends: listOfFriends,
+      type: 'UpdateFriendList'
+    });
+    this.socket.send(json);
   }
 
   close() {
