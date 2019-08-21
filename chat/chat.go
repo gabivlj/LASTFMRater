@@ -233,6 +233,8 @@ func (c *Client) read() {
 			manager.friends <- c
 			continue
 			// When user gets followed.
+		case "UpdateFriendList":
+			c.friends = msg.Friends
 		case "Followed":
 			msg.Message = c.username + " followed you!"
 			// When someone sends a message
