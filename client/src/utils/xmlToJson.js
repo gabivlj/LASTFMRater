@@ -146,7 +146,7 @@ export default function xml2json(xml, tab = '') {
         else n = n.nextSibling;
       }
       return e;
-    },
+    }
   };
   if (xml.nodeType == 9)
     // document node

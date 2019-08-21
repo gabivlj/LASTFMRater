@@ -10,6 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import profile from '../../../../images/profile.png';
 import { ROUTES } from '../../../../actions/chatActions';
+import linksHttp from '../../../../utils/links.http';
 
 const styles = () => ({
   inline: {
@@ -26,7 +27,7 @@ function ChatItem({ chat, classes, setChatRoute, setChatInfo }) {
       : '';
   if (chat && chat.images && chat.images.length > 0) {
     imageMd = chat.images[0].md;
-    image = `http://localhost:2222/api/image/${
+    image = `${linksHttp.GO_IMAGE}/api/image/${
       chat.images[0].md.split('.')[0]
     }`;
   }

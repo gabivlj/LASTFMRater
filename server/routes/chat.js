@@ -20,11 +20,12 @@ router.get(
     const users = [];
     chats.forEach(chat => {
       // get other user
-      for (const user in chat.users) {
+      const keys = Object.keys(chat.users);
+      keys.forEach(user => {
         if (user !== id) {
           users.push(user);
         }
-      }
+      });
     });
     const profiles = await getProfiles(users);
     let chatsResponse = [];

@@ -6,14 +6,14 @@ import { addAlbumRating } from '../../actions/albumActions';
 const __propTypes = {
   album: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  addAlbumRating: PropTypes.func.isRequired,
+  addAlbumRating: PropTypes.func.isRequired
 };
 
 const buttonStyle = {
   textDecoration: 'none',
   border: 'none',
   background: 'none',
-  cursor: 'pointer',
+  cursor: 'pointer'
 };
 
 class AlbumRating extends Component {
@@ -26,7 +26,7 @@ class AlbumRating extends Component {
       actualRating: 0,
       generalRating: 0,
       currentVersion: 0,
-      error: null,
+      error: null
     };
   }
 
@@ -45,17 +45,19 @@ class AlbumRating extends Component {
       album.ratings.length > 0 &&
       album.__v !== this.state.currentVersion
     ) {
-      let actualRating = 0;
-      for (const rating of album.ratings) {
-        actualRating += rating.puntuation;
-      }
+      // let actualRating = 0;
+      // for (const rating of album.ratings) {
+      //   actualRating += rating.puntuation;
+      // }
+      let actualRating = album.ratings.reduce((r, c) => r + c, 0);
       actualRating /= album.ratings.length;
-      let userRating = null
+      let userRating = null;
       if (this.props.auth.auth)
         userRating = album.ratings.filter(
           element => element.user === this.props.auth.apiUser.user
         );
-      if (userRating && userRating.length > 0) userRating = userRating[0].puntuation;
+      if (userRating && userRating.length > 0)
+        userRating = userRating[0].puntuation;
       else {
         userRating = actualRating;
       }
@@ -63,7 +65,7 @@ class AlbumRating extends Component {
         generalRating: actualRating,
         rating: userRating,
         actualRating: userRating,
-        currentVersion: album.__v,
+        currentVersion: album.__v
       });
       this.changedRating = true;
     }
@@ -81,7 +83,7 @@ class AlbumRating extends Component {
       );
     } else {
       this.setState({
-        error: 'You cannot rate an album if you are not logged!',
+        error: 'You cannot rate an album if you are not logged!'
       });
       setTimeout(() => this.setState({ error: null }), 2000);
     }
@@ -138,7 +140,7 @@ class AlbumRating extends Component {
 const mapStateToProps = state => ({
   album: state.album,
   auth: state.auth,
-  ratings: state.album.album.album.ratings,
+  ratings: state.album.album.album.ratings
 });
 export default connect(
   mapStateToProps,

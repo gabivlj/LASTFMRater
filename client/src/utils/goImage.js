@@ -1,6 +1,7 @@
 import uuid from 'uuid/v1';
 import Axios from 'axios';
 import handleError from './handleError';
+import linksHttp from './links.http';
 
 export default async file => {
   const fileData = new FormData();
@@ -11,7 +12,7 @@ export default async file => {
     }
   };
   const [res, error] = await handleError(
-    Axios.post('http://localhost:2222/api/image', fileData, config)
+    Axios.post(`${linksHttp.GO_IMAGE}/api/image`, fileData, config)
   );
   return [res, error];
 };

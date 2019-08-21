@@ -8,10 +8,10 @@ import './RatingsCommon.styles.css';
  * @param {Object} elementWithRatings { __v }
  * @param {Function} setRatings (elementId, i, username, auth.id)
  * @param {String} elementId
- * @param {String} username 
+ * @param {String} username
  * @param {Boolean} showTitleGeneral
  */
-const propTypes = {  
+const propTypes = {
   elementWithRatings: PropTypes.object.isRequired,
   setRatings: PropTypes.func.isRequired,
   elementId: PropTypes.string.isRequired,
@@ -19,22 +19,22 @@ const propTypes = {
   comparisonInRatingUpdate: PropTypes.string,
   auth: PropTypes.object,
   showTitleGeneral: PropTypes.bool,
-  ratings: PropTypes.array,
-}
+  ratings: PropTypes.array
+};
 
 const defaultProptypes = {
   comparisonInRatingUpdate: null,
   showTitleGeneral: true,
   auth: null,
   username: '',
-  ratings: [],
-}
+  ratings: []
+};
 
 const buttonStyle = {
   textDecoration: 'none',
   border: 'none',
   background: 'none',
-  cursor: 'pointer',
+  cursor: 'pointer'
 };
 
 /**
@@ -48,13 +48,22 @@ const buttonStyle = {
  * @param {String} comparisonInRatingUpdate What you wanna compare .user to.
  * @param {Boolean} showTitleGeneral If you wanna show the total score
  */
-function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementId, username, comparisonInRatingUpdate, showTitleGeneral }) {
+function RatingsCommon({
+  ratings,
+  auth,
+  elementWithRatings,
+  setRatings,
+  elementId,
+  username,
+  comparisonInRatingUpdate,
+  showTitleGeneral
+}) {
   const [state, setState] = useState({
     rating: 0,
     actualRating: 0,
     generalRating: 0,
     currentVersion: 0,
-    error: null,
+    error: null
   });
 
   useEffect(() => {
@@ -67,47 +76,45 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
    */
   function handleClick(i) {
     if (auth) {
-      setState((prevState) => ({ ...state, actualRating: i }));
-      setRatings(
-        elementId,
-        i,
-        username,
-        auth.id
-      );
+      setState(prevState => ({ ...state, actualRating: i }));
+      setRatings(elementId, i, username, auth.id);
       return;
     }
     // If not loged. TODO: Maybe make a possibility of executing a passed callback right here?
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
-      error: 'You cannot rate an album if you are not logged!',
+      error: 'You cannot rate an album if you are not logged!'
     }));
-    setTimeout(() => setState((prev) => ({ ...state, error: null })), 2000);
+    setTimeout(() => setState(prev => ({ ...state, error: null })), 2000);
   }
 
   /**
    * @description Updates the rating if there is any changes.
    */
-  function ratingUpdate() {    
+  function ratingUpdate() {
     if (
       ratings &&
       ratings.length > 0 &&
       // Checkes the version of the database and the current version.
       elementWithRatings.__v !== state.currentVersion
     ) {
-      let generalRating = 0;
-      for (const rating of ratings) {
-        generalRating += rating.puntuation;
-      }
-      generalRating /= ratings.length;
-      let userRating = null; 
+      // let generalRating = 0;
+      // for (const rating of ratings) {
+      //   generalRating += rating.puntuation;
+      // }
+      const sumRating = ratings.reduce((p, c) => p + c.puntuation, 0);
+      const generalRating = sumRating / ratings.length;
+      let userRating = null;
       // Check if it's auth
       if (auth !== null && typeof auth === 'object' && auth !== undefined) {
-        if (!comparisonInRatingUpdate && auth) comparisonInRatingUpdate = auth.user;
+        if (!comparisonInRatingUpdate && auth)
+          comparisonInRatingUpdate = auth.user;
         userRating = ratings.filter(
           element => String(element.user) === String(comparisonInRatingUpdate)
         );
       }
-      if (userRating && userRating.length > 0) userRating = userRating[0].puntuation;
+      if (userRating && userRating.length > 0)
+        userRating = userRating[0].puntuation;
       else {
         userRating = generalRating;
       }
@@ -119,11 +126,11 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
         // The actual rating of the user.
         actualRating: userRating,
         // Updates the current database version on component's state.
-        currentVersion: elementWithRatings.__v,
-      });      
+        currentVersion: elementWithRatings.__v
+      });
     }
   }
-  
+
   const stars = [];
   if (ratings && ratings.length >= 0) {
     for (let i = 0; i < 10; i++) {
@@ -148,7 +155,9 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
           <button
             style={buttonStyle}
             onPointerEnter={() => setState({ ...state, rating: i + 1 })}
-            onPointerLeave={() => setState({ ...state, rating: state.actualRating })}
+            onPointerLeave={() =>
+              setState({ ...state, rating: state.actualRating })
+            }
             key={i}
             onClick={() => handleClick(i + 1)}
           >
@@ -158,21 +167,25 @@ function RatingsCommon({ ratings, auth, elementWithRatings, setRatings, elementI
       }
     }
   }
-  return (    
+  return (
     <div>
-      {showTitleGeneral ? 
+      {showTitleGeneral ? (
         <div className="box-rating">
           <h3 className="m-3 padding-box">
-            Total Score: {state.generalRating.toFixed(2)} / 10
-          </h3>
-        </div> : null}
-      {stars}{' '}      
-      <div className="badge badge-primary">{state.actualRating}</div>
+            Total Score: 
+{' '}
+{state.generalRating.toFixed(2)} / 10
+                              </h3>
+        </div>
+      ) : null}
+      {stars} 
+{' '}
+<div className="badge badge-primary">{state.actualRating}</div>
       {state.error ? (
         <div className="badge badge-danger ml-3">{state.error}</div>
       ) : null}
     </div>
-  )
+  );
 }
 
 RatingsCommon.propTypes = propTypes;
