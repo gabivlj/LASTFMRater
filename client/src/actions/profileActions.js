@@ -4,6 +4,7 @@ import handleError from '../utils/handleError';
 import { notifySuccess, notifyError } from './notifyActions';
 import goImage from '../utils/goImage';
 import uploadImageRoute from '../utils/uploadImageRoute';
+import socket from '../classes/SocketInstance';
 
 export const getPlaylists = userName => async dispatch => {
   dispatch({
@@ -96,7 +97,7 @@ export const cleanProfile = () => dispatch => {
   });
 };
 
-export const followUser = id => async dispatch => {
+export const followUser = id => async (dispatch, state) => {
   const [response, error] = await handleError(
     axios.post(`/api/following/follow/${id}`)
   );
@@ -117,6 +118,8 @@ export const followUser = id => async dispatch => {
       payload: id
     });
   }
+  socket.socket.updateListOfFriends(state().auth.apiUser.listOfFriends);
+  // socket.socket.updateListOfFriends()
   return dispatch({
     type: 'UPDATE_PROFILE',
     payload: {
