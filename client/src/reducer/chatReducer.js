@@ -6,6 +6,7 @@ const initialState = {
   open: false,
   route: 'CHATS',
   friendsConnected: null,
+  listOfFriends: [],
   notification: false,
   isLoading: false
 };
@@ -13,6 +14,11 @@ const initialState = {
 // page: (chat list : 'mutual list') = > enterchat => SET_CHAT_USER => _chat_
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_FRIENDS':
+      return {
+        ...state,
+        listOfFriends: [...action.payload]
+      };
     case 'SET_LOADING_CHAT':
       return {
         ...state,
