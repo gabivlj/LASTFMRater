@@ -18,7 +18,9 @@ export default function DialogMe({
   renderActions,
   image,
   handleBack,
-  isLoading
+  isLoading,
+  handleFriend,
+  titleButton
 }) {
   // useEffect(() => {
   //   if (onRender && open) {
@@ -43,13 +45,21 @@ export default function DialogMe({
           {image}
           {title}
           <Button
+            onClick={handleFriend}
+            className="ml-3"
+            type="button"
+            color="primary"
+          >
+            {titleButton}
+          </Button>
+          {/* <Button
             onClick={handleBack}
             className="ml-3"
             type="button"
             color="secondary"
           >
             Back
-          </Button>
+          </Button> */}
           <Button
             onClick={handleClose}
             className="ml-3"

@@ -2,6 +2,33 @@ import axios from 'axios';
 import jwt from 'jwt-decode';
 import API from '../API';
 
+// Function that handles await async errors, handles the promise that you pass.
+export const handleError = fn =>
+  fn.then(data => [null, data]).catch(error => [error]);
+
+export function setAuthTokenLocalStorage(token) {
+  localStorage.setItem('token', token);
+}
+
+export function LogUser(token) {
+  const user = jwt(token);
+  return user;
+}
+
+export function setAuthTokenAxios(token) {
+  axios.defaults.headers.common.Authorization = token;
+  axios.defaults.headers.common.CLIENT_KEY =
+    process.env.CLIENT_KEY || API.CLIENT_KEY;
+}
+
+export function deleteAuthTokenAxios() {
+  delete axios.defaults.headers.common.Authorization;
+}
+
+export function deleteAuthTokenFromLS() {
+  localStorage.removeItem('token');
+}
+
 class Auth {
   constructor() {
     this.currentAuthToken = null;
@@ -56,33 +83,6 @@ class Auth {
     setAuthTokenAxios(token);
     return user;
   }
-}
-
-// Function that handles await async errors, handles the promise that you pass.
-export const handleError = fn =>
-  fn.then(data => [null, data]).catch(error => [error]);
-
-export function setAuthTokenLocalStorage(token) {
-  localStorage.setItem('token', token);
-}
-
-export function LogUser(token) {
-  const user = jwt(token);
-  return user;
-}
-
-export function setAuthTokenAxios(token) {
-  axios.defaults.headers.common.Authorization = token;
-  axios.defaults.headers.common.CLIENT_KEY =
-    process.env.CLIENT_KEY || API.CLIENT_KEY;
-}
-
-export function deleteAuthTokenAxios() {
-  delete axios.defaults.headers.common.Authorization;
-}
-
-export function deleteAuthTokenFromLS() {
-  localStorage.removeItem('token');
 }
 
 export default Auth;

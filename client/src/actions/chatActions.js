@@ -168,3 +168,18 @@ export const getChats = () => async dispatch => {
     payload: data.chats
   });
 };
+
+export const getFriendsProfiles = () => async dispatch => {
+  dispatch(setLoading());
+  const [res, err] = await handleError(Axios.get('/api/profile/get/friends'));
+  if (err) {
+    console.log(err);
+    return dispatch(notifyError('Error retrieving friends profiles...', 3000));
+  }
+  dispatch(setLoading());
+  const { data } = res;
+  return dispatch({
+    type: 'SET_FRIENDS',
+    payload: data.friends
+  });
+};

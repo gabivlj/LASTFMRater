@@ -15,6 +15,31 @@ const Authenticator = require('../classes/Authenticator');
 //   });
 // });
 
+router.get(
+  '/get/friends',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { id } = req.user;
+      const user = await User.findById(id);
+      const listOfFriends = user.followedAccounts.filter(followed =>
+        user.followers.includes(String(followed))
+      );
+      const usersFriends = (await User.find({
+        $or: [...listOfFriends.map(friend => ({ _id: friend }))]
+      })).map(friend => ({
+        _id: friend._id,
+        images: friend.images,
+        username: friend.username
+      }));
+      res.json({ friends: usersFriends });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Internal server error. ' });
+    }
+  }
+);
+
 /**
  * @GET
  * @PUBLIC
