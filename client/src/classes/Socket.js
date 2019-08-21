@@ -1,6 +1,8 @@
+import linksHttp from '../utils/links.http';
+
 class Socket {
   constructor(userId, receiveMessage, username, friends = []) {
-    this.socket = new WebSocket('ws://localhost:12345/ws');
+    this.socket = new WebSocket(`${linksHttp.GO_CHAT}/ws`);
     this.userId = userId;
     this.username = username;
     this.socket.onopen = () => {

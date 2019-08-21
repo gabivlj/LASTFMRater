@@ -41,8 +41,7 @@ router.get('/:id', async (req, res) => {
     //                probably for the first 100 comments yes??? .limit().
     // @https://stackoverflow.com/questions/46348860/nodejs-mongodb-perform-slice-operation-on-an-array-field
     // @@ before:: commentSection = commentSection.slice(current, limit);
-    const comments = [];
-    for (const comment of commentSection) {
+    const comments = commentSection.reduce((prev, comment) => {
       const commentP = {
         text: comment.text,
         username: comment.username,
@@ -56,8 +55,8 @@ router.get('/:id', async (req, res) => {
       const copy = CommentLib.setHasLikedOrDislikedProperty(comment, userId);
       commentP.liked = copy.liked;
       commentP.disliked = copy.disliked;
-      comments.push(commentP);
-    }
+      return [...prev, commentP];
+    }, []);
 
     res.json({ comments });
   } catch (err) {

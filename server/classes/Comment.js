@@ -3,6 +3,10 @@ const Comment = require('./CommentSchema');
 const albumHelper = require('./Album');
 
 /**
+ * @DEPRECATED
+ */
+
+/**
  * @param {String}
  * @param {String}
  * @param {Object} CommentSchemaInstances
@@ -161,7 +165,7 @@ class CommentHandler {
         return resolve({
           [type]: SchemaInstance.comments[finalIndex][type].length,
           index: finalIndex,
-          instanceSaved,
+          instanceSaved
         });
       } catch (err) {
         console.log(err);

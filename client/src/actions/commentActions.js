@@ -34,7 +34,6 @@ export const comment = (username, text, objectId) => async dispatch => {
     axios.post(`/api/comments/${objectId}`, { username, text })
   );
   if (error) {
-    // todo: dispatch
     dispatch(notifyError('Error adding comment.', 3000));
     return dispatch({
       type: 'ERROR_COMMENTING'
