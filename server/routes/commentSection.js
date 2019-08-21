@@ -27,16 +27,20 @@ const Comment = require('../models/Comment');
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const { current = 0, limit = 50, userId } = req.query;
+  const parsedLimit = parseInt(limit, 10);
   try {
-    let commentSection = await Comment.find({ objectId: id }).sort({
-      date: -1
-    });
+    const commentSection = await Comment.find({ objectId: id })
+      .sort({
+        date: -1
+      })
+      .limit(parsedLimit);
     if (!commentSection) {
       return res.status(404).json({ error: 'Comment section not found.' });
     }
-    // #NOTE (GABI): Prob. slice with the Mongodb .project() ?
+    // #NOTE (GABI): Prob. slice with the Mongodb .project() ? Also the above it's not really optimal for performance
+    //                probably for the first 100 comments yes??? .limit().
     // @https://stackoverflow.com/questions/46348860/nodejs-mongodb-perform-slice-operation-on-an-array-field
-    commentSection = commentSection.slice(current, limit);
+    // @@ before:: commentSection = commentSection.slice(current, limit);
     const comments = [];
     for (const comment of commentSection) {
       const commentP = {

@@ -5,7 +5,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button
+  Button,
+  CircularProgress
 } from '@material-ui/core';
 
 export default function DialogMe({
@@ -16,7 +17,8 @@ export default function DialogMe({
   propsRender,
   renderActions,
   image,
-  handleBack
+  handleBack,
+  isLoading
 }) {
   // useEffect(() => {
   //   if (onRender && open) {
@@ -58,9 +60,18 @@ export default function DialogMe({
           </Button>
         </DialogTitle>
         <DialogContent modal="false" dividers="true">
-          <Render {...propsRender} />
+          {isLoading ? (
+            <div style={{ padding: '10% 10% 10% 50%' }}>
+              <CircularProgress />
+            </div>
+          ) : (
+            <Render {...propsRender} />
+          )}
         </DialogContent>
-        <DialogActions style={{ borderTop: '1px solid #dce7f2' }}>
+        <DialogActions
+          disableActionSpacing
+          style={{ borderTop: '1px solid #dce7f2', overflowX: 'hidden' }}
+        >
           {renderActions}
         </DialogActions>
       </Dialog>

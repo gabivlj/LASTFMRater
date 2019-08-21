@@ -6,12 +6,18 @@ const initialState = {
   open: false,
   route: 'CHATS',
   friendsConnected: null,
-  notification: false
+  notification: false,
+  isLoading: false
 };
 
 // page: (chat list : 'mutual list') = > enterchat => SET_CHAT_USER => _chat_
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_LOADING_CHAT':
+      return {
+        ...state,
+        isLoading: !state.isLoading
+      };
     case 'SET_NOTIFICATION':
       return {
         ...state,
