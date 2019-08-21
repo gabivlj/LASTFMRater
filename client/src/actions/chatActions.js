@@ -3,11 +3,18 @@ import SocketInstance from '../classes/SocketInstance';
 import { notifySuccess, notifyNormality, notifyError } from './notifyActions';
 import handleError from '../utils/handleError';
 import testTime from '../utils/testTime';
+import wait from '../utils/wait';
 
 export const ROUTES = {
   FRIENDS: 'FRIENDS',
   CHATS: 'CHATS',
   CHAT: 'CHAT'
+};
+
+export const setLoading = () => {
+  return {
+    type: 'SET_LOADING_CHAT'
+  };
 };
 
 /**
@@ -52,17 +59,18 @@ export const sendMessage = ({
 };
 
 export const getChat = (otherId, get = '') => async dispatch => {
+  dispatch(setLoading());
   const [res, err] = await handleError(Axios.get(`/api/chat/${get}${otherId}`));
   if (err) {
     return dispatch(notifyError('Error getting chat...', 500));
   }
   const { data } = res;
   // Check if it exists, if it doesn't probably the user hasn't talked to that guy yet...
-  console.log(data);
   const chat = data.chat || {
     messages: [],
     users: {}
   };
+  dispatch(setLoading());
   return dispatch({
     type: 'GET_CHAT',
     payload: chat
@@ -147,11 +155,13 @@ export const receiveMessage = e => dispatch => {
 };
 
 export const getChats = () => async dispatch => {
+  dispatch(setLoading());
   const [res, err] = await handleError(Axios.get('/api/chat'));
   if (err) {
     console.log(err);
     return dispatch(notifyError('Error retrieving chats...', 3000));
   }
+  dispatch(setLoading());
   const { data } = res;
   return dispatch({
     type: 'SET_CHATS',

@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-wrap-multilines */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
+import SendIcon from '@material-ui/icons/Send';
 import {
   getChat,
   sendMessage,
@@ -16,6 +17,7 @@ import InputBorderline from '../../Common/InputBorderline';
 import GoImage from '../../Common/GoImage';
 import Messages from './Dialog/Messages';
 import Chats from './Chats/Chats';
+import Friends from './Friends/Friends';
 
 function ChatDialog({
   auth,
@@ -33,12 +35,15 @@ function ChatDialog({
         return Messages;
       case 1:
         return Chats;
+      case 2:
+        return Friends;
       default:
         return <></>;
     }
   }
   const [text, setText] = useState('');
   const [render, setRender] = useState(0);
+  const { isLoading } = chat;
   function onChange(e) {
     setText(e.target.value);
   }
@@ -54,6 +59,7 @@ function ChatDialog({
           setRender(1);
           break;
         case ROUTES.FRIENDS:
+          setRender(2);
           break;
         default:
           break;
@@ -97,9 +103,9 @@ function ChatDialog({
   if (chat.chat && chat.chat.messages && chat.route === ROUTES.CHAT) {
     messages = chat.chat.messages;
   }
-  const actions = (
-    <div className="row">
-      <div className="col-md-8">
+  const actionChat = (
+    <div className="row" style={{ width: '95%', overflowX: 'hidden' }}>
+      <div className="col-md-10">
         <InputBorderline
           label="Send something!"
           value={text}
@@ -109,13 +115,15 @@ function ChatDialog({
           onKeyDown={onEnter}
         />
       </div>
-      <div className="col-md-4 mt-3">
-        <Button onClick={sendMessageSubm} value="Send" color="primary">
-          Send
-        </Button>
+      <div className="col-md-2 mt-3">
+        <IconButton onClick={sendMessageSubm} value="Send" color="primary">
+          <SendIcon />
+        </IconButton>
       </div>
     </div>
   );
+  const actions =
+    ROUTES.CHAT === chat.route ? actionChat : <div className="pt-3" />;
   const otherUser = chat.currentChatInfo ? chat.currentChatInfo.username : null;
   const profileImg = chat.currentChatInfo
     ? chat.currentChatInfo.profileImage
@@ -131,6 +139,7 @@ function ChatDialog({
           setChatRoute,
           setChatInfo
         }}
+        isLoading={isLoading}
         renderActions={actions}
         title={ROUTES.CHAT === chat.route ? otherUser : ''}
         image={

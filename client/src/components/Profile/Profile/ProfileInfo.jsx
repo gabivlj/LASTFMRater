@@ -33,7 +33,7 @@ function ProfileInfo({
     <div className="profileInfoWrapper">
       <div className="container borderProfile">
         <div className="row wrapperProfile">
-          <div className="col-md-4 col-sm-12">
+          <div className="col-lg-4 col-sm-12">
             <GoImage
               goImg={goImg}
               src={img}
@@ -58,7 +58,7 @@ function ProfileInfo({
               {isUser ? <ImageUploader submit={submit} /> : null}
             </div>
           </div>
-          <div className="col-md-6">
+          <div className="col-md-8">
             <div className="showInfo">
               <h2>{name}</h2>
               <h3>{lastfm === '' ? null : `Known in Lastfm as: ${lastfm}`}</h3>

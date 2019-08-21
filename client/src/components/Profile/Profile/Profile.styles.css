@@ -13,6 +13,7 @@
 
 .showInfo {
   margin-top: 20px;
+  margin-left: 40px;
 }
 
 .borderProfile {
@@ -22,6 +23,7 @@
 
 .wrapperProfile {
   padding: 100px;
+  margin-left: 10%;
 }
 
 .cards-list-profile {
