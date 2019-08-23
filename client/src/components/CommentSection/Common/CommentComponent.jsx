@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { LinearProgress } from '@material-ui/core';
 import {
@@ -10,6 +11,7 @@ import {
   setComments,
   cleanComments
 } from '../../../actions/commentActions';
+
 import CommentSection from '../CommentSection';
 
 /**
@@ -26,7 +28,9 @@ function CommentComponent({
   addOpinionToComment,
   getComments,
   setLoading,
-  cleanComments
+  cleanComments,
+  location,
+  name
 }) {
   // Redux refactoring.
   const userId = auth.apiUser ? auth.apiUser.id : null;
@@ -34,7 +38,7 @@ function CommentComponent({
   const { loaded } = comments;
   const [, setCurrentNOfComments] = useState(0);
   let timeoutForLoading = false;
-  // Before useEffect function declarations
+  const { pathname } = location;
 
   // UseEffect
   useEffect(() => {
@@ -87,7 +91,7 @@ function CommentComponent({
    * @description passed fn. to CommentSection (Check component for more information).
    */
   function commentSubmit(user, _, txt) {
-    comment(user, txt, objectId);
+    comment(user, txt, objectId, pathname, name);
   }
 
   return (
@@ -118,6 +122,7 @@ CommentComponent.propTypes = {
   getComments: PropTypes.func.isRequired,
   setLoading: PropTypes.func.isRequired,
   cleanComments: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
   comments: PropTypes.shape({
     comments: PropTypes.array.isRequired,
     loaded: PropTypes.bool.isRequired
@@ -130,14 +135,16 @@ CommentComponent.defaultProps = {
   numberOfCommentsAdd: 20
 };
 
-export default connect(
-  mapStateToProps,
-  {
-    comment,
-    addOpinionToComment,
-    getComments,
-    setLoading,
-    setComments,
-    cleanComments
-  }
-)(CommentComponent);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    {
+      comment,
+      addOpinionToComment,
+      getComments,
+      setLoading,
+      setComments,
+      cleanComments
+    }
+  )(CommentComponent)
+);

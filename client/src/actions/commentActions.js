@@ -26,12 +26,18 @@ export const actionToComment = (
   );
 };
 
-export const comment = (username, text, objectId) => async dispatch => {
-  if (!username || text === '' || !objectId) {
+export const comment = (
+  username,
+  text,
+  objectId,
+  pathname,
+  name
+) => async dispatch => {
+  if (!username || text === '' || !objectId || !pathname || !name) {
     return null;
   }
   const [res, error] = await handleError(
-    axios.post(`/api/comments/${objectId}`, { username, text })
+    axios.post(`/api/comments/${objectId}`, { username, text, pathname, name })
   );
   if (error) {
     dispatch(notifyError('Error adding comment.', 3000));

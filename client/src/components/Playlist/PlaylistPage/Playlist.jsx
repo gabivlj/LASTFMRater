@@ -169,7 +169,10 @@ class Playlist extends Component {
                 }}
               />
             ) : null}
-            <CommentComponent objectId={playlist._id} />
+            <CommentComponent
+              objectId={playlist._id}
+              name={`${playlist.playlistName} playlist from ${usernameRender}`}
+            />
           </div>
         </div>
       </div>
