@@ -168,6 +168,7 @@ class Album extends Component {
                   <CommentComponent
                     objectId={album._id}
                     numberOfCommentsAdd={20}
+                    name={`${album.name} by ${this.state.artist}`}
                   />
                 </div>
               </div>

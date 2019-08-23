@@ -9,6 +9,7 @@ const router = express.Router();
 // const time = require('../lib/time');
 const CommentLib = require('../classes/Comment');
 const Comment = require('../models/Comment');
+const Activity = require('../classes/Activity');
 
 // router.get('/test/comment', async (req, res) => {
 //   // Comment.ensureIndexes({ objectId: 1 });
@@ -76,7 +77,7 @@ router.post(
   '/:objectId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const { text, username, userId = req.user.id } = req.body;
+    const { text, username, userId = req.user.id, pathname, name } = req.body;
     const { objectId } = req.params;
     const comment = new Comment({
       text,
@@ -87,6 +88,18 @@ router.post(
       user: userId
     });
     await comment.save();
+    Activity.addSomethingActivity(
+      Activity.createCommentedInformation(
+        { username, user: userId },
+        text,
+        {
+          _id: objectId,
+          pathname,
+          name
+        },
+        false
+      )
+    );
     return res.json({ comment });
   }
 );

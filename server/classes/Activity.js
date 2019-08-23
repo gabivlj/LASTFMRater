@@ -25,7 +25,7 @@ class Activity {
   ) {
     const activity = new ActivityModel({
       user: userId,
-      userName: user,
+      username: user,
       type: 'album_rating',
       information: {
         albumName,
@@ -46,15 +46,58 @@ class Activity {
     return activity;
   }
 
-  async addSomethingActivity({ information, type, user, userName }) {
+  /**
+   * @description call this function and it will handle if the activity is repeated
+   * @returns {Boolean} False if you should save activity, otherwise if it's true
+   */
+  async dontDoRepeatedActivity(type, information, user, username) {
+    let doAct = true;
+    switch (type) {
+      case this.ACTIVITIES.ALBUM_RATING:
+        doAct = await ActivityModel.findOneAndUpdate(
+          {
+            type,
+            information: { albumId: information.albumId },
+            user,
+            username
+          },
+          {
+            type,
+            information,
+            user,
+            username
+          }
+        );
+        return !!doAct;
+      case this.ACTIVITIES.FOLLOWED_USER:
+        doAct = !!(await Activity.findOne({
+          user,
+          username,
+          type,
+          information
+        }));
+        return doAct;
+      default:
+        return doAct;
+    }
+  }
+
+  async addSomethingActivity({ information, type, user, username }) {
     if (!this.checkActivityIsRight(type)) {
       throw new Error('Error, activity not defined in the activity vars.');
     }
+    const doActivity = await this.dontDoRepeatedActivity(
+      type,
+      information,
+      user,
+      username
+    );
+    if (!doActivity) return null;
     const activity = new ActivityModel({
       information,
       type,
       user,
-      username: userName
+      username
     });
     const [err, activitySave] = await handleError(activity.save());
     if (err) throw err;
@@ -68,17 +111,17 @@ class Activity {
   createFollowedInformation(userFollowed, userFollows) {
     return {
       information: {
-        followed: { id: userFollowed._id, userName: userFollowed.username },
-        follows: { id: userFollows._id, userName: userFollows.username }
+        followed: { id: userFollowed._id, username: userFollowed.username },
+        follows: { id: userFollows._id, username: userFollows.username }
       },
       type: this.ACTIVITIES.FOLLOWED_USER,
       user: userFollowed._id,
-      userName: userFollowed.username
+      username: userFollowed.username
     };
   }
 
   createRatedInformation(
-    { albumId, albumName, score, artist, mbid },
+    { albumId, albumName, score, artist, mbid, pathname },
     { username, userId }
   ) {
     return {
@@ -87,10 +130,11 @@ class Activity {
         albumName,
         score,
         artist,
-        mbid
+        mbid,
+        pathname
       },
       type: this.ACTIVITIES.ALBUM_RATING,
-      userName: username,
+      username,
       user: userId
     };
   }
@@ -103,11 +147,12 @@ class Activity {
   ) {
     return {
       information: {
-        objectCommented,
-        text
+        objectCommented, // name, _id, route
+        text,
+        answered
       },
       type: this.ACTIVITIES.COMMENT,
-      userName: userCommented.username,
+      username: userCommented.username,
       user: userCommented._id
     };
   }
