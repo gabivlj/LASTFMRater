@@ -48,7 +48,7 @@ class Activity {
 
   /**
    * @description call this function and it will handle if the activity is repeated
-   * @returns {Boolean} False if you should save activity, otherwise if it's true
+   * @returns {Boolean} False if you shouldn't save activity, otherwise if you should
    */
   async dontDoRepeatedActivity(type, information, user, username) {
     let doAct = true;
