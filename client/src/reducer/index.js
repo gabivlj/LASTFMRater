@@ -8,6 +8,7 @@ import profileReducer from './profileReducer';
 import commentReducer from './commentReducer';
 import notifyReducer from './notifyReducer';
 import chatReducer from './chatReducer';
+import timelineReducer from './timelineReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
   profile: profileReducer,
   comments: commentReducer,
   notify: notifyReducer,
-  chat: chatReducer
+  chat: chatReducer,
+  timeline: timelineReducer
 });

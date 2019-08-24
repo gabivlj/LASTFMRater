@@ -6,6 +6,7 @@ const Playlist = require('../models/Playlist');
 const Profile = require('../models/Profile');
 const handleError = require('../lib/handleError');
 const LastFm = require('../classes/Lastfm');
+const activity = require('../classes/Activity');
 const Authenticator = require('../classes/Authenticator');
 
 // router.get('/god/delete/image', (req, res) => {
@@ -14,6 +15,35 @@ const Authenticator = require('../classes/Authenticator');
 //     usr.save().then(res => console.log('...'));
 //   });
 // });
+
+/**
+ * @GET
+ * @PRIVATE
+ * @description Gets the image from a profile.
+ */
+router.get(
+  '/image',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const profile = await Profile.findOne({ user: req.user.id });
+    if (!profile) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    return res.json(profile);
+  }
+);
+
+router.get(
+  '/gramps',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const user = await User.findById(req.user.id);
+    const activities = await activity.getActivityFromUsersFollowers(
+      user.followedAccounts
+    );
+    return res.json({ gramps: activities });
+  }
+);
 
 router.get(
   '/get/friends',
@@ -165,23 +195,6 @@ router.get('/playlists/:username', async (req, res) => {
 //     return res.json({ success: true });
 //   }
 // );
-
-/**
- * @GET
- * @PRIVATE
- * @description Gets the image from a profile.
- */
-router.get(
-  '/image',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    const profile = await Profile.findOne({ user: req.user.id });
-    if (!profile) {
-      return res.status(404).json({ error: 'Not found' });
-    }
-    return res.json(profile);
-  }
-);
 
 /**
  * @GET

@@ -1,0 +1,30 @@
+.gramp {
+
+  max-height: 200px;
+  min-height: 20vh;
+  max-width: 500px;
+  min-width: 200px;
+  -webkit-box-shadow: 0px 1px 2px 3px rgba(66,66,66,1);
+-moz-box-shadow: 0px 1px 2px 3px rgba(66,66,66,1);
+box-shadow: 0px 1px 2px 3px rgba(66,66,66,1);
+margin: 15px;
+
+}
+.gramp-upper {
+  padding: 10px 40px 40px 40px
+}
+
+.gramp h2 {
+  font-size: 2.45vh;
+}
+
+@media (max-height: 700px) {
+  .gramp h2 { font-size: 18px; }
+  .gramp { min-height: 100px }
+}
+
+@media (max-width: 500px) {
+  .gramp {
+    min-width: 150px;
+  }
+}

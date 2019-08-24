@@ -150,10 +150,6 @@ router.get('/:albumname/:artistname', async (req, res) => {
       artist: albumFM.artist,
       name: albumFM.name
     });
-    if (!albumDB.lastfmSource) {
-      albumDB.lastfmSource = true;
-      dontCareWaitingForSave(albumDB, false);
-    }
     if (!albumDB) {
       const newAlbum = new Album({
         artist: albumFM.artist,
@@ -163,6 +159,11 @@ router.get('/:albumname/:artistname', async (req, res) => {
       });
       const saved = await newAlbum.save();
       albumDB = saved;
+    }
+
+    if (!albumDB.lastfmSource) {
+      albumDB.lastfmSource = true;
+      dontCareWaitingForSave(albumDB, false);
     }
 
     albumFM.ratings = albumDB.ratings;

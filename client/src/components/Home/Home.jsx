@@ -1,10 +1,19 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import KEYS from '../../API';
 import logo from '../../images/grampy-logo.png';
+import Timeline from '../Timeline/Timeline';
+import { loadGramps } from '../../actions/timelineActions';
 
-export default function Home() {
-  return (
+function Home({ auth, loadGramps, timeline }) {
+  const render = auth ? (
+    <Timeline
+      loadGramps={loadGramps}
+      gramps={timeline.gramps}
+      loaded={timeline.loaded}
+    />
+  ) : (
     <div>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -32,4 +41,14 @@ export default function Home() {
       </header>
     </div>
   );
+  return render;
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth.auth,
+  timeline: state.timeline
+});
+export default connect(
+  mapStateToProps,
+  { loadGramps }
+)(Home);

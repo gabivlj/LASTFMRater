@@ -1,5 +1,7 @@
 const handleError = require('../lib/handleError');
 const ActivityModel = require('../models/Activity');
+const User = require('../models/User');
+const time = require('../lib/time');
 
 class Activity {
   constructor() {
@@ -39,11 +41,37 @@ class Activity {
   }
 
   async getActivityFromUsersFollowers(followingArray) {
-    const followingOr = followingArray.map(following => ({ user: following }));
-    const activity = await ActivityModel.find({ $or: followingOr }).sort({
+    // Create the $or following arrays.
+    const following = followingArray.reduce(
+      (prev, current) => [
+        [...prev[0], { _id: current }],
+        [...prev[1], { user: current }]
+      ],
+      [[], []]
+    );
+    // find activities promise
+    const activity = ActivityModel.find({ $or: following[1] }).sort({
       date: -1
     });
-    return activity;
+    // use the first one to find the users.
+    const users = await User.find({ $or: following[0] });
+    // reduce for dictionary
+    const imageDictionary = users.reduce(
+      (prev, current) => ({ ...prev, [current._id]: current.images }),
+      {}
+    );
+
+    // wait promise
+    const [promisedActivity] = await Promise.all([activity]);
+    const finalActivity = promisedActivity.map(act => ({
+      user: act.user,
+      username: act.username,
+      type: act.type,
+      information: act.information,
+      date: act.date,
+      image: imageDictionary[act.user]
+    }));
+    return finalActivity;
   }
 
   /**
@@ -70,7 +98,7 @@ class Activity {
         );
         return !!doAct;
       case this.ACTIVITIES.FOLLOWED_USER:
-        doAct = !!(await Activity.findOne({
+        doAct = !!(await ActivityModel.findOne({
           user,
           username,
           type,
@@ -82,7 +110,7 @@ class Activity {
     }
   }
 
-  async addSomethingActivity({ information, type, user, username }) {
+  async addSomethingActivity({ information, type, user, username, image }) {
     if (!this.checkActivityIsRight(type)) {
       throw new Error('Error, activity not defined in the activity vars.');
     }
