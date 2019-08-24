@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import uuid from 'uuid/v1';
 import SocketInstance from '../classes/SocketInstance';
 import { notifySuccess, notifyNormality, notifyError } from './notifyActions';
 import handleError from '../utils/handleError';
@@ -121,13 +122,13 @@ export const receiveMessage = e => dispatch => {
         payload: {
           chat: {
             username: from,
-            text: message
+            text: message,
+            provisionalId: uuid()
           },
           from: userId
         }
       });
     case 'ListOfFriends':
-      console.log(friends);
       return dispatch({
         type: 'SET_FRIENDS_CONNECTED',
         payload: friends

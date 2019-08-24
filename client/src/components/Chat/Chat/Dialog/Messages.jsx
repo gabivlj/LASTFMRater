@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import React, { useRef, useEffect } from 'react';
-import uuid from 'uuid/v1';
 import './message.style.css';
 
 export default function Messages({ messages, otherUser }) {
@@ -26,7 +25,10 @@ export default function Messages({ messages, otherUser }) {
   let messagesRender;
   if (messages)
     messagesRender = messages.map((msg, index) => (
-      <div key={msg._id || uuid()} className={classes.padding(msg.username)}>
+      <div
+        key={msg._id || msg.provisionalId}
+        className={classes.padding(msg.username)}
+      >
         <div
           className={`${classes.message(msg.username)} ${classes.lastmsg(
             index

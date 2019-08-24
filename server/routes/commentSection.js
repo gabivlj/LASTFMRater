@@ -90,7 +90,7 @@ router.post(
     await comment.save();
     Activity.addSomethingActivity(
       Activity.createCommentedInformation(
-        { username, user: userId },
+        { username, _id: userId },
         text,
         {
           _id: objectId,
