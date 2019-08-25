@@ -69,7 +69,8 @@ class Activity {
       type: act.type,
       information: act.information,
       date: act.date,
-      image: imageDictionary[act.user]
+      image: imageDictionary[act.user],
+      _id: act._id
     }));
     return finalActivity;
   }
@@ -80,33 +81,50 @@ class Activity {
    */
   async dontDoRepeatedActivity(type, information, user, username) {
     let doAct = true;
-    switch (type) {
-      case this.ACTIVITIES.ALBUM_RATING:
-        doAct = await ActivityModel.findOneAndUpdate(
-          {
-            type,
-            information: { albumId: information.albumId },
-            user,
-            username
-          },
-          {
-            type,
-            information,
-            user,
-            username
+    let act;
+    try {
+      switch (type) {
+        case this.ACTIVITIES.ALBUM_RATING:
+          // doAct = await ActivityModel.findOneAndUpdate(
+          //   {
+          //     type,
+          //     information: { albumId: information.albumId },
+          //     user,
+          //     username
+          //   },
+          //   {
+          //     type,
+          //     information,
+          //     user,
+          //     username
+          //   }
+          // );
+          act = await ActivityModel.updateOne(
+            {
+              'information.objId': information.objId
+            },
+            { type, information, user, username }
+          );
+          if (!act || act.nModified === parseInt(0, 10)) doAct = true;
+          else {
+            // act.update({ type, information, user, username });
+            doAct = false;
           }
-        );
-        return !!doAct;
-      case this.ACTIVITIES.FOLLOWED_USER:
-        doAct = !!(await ActivityModel.findOne({
-          user,
-          username,
-          type,
-          information
-        }));
-        return doAct;
-      default:
-        return doAct;
+          return doAct;
+        case this.ACTIVITIES.FOLLOWED_USER:
+          doAct = !!(await ActivityModel.findOne({
+            user,
+            username,
+            type,
+            information
+          }));
+          return doAct;
+        default:
+          return doAct;
+      }
+    } catch (err) {
+      console.log(err);
+      return false;
     }
   }
 
@@ -128,7 +146,10 @@ class Activity {
       username
     });
     const [err, activitySave] = await handleError(activity.save());
-    if (err) throw err;
+    if (err) {
+      console.log(err);
+      throw err;
+    }
     return activitySave;
   }
 
@@ -149,17 +170,17 @@ class Activity {
   }
 
   createRatedInformation(
-    { albumId, albumName, score, artist, mbid, pathname },
+    { _id, name, score, creator, mbid, pathname },
     { username, userId }
   ) {
     return {
       information: {
-        albumId,
-        albumName,
+        creator,
         score,
-        artist,
+        pathname,
+        name,
         mbid,
-        pathname
+        objId: _id
       },
       type: this.ACTIVITIES.ALBUM_RATING,
       username,
@@ -175,7 +196,7 @@ class Activity {
   ) {
     return {
       information: {
-        objectCommented, // name, _id, route
+        ...objectCommented, // name, _id, route
         text,
         answered
       },

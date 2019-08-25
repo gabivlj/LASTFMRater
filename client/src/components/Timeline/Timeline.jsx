@@ -8,10 +8,13 @@ function Timeline({ loadGramps, gramps }) {
   return (
     <div>
       <h1>Timeline lmao</h1>
-      <div className="container gramp-container">
-        {gramps.map(gramp => (
-          <Gramp gramp={gramp} _id={gramp._id} />
-        ))}
+      <div className="row">
+        <div className="col-md-4">-</div>
+        <div className="gramp-container col-sm-12 col-md-8">
+          {gramps.map(gramp => (
+            <Gramp gramp={gramp} key={gramp._id} />
+          ))}
+        </div>
       </div>
     </div>
   );

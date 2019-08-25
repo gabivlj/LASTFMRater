@@ -93,7 +93,7 @@ router.post(
         { username, _id: userId },
         text,
         {
-          _id: objectId,
+          objId: objectId,
           pathname,
           name
         },
