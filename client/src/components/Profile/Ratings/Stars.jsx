@@ -1,31 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
   puntuation: PropTypes.number.isRequired,
-  generalScore: PropTypes.number.isRequired
+  generalScore: PropTypes.number.isRequired,
+  color: PropTypes.string
 };
 
-function Stars({ puntuation, generalScore }) {
+const defaultProps = {
+  color: '#FFD700'
+};
+
+function Stars({ puntuation, generalScore, color }) {
   const stars = [];
-  for (let i = 0; i < generalScore; i++) {
+  for (let i = 0; i < generalScore; i += 1) {
     if (i >= puntuation) {
       stars.push(
-        <i
-          className="far fa-star"
-          id={i}
-          key={i}
-          style={{ color: '#b29600' }}
-        />
+        <i className="far fa-star" id={i} key={i} style={{ color }} />
       );
     } else {
       stars.push(
-        <i
-          className="fas fa-star"
-          id={i}
-          key={i}
-          style={{ color: '#FFD700' }}
-        />
+        <i className="fas fa-star" id={i} key={i} style={{ color }} />
       );
     }
   }
@@ -33,5 +28,6 @@ function Stars({ puntuation, generalScore }) {
 }
 
 Stars.propTypes = propTypes;
+Stars.defaultProps = defaultProps;
 
 export default Stars;

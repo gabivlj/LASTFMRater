@@ -183,11 +183,16 @@ class Lastfm {
     return new Promise(async (resolve, reject) => {
       const [error, track] = await handleError(
         axios.get(
-          `${this.LASTFMROUTE}/?method=track.getInfo&api_key=${this.API_KEY}&artist=${artist}&track=${name}&format=json`
+          encodeURI(
+            `${this.LASTFMROUTE}/?method=track.getInfo&api_key=${
+              this.API_KEY
+            }&artist=${String(artist)}&track=${name}&format=json`
+          )
         )
       );
       if (error) {
-        return reject(new Error(error.response.data));
+        console.log(error);
+        return reject(new Error(error));
       }
       resolve(track.data.track);
     });

@@ -4,18 +4,33 @@
   min-height: 20vh;
   max-width: 500px;
   min-width: 200px;
-  -webkit-box-shadow: 0px 1px 2px 3px rgba(66,66,66,1);
--moz-box-shadow: 0px 1px 2px 3px rgba(66,66,66,1);
-box-shadow: 0px 1px 2px 3px rgba(66,66,66,1);
+  -webkit-box-shadow: 0px 1px 2px 3px #1f3492;
+-moz-box-shadow: 0px 1px 2px 3px #1f3492;
+box-shadow: 0px 1px 2px 3px #1f3492;
 margin: 15px;
 
 }
 .gramp-upper {
-  padding: 10px 40px 40px 40px
+  padding: 10px 40px 5px 40px;
 }
 
 .gramp h2 {
-  font-size: 2.45vh;
+  font-size: 2vh;
+  margin-top: 5px;
+}
+
+.gramp-body {
+  padding: 0 0 30px 60px;
+}
+
+.gramp-avatar {
+  min-width: 0.3vw;
+  min-height: 2vh;
+}
+
+.gramp-container {
+  padding-bottom: 100px;
+  /* margin-left: 30vw; */
 }
 
 @media (max-height: 700px) {
@@ -28,3 +43,15 @@ margin: 15px;
     min-width: 150px;
   }
 }
+/* 
+@media (max-width: 900px) {
+  .gramp-container {
+    margin-left: 18vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .gramp-container {
+    margin-left: 1vw;
+  }
+} */

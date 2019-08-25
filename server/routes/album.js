@@ -7,6 +7,7 @@ const dontCareWaitingForSave = require('../lib/dontCareWaitingForSave');
 const albumHelper = require('../classes/Album');
 const Comment = require('../classes/Comment');
 const CommentSchema = require('../classes/CommentSchema');
+const Activity = require('../classes/Activity');
 
 const FM = new Lastfm(null);
 
@@ -117,6 +118,17 @@ router.post(
             user: req.body.userid
           });
         }
+        Activity.addSomethingActivity(
+          Activity.createRatedInformation(
+            {
+              _id: album._id,
+              name: `${album.name} by ${album.artist}`,
+              score: req.body.puntuation,
+              pathname: `/album/${album.artist}/${album.name}/${album.mbid}`
+            },
+            { userId: req.user.id, username: req.user.username }
+          )
+        );
         album
           .save()
           .then(res_ => res.json({ ratings: res_.ratings, __v: res_.__v }))
@@ -125,6 +137,7 @@ router.post(
         return res.status(400).json('Error finding the album.');
       }
     } catch (err) {
+      console.log(err);
       return res.status(404).json('Error.');
     }
   }
