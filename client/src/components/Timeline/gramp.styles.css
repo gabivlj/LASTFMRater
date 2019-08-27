@@ -1,17 +1,26 @@
 .gramp {
 
-  max-height: 200px;
-  min-height: 20vh;
+  max-height: 100vh;
+  min-height: 5vh;
   max-width: 500px;
   min-width: 200px;
   -webkit-box-shadow: 0px 1px 2px 3px #1f3492;
--moz-box-shadow: 0px 1px 2px 3px #1f3492;
-box-shadow: 0px 1px 2px 3px #1f3492;
-margin: 15px;
-
+  -moz-box-shadow: 0px 1px 2px 3px #1f3492;
+  box-shadow: 0px 1px 2px 3px #1f3492;
+  margin: 15px;
 }
+
+.gramp:hover {
+  background-color: #cccfdd;
+  cursor: pointer;
+}
+
+
 .gramp-upper {
   padding: 10px 40px 5px 40px;
+}
+.gramp-upper-follow {
+  padding: 10px 40px 0px 40px;
 }
 
 .gramp h2 {
@@ -20,7 +29,7 @@ margin: 15px;
 }
 
 .gramp-body {
-  padding: 0 0 30px 60px;
+  padding: 0 40px 30px 60px;
 }
 
 .gramp-avatar {
