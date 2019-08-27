@@ -97,7 +97,7 @@ func (manager *ClientManager) start() {
 
 		case message := <-manager.broadcast:
 			for connection := range manager.clients {
-				if connection.UserID != message.message.To {
+				if connection.UserID != message.message.To && connection.UserID != message.message.UserID {
 					continue
 				}
 				select {
@@ -243,5 +243,6 @@ func (c *Client) read() {
 		}
 		finalMsg := &ChanMessage{message: msg, bytes: message}
 		manager.broadcast <- finalMsg
+
 	}
 }
