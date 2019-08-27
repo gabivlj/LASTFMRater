@@ -22,6 +22,7 @@ import {
   setChatRoute,
   ROUTES
 } from '../../../actions/chatActions';
+import Hider from '../../Common/Hider/Hider';
 
 /**
  * @todo I think we will be changing Auth.jsx to this, Or separate or i don't know, but we must do profile page again.
@@ -88,6 +89,28 @@ function Profile({
     profile.profile && !profile.isLoading && profile.profile.images[currentImg]
       ? { image: profile.profile.images[currentImg].lg, go: true }
       : { image: ProfileImg, go: false };
+
+  function returnElements() {
+    const mostListened = {
+      Component:
+        profile.profile.lastfm && profile.profile.lastfm.length !== '' ? (
+          <div>
+            <ProfileArtists artists={profile.profile.artists.artists.artist} />
+          </div>
+        ) : (
+          <h3>This user has no most listened artists!</h3>
+        ),
+      jsx: false,
+      name: 'Most listened artists'
+    };
+    const h1 = {
+      Component: <h1>Hey</h1>,
+      jsx: false,
+      name: 'Test'
+    };
+    const elementsArray = [mostListened, h1];
+    return elementsArray;
+  }
 
   return (
     <div style={{ marginTop: '100px', paddingBottom: '200px' }}>
@@ -160,13 +183,21 @@ function Profile({
               </div>
             </div>
           </div>
-          {profile.profile.lastfm && profile.profile.lastfm.length !== '' ? (
+          {/* {profile.profile.lastfm && profile.profile.lastfm.length !== '' ? (
             <div>
               <ProfileArtists
                 artists={profile.profile.artists.artists.artist}
               />
             </div>
-          ) : null}
+          ) : (
+            <h3>This user has no most listened artists!</h3>
+          )} */}
+          <div>
+            <Hider
+              style={{ marginLeft: '13.5%' }}
+              components={returnElements()}
+            />
+          </div>
         </div>
       )}
     </div>

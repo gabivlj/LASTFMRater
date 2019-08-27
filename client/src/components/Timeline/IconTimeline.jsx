@@ -1,6 +1,7 @@
 import React from 'react';
 import CommentIcon from '@material-ui/icons/ChatBubbleOutlineOutlined';
 import StarIcon from '@material-ui/icons/Star';
+import PersonIcon from '@material-ui/icons/PersonAdd';
 import activityTypes from '../../utils/activityTypes';
 
 export default function IconTimeline({ type }) {
@@ -17,5 +18,7 @@ export default function IconTimeline({ type }) {
     type === activityTypes.PLAYLIST_RATING
   )
     return <StarIcon style={iconStyles} />;
+  if (type === activityTypes.FOLLOWED_USER)
+    return <PersonIcon style={iconStyles} />;
   return <></>;
 }

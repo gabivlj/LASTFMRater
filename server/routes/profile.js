@@ -37,7 +37,7 @@ router.get(
   '/gramps',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const user = await User.findById(req.user.id);
+    const { user } = req;
     const activities = await activity.getActivityFromUsersFollowers(
       user.followedAccounts
     );
@@ -50,8 +50,7 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const { id } = req.user;
-      const user = await User.findById(id);
+      const { user } = req;
       const listOfFriends = user.followedAccounts.filter(followed =>
         user.followers.includes(String(followed))
       );
@@ -275,9 +274,9 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const { lz, sm, md, lg } = req.body;
-    const { id } = req.user;
-    const [err, user] = await handleError(User.findById(id));
-    if (err) return res.status(403).json({ error: 'Error finding user' });
+    const { user } = req;
+    //  const [err, user] = await handleError(User.findById(id));
+    // if (err) return res.status(403).json({ error: 'Error finding user' });
     if (!user) return res.status(404).json({ error: 'User not found.' });
     if (user.images.length > 20)
       return res.status(400).json({ error: 'Not more than 5 images.' });

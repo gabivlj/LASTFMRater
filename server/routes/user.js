@@ -20,7 +20,7 @@ router.get(
   '/info',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const user = await User.findById({ _id: req.user._id });
+    const { user } = req;
     const listOfFriends = user.followedAccounts.filter(followed =>
       user.followers.includes(String(followed))
     );
@@ -65,7 +65,7 @@ router.post(
   '/image',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const user = await User.findById({ _id: req.user.id });
+    const { user } = req;
     const { img } = '';
     if (!img) {
       return res

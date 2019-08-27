@@ -85,20 +85,6 @@ class Activity {
     try {
       switch (type) {
         case this.ACTIVITIES.ALBUM_RATING:
-          // doAct = await ActivityModel.findOneAndUpdate(
-          //   {
-          //     type,
-          //     information: { albumId: information.albumId },
-          //     user,
-          //     username
-          //   },
-          //   {
-          //     type,
-          //     information,
-          //     user,
-          //     username
-          //   }
-          // );
           act = await ActivityModel.updateOne(
             {
               'information.objId': information.objId
@@ -112,13 +98,13 @@ class Activity {
           }
           return doAct;
         case this.ACTIVITIES.FOLLOWED_USER:
-          doAct = !!(await ActivityModel.findOne({
+          doAct = await ActivityModel.findOne({
             user,
             username,
             type,
             information
-          }));
-          return doAct;
+          });
+          return !doAct;
         default:
           return doAct;
       }
@@ -143,9 +129,11 @@ class Activity {
       information,
       type,
       user,
-      username
+      username,
+      date: Date.now()
     });
     const [err, activitySave] = await handleError(activity.save());
+    console.log(activitySave);
     if (err) {
       console.log(err);
       throw err;
@@ -157,11 +145,12 @@ class Activity {
     return !!this.ACTIVITIES[activity];
   }
 
-  createFollowedInformation(userFollowed, userFollows) {
+  createFollowedInformation(userFollowed, userFollows, pathname) {
     return {
       information: {
         followed: { id: userFollowed._id, username: userFollowed.username },
-        follows: { id: userFollows._id, username: userFollows.username }
+        follows: { id: userFollows._id, username: userFollows.username },
+        pathname
       },
       type: this.ACTIVITIES.FOLLOWED_USER,
       user: userFollowed._id,

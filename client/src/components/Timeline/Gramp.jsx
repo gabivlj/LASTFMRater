@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import './gramp.styles.css';
 import { Avatar, Icon } from '@material-ui/core';
@@ -24,7 +25,8 @@ const PHRASES = {
 function Gramp({ gramp }) {
   const { username, user, type, date, information = {}, _id, image } =
     gramp || {};
-  const { pathname, name, text, score, creator } = information || {};
+  const { pathname, name, text, score, creator, followed, follows } =
+    information || {};
   let srcImg = profile;
   if (image && image.length > 0) {
     srcImg = `${linksHttp.GO_IMAGE}/api/image/${image[0].lg.split('.')[0]}`;
@@ -49,11 +51,25 @@ function Gramp({ gramp }) {
           </div>
         </div>
         <div className="col-8">
-          <h2>
-            {username}
-            {` ${PHRASES.en[type]} `}
-            <Link to={pathname}>{name}</Link>
-          </h2>
+          {type !== activityTypes.FOLLOWED_USER ? (
+            <h2>
+              {username}
+              {` ${PHRASES.en[type]} `}
+              <Link to={pathname}>{name}</Link>
+            </h2>
+          ) : (
+            <h2 className="mt-3">
+              <Link to={`/profile/${follows.username}`}>
+                {`${follows.username}`}
+              </Link>
+              {' '}
+              followed
+              {' '}
+              <Link to={`/profile/${followed.username}`}>
+                {`${followed.username}`}
+              </Link>
+            </h2>
+          )}
         </div>
       </div>
       <div>

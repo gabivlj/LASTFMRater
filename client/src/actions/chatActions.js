@@ -49,12 +49,14 @@ export const sendMessage = ({
       type: 'GET_CHAT',
       payload: res.data.chat
     });
-  } else {
-    dispatch({
-      type: 'SEND_MESSAGE',
-      payload: res.data.chat.messages[res.data.chat.messages.length - 1]
-    });
   }
+  // now we don't use this snippet because we do it on the receiveMessage itself.
+  // } else {
+  //   dispatch({
+  //     type: 'SEND_MESSAGE',
+  //     payload: res.data.chat.messages[res.data.chat.messages.length - 1]
+  //   });
+  // }
 
   return dispatch(notifySuccess('Message sent succesfuly...', 1000));
 };
@@ -110,13 +112,16 @@ export const setChatInfo = ({ username, id, profileImage }) => dispatch => {
  * @param {EventHandler} e
  * @description Pass this function to new Socket() so it executes it.
  */
-export const receiveMessage = e => dispatch => {
+export const receiveMessage = e => (dispatch, state) => {
   const json = JSON.parse(e.data);
   const { message, from, type, username, to, userId, friends } = json;
+  const s = state();
+  const { auth } = s;
+  const { id } = auth.apiUser;
   switch (type) {
-    // TODO: Handle redux.
     case 'Message':
-      dispatch(notifyNormality(`${message} from ${from}`), 10000);
+      if (userId !== id)
+        dispatch(notifyNormality(`${message} from ${from}`), 10000);
       return dispatch({
         type: 'RECEIVE_MESSAGE',
         payload: {

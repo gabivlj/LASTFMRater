@@ -2,7 +2,7 @@ import Axios from 'axios';
 import handleError from '../utils/handleError';
 import { notifyError } from './notifyActions';
 
-export const loading = () => ({ type: 'LOADING_TIMELINE ' });
+export const loading = () => ({ type: 'LOADING_TIMELINE' });
 
 export const loadGramps = () => async dispatch => {
   dispatch(loading());
@@ -13,7 +13,7 @@ export const loadGramps = () => async dispatch => {
   }
   const { data } = res;
   const { gramps } = data;
-  console.log(gramps);
+
   return dispatch({
     type: 'SET_GRAMPS',
     payload: gramps

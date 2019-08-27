@@ -18,7 +18,7 @@ router.post(
     try {
       const { id } = req.params;
       const userId = req.user.id;
-      const user = await User.findById(userId);
+      const { user } = req;
       const index = user.followedAccounts.indexOf(id);
       //
       if (index < 0) {
