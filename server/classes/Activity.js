@@ -40,38 +40,39 @@ class Activity {
     return activityReturn;
   }
 
-  async getActivityFromUsersFollowers(followingArray) {
-    // Create the $or following arrays.
-    const following = followingArray.reduce(
-      (prev, current) => [
-        [...prev[0], { _id: current }],
-        [...prev[1], { user: current }]
-      ],
-      [[], []]
-    );
-    // find activities promise
-    const activity = ActivityModel.find({ $or: following[1] }).sort({
-      date: -1
-    });
-    // use the first one to find the users.
-    const users = await User.find({ $or: following[0] });
-    // reduce for dictionary
-    const imageDictionary = users.reduce(
-      (prev, current) => ({ ...prev, [current._id]: current.images }),
-      {}
-    );
-
-    // wait promise
-    const [promisedActivity] = await Promise.all([activity]);
-    const finalActivity = promisedActivity.map(act => ({
-      user: act.user,
-      username: act.username,
-      type: act.type,
-      information: act.information,
-      date: act.date,
-      image: imageDictionary[act.user],
-      _id: act._id
-    }));
+  async getActivityFromUsersFollowers(followingArray, beginning = 0, end = 4) {
+    // $or array
+    const following = followingArray.map(follow => ({ user: follow }));
+    const activity = await ActivityModel.aggregate([
+      {
+        $match: {
+          $or: following
+        }
+      },
+      {
+        // join users with activity
+        $lookup: {
+          from: 'users',
+          localField: 'username',
+          foreignField: 'username',
+          as: 'userObj'
+        }
+      },
+      {
+        $project: {
+          user: 1,
+          username: 1,
+          type: 1,
+          information: 1,
+          date: 1,
+          images: { $arrayElemAt: ['$userObj.images', 0] }
+          // secondxyzArray: { $arrayElemAt: ['$xyzArray', 1] }
+        }
+      }
+    ])
+      .sort({ date: -1 })
+      .limit(beginning + end + 1);
+    const finalActivity = activity.slice(beginning, end + 1);
     return finalActivity;
   }
 
@@ -199,3 +200,37 @@ class Activity {
 const ActivityInstance = new Activity();
 
 module.exports = ActivityInstance;
+
+// thrash code
+// Create the $or following arrays.
+// const following = followingArray.reduce(
+//   (prev, current) => [
+//     [...prev[0], { _id: current }],
+//     [...prev[1], { user: current }]
+//   ],
+//   [[], []]
+// );
+// find activities promise
+// const activity = ActivityModel.find({ $or: following[1] }).sort({
+//   date: -1
+// });
+// console.log(test);
+// // use the first one to find the users.
+// const users = await User.find({ $or: following[0] });
+// // reduce for dictionary
+// const imageDictionary = users.reduce(
+//   (prev, current) => ({ ...prev, [current._id]: current.images }),
+//   {}
+// );
+
+// // wait promise
+// const [promisedActivity] = await Promise.all([activity]);
+// const finalActivity = promisedActivity.map(act => ({
+//   user: act.user,
+//   username: act.username,
+//   type: act.type,
+//   information: act.information,
+//   date: act.date,
+//   image: imageDictionary[act.user],
+//   _id: act._id
+// }));

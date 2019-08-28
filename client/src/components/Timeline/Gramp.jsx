@@ -23,13 +23,13 @@ const PHRASES = {
 };
 
 function Gramp({ gramp }) {
-  const { username, user, type, date, information = {}, _id, image } =
+  const { username, user, type, date, information = {}, _id, images } =
     gramp || {};
   const { pathname, name, text, score, creator, followed, follows } =
     information || {};
   let srcImg = profile;
-  if (image && image.length > 0) {
-    srcImg = `${linksHttp.GO_IMAGE}/api/image/${image[0].lg.split('.')[0]}`;
+  if (images && images.length > 0) {
+    srcImg = `${linksHttp.GO_IMAGE}/api/image/${images[0].lg.split('.')[0]}`;
   }
   return (
     <div className="gramp">

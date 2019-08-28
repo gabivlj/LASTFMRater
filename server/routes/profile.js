@@ -37,11 +37,25 @@ router.get(
   '/gramps',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const { user } = req;
+    const { user, query } = req;
+    const { beginning = 0, end = 4 } = query;
     const activities = await activity.getActivityFromUsersFollowers(
-      user.followedAccounts
+      user.followedAccounts,
+      parseInt(beginning || 0, 10),
+      parseInt(end || 4, 10)
     );
     return res.json({ gramps: activities });
+  }
+);
+
+router.get(
+  '/gramps/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { params, query } = req;
+    const { id } = params;
+    const { beginning = 0, end = 4 } = query;
+    return res.status(501, { error: 'Not implemented.' });
   }
 );
 
