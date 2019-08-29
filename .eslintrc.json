@@ -4,7 +4,7 @@
   "rules": {
     "prettier/prettier": "error",
     "func-names": "off",
-    "no-unused-vars": "warn",
+    "no-unused-vars": "off",
     "no-console": "off",
     "no-process-exit": "off",
     "class-methods-use-this": "off",

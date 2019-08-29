@@ -30,9 +30,6 @@ export const sendMessage = ({
   toUsername
 }) => async dispatch => {
   if (!SocketInstance.socket) return null;
-  const { socket } = SocketInstance;
-  socket.sendMessage(message, to, username);
-  // TODO: Handle redux and node.js db.
   const [res, err] = await handleError(
     Axios.post('/api/chat/new', {
       from: { _id: fromId, username },
@@ -41,8 +38,15 @@ export const sendMessage = ({
     })
   );
   if (err) {
-    return dispatch(notifyError('Error sending message...', 500));
+    return dispatch(
+      notifyError(
+        'Error sending message, maybe you are not friends anymore...',
+        2000
+      )
+    );
   }
+  const { socket } = SocketInstance;
+  socket.sendMessage(message, to, username);
   // CHECK IF FIRST MESSAGE, IF IT IS FIRST MESSAGE UPDATE WHOLE CHAT, BECAUSE AT FIRST WE DON'T GET THE ENTIRE INFORMATION OF THE CHAT.
   if (res.data.chat.messages.length === 1) {
     dispatch({

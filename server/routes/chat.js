@@ -4,6 +4,8 @@ const handleError = require('../lib/handleError');
 const Chat = require('../models/Chat');
 const dontCareWaitingForSave = require('../lib/dontCareWaitingForSave');
 const getProfiles = require('../lib/getProfiles');
+const User = require('../models/User');
+
 /**
  * @description Route for getting all the chats of an user.
  */
@@ -55,6 +57,7 @@ router.post(
   '/new',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
+    const { user } = req;
     const { text, from, to } = req.body;
     const userIdFrom = from._id;
     const userIdTo = to._id;
@@ -67,6 +70,14 @@ router.post(
     );
     if (err) {
       return res.status(404).json({ error: 'Error posting message.' });
+    }
+    if (
+      user.followedAccounts.indexOf(userIdTo) < 0 ||
+      user.followers.indexOf(userIdTo) < 0
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'Error, you are not friends with the other!' });
     }
     if (!chat) {
       const Ch = new Chat({

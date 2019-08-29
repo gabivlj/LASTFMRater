@@ -9,6 +9,7 @@ const RatingHelper = require('../lib/RatingHelper');
 const albumHelper = require('../classes/Album');
 const CommentSchema = require('../classes/CommentSchema');
 const Comment = require('../classes/Comment');
+const mongoQueries = require('../lib/mongoQueries');
 
 /**
  * @GET
@@ -326,13 +327,34 @@ router.get('/search/:query', async (req, res) => {
   if (query === null || query === undefined || query.trim() === '') {
     return res.json({ playlists: [] });
   }
-  const [error, playlists] = await handleError(
-    Playlist.find({
+
+  /*
+  db.collection.aggregate([ 
+    { "$project": { 
+        "averageAge": { "$avg": "$patients.age" } 
+    }}
+]) 
+  */
+  /**
+  * {
+        $match: {
+          $or: [{ playlistName: { $regex: query, $options: 'i' } }]
+        }
+      }
+  */
+  const regex = {
+    $match: {
       $or: [{ playlistName: { $regex: query, $options: 'i' } }]
-    }).sort({ playlistName: -1 })
+    }
+  };
+  const [error, playlists] = await handleError(
+    Playlist.aggregate(
+      mongoQueries.aggregations.playlist.makeAverage(regex)
+    ).sort({ averageScore: -1 })
   );
 
   if (error) {
+    console.log(error);
     return res.status(400).json({ error: 'Error finding the playlists. ' });
   }
 
