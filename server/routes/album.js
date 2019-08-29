@@ -158,7 +158,6 @@ router.get('/:albumname/:artistname', async (req, res) => {
 
   if (albumFM && albumFM.album) {
     albumFM = albumFM.album;
-    // TODO: Please check this better.
     let albumDB = await Album.findOne({
       artist: albumFM.artist,
       name: albumFM.name
