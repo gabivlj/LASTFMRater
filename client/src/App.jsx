@@ -30,6 +30,7 @@ import Profile from './components/Profile/Profile/Profile';
 import Notify from './components/Notifications/Notify';
 import Chat from './components/Chat/Chat/Chat';
 import ChatDialog from './components/Chat/Chat/ChatDialog';
+import CommentDialog from './components/Comment/CommentDialog';
 // Get user from localStorage.
 store.dispatch(logFromSession());
 
@@ -89,6 +90,7 @@ function App() {
             <Route component={NotFound} exact path="/sorry/not-found" />
           </div>
           <ChatDialog />
+          <CommentDialog />
           <Notify />
           <AppBarMine />
         </div>

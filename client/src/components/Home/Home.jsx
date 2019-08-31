@@ -5,13 +5,15 @@ import KEYS from '../../API';
 import logo from '../../images/grampy-logo.png';
 import Timeline from '../Timeline/Timeline';
 import { loadGramps } from '../../actions/timelineActions';
+import { setCommentOverlay } from '../../actions/commentActions';
 
-function Home({ auth, loadGramps, timeline }) {
+function Home({ auth, loadGramps, timeline, setCommentOverlay }) {
   const render = auth ? (
     <Timeline
       loadGramps={loadGramps}
       gramps={timeline.gramps}
       loaded={timeline.loaded}
+      onClickGramp={setCommentOverlay}
     />
   ) : (
     <div>
@@ -46,9 +48,9 @@ function Home({ auth, loadGramps, timeline }) {
 
 const mapStateToProps = state => ({
   auth: state.auth.auth,
-  timeline: state.timeline
+  timeline: state.timeline,
 });
 export default connect(
   mapStateToProps,
-  { loadGramps }
+  { loadGramps, setCommentOverlay },
 )(Home);

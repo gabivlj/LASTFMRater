@@ -9,12 +9,12 @@ import wait from '../utils/wait';
 export const ROUTES = {
   FRIENDS: 'FRIENDS',
   CHATS: 'CHATS',
-  CHAT: 'CHAT'
+  CHAT: 'CHAT',
 };
 
 export const setLoading = () => {
   return {
-    type: 'SET_LOADING_CHAT'
+    type: 'SET_LOADING_CHAT',
   };
 };
 
@@ -27,22 +27,22 @@ export const sendMessage = ({
   to,
   username,
   fromId,
-  toUsername
+  toUsername,
 }) => async dispatch => {
   if (!SocketInstance.socket) return null;
   const [res, err] = await handleError(
     Axios.post('/api/chat/new', {
       from: { _id: fromId, username },
       to: { _id: to, username: toUsername },
-      text: message
-    })
+      text: message,
+    }),
   );
   if (err) {
     return dispatch(
       notifyError(
         'Error sending message, maybe you are not friends anymore...',
-        2000
-      )
+        2000,
+      ),
     );
   }
   const { socket } = SocketInstance;
@@ -51,7 +51,7 @@ export const sendMessage = ({
   if (res.data.chat.messages.length === 1) {
     dispatch({
       type: 'GET_CHAT',
-      payload: res.data.chat
+      payload: res.data.chat,
     });
   }
   // now we don't use this snippet because we do it on the receiveMessage itself.
@@ -75,26 +75,26 @@ export const getChat = (otherId, get = '') => async dispatch => {
   // Check if it exists, if it doesn't probably the user hasn't talked to that guy yet...
   const chat = data.chat || {
     messages: [],
-    users: {}
+    users: {},
   };
   dispatch(setLoading());
   return dispatch({
     type: 'GET_CHAT',
-    payload: chat
+    payload: chat,
   });
 };
 
 export const setChatRoute = route => dispatch => {
   return dispatch({
     type: 'SET_CHAT_ROUTE',
-    payload: route
+    payload: route,
   });
 };
 
 export const setChatUsername = username => dispatch => {
   return dispatch({
     type: 'SET_CHAT',
-    payload: username
+    payload: username,
   });
 };
 
@@ -107,8 +107,8 @@ export const setChatInfo = ({ username, id, profileImage }) => dispatch => {
     payload: {
       username,
       id,
-      profileImage
-    }
+      profileImage,
+    },
   });
 };
 
@@ -132,31 +132,31 @@ export const receiveMessage = e => (dispatch, state) => {
           chat: {
             username: from,
             text: message,
-            provisionalId: uuid()
+            provisionalId: uuid(),
           },
-          from: userId
-        }
+          from: userId,
+        },
       });
     case 'ListOfFriends':
       return dispatch({
         type: 'SET_FRIENDS_CONNECTED',
-        payload: friends
+        payload: friends,
       });
     case 'NewFriendDisconnected':
       return dispatch({
         type: 'SET_FRIEND_CONNECTION',
         payload: {
           user: userId,
-          connected: false
-        }
+          connected: false,
+        },
       });
     case 'NewFriendConnected':
       dispatch({
         type: 'SET_FRIEND_CONNECTION',
         payload: {
           user: userId,
-          connected: true
-        }
+          connected: true,
+        },
       });
       return dispatch(notifyNormality(`${username} connected!`));
     default:
@@ -175,7 +175,7 @@ export const getChats = () => async dispatch => {
   const { data } = res;
   return dispatch({
     type: 'SET_CHATS',
-    payload: data.chats
+    payload: data.chats,
   });
 };
 
@@ -190,6 +190,6 @@ export const getFriendsProfiles = () => async dispatch => {
   const { data } = res;
   return dispatch({
     type: 'SET_FRIENDS',
-    payload: data.friends
+    payload: data.friends,
   });
 };

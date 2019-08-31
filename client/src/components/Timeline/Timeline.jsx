@@ -8,7 +8,8 @@ function Timeline({
   gramps,
   loaded,
   updateOnScrollBot,
-  updateOnScrollTop
+  updateOnScrollTop,
+  onClickGramp,
 }) {
   // let timeoutForLoading = false;
   const ADDER_N_GRAMPS = 10;
@@ -66,7 +67,7 @@ function Timeline({
         <div className="col-md-4">...</div>
         <div className="gramp-container col-sm-12 col-md-8">
           {gramps.map(gramp => (
-            <Gramp gramp={gramp} key={gramp._id} />
+            <Gramp gramp={gramp} key={gramp._id} onClick={onClickGramp} />
           ))}
         </div>
       </div>
@@ -80,12 +81,12 @@ Timeline.propTypes = {
   gramps: PropTypes.array.isRequired,
   loaded: PropTypes.bool.isRequired,
   updateOnScrollBot: PropTypes.bool,
-  updateOnScrollTop: PropTypes.bool
+  updateOnScrollTop: PropTypes.bool,
 };
 
 Timeline.defaultProps = {
   updateOnScrollTop: true,
-  updateOnScrollBot: true
+  updateOnScrollBot: true,
 };
 
 export default Timeline;
