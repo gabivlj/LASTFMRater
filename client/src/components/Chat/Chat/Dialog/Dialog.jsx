@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import {
   Dialog,
   DialogTitle,
@@ -6,7 +7,7 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  CircularProgress
+  CircularProgress,
 } from '@material-ui/core';
 
 export default function DialogMe({
@@ -20,20 +21,15 @@ export default function DialogMe({
   handleBack,
   isLoading,
   handleFriend,
-  titleButton
+  titleButton,
+  scrollableGeneral,
 }) {
-  // useEffect(() => {
-  //   if (onRender && open) {
-  //     onRender();
-  //   }
-  // }, []);
-
   return (
     <div>
       <Dialog
         open={open}
         onClose={handleClose}
-        scroll="paper"
+        scroll={scrollableGeneral ? 'body' : 'paper'}
         aria-labelledby="scroll-dialog-title"
         fullWidth
         maxWidth="md"
@@ -52,14 +48,7 @@ export default function DialogMe({
           >
             {titleButton}
           </Button>
-          {/* <Button
-            onClick={handleBack}
-            className="ml-3"
-            type="button"
-            color="secondary"
-          >
-            Back
-          </Button> */}
+
           <Button
             onClick={handleClose}
             className="ml-3"

@@ -291,7 +291,7 @@ router.post(
     const { id } = req.user;
     const { playlistId } = req.params;
     const { puntuation } = req.body;
-    const parsedPuntuation = puntuation ? parseInt(puntuation) : 0;
+    const parsedPuntuation = puntuation ? parseInt(puntuation, 10) : 0;
     const ratingHelper = new RatingHelper(Playlist);
     const [error, PlaylistToReturn] = await handleError(
       ratingHelper.addRating(id, playlistId, parsedPuntuation)

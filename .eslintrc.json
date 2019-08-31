@@ -14,6 +14,7 @@
     "no-multi-assign": "off",
     "react/forbid-prop-types": "warn",
     "no-underscore-dangle": "off",
+    "comma-dangle": "error",
     // This let us use for of without warnings. for of performance and readibility >>>>> forEach...
     "no-restricted-syntax": "off"
   },

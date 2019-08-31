@@ -11,15 +11,6 @@ const CommentLib = require('../classes/Comment');
 const Comment = require('../models/Comment');
 const Activity = require('../classes/Activity');
 
-// router.get('/test/comment', async (req, res) => {
-//   // Comment.ensureIndexes({ objectId: 1 });
-//   const t = time();
-//   const comment = await Comment.find({ objectId: '5cb8910228215838207d08a9' });
-//   console.log(comment.length);
-//   t();
-//   return res.json(comment);
-// });
-
 /**
  * @GET
  * @PUBLIC

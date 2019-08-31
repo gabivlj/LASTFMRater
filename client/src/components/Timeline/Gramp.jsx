@@ -18,11 +18,11 @@ const PHRASES = {
     [activityTypes.COMMENT]: 'has commented on',
     [activityTypes.CREATED_PLAYLIST]: 'created a playlist',
     [activityTypes.FOLLOWED_USER]: 'followed',
-    [activityTypes.PLAYLIST_RATING]: 'has rated'
-  }
+    [activityTypes.PLAYLIST_RATING]: 'has rated',
+  },
 };
 
-function Gramp({ gramp }) {
+function Gramp({ gramp, onClick }) {
   const { username, user, type, date, information = {}, _id, images } =
     gramp || {};
   const { pathname, name, text, score, creator, followed, follows } =
@@ -32,7 +32,19 @@ function Gramp({ gramp }) {
     srcImg = `${linksHttp.GO_IMAGE}/api/image/${images[0].lg.split('.')[0]}`;
   }
   return (
-    <div className="gramp">
+    <div
+      className="gramp"
+      role="button"
+      tabIndex={0}
+      onClick={() => {
+        if (type === activityTypes.COMMENT)
+          onClick({ _id: information.objId, text, image: srcImg, username });
+      }}
+      onKeyDown={() => {
+        if (type === activityTypes.COMMENT)
+          onClick({ _id: information.objId, text, image: srcImg, username });
+      }}
+    >
       <div className="gramp-upper row">
         <div className="col-4">
           <div className="row">

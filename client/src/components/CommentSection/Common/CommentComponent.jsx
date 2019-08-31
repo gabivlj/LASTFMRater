@@ -9,7 +9,7 @@ import {
   getComments,
   setLoading,
   setComments,
-  cleanComments
+  cleanComments,
 } from '../../../actions/commentActions';
 
 import CommentSection from '../CommentSection';
@@ -30,7 +30,8 @@ function CommentComponent({
   setLoading,
   cleanComments,
   location,
-  name
+  name,
+  paddingIfNotLoaded,
 }) {
   // Redux refactoring.
   const userId = auth.apiUser ? auth.apiUser.id : null;
@@ -43,9 +44,11 @@ function CommentComponent({
   // UseEffect
   useEffect(() => {
     function checkBottom() {
+      console.log(document.body.offsetHeight);
       // When scrolling to the bottom of the component, reload comments.
       if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight &&
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 20 &&
         loaded &&
         !timeoutForLoading
       ) {
@@ -104,6 +107,9 @@ function CommentComponent({
         comments={comments.comments}
         user={userName}
       />
+      {paddingIfNotLoaded && comments.comments.length === 0 ? (
+        <div style={{ paddingBottom: '2000px' }} />
+      ) : null}
       {!loaded ? <LinearProgress /> : null}
     </>
   );
@@ -111,7 +117,7 @@ function CommentComponent({
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  comments: state.comments
+  comments: state.comments,
 });
 
 CommentComponent.propTypes = {
@@ -125,14 +131,16 @@ CommentComponent.propTypes = {
   name: PropTypes.string.isRequired,
   comments: PropTypes.shape({
     comments: PropTypes.array.isRequired,
-    loaded: PropTypes.bool.isRequired
+    loaded: PropTypes.bool.isRequired,
   }),
-  numberOfCommentsAdd: PropTypes.number
+  numberOfCommentsAdd: PropTypes.number,
+  paddingIfNotLoaded: PropTypes.bool,
 };
 
 CommentComponent.defaultProps = {
   comments: [],
-  numberOfCommentsAdd: 20
+  numberOfCommentsAdd: 20,
+  paddingIfNotLoaded: false,
 };
 
 export default withRouter(
@@ -144,7 +152,7 @@ export default withRouter(
       getComments,
       setLoading,
       setComments,
-      cleanComments
-    }
-  )(CommentComponent)
+      cleanComments,
+    },
+  )(CommentComponent),
 );

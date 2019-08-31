@@ -1,21 +1,38 @@
 const initialState = {
   comments: [],
-  loaded: true
+  showCommentOverlay: false,
+  loaded: true,
+  comment: {},
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'COMMENTS_OVERLAY':
+      return {
+        ...state,
+        commentsOverlay: action.payload,
+      };
+    case 'SET_COMMENT_OVERLAY':
+      return {
+        ...state,
+        comment: action.payload,
+      };
+    case 'SHOW_OVERLAY':
+      return {
+        ...state,
+        showCommentOverlay: action.payload,
+      };
     case 'SET_COMMENTS':
       return {
         ...state,
         comments: [...action.payload],
-        loaded: true
+        loaded: true,
       };
     case 'ADD_COMMENTS':
       return {
         ...state,
         comments: [...state.comments, ...action.payload],
-        loaded: true
+        loaded: true,
       };
     case 'REPLACE_COMMENT':
       return {
@@ -25,24 +42,24 @@ export default (state = initialState, action) => {
           action.payload.comment,
           ...state.comments.slice(
             action.payload.index + 1,
-            state.comments.length
-          )
-        ]
+            state.comments.length,
+          ),
+        ],
       };
     case 'ADD_COMMENT':
       return {
         ...state,
         comments: [action.payload, ...state.comments],
-        loaded: true
+        loaded: true,
       };
     case 'SET_LOADING_COMMENTS':
       return {
         ...state,
-        loaded: !state.loaded
+        loaded: !state.loaded,
       };
     default:
       return {
-        ...state
+        ...state,
       };
   }
 };
