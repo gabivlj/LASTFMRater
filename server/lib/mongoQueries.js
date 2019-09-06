@@ -5,6 +5,9 @@ const { ObjectId } = mongoose.Types;
 const mongoQueries = {
   aggregations: {
     user: {
+      /**
+       * @description gets the users that liked the album
+       */
       getUsersAlbum: id => [
         {
           $match: { _id: ObjectId(id) },
@@ -38,14 +41,14 @@ const mongoQueries = {
         },
       ],
       /**
-       * @description Gets the most prestigious users if you sort() by loved. (Pass the match if you want specific results)
+       * @description Gets the 3 most prestigious users of an album.
        */
       getMostPrestigiousUsers(id = null, $match = null) {
         return [
           ...($match || mongoQueries.aggregations.user.getUsersAlbum(id)),
-
           {
             $project: {
+              _id: 0,
               loved: {
                 $map: {
                   input: '$usersLikedArray',
@@ -75,20 +78,25 @@ const mongoQueries = {
                     },
                     user: '$$user.user',
                     username: '$$user.username',
+                    likedAlbums: { $objectToArray: '$$user.likedAlbums' },
                   },
                 },
               },
             },
           },
-
-          // {
-          //   $project: {
-          //     liked: '$likedAlbums',
-          //     rated: '$ratedAlbums',
-          //     totalPrestig: { $sum: { $add: ['$liked', '$rated '] } },
-          //     username: 1,
-          //   },
-          // },
+          { $unwind: '$loved' },
+          {
+            $sort: { 'loved.numberOfLoved': -1 },
+          },
+          {
+            $group: { _id: '$_id', users: { $push: '$loved' } },
+          },
+          {
+            $project: {
+              _id: 0,
+              users: { $slice: ['$users', 0, 3] },
+            },
+          },
         ];
       },
     },
