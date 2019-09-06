@@ -15,7 +15,7 @@ const albumHelper = require('./Album');
 function checkOtherOpinionArrayAndDelete(userId, otherType, comment) {
   if (Array.isArray(comment[otherType])) {
     const opinions = comment[otherType].filter(
-      opinion => String(opinion.user) !== String(userId)
+      opinion => String(opinion.user) !== String(userId),
     );
     comment[otherType] = opinions;
   }
@@ -113,7 +113,7 @@ class CommentHandler {
     commentId,
     fastIndex,
     userGivingOpinion,
-    otherType = 'dislike'
+    otherType = 'dislike',
   ) {
     return new Promise(async (resolve, reject) => {
       let finalIndex = -1;
@@ -135,12 +135,12 @@ class CommentHandler {
           SchemaInstance.comments[fastIndex] = addOpinionToSpecific(
             userGivingOpinion,
             SchemaInstance.comments[fastIndex],
-            type
+            type,
           );
           SchemaInstance.comments[fastIndex] = checkOtherOpinionArrayAndDelete(
             userGivingOpinion,
             otherType,
-            SchemaInstance.comments[fastIndex]
+            SchemaInstance.comments[fastIndex],
           );
         } else {
           // if fast index didn't work, just find the comment and addOpinionToSpecific.
@@ -148,13 +148,13 @@ class CommentHandler {
             SchemaInstance.comments,
             commentId,
             _comment_ =>
-              addOpinionToSpecific(userGivingOpinion, _comment_, type)
+              addOpinionToSpecific(userGivingOpinion, _comment_, type),
           );
           finalIndex = index;
           const finalComment = checkOtherOpinionArrayAndDelete(
             userGivingOpinion,
             otherType,
-            SchemaInstance.comments[finalIndex]
+            SchemaInstance.comments[finalIndex],
           );
           SchemaInstance.comments[finalIndex] = finalComment;
         }
@@ -165,7 +165,7 @@ class CommentHandler {
         return resolve({
           [type]: SchemaInstance.comments[finalIndex][type].length,
           index: finalIndex,
-          instanceSaved
+          instanceSaved,
         });
       } catch (err) {
         console.log(err);

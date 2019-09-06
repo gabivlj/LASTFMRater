@@ -9,13 +9,13 @@ const CommentSchema = new Schema({
   dislikes: [{ user: { type: Schema.Types.ObjectId, ref: 'users' } }],
   date: {
     type: Date,
-    default: Date.now()
+    default: Date.now(),
   },
   objectId: {
     type: String,
-    required: true
+    required: true,
   },
-  answer: { type: Schema.Types.ObjectId, ref: 'comments' }
+  answer: { type: Schema.Types.ObjectId, ref: 'comments' },
 });
 
 module.exports = mongoose.model('comments', CommentSchema);

@@ -30,7 +30,7 @@ router.get(
       return res.status(404).json({ error: 'Not found' });
     }
     return res.json(profile);
-  }
+  },
 );
 
 router.get(
@@ -42,10 +42,10 @@ router.get(
     const activities = await activity.getActivityFromUsersFollowers(
       user.followedAccounts,
       parseInt(beginning || 0, 10),
-      parseInt(end || 4, 10)
+      parseInt(end || 4, 10),
     );
     return res.json({ gramps: activities });
-  }
+  },
 );
 
 router.get(
@@ -56,7 +56,7 @@ router.get(
     const { id } = params;
     const { beginning = 0, end = 4 } = query;
     return res.status(501, { error: 'Not implemented.' });
-  }
+  },
 );
 
 router.get(
@@ -66,21 +66,22 @@ router.get(
     try {
       const { user } = req;
       const listOfFriends = user.followedAccounts.filter(followed =>
-        user.followers.includes(String(followed))
+        user.followers.includes(String(followed)),
       );
+      // todo: when normalized the followingObjects, don't use includes();
       const usersFriends = (await User.find({
-        $or: [...listOfFriends.map(friend => ({ _id: friend }))]
+        $or: [...listOfFriends.map(friend => ({ _id: friend }))],
       })).map(friend => ({
         _id: friend._id,
         images: friend.images,
-        username: friend.username
+        username: friend.username,
       }));
       res.json({ friends: usersFriends });
     } catch (err) {
       console.log(err);
       return res.status(500).json({ error: 'Internal server error. ' });
     }
-  }
+  },
 );
 
 /**
@@ -118,6 +119,8 @@ router.get('/:id', async (req, res) => {
     userId.length > 0 &&
     typeof userId === 'string'
   );
+
+  // TODO:  These checkings are O(n), not bad but we really need to use followingObject in the future...
   const followed = !!(
     initialChecking && user.followers.indexOf(String(userId)) > -1
   );
@@ -132,7 +135,7 @@ router.get('/:id', async (req, res) => {
     ? lastFm.getUsersArtist(user.lastfm)
     : null;
   const [errorPromise, [playlistsFinal, artistsFinal]] = await handleError(
-    Promise.all([playlists, artists || []])
+    Promise.all([playlists, artists || []]),
   );
   if (errorPromise) {
     console.log(errorPromise);
@@ -152,7 +155,7 @@ router.get('/:id', async (req, res) => {
     followed,
     follows,
     mutuals,
-    itsUser
+    itsUser,
   };
   return res.json({ profile });
 });
@@ -165,49 +168,13 @@ router.get('/:id', async (req, res) => {
 router.get('/playlists/:username', async (req, res) => {
   const { username } = req.params;
   const [errors, playlists] = await handleError(
-    Playlist.find({ user: username })
+    Playlist.find({ user: username }),
   );
   if (errors) {
     return res.status(404).json({ error: 'No playlists!' });
   }
   return res.json({ playlists });
 });
-
-// /**
-//  * @POST
-//  * @PRIVATE
-//  * @description Posts a image to a profile, or updates it.
-//  * @param { String } img Link to the image.
-//  */
-// router.post(
-//   '/image',
-//   passport.authenticate('jwt', { session: false }),
-//   async (req, res) => {
-//     const { img } = req.body;
-//     if (!img) {
-//       return res.status(400).json({ error: 'Pass an image profile please' });
-//     }
-//     const user = await User.findById({
-//       _id: req.user.id
-//     });
-//     if (!user) {
-//       return res.status(404).json({ error: 'User not found.' });
-//     }
-//     const profile = await Profile.findOne({
-//       user: user._id
-//     });
-//     if (!profile) {
-//       const profileSchema = new Profile({
-//         img
-//       });
-//       profileSchema.save();
-//       return res.json({ success: true });
-//     }
-//     profile.img = img;
-//     profile.save();
-//     return res.json({ success: true });
-//   }
-// );
 
 /**
  * @GET
@@ -228,8 +195,8 @@ router.get('/search/:query', async (req, res) => {
 
   const [error, profiles] = await handleError(
     User.find({
-      $or: [{ username: { $regex: query, $options: 'i' } }]
-    }).sort({ name: -1 })
+      $or: [{ username: { $regex: query, $options: 'i' } }],
+    }).sort({ name: -1 }),
   );
 
   if (error) {
@@ -241,7 +208,7 @@ router.get('/search/:query', async (req, res) => {
     lastfm: profile.lastfm,
     img: profile.img || '',
     followers: profile.followers || 0,
-    _id: profile._id
+    _id: profile._id,
   }));
 
   if (
@@ -269,16 +236,16 @@ router.get('/ratings/:user', async (req, res) => {
   }
   const orArray = userdb.ratedAlbums.map(album => ({ _id: album }));
   const albumsdb = await Album.find({
-    $or: orArray
+    $or: orArray,
   });
   const albumShortened = albumsdb.map(album => ({
     name: album.name,
     artist: album.artist,
     rating: album.ratings.filter(
-      rating => String(rating.user) === String(user)
+      rating => String(rating.user) === String(user),
     )[0],
     mbid: album.mbid,
-    _id: album._id
+    _id: album._id,
   }));
   return res.json({ puntuations: albumShortened });
 });
@@ -297,7 +264,7 @@ router.post(
     user.images = [...user.images, { lz, sm, md, lg }];
     await user.save();
     return res.json({ images: user.images });
-  }
+  },
 );
 
 module.exports = router;

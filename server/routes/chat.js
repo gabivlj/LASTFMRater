@@ -16,8 +16,8 @@ router.get(
     const { id } = req.user;
     const [err, chats] = await handleError(
       Chat.find({
-        [`users.${id}.id`]: id
-      }).sort({ lastTalked: -1 })
+        [`users.${id}.id`]: id,
+      }).sort({ lastTalked: -1 }),
     );
     const users = [];
     chats.forEach(chat => {
@@ -38,16 +38,16 @@ router.get(
         users: chat.users,
         messages: chat.messages,
         images: profiles.filter(
-          profile => String(profile._id) === String(users[index])
+          profile => String(profile._id) === String(users[index]),
         )[0].images,
-        otherUser: users[index]
+        otherUser: users[index],
       }));
     }
     if (err) {
       return res.status(404).json({ error: 'Error retrieving chats.' });
     }
     return res.json({ chats: chatsResponse });
-  }
+  },
 );
 
 /**
@@ -65,8 +65,8 @@ router.post(
     const [err, chat] = await handleError(
       Chat.findOne({
         [`users.${userIdFrom}.id`]: userIdFrom,
-        [`users.${userIdTo}.id`]: userIdTo
-      })
+        [`users.${userIdTo}.id`]: userIdTo,
+      }),
     );
     if (err) {
       return res.status(404).json({ error: 'Error posting message.' });
@@ -85,43 +85,43 @@ router.post(
           [userIdFrom]: {
             id: userIdFrom,
             username: from.username,
-            notification: false
+            notification: false,
           },
           [userIdTo]: {
             id: userIdTo,
             username: to.username,
-            notification: true
-          }
+            notification: true,
+          },
         },
         messages: [{ text, user: userIdFrom, username: from.username }],
-        lastTalked: Date.now()
+        lastTalked: Date.now(),
       });
       const newChat = await Ch.save();
       return res.json({ chat: newChat });
     }
     const msgs = [
       ...chat.messages,
-      { text, user: userIdFrom, username: from.username }
+      { text, user: userIdFrom, username: from.username },
     ];
     chat.users[userIdTo].notification = true;
     chat.messages = msgs;
     chat.lastTalked = Date.now();
     dontCareWaitingForSave(chat, true);
     return res.json({ chat });
-  }
+  },
 );
 
 // todo
 router.post(
   '/deleteNotification',
   passport.authenticate('jwt', { session: false }),
-  async (req, res) => {}
+  async (req, res) => {},
 );
 
 router.get(
   '/get/notification',
   passport.authenticate('jwt', { session: false }),
-  async (req, res) => {}
+  async (req, res) => {},
 );
 
 /**
@@ -136,8 +136,8 @@ router.get(
     const [err, chat] = await handleError(
       Chat.findOne({
         [`users.${id}.id`]: id,
-        [`users.${otherUserId}.id`]: otherUserId
-      })
+        [`users.${otherUserId}.id`]: otherUserId,
+      }),
     );
     if (err) {
       console.log(err);
@@ -146,11 +146,11 @@ router.get(
     if (!chat) {
       return res.status(201).json({
         chat: null,
-        message: 'Empty chat, send a message to start chatting!'
+        message: 'Empty chat, send a message to start chatting!',
       });
     }
     return res.json({ chat });
-  }
+  },
 );
 
 /**
@@ -164,8 +164,8 @@ router.get(
     const [err, chat] = await handleError(
       Chat.findOne({
         [`users.${id}.id`]: id,
-        _id: req.params.id
-      })
+        _id: req.params.id,
+      }),
     );
     if (err) {
       console.log(err);
@@ -174,11 +174,11 @@ router.get(
     if (!chat) {
       return res.status(201).json({
         chat: null,
-        message: 'Empty chat, send a message to start chatting!'
+        message: 'Empty chat, send a message to start chatting!',
       });
     }
     return res.json({ chat });
-  }
+  },
 );
 
 module.exports = router;
