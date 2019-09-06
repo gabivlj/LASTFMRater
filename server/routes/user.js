@@ -22,7 +22,7 @@ router.get(
   async (req, res) => {
     const { user } = req;
     const listOfFriends = user.followedAccounts.filter(followed =>
-      user.followers.includes(String(followed))
+      user.followers.includes(String(followed)),
     );
     res.json({
       email: user.email,
@@ -34,9 +34,9 @@ router.get(
       followedAccounts: user.followedAccounts,
       profileImage: user.img,
       followers: user.followers || 0,
-      listOfFriends
+      listOfFriends,
     });
-  }
+  },
 );
 
 router.post(
@@ -58,7 +58,7 @@ router.post(
     } catch (err) {
       res.status(400).json('Error processing');
     }
-  }
+  },
 );
 
 router.post(
@@ -78,7 +78,7 @@ router.post(
     user.img = img;
     user.save();
     return res.json({ success: true });
-  }
+  },
 );
 
 router.post('/rate', async (req, res) => {
@@ -117,13 +117,13 @@ router.post(
         res.json(user);
       })
       .catch(err => res.status(500).json('ERROR WITH API'));
-  }
+  },
 );
 
 router.post('/auth/login', async (req, res) => {
   const { email, password } = req.body;
   const { isValid, errors } = Authenticator.AuthenticateUserInputLogin(
-    req.body
+    req.body,
   );
 
   if (!isValid) {
@@ -152,11 +152,11 @@ router.post('/auth/login', async (req, res) => {
         ratedAlbums: user.ratedAlbums,
         reviews: user.reviews,
         playlists: user.playlists,
-        followedAccounts: user.followedAccounts
+        followedAccounts: user.followedAccounts,
       },
       secret,
       { expiresIn: 4800 },
-      (err, token) => res.json({ token: `Bearer ${token}`, success: true })
+      (err, token) => res.json({ token: `Bearer ${token}`, success: true }),
     );
   } catch (err) {
     console.log(err);
@@ -168,7 +168,7 @@ router.post('/auth/register', async (req, res) => {
   const { email, password, password2, username } = req.body;
   // Input check
   const { isValid, errors } = Authenticator.AuthenticateUserInputRegister(
-    req.body
+    req.body,
   );
   // If it is invalid, return 400
   if (!isValid) {
@@ -178,7 +178,7 @@ router.post('/auth/register', async (req, res) => {
   try {
     // We try to find a user that meets email or username
     const doesUserExists = await User.findOne({
-      $or: [{ email }, { username }]
+      $or: [{ email }, { username }],
     });
     // Check if it does exist
     if (!Authenticator.isEmpty(doesUserExists)) {
@@ -198,7 +198,7 @@ router.post('/auth/register', async (req, res) => {
             reviews: [],
             followedAccounts: [],
             followers: [],
-            playlists: []
+            playlists: [],
           });
           const userS = await user.save();
           return res.json(userS);

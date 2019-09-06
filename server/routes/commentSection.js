@@ -23,7 +23,7 @@ router.get('/:id', async (req, res) => {
   try {
     const commentSection = await Comment.find({ objectId: id })
       .sort({
-        date: -1
+        date: -1,
       })
       .limit(parsedLimit);
     if (!commentSection) {
@@ -42,7 +42,7 @@ router.get('/:id', async (req, res) => {
         __v: comment.__v,
         likes: parseInt(comment.likes.length, 10),
         dislikes: parseInt(comment.dislikes.length, 10),
-        _id: comment._id
+        _id: comment._id,
       };
       const copy = CommentLib.setHasLikedOrDislikedProperty(comment, userId);
       commentP.liked = copy.liked;
@@ -76,7 +76,7 @@ router.post(
       objectId,
       likes: [],
       dislikes: [],
-      user: userId
+      user: userId,
     });
     await comment.save();
     Activity.addSomethingActivity(
@@ -86,13 +86,13 @@ router.post(
         {
           objId: objectId,
           pathname,
-          name
+          name,
         },
-        false
-      )
+        false,
+      ),
     );
     return res.json({ comment });
-  }
+  },
 );
 
 /**
@@ -114,7 +114,7 @@ router.post(
       comment,
       id,
       'likes',
-      'dislikes'
+      'dislikes',
     );
     const finalComment = {
       text: returnedComment.text,
@@ -123,14 +123,14 @@ router.post(
       __v: returnedComment.__v,
       likes: parseInt(returnedComment.likes.length, 10),
       dislikes: parseInt(returnedComment.dislikes.length, 10),
-      _id: returnedComment._id
+      _id: returnedComment._id,
     };
     const copy = CommentLib.setHasLikedOrDislikedProperty(returnedComment, id);
     finalComment.liked = copy.liked;
     finalComment.disliked = copy.disliked;
     returnedComment.save();
     res.json({ comment: finalComment });
-  }
+  },
 );
 
 /**
@@ -152,7 +152,7 @@ router.post(
       comment,
       id,
       'dislikes',
-      'likes'
+      'likes',
     );
     const finalComment = {
       text: returnedComment.text,
@@ -161,7 +161,7 @@ router.post(
       __v: returnedComment.__v,
       likes: parseInt(returnedComment.likes.length, 10),
       dislikes: parseInt(returnedComment.dislikes.length, 10),
-      _id: returnedComment._id
+      _id: returnedComment._id,
     };
 
     const copy = CommentLib.setHasLikedOrDislikedProperty(returnedComment, id);
@@ -169,7 +169,7 @@ router.post(
     finalComment.disliked = copy.disliked;
     returnedComment.save();
     res.json({ comment: finalComment });
-  }
+  },
 );
 
 module.exports = router;

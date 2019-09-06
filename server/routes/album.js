@@ -8,8 +8,21 @@ const albumHelper = require('../classes/Album');
 const Comment = require('../classes/Comment');
 const CommentSchema = require('../classes/CommentSchema');
 const Activity = require('../classes/Activity');
+const mongoQueries = require('../lib/mongoQueries');
+const User = require('../models/User');
 
 const FM = new Lastfm(null);
+
+router.get('/testing/album/:id', async (req, res) => {
+  const [err, album] = await handleError(
+    Album.aggregate(
+      mongoQueries.aggregations.user.getMostPrestigiousUsers(req.params.id),
+    ),
+  );
+  if (err) return console.log(err);
+  if (album) console.log(album);
+  res.json(album);
+});
 
 /**
  * @GET
@@ -34,13 +47,13 @@ router.post('/', async (req, res) => {
     const album = await Album.findOne({
       name: req.body.albumname,
       artist: req.body.artist,
-      mbid: req.body.mbid
+      mbid: req.body.mbid,
     });
     if (!album) {
       const newAlbum = new Album({
         name: req.body.albumname,
         artist: req.body.artist,
-        mbid: req.body.mbid
+        mbid: req.body.mbid,
       });
       newAlbum
         .save()
@@ -95,7 +108,7 @@ router.post(
   async (req, res) => {
     try {
       const album = await Album.findOne({
-        _id: req.params.albumid
+        _id: req.params.albumid,
       });
       // const userPromise = User.findOne({ _id: req.user._id });
       // const [user, album] = await Promise.all([userPromise, albumPromise]);
@@ -109,13 +122,13 @@ router.post(
           // Add it.
           album.ratings.push({
             puntuation: req.body.puntuation,
-            user: req.body.userid
+            user: req.body.userid,
           });
         } else {
           // else replace
           album.ratings.splice(index, 1, {
             puntuation: req.body.puntuation,
-            user: req.body.userid
+            user: req.body.userid,
           });
         }
         Activity.addSomethingActivity(
@@ -124,10 +137,10 @@ router.post(
               _id: album._id,
               name: `${album.name} by ${album.artist}`,
               score: req.body.puntuation,
-              pathname: `/album/${album.artist}/${album.name}/${album.mbid}`
+              pathname: `/album/${album.artist}/${album.name}/${album.mbid}`,
             },
-            { userId: req.user.id, username: req.user.username }
-          )
+            { userId: req.user.id, username: req.user.username },
+          ),
         );
         album
           .save()
@@ -140,7 +153,7 @@ router.post(
       console.log(err);
       return res.status(404).json('Error.');
     }
-  }
+  },
 );
 
 // @GET
@@ -152,7 +165,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
     albumname: req.params.albumname,
     username,
     artist: req.params.artistname,
-    mbid
+    mbid,
   };
   let albumFM = await FM.getAlbum(AlbumData);
 
@@ -160,14 +173,14 @@ router.get('/:albumname/:artistname', async (req, res) => {
     albumFM = albumFM.album;
     let albumDB = await Album.findOne({
       artist: albumFM.artist,
-      name: albumFM.name
+      name: albumFM.name,
     });
     if (!albumDB) {
       const newAlbum = new Album({
         artist: albumFM.artist,
         name: albumFM.name,
         mbid: albumFM.mbid,
-        lastfmSource: true
+        lastfmSource: true,
       });
       const saved = await newAlbum.save();
       albumDB = saved;
@@ -190,13 +203,102 @@ router.get('/:albumname/:artistname', async (req, res) => {
     name: req.params.albumname,
     artist: req.params.artistname,
     _id: mbid,
-    lastfmSource: false
+    lastfmSource: false,
   });
   if (!album) {
     return res.status(400).json('Album not found!');
   }
   return res.json({ album });
 });
+
+/**
+ * @POST
+ * @description Posts a loved.
+ */
+router.post(
+  '/loved/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { params, user } = req;
+    const { id } = params;
+    delete user.password;
+    if (id === null || id === 'null' || !id)
+      return res.status(400).json({ error: 'Bad id for Album.' });
+    const album = await Album.findById(id);
+    if (!album) {
+      return res.status(404).json({ error: 'Error, album not found.' });
+    }
+    // Initialize objects for late models that don't have this param.
+    if (!user.likedAlbums) user.likedAlbums = {};
+    if (!album.usersLiked) album.usersLiked = {};
+    let updatedUser = null;
+    if (user.likedAlbums[id] === undefined || user.likedAlbums[id] === null) {
+      user.likedAlbums[id] = {
+        album: album._id,
+        name: album.name,
+        artist: album.artist,
+      };
+      updatedUser = User.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            [`likedAlbums.${album._id}`]: {
+              album: album._id,
+              name: album.name,
+              artist: album.artist,
+            },
+          },
+        },
+      );
+    } else {
+      user.likedAlbums[id] = null;
+      updatedUser = User.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            [`likedAlbums.${album._id}`]: null,
+          },
+        },
+      );
+    }
+    let updatedAlbum = null;
+
+    if (
+      album.usersLiked[user._id] === null ||
+      album.usersLiked[user._id] === undefined
+    ) {
+      album.usersLiked[user._id] = {
+        user: user._id,
+        username: user.username,
+      };
+      updatedAlbum = Album.updateOne(
+        { _id: album._id },
+        {
+          $set: {
+            [`usersLiked.${user._id}`]: {
+              user: user._id,
+              username: user.username,
+            },
+          },
+        },
+      );
+    } else {
+      album.usersLiked[user._id] = null;
+      updatedAlbum = Album.updateOne(
+        { _id: album._id },
+        {
+          $set: {
+            [`usersLiked.${user._id}`]: null,
+          },
+        },
+      );
+    }
+    res.json({ user, album });
+    const [err, [userSaved, albumSaved]] = await handleError(
+      Promise.all([updatedAlbum, updatedUser]),
+    );
+  },
+);
 
 /**
  * @POST
@@ -217,7 +319,7 @@ router.post(
     }
     const comment = new CommentSchema(req.user.id, username, text);
     const [errorReturn, returner] = await handleError(
-      Comment.postComment(album, comment)
+      Comment.postComment(album, comment),
     );
 
     if (errorReturn) {
@@ -225,7 +327,7 @@ router.post(
     }
 
     res.json({ comments: returner });
-  }
+  },
 );
 
 /**
@@ -253,11 +355,11 @@ router.post(
       id,
       fastIndex,
       userId,
-      'dislikes'
+      'dislikes',
     );
 
     res.json({ comments: [...obj.instanceSaved.comments] });
-  }
+  },
 );
 
 /**
@@ -285,11 +387,11 @@ router.post(
       id,
       fastIndex,
       userId,
-      'likes'
+      'likes',
     );
 
     res.json({ comments: [...obj.instanceSaved.comments] });
-  }
+  },
 );
 
 router.post(
@@ -307,7 +409,7 @@ router.post(
     album.images = [...album.images, { lz, sm, md, lg }];
     await album.save();
     return res.json({ images: album.images });
-  }
+  },
 );
 
 module.exports = router;

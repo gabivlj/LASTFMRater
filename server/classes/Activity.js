@@ -10,7 +10,7 @@ class Activity {
       PLAYLIST_RATING: 'PLAYLIST_RATING',
       COMMENT: 'COMMENT',
       CREATED_PLAYLIST: 'CREATED_PLAYLIST',
-      FOLLOWED_USER: 'FOLLOWED_USER'
+      FOLLOWED_USER: 'FOLLOWED_USER',
     };
     this.ALBUM_RATING = 'ALBUM_RATING';
 
@@ -23,7 +23,7 @@ class Activity {
   async addAlbumRatingActivity(
     { albumName, id, mbid = '', artistName },
     user,
-    userId
+    userId,
   ) {
     const activity = new ActivityModel({
       user: userId,
@@ -33,8 +33,8 @@ class Activity {
         albumName,
         id,
         mbid,
-        artistName
-      }
+        artistName,
+      },
     });
     const activityReturn = await activity.save();
     return activityReturn;
@@ -46,8 +46,8 @@ class Activity {
     const activity = await ActivityModel.aggregate([
       {
         $match: {
-          $or: following
-        }
+          $or: following,
+        },
       },
       {
         // join users with activity
@@ -55,8 +55,8 @@ class Activity {
           from: 'users',
           localField: 'username',
           foreignField: 'username',
-          as: 'userObj'
-        }
+          as: 'userObj',
+        },
       },
       {
         $project: {
@@ -65,10 +65,10 @@ class Activity {
           type: 1,
           information: 1,
           date: 1,
-          images: { $arrayElemAt: ['$userObj.images', 0] }
+          images: { $arrayElemAt: ['$userObj.images', 0] },
           // secondxyzArray: { $arrayElemAt: ['$xyzArray', 1] }
-        }
-      }
+        },
+      },
     ])
       .sort({ date: -1 })
       .limit(beginning + end + 1);
@@ -88,9 +88,9 @@ class Activity {
         case this.ACTIVITIES.ALBUM_RATING:
           act = await ActivityModel.updateOne(
             {
-              'information.objId': information.objId
+              'information.objId': information.objId,
             },
-            { type, information, user, username }
+            { type, information, user, username },
           );
           if (!act || act.nModified === parseInt(0, 10)) doAct = true;
           else {
@@ -103,7 +103,7 @@ class Activity {
             user,
             username,
             type,
-            information
+            information,
           });
           return !doAct;
         default:
@@ -123,7 +123,7 @@ class Activity {
       type,
       information,
       user,
-      username
+      username,
     );
     if (!doActivity) return null;
     const activity = new ActivityModel({
@@ -131,7 +131,7 @@ class Activity {
       type,
       user,
       username,
-      date: Date.now()
+      date: Date.now(),
     });
     const [err, activitySave] = await handleError(activity.save());
     console.log(activitySave);
@@ -151,17 +151,17 @@ class Activity {
       information: {
         followed: { id: userFollowed._id, username: userFollowed.username },
         follows: { id: userFollows._id, username: userFollows.username },
-        pathname
+        pathname,
       },
       type: this.ACTIVITIES.FOLLOWED_USER,
       user: userFollowed._id,
-      username: userFollowed.username
+      username: userFollowed.username,
     };
   }
 
   createRatedInformation(
     { _id, name, score, creator, mbid, pathname },
-    { username, userId }
+    { username, userId },
   ) {
     return {
       information: {
@@ -170,11 +170,11 @@ class Activity {
         pathname,
         name,
         mbid,
-        objId: _id
+        objId: _id,
       },
       type: this.ACTIVITIES.ALBUM_RATING,
       username,
-      user: userId
+      user: userId,
     };
   }
 
@@ -182,17 +182,17 @@ class Activity {
     userCommented,
     text,
     objectCommented,
-    answered = null
+    answered = null,
   ) {
     return {
       information: {
         ...objectCommented, // name, _id, route
         text,
-        answered
+        answered,
       },
       type: this.ACTIVITIES.COMMENT,
       username: userCommented.username,
-      user: userCommented._id
+      user: userCommented._id,
     };
   }
 }

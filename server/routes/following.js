@@ -25,62 +25,58 @@ router.post(
         // const followed = [...user.followedAccounts, id];
         // user.followedAccounts = followed;
         user.followedAccounts.push(id);
+        user.followedObject[id] = id;
         dontCareWaitingForSave(user, false);
         const [err, theUserItsGonnaFollow] = await handleError(
-          User.findById(id)
+          User.findById(id),
         );
         if (err) throw err;
         const newFollowers = [...theUserItsGonnaFollow.followers, userId];
         theUserItsGonnaFollow.followers = newFollowers;
-        // const [errAnotherTime, returnedUser] = await handleError(
-        //   theUserItsGonnaFollow.save()
-        // );
+        theUserItsGonnaFollow.followersObject[userId] = userId;
         dontCareWaitingForSave(theUserItsGonnaFollow, false);
-        // if (errAnotherTime) throw errAnotherTime;
-        // returnedUser.password = null;
         user.password = null;
-        // todo: check that someone cannot spam this activity.
         Activity.addSomethingActivity(
-          Activity.createFollowedInformation(theUserItsGonnaFollow, user)
+          Activity.createFollowedInformation(theUserItsGonnaFollow, user),
         );
-        const followsUser =
-          theUserItsGonnaFollow.followedAccounts.indexOf(String(userId)) > -1;
-
+        const followsUser = !!theUserItsGonnaFollow.followedObject[
+          String(userId)
+        ];
         return res.json({
           followed: true,
           followers: newFollowers,
-          followsUser
+          followsUser,
         });
       }
       const followed = user.followedAccounts.filter(
-        followed => String(followed) !== String(id)
+        followed => String(followed) !== String(id),
       );
+      user.followedObject[String(id)] = null;
       user.followedAccounts = followed;
       dontCareWaitingForSave(user, false);
       const [err, theUserItsGonnaFollow] = await handleError(User.findById(id));
       if (err) throw err;
       // We filter it out because we know he wanna unfollow.
       const newFollowers = theUserItsGonnaFollow.followers.filter(
-        follower => String(follower) !== String(userId)
+        follower => String(follower) !== String(userId),
       );
+      theUserItsGonnaFollow.followersObject[userId] = null;
       theUserItsGonnaFollow.followers = newFollowers;
-      // const [errAnotherTime, saved] = await handleError(
-      //   theUserItsGonnaFollow.save()
-      // );
       dontCareWaitingForSave(theUserItsGonnaFollow, false);
-      const followsUser =
-        theUserItsGonnaFollow.followedAccounts.indexOf(String(userId)) > -1;
+      const followsUser = !!theUserItsGonnaFollow.followedObject[
+        String(userId)
+      ];
       user.password = null;
       return res.json({
         followed: false,
         followers: newFollowers,
-        followsUser
+        followsUser,
       });
     } catch (err) {
       // console.log(err);
       return res.status(404).json({ error: 'Error un/following the user...' });
     }
-  }
+  },
 );
 
 module.exports = router;
