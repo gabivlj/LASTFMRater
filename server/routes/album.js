@@ -13,17 +13,6 @@ const User = require('../models/User');
 
 const FM = new Lastfm(null);
 
-router.get('/testing/album/:id', async (req, res) => {
-  const [err, album] = await handleError(
-    Album.aggregate(
-      mongoQueries.aggregations.user.getMostPrestigiousUsers(req.params.id),
-    ),
-  );
-  if (err) return console.log(err);
-  if (album) console.log(album);
-  res.json(album);
-});
-
 /**
  * @GET
  * @PRIVATE
@@ -74,6 +63,34 @@ router.post('/', async (req, res) => {
  */
 
 router.post('/review/:albumid', (req, res) => {});
+
+/**
+ * @description Returns the 3 recommended albums for the loged user that liked the album.
+ */
+router.get(
+  '/recommend_like/:id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { user, params } = req;
+    const [err, album] = await handleError(
+      Album.aggregate(
+        mongoQueries.aggregations.user.getMostPrestigiousUsers(params.id),
+      ),
+    );
+    const recommendedAlbums = [];
+    for (const userElement of album[0].users) {
+      for (const album of userElement.likedAlbums) {
+        const { k, v } = album;
+        if (!user.likedAlbums[k]) {
+          recommendedAlbums.push({ [k]: v });
+          break;
+        }
+      }
+    }
+    if (err) return console.log(err);
+    return res.json({ albums: recommendedAlbums });
+  },
+);
 
 /**
  * @GET
@@ -237,6 +254,7 @@ router.post(
         album: album._id,
         name: album.name,
         artist: album.artist,
+        mbid: album.mbid || null,
       };
       updatedUser = User.updateOne(
         { _id: user._id },
@@ -246,6 +264,7 @@ router.post(
               album: album._id,
               name: album.name,
               artist: album.artist,
+              mbid: album.mbid || null,
             },
           },
         },
