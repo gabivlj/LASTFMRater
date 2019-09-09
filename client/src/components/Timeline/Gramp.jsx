@@ -15,7 +15,10 @@ import BodyGramp from './BodyGramp';
 const PHRASES = {
   en: {
     [activityTypes.ALBUM_RATING]: 'has rated',
-    [activityTypes.COMMENT]: 'has commented on',
+    [activityTypes.COMMENT]: {
+      not_response: 'has commented on',
+      response: 'responded a gramp from',
+    },
     [activityTypes.CREATED_PLAYLIST]: 'created a playlist',
     [activityTypes.FOLLOWED_USER]: 'followed',
     [activityTypes.PLAYLIST_RATING]: 'has rated',
@@ -25,7 +28,7 @@ const PHRASES = {
 function Gramp({ gramp, onClick }) {
   const { username, user, type, date, information = {}, _id, images } =
     gramp || {};
-  const { pathname, name, text, score, creator, followed, follows } =
+  const { pathname, name, text, score, creator, followed, follows, answered } =
     information || {};
   let srcImg = profile;
   if (images && images.length > 0) {
@@ -36,11 +39,11 @@ function Gramp({ gramp, onClick }) {
       className="gramp"
       role="button"
       tabIndex={0}
-      onClick={() => {
+      onClick={e => {
         if (type === activityTypes.COMMENT)
           onClick({ _id: information.objId, text, image: srcImg, username });
       }}
-      onKeyDown={() => {
+      onKeyDown={e => {
         if (type === activityTypes.COMMENT)
           onClick({ _id: information.objId, text, image: srcImg, username });
       }}
@@ -66,7 +69,14 @@ function Gramp({ gramp, onClick }) {
           {type !== activityTypes.FOLLOWED_USER ? (
             <h2>
               {username}
-              {` ${PHRASES.en[type]} `}
+              {` ${
+                typeof PHRASES.en[type] === 'string'
+                  ? PHRASES.en[type]
+                  : (() =>
+                      answered
+                        ? PHRASES.en[type].response
+                        : PHRASES.en[type].not_response)()
+              } `}
               <Link to={pathname}>{name}</Link>
             </h2>
           ) : (

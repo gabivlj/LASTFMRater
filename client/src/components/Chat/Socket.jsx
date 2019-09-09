@@ -15,7 +15,7 @@ function Socket({ auth, receiveMessage, ...props }) {
       auth.id,
       receiveMessage,
       auth.user,
-      auth.listOfFriends
+      auth.listOfFriends,
     );
     return () => {
       SocketInstance.socket.close();
@@ -26,12 +26,12 @@ function Socket({ auth, receiveMessage, ...props }) {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth.apiUser
+  auth: state.auth.apiUser,
 });
 
 export default connect(
   mapStateToProps,
   {
-    receiveMessage
-  }
+    receiveMessage,
+  },
 )(Socket);

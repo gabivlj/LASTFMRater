@@ -23,11 +23,13 @@ export default function DialogMe({
   handleFriend,
   titleButton,
   scrollableGeneral,
+  onScroll,
 }) {
   return (
     <div>
       <Dialog
         open={open}
+        onScroll={onScroll || function() {}}
         onClose={handleClose}
         scroll={scrollableGeneral ? 'body' : 'paper'}
         aria-labelledby="scroll-dialog-title"
