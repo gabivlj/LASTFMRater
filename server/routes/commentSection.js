@@ -68,7 +68,14 @@ router.post(
   '/:objectId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const { text, username, userId = req.user.id, pathname, name } = req.body;
+    const {
+      text,
+      username,
+      userId = req.user.id,
+      pathname,
+      name,
+      answered = false,
+    } = req.body;
     const { objectId } = req.params;
     const comment = new Comment({
       text,
@@ -78,17 +85,18 @@ router.post(
       dislikes: [],
       user: userId,
     });
-    await comment.save();
+    const commentSaved = await comment.save();
     Activity.addSomethingActivity(
       Activity.createCommentedInformation(
         { username, _id: userId },
         text,
         {
-          objId: objectId,
+          // TODO ATTENTION: Maybe add param: comment_id?
+          objId: commentSaved._id,
           pathname,
           name,
         },
-        false,
+        answered,
       ),
     );
     return res.json({ comment });

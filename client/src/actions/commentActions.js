@@ -54,12 +54,19 @@ export const comment = (
   objectId,
   pathname,
   name,
+  answer = false,
 ) => async dispatch => {
   if (!username || text === '' || !objectId || !pathname || !name) {
     return null;
   }
   const [res, error] = await handleError(
-    axios.post(`/api/comments/${objectId}`, { username, text, pathname, name }),
+    axios.post(`/api/comments/${objectId}`, {
+      username,
+      text,
+      pathname,
+      name,
+      answered: answer,
+    }),
   );
   if (error) {
     dispatch(notifyError('Error adding comment.', 3000));
@@ -79,6 +86,7 @@ export const getComments = (
   current = 0,
   limit = 50,
   userId = null,
+  slice = false,
 ) => async dispatch => {
   const [res, error] = await handleError(
     axios.get(`/api/comments/${objectId}`, {
@@ -91,6 +99,7 @@ export const getComments = (
       type: 'ERROR_GETTING_COMMENTS',
     });
   }
+
   return dispatch({
     type: 'SET_COMMENTS',
     payload: res.data.comments,

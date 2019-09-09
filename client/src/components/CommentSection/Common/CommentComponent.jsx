@@ -32,6 +32,8 @@ function CommentComponent({
   location,
   name,
   paddingIfNotLoaded,
+  useOwnOnScroll,
+  answer,
 }) {
   // Redux refactoring.
   const userId = auth.apiUser ? auth.apiUser.id : null;
@@ -44,7 +46,6 @@ function CommentComponent({
   // UseEffect
   useEffect(() => {
     function checkBottom() {
-      console.log(document.body.offsetHeight);
       // When scrolling to the bottom of the component, reload comments.
       if (
         window.innerHeight + window.scrollY >=
@@ -67,14 +68,17 @@ function CommentComponent({
         // API Call.
       }
     }
-    document.addEventListener('scroll', checkBottom);
-    // Remove the EventListener
-    return () => {
-      // Destroy
-      setCurrentNOfComments(0);
-      document.removeEventListener('scroll', checkBottom);
-      cleanComments();
-    };
+    if (!useOwnOnScroll) {
+      document.addEventListener('scroll', checkBottom);
+      // Remove the EventListener
+      return () => {
+        // Destroy
+        setCurrentNOfComments(0);
+        document.removeEventListener('scroll', checkBottom);
+        cleanComments();
+      };
+    }
+    return () => {};
   }, [objectId]);
 
   // After UseEffect function declarations
@@ -94,7 +98,7 @@ function CommentComponent({
    * @description passed fn. to CommentSection (Check component for more information).
    */
   function commentSubmit(user, _, txt) {
-    comment(user, txt, objectId, pathname, name);
+    comment(user, txt, objectId, pathname, name, answer);
   }
 
   return (
@@ -135,12 +139,16 @@ CommentComponent.propTypes = {
   }),
   numberOfCommentsAdd: PropTypes.number,
   paddingIfNotLoaded: PropTypes.bool,
+  useOwnOnScroll: PropTypes.bool,
+  answer: PropTypes.bool,
 };
 
 CommentComponent.defaultProps = {
   comments: [],
   numberOfCommentsAdd: 20,
   paddingIfNotLoaded: false,
+  useOwnOnScroll: false,
+  answer: false,
 };
 
 export default withRouter(
