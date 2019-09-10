@@ -92,7 +92,8 @@ router.post(
         text,
         {
           // TODO ATTENTION: Maybe add param: comment_id?
-          objId: commentSaved._id,
+          commentId: commentSaved._id,
+          objId: objectId,
           pathname,
           name,
         },

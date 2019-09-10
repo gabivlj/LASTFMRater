@@ -6,18 +6,43 @@ import { notifyNormality, notifyError } from './notifyActions';
 import goImage from '../utils/goImage';
 import uploadImageRoute from '../utils/uploadImageRoute';
 
+export const likeAlbum = id => async dispatch => {
+  const [response, err] = await handleError(
+    axios.post(`/api/album/loved/${id}`),
+  );
+  if (err) {
+    return dispatch(notifyError('Error liking album'));
+  }
+  const { data } = response;
+  const { album } = data;
+  dispatch({
+    type: 'UPDATE_ALBUM',
+    payload: {
+      liked: album,
+    },
+  });
+  if (!album) return {};
+  const [res, error] = await handleError(
+    axios.get(`/api/album/recommend_like/${id}`),
+  );
+  if (error) return console.log(error);
+  console.log(res);
+};
+
 export const getAlbum = albumData => async dispatch => {
   if (albumData.mbid === '0') albumData.mbid = null;
-  const username = albumData.username
-    ? `?username=${albumData.username}&userId=${albumData.userId}&mbid=${albumData.mbid}`
-    : '';
+  console.log(albumData);
+  const username = albumData.username ? `?username=${albumData.username}` : '?';
+  const userId = `&userId=${albumData.userId}&mbid=${albumData.mbid}`;
 
   axios
-    .get(`/api/album/${albumData.albumname}/${albumData.artist}${username}`)
+    .get(
+      `/api/album/${albumData.albumname}/${albumData.artist}${username}${userId}`,
+    )
     .then(res => {
       dispatch({
         type: 'GET_ALBUM',
-        payload: res.data
+        payload: res.data,
       });
     })
     .catch(err => console.log(err));
@@ -27,7 +52,7 @@ export const addAlbumRating = (
   albumId,
   puntuation,
   username,
-  userid
+  userid,
 ) => dispatch => {
   const infoToSendToApi = { puntuation, userid: username };
 
@@ -36,7 +61,7 @@ export const addAlbumRating = (
     .then(res => {
       dispatch({
         type: 'ADD_ALBUM',
-        payload: res.data
+        payload: res.data,
       });
     })
     .catch(err => console.log(err));
@@ -46,7 +71,7 @@ export const addAlbumRating = (
       dispatch(notifyNormality('Rating added!', 1500));
       dispatch({
         type: 'SET_RATING_USER',
-        payload: res.data
+        payload: res.data,
       });
     })
     .catch(err => console.log(err));
@@ -54,18 +79,18 @@ export const addAlbumRating = (
 
 export const addComment = (user, album, text) => async dispatch => {
   const [response, error] = await handleError(
-    axios.post(`/api/album/comment/${album}`, { text, username: user })
+    axios.post(`/api/album/comment/${album}`, { text, username: user }),
   );
   if (error) {
     return dispatch({
-      type: 'ERROR_ADDING_COMMENT_ALBUM'
+      type: 'ERROR_ADDING_COMMENT_ALBUM',
     });
   }
   const { data } = response;
   const comments = mapLikesDislikes(data.comments);
   return dispatch({
     type: 'ADD_COMMENT_ALBUM',
-    payload: { comments }
+    payload: { comments },
   });
 };
 
@@ -77,14 +102,16 @@ export const addComment = (user, album, text) => async dispatch => {
 export const likeComment = (
   albumId,
   commentId,
-  fastIndex
+  fastIndex,
 ) => async dispatch => {
   const [response, error] = await handleError(
-    axios.post(`/api/album/comment/like/${albumId}/${commentId}`, { fastIndex })
+    axios.post(`/api/album/comment/like/${albumId}/${commentId}`, {
+      fastIndex,
+    }),
   );
   if (error) {
     dispatch({
-      type: 'ERROR_LIKING_COMMENT'
+      type: 'ERROR_LIKING_COMMENT',
     });
   }
   const { data } = response;
@@ -94,8 +121,8 @@ export const likeComment = (
     // Maybe generalize this ??
     type: 'ADD_COMMENT_ALBUM',
     payload: {
-      comments
-    }
+      comments,
+    },
   });
 };
 
@@ -111,9 +138,9 @@ export const uploadImage = (file, id) => async dispatch => {
     dispatch,
     images => ({
       type: 'UPDATE_ALBUM',
-      payload: { images }
+      payload: { images },
     }),
-    data
+    data,
   );
   return _;
 };

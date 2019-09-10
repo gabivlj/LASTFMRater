@@ -45,7 +45,7 @@ function CommentDialog({
         timeoutForLoading = true;
         setTimeout(() => {
           timeoutForLoading = false;
-        }, 1000);
+        }, 2000);
         // Update.
         return prev + numberOfCommentsAdd;
       });
