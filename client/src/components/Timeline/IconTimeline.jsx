@@ -10,7 +10,7 @@ export default function IconTimeline({ type }) {
     height: '35px',
     marginTop: '5.8px',
     marginLeft: '17.5px',
-    color: '#4263f5'
+    color: '#4263f5',
   };
   if (type === activityTypes.COMMENT) return <CommentIcon style={iconStyles} />;
   if (

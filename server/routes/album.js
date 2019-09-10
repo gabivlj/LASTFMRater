@@ -77,17 +77,20 @@ router.get(
         mongoQueries.aggregations.user.getMostPrestigiousUsers(params.id),
       ),
     );
+    if (err) return console.log(err);
     const recommendedAlbums = [];
-    for (const userElement of album[0].users) {
-      for (const album of userElement.likedAlbums) {
+    for (const userElement of album[0].users || []) {
+      for (const album of userElement.likedAlbums || []) {
         const { k, v } = album;
-        if (!user.likedAlbums[k]) {
-          recommendedAlbums.push({ [k]: v });
-          break;
+        if (v) {
+          if (!user.likedAlbums[k]) {
+            recommendedAlbums.push({ [k]: v });
+            break;
+          }
         }
       }
     }
-    if (err) return console.log(err);
+
     return res.json({ albums: recommendedAlbums });
   },
 );
@@ -178,6 +181,7 @@ router.post(
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
   const { username, userId, mbid } = req.query;
+  console.log(userId);
   const AlbumData = {
     albumname: req.params.albumname,
     username,
@@ -214,6 +218,8 @@ router.get('/:albumname/:artistname', async (req, res) => {
     albumFM.__v = albumDB.__v;
     albumFM.images = albumDB.images;
     albumFM.lastfmSource = albumDB.lastfmSource;
+    console.log(userId);
+    albumFM.liked = !!(albumDB.usersLiked ? albumDB.usersLiked[userId] : false);
     return res.json({ album: albumFM });
   }
   const album = await Album.findOne({
@@ -312,10 +318,13 @@ router.post(
         },
       );
     }
-    res.json({ user, album });
+    console.log(album);
+    console.log('????', album.usersLiked[user._id]);
+    res.json({ album: !!album.usersLiked[user._id] });
     const [err, [userSaved, albumSaved]] = await handleError(
       Promise.all([updatedAlbum, updatedUser]),
     );
+    return [userSaved, albumSaved];
   },
 );
 

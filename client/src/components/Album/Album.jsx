@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress, IconButton } from '@material-ui/core';
 import {
   getAlbum,
   addAlbumRating,
   addComment,
-  likeComment
+  likeComment,
+  likeAlbum,
 } from '../../actions/albumActions';
 import store from '../../store';
 import hourFormat from '../../utils/hourFormat';
 import RatingsCommon from '../Common/RatingsCommon';
 import { Link } from 'react-router-dom';
 import CommentComponent from '../CommentSection/Common/CommentComponent';
+import HeartBorderIcon from '@material-ui/icons/FavoriteBorder';
+import HeartIcon from '@material-ui/icons/Favorite';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
   album: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired
+  currentUser: PropTypes.object.isRequired,
 };
 
 class Album extends Component {
@@ -27,7 +30,7 @@ class Album extends Component {
     super(props);
     this.state = {
       artist: '',
-      album: null
+      album: null,
     };
 
     // There is a delay with this.setState that'd bug the componentDidUpdate()
@@ -36,15 +39,16 @@ class Album extends Component {
 
   componentWillUnmount() {
     store.dispatch({
-      type: 'CLEAR_ALBUM'
+      type: 'CLEAR_ALBUM',
     });
   }
 
   componentDidMount() {
     const { artist, albumname, mbid } = this.props.match.params;
     this.setState({
-      artist
+      artist,
     });
+    console.log(this.props.currentUser);
     this.props.getAlbum({
       artist,
       albumname,
@@ -53,14 +57,14 @@ class Album extends Component {
       username:
         this.props.currentUser && this.props.currentUser.lastfm
           ? this.props.currentUser.lastfm
-          : null
+          : null,
     });
   }
 
   componentDidUpdate() {
     if (!this.loadedAlbum && this.props.album.album) {
       this.setState({
-        album: this.props.album.album.album
+        album: this.props.album.album.album,
       });
       this.loadedAlbum = true;
     }
@@ -68,7 +72,7 @@ class Album extends Component {
 
   render() {
     let { album } = this.props;
-    const { currentUser, addComment, likeComment } = this.props;
+    const { currentUser, addComment, likeComment, likeAlbum } = this.props;
     if (album) album = album.album;
     if (album) album = album.album;
     let tracks;
@@ -88,7 +92,7 @@ class Album extends Component {
       ));
       duration = album.tracks.track.reduce(
         (total, current) => total + parseInt(current.duration),
-        0
+        0,
       );
     }
 
@@ -134,6 +138,21 @@ class Album extends Component {
                   }
                   elementId={album._id}
                 />
+
+                {album.liked ? (
+                  <IconButton style={{}} onClick={() => likeAlbum(album._id)}>
+                    <HeartIcon
+                      style={{ color: '#4263f5' }} //#bfe0f2
+                    ></HeartIcon>
+                  </IconButton>
+                ) : (
+                  <IconButton style={{}} onClick={() => likeAlbum(album._id)}>
+                    <HeartBorderIcon
+                      style={{ color: '#4263f5' }} //#bfe0f2
+                    ></HeartBorderIcon>
+                  </IconButton>
+                )}
+
                 <h5 className="mt-3 ">Track list:</h5>
                 <ul className="list-group mt-3 w-100">
                   {tracks && tracks.length > 0
@@ -152,19 +171,6 @@ class Album extends Component {
                 <br />
                 {/* TODO: We are cuerrently testing this component for reusable. */}
                 <div style={{ margin: '50px 0 20px 0' }}>
-                  {/* <CommentSection
-                    user={currentUser}
-                    addComment={addComment}
-                    comments={album.comments}
-                    likeComment={likeComment}
-                    dislikeComment={() => console.log("nope")}
-                    objectId={album._id}
-                  /> */}
-                  {/* <CommentShowcase
-                    comments={album.comments}
-                    objectId={album._id}
-                    type={'album'}
-                /> */}
                   <CommentComponent
                     objectId={album._id}
                     numberOfCommentsAdd={20}
@@ -184,9 +190,9 @@ class Album extends Component {
 const mapStateToProps = state => ({
   album: state.album,
   currentUser: state.auth.apiUser,
-  auth: state.auth
+  auth: state.auth,
 });
 export default connect(
   mapStateToProps,
-  { getAlbum, addAlbumRating, addComment, likeComment }
+  { getAlbum, addAlbumRating, addComment, likeComment, likeAlbum },
 )(Album);

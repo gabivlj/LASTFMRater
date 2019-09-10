@@ -41,11 +41,21 @@ function Gramp({ gramp, onClick }) {
       tabIndex={0}
       onClick={e => {
         if (type === activityTypes.COMMENT)
-          onClick({ _id: information.objId, text, image: srcImg, username });
+          onClick({
+            _id: information.commentId || information.objId,
+            text,
+            image: srcImg,
+            username,
+          });
       }}
       onKeyDown={e => {
         if (type === activityTypes.COMMENT)
-          onClick({ _id: information.objId, text, image: srcImg, username });
+          onClick({
+            _id: information.commentId || information.objId,
+            text,
+            image: srcImg,
+            username,
+          });
       }}
     >
       <div className="gramp-upper row">

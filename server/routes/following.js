@@ -21,6 +21,8 @@ router.post(
       const { user } = req;
       const index = user.followedAccounts.indexOf(id);
       //
+      if (!user.followedObject) user.followedObject = {};
+      if (!user.followersObject) user.followersObject = {};
       if (index < 0) {
         // const followed = [...user.followedAccounts, id];
         // user.followedAccounts = followed;
@@ -31,6 +33,10 @@ router.post(
           User.findById(id),
         );
         if (err) throw err;
+        if (!theUserItsGonnaFollow.followedObject)
+          theUserItsGonnaFollow.followedObject = {};
+        if (!theUserItsGonnaFollow.followersObject)
+          theUserItsGonnaFollow.followersObject = {};
         const newFollowers = [...theUserItsGonnaFollow.followers, userId];
         theUserItsGonnaFollow.followers = newFollowers;
         theUserItsGonnaFollow.followersObject[userId] = userId;
@@ -39,6 +45,7 @@ router.post(
         Activity.addSomethingActivity(
           Activity.createFollowedInformation(theUserItsGonnaFollow, user),
         );
+
         const followsUser = !!theUserItsGonnaFollow.followedObject[
           String(userId)
         ];
@@ -55,12 +62,18 @@ router.post(
       user.followedAccounts = followed;
       dontCareWaitingForSave(user, false);
       const [err, theUserItsGonnaFollow] = await handleError(User.findById(id));
+
       if (err) throw err;
+      if (!theUserItsGonnaFollow.followedObject)
+        theUserItsGonnaFollow.followedObject = {};
+      if (!theUserItsGonnaFollow.followersObject)
+        theUserItsGonnaFollow.followersObject = {};
       // We filter it out because we know he wanna unfollow.
       const newFollowers = theUserItsGonnaFollow.followers.filter(
         follower => String(follower) !== String(userId),
       );
       theUserItsGonnaFollow.followersObject[userId] = null;
+
       theUserItsGonnaFollow.followers = newFollowers;
       dontCareWaitingForSave(theUserItsGonnaFollow, false);
       const followsUser = !!theUserItsGonnaFollow.followedObject[
@@ -73,7 +86,7 @@ router.post(
         followsUser,
       });
     } catch (err) {
-      // console.log(err);
+      console.log(err);
       return res.status(404).json({ error: 'Error un/following the user...' });
     }
   },
