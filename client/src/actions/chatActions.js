@@ -161,6 +161,7 @@ export const receiveMessage = e => (dispatch, state) => {
       return dispatch(notifyNormality(`${username} connected!`));
     case 'NewGramp':
       // now we dispatch the new gramps perma noti.
+      dispatch({ type: 'NEW_GRAMPS', payload: true });
       return dispatch(notifyNormality(`SOCKET TESTING`));
     default:
       return null;

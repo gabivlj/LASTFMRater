@@ -2,6 +2,9 @@ import Axios from 'axios';
 import handleError from '../utils/handleError';
 import { notifyError, notifyNormality } from './notifyActions';
 
+export const setNewGramps = set => dispatch =>
+  dispatch({ type: 'NEW_GRAMPS', payload: set });
+
 export const loading = () => ({ type: 'LOADING_TIMELINE' });
 
 export const loadGramps = (beginning, end, restart) => async (
@@ -22,6 +25,7 @@ export const loadGramps = (beginning, end, restart) => async (
   const { gramps } = data;
   const grampsLengthBefore = store().timeline.gramps.length;
   if (restart) {
+    dispatch({ type: 'NEW_GRAMPS', payload: false });
     dispatch({ type: 'CLEAN_GRAMPS' });
   }
   if (grampsLengthBefore === gramps.length + grampsLengthBefore) {
