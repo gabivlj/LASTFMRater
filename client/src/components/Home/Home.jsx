@@ -14,6 +14,7 @@ function Home({ auth, loadGramps, timeline, setCommentOverlay }) {
       gramps={timeline.gramps}
       loaded={timeline.loaded}
       onClickGramp={setCommentOverlay}
+      newGramps={timeline.newGramps}
     />
   ) : (
     <div>

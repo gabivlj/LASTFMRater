@@ -10,6 +10,42 @@
   margin: 15px;
 }
 
+.hide-notification {
+  top: -500px;
+  z-index: 10;
+  right: 47.5%;
+  animation: HideNotificationFromBottom 1 .7s;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: fixed;
+}
+
+.new-gramp-notification {
+  top: 20px;
+  z-index: 10;
+  position: fixed;
+  animation: NotificationFromTop 1 .7s;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  right: 47.5%;
+}
+
+@keyframes HideNotificationFromBottom {
+  from {
+    top: 20px;
+  }
+  to {
+    top: -500px;
+  }
+}
+
+@keyframes NotificationFromTop {
+  from {
+    top: -3px;
+  }
+  to {
+    top: 20px;
+  }
+}
+
 .gramp:hover {
   background-color: #cccfdd;
   cursor: pointer;

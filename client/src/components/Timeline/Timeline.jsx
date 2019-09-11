@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { LinearProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Gramp from './Gramp';
+import NewGrampsNotif from './NewGrampsNotif';
 
 function Timeline({
   loadGramps,
@@ -10,6 +11,7 @@ function Timeline({
   updateOnScrollBot,
   updateOnScrollTop,
   onClickGramp,
+  newGramps,
 }) {
   // let timeoutForLoading = false;
   const ADDER_N_GRAMPS = 10;
@@ -62,6 +64,7 @@ function Timeline({
 
   return (
     <div style={{ paddingBottom: '300px' }}>
+      <NewGrampsNotif show={newGramps} />
       {loaded ? null : <LinearProgress />}
       <div className="row">
         <div className="col-md-4">...</div>
