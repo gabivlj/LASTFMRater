@@ -6,13 +6,13 @@ export const loading = () => ({ type: 'LOADING_TIMELINE' });
 
 export const loadGramps = (beginning, end, restart) => async (
   dispatch,
-  store
+  store,
 ) => {
   dispatch(loading());
   const [res, error] = await handleError(
     Axios.get('/api/profile/gramps', {
-      params: { beginning, end }
-    })
+      params: { beginning, end },
+    }),
   );
   if (error) {
     dispatch(notifyError('Error loading timeline!'));
@@ -27,27 +27,27 @@ export const loadGramps = (beginning, end, restart) => async (
   if (grampsLengthBefore === gramps.length + grampsLengthBefore) {
     dispatch({
       type: 'SET_GRAMPS',
-      payload: []
+      payload: [],
     });
     return dispatch(
-      notifyNormality('There are no more gramps for today :(', 2000)
+      notifyNormality('There are no more gramps for today :(', 2000),
     );
   }
   return dispatch({
     type: 'SET_GRAMPS',
-    payload: gramps
+    payload: gramps,
   });
 };
 
 export const loadProfileGramps = (beginning, end, restart) => async (
   dispatch,
-  store
+  store,
 ) => {
   dispatch(loading());
   const [res, error] = await handleError(
     Axios.get('/api/profile/gramps', {
-      params: { beginning, end }
-    })
+      params: { beginning, end },
+    }),
   );
   if (error) {
     dispatch(notifyError('Error loading timeline!'));
@@ -61,11 +61,11 @@ export const loadProfileGramps = (beginning, end, restart) => async (
   const grampsLengthBefore = store().timeline.gramps.length;
   if (grampsLengthBefore === gramps.length + grampsLengthBefore)
     return dispatch(
-      notifyNormality('There are no more gramps for today :(', 2000)
+      notifyNormality('There are no more gramps for today :(', 2000),
     );
   return dispatch({
     type: 'SET_GRAMPS',
-    payload: gramps
+    payload: gramps,
   });
 };
 

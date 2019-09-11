@@ -20,6 +20,7 @@ type ClientManager struct {
 	register   chan *Client
 	unregister chan *Client
 	friends    chan *Client
+	gramps     chan []string
 }
 
 var manager = ClientManager{
@@ -29,6 +30,7 @@ var manager = ClientManager{
 	clients:    make(map[*Client]bool),
 	clientsStr: make(map[string]uint16),
 	friends:    make(chan *Client),
+	gramps:     make(chan []string),
 }
 
 type ListOfFriends struct {
@@ -122,6 +124,24 @@ func (manager *ClientManager) start() {
 				case friends.connected <- mapFriends:
 				}
 			}
+		case followers := <-manager.gramps:
+			message := MessageChat{Type: "NewGramp"}
+			for _, id := range followers {
+				for client, ok := range manager.clients {
+					if !ok {
+						continue
+					}
+					if client.UserID == id {
+						bytesMessage, err := json.Marshal(message)
+						if err != nil {
+							continue
+						}
+						client.send <- bytesMessage
+						break
+					}
+				}
+			}
+
 		}
 	}
 }
@@ -233,6 +253,12 @@ func (c *Client) read() {
 			manager.friends <- c
 			continue
 			// When user gets followed.
+		case "NewGramp":
+			fmt.Println("HEY")
+			fmt.Println(msg.Friends)
+			// new activity for followers
+			manager.gramps <- msg.Friends
+			continue
 		case "UpdateFriendList":
 			c.friends = msg.Friends
 		case "Followed":
@@ -243,6 +269,5 @@ func (c *Client) read() {
 		}
 		finalMsg := &ChanMessage{message: msg, bytes: message}
 		manager.broadcast <- finalMsg
-
 	}
 }

@@ -1,5 +1,5 @@
 const socket = {
-  socket: null
+  socket: null,
 };
 
 export default socket;

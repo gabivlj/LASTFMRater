@@ -5,23 +5,23 @@ const { Schema } = mongoose;
 const ActivitySchema = new Schema({
   user: {
     ref: 'users',
-    type: Schema.Types.ObjectId
+    type: Schema.Types.ObjectId,
   },
   username: {
     type: String,
-    required: true
+    required: true,
   },
   type: {
     type: String,
-    required: true
+    required: true,
   },
   information: {
-    type: Object
+    type: Object,
   },
   date: {
     type: Date,
-    default: Date.now()
-  }
+    default: Date.now(),
+  },
 });
 
 module.exports = mongoose.model('activity', ActivitySchema);
