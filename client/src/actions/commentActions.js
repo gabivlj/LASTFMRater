@@ -2,6 +2,7 @@ import axios from 'axios';
 import CommentSection from '../classes/CommentSection';
 import handleError from '../utils/handleError';
 import { notifyError, notifySuccess } from './notifyActions';
+import SocketInstance from '../classes/SocketInstance';
 
 export const addComment = (type, user, id, text, userId) => dispatch => {
   CommentSection.addComment(dispatch, type, id, user || null, text, userId);
@@ -55,7 +56,7 @@ export const comment = (
   pathname,
   name,
   answer = false,
-) => async dispatch => {
+) => async (dispatch, store) => {
   if (!username || text === '' || !objectId || !pathname || !name) {
     return null;
   }
@@ -74,11 +75,17 @@ export const comment = (
       type: 'ERROR_COMMENTING',
     });
   }
+
   dispatch(notifySuccess('Comment succesfuly added!', 3000));
-  return dispatch({
+  dispatch({
     type: 'ADD_COMMENT',
     payload: res.data.comment,
   });
+  const { socket } = SocketInstance;
+  if (socket) {
+    socket.informOfGramps(store().auth.apiUser.followers);
+  }
+  return true;
 };
 
 export const getComments = (

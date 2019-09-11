@@ -99,11 +99,12 @@ class Activity {
           }
           return doAct;
         case this.ACTIVITIES.FOLLOWED_USER:
+          console.log(information);
           doAct = await ActivityModel.findOne({
             user,
             username,
             type,
-            information,
+            'information.followed.username': information.followed.username,
           });
           return !doAct;
         default:
@@ -151,11 +152,11 @@ class Activity {
       information: {
         followed: { id: userFollowed._id, username: userFollowed.username },
         follows: { id: userFollows._id, username: userFollows.username },
-        pathname,
+        pathname: null,
       },
       type: this.ACTIVITIES.FOLLOWED_USER,
-      user: userFollowed._id,
-      username: userFollowed.username,
+      user: userFollows._id,
+      username: userFollows.username,
     };
   }
 

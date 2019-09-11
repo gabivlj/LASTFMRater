@@ -12,8 +12,8 @@ class Socket {
           userId,
           message: 'Connected!',
           type: 'Open',
-          friends
-        })
+          friends,
+        }),
       );
     };
     this.socket.onclose = () => {};
@@ -24,7 +24,7 @@ class Socket {
   updateListOfFriends(listOfFriends) {
     const json = JSON.stringify({
       friends: listOfFriends,
-      type: 'UpdateFriendList'
+      type: 'UpdateFriendList',
     });
     this.socket.send(json);
   }
@@ -39,10 +39,19 @@ class Socket {
       message: msg,
       to,
       type: 'Message',
-      from: username
+      from: username,
     };
     const json = JSON.stringify(data);
     this.socket.send(json);
+  }
+
+  informOfGramps(followers) {
+    console.log(followers);
+    const data = JSON.stringify({
+      type: 'NewGramp',
+      friends: followers,
+    });
+    this.socket.send(data);
   }
 }
 
