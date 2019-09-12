@@ -32,6 +32,10 @@
 
 - Yes, of course!
 
+### Can I follow the development?
+
+- If you want to collaborate, contact me, but if you wanna check how is the development going (more or less), check the board on [Notion]('https://www.notion.so/f6eda5848a904825aa40831e7c5d37b5?v=5571f489d7924d9a84747816e48c0736')
+
 ## Credits:
 
 - Made by Gabriel Villalonga Simón
