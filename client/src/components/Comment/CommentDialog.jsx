@@ -25,7 +25,6 @@ function CommentDialog({
     // When scrolling to the bottom of the component, reload comments.
     let timeoutForLoading = false;
     return e => {
-      console.log(timeoutForLoading);
       if (
         e.target.scrollTop >=
           e.target.scrollHeight - e.target.clientHeight - 10 &&

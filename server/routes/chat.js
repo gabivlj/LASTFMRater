@@ -36,7 +36,8 @@ router.get(
       chatsResponse = chats.map((chat, index) => ({
         _id: chat._id,
         users: chat.users,
-        messages: chat.messages,
+        messages: chat.messages.slice(chat.messages.length - 1),
+        lastPerson: chat.lastPerson,
         images: profiles.filter(
           profile => String(profile._id) === String(users[index]),
         )[0].images,
@@ -85,16 +86,20 @@ router.post(
           [userIdFrom]: {
             id: userIdFrom,
             username: from.username,
-            notification: false,
+            notification: 0,
           },
           [userIdTo]: {
             id: userIdTo,
             username: to.username,
-            notification: true,
+            notification: 1,
           },
         },
         messages: [{ text, user: userIdFrom, username: from.username }],
         lastTalked: Date.now(),
+        lastPerson: {
+          notification: 1,
+          user: userIdFrom,
+        },
       });
       const newChat = await Ch.save();
       return res.json({ chat: newChat });
@@ -103,7 +108,16 @@ router.post(
       ...chat.messages,
       { text, user: userIdFrom, username: from.username },
     ];
-    chat.users[userIdTo].notification = true;
+    chat.lastPerson = {
+      notification:
+        chat.lastPerson &&
+        chat.lastPerson.notification &&
+        chat.lastPerson.user === userIdFrom
+          ? chat.lastPerson.notification + 1
+          : 1,
+      user: userIdFrom,
+    };
+    chat.users[userIdTo].notification += 1;
     chat.messages = msgs;
     chat.lastTalked = Date.now();
     dontCareWaitingForSave(chat, true);
@@ -113,9 +127,26 @@ router.post(
 
 // todo
 router.post(
-  '/deleteNotification',
+  '/cleanNotifications/:id',
   passport.authenticate('jwt', { session: false }),
-  async (req, res) => {},
+  (req, res) => {
+    Chat.findById(req.params.id)
+      .then(chat => {
+        if (!chat) res.status(404).json({ error: 'Chat not found.' });
+        chat.lastPerson.notification = 0;
+        chat
+          .save()
+          .then(saved => res.json({ success: true }))
+          .catch(err => {
+            console.log(err);
+            res.json({ success: false });
+          });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({ success: false });
+      });
+  },
 );
 
 router.get(

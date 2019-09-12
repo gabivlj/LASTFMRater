@@ -7,11 +7,18 @@ const styles = theme => ({
   root: {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: theme.palette.background.paper
-  }
+    backgroundColor: theme.palette.background.paper,
+  },
 });
 
-function Chats({ chats, loading, classes, setChatRoute, setChatInfo }) {
+function Chats({
+  chats,
+  loading,
+  classes,
+  setChatRoute,
+  setChatInfo,
+  username,
+}) {
   let chatsRender;
   if (chats) {
     chatsRender = chats.map(chat => (
@@ -20,6 +27,7 @@ function Chats({ chats, loading, classes, setChatRoute, setChatInfo }) {
         key={chat._id}
         setChatInfo={setChatInfo}
         setChatRoute={setChatRoute}
+        username={username}
       />
     ));
   }
