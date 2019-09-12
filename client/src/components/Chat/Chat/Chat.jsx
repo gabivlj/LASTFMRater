@@ -13,7 +13,7 @@ function Chat({ auth, chat, match, getChat, sendMessage }) {
       to: match.params.id,
       toUsername: chat.currentChatUsername,
       fromId: auth.id,
-      username: auth.user
+      username: auth.user,
     });
   }
   let messages;
@@ -37,13 +37,13 @@ function Chat({ auth, chat, match, getChat, sendMessage }) {
 
 const mapStateToProps = state => ({
   chat: state.chat,
-  auth: state.auth.apiUser
+  auth: state.auth.apiUser,
 });
 
 export default connect(
   mapStateToProps,
   {
     getChat,
-    sendMessage
-  }
+    sendMessage,
+  },
 )(Chat);

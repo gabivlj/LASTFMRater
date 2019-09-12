@@ -11,7 +11,7 @@ import {
   getChats,
   setChatRoute,
   setChatInfo,
-  getFriendsProfiles
+  getFriendsProfiles,
 } from '../../../actions/chatActions';
 import DialogMe from './Dialog/Dialog';
 import InputBorderline from '../../Common/InputBorderline';
@@ -33,7 +33,7 @@ function ChatDialog({
   open,
   setChatRoute,
   setChatInfo,
-  getFriendsProfiles
+  getFriendsProfiles,
 }) {
   // Variables
   const [routeBefore, setRouteBefore] = useState(ROUTES.CHATS);
@@ -109,7 +109,7 @@ function ChatDialog({
       to: chat.currentChatInfo.id,
       toUsername: chat.currentChatInfo.username,
       fromId: auth.id,
-      username: auth.user
+      username: auth.user,
     });
     setText('');
   }
@@ -185,12 +185,13 @@ function ChatDialog({
         propsRender={{
           messages,
           otherUser,
+          username: auth ? auth.id : '',
           chats: chat.chats,
           setChatRoute,
           setChatInfo,
           // Friendlist
           friends: friendList,
-          friendsConnected: chat.friendsConnected || {}
+          friendsConnected: chat.friendsConnected || {},
         }}
         isLoading={isLoading}
         renderActions={actions}
@@ -198,7 +199,14 @@ function ChatDialog({
         image={
           chat.route === ROUTES.CHAT && profileImg ? (
             <GoImage
-              style={{ height: '60px', width: '60px' }}
+              style={{
+                height: '60px',
+                width: '60px',
+                borderColor: chat.friendsConnected[chat.currentChatInfo.id]
+                  ? '#2bff8e'
+                  : 'grey',
+                borderWidth: '3.3px',
+              }}
               goImg={profileImg.go}
               src={profileImg.image}
               className="profileImage borderProfile mr-3"
@@ -218,7 +226,7 @@ function ChatDialog({
 
 const mapStateToProps = state => ({
   chat: state.chat,
-  auth: state.auth.apiUser
+  auth: state.auth.apiUser,
 });
 
 export default connect(
@@ -230,6 +238,6 @@ export default connect(
     getChats,
     setChatRoute,
     setChatInfo,
-    getFriendsProfiles
-  }
+    getFriendsProfiles,
+  },
 )(ChatDialog);
