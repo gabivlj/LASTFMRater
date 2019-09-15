@@ -26,13 +26,10 @@ router.get('/:id', async (req, res) => {
         date: -1,
       })
       .limit(parsedLimit);
+
     if (!commentSection) {
       return res.status(404).json({ error: 'Comment section not found.' });
     }
-    // #NOTE (GABI): Prob. slice with the Mongodb .project() ? Also the above it's not really optimal for performance
-    //                probably for the first 100 comments yes??? .limit().
-    // @https://stackoverflow.com/questions/46348860/nodejs-mongodb-perform-slice-operation-on-an-array-field
-    // @@ before:: commentSection = commentSection.slice(current, limit);
     const comments = commentSection.reduce((prev, comment) => {
       const commentP = {
         text: comment.text,

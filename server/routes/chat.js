@@ -52,6 +52,31 @@ router.get(
 );
 
 /**
+ * @description Get the sum of all the notifications
+ */
+
+router.get(
+  '/notificationSum',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { id } = req.user;
+    const [err, chats] = await handleError(
+      Chat.find({
+        [`users.${id}.id`]: id,
+      }),
+    );
+    if (err) {
+      return res.status(404).json({ error: 'Error finding chat.' });
+    }
+    const notificationSum = chats.reduce((prev, chat) => {
+      if (chat.lastPerson && chat.lastPerson.user !== id) return prev + 1;
+      return prev;
+    }, 0);
+    return res.json({ notificationSum });
+  },
+);
+
+/**
  * @description Route for adding a message to a chat, if it doesn't exists, it creates it.
  */
 router.post(
@@ -62,7 +87,6 @@ router.post(
     const { text, from, to } = req.body;
     const userIdFrom = from._id;
     const userIdTo = to._id;
-    // todo: check if both of the users follow each other.
     const [err, chat] = await handleError(
       Chat.findOne({
         [`users.${userIdFrom}.id`]: userIdFrom,

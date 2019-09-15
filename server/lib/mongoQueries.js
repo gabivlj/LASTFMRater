@@ -4,6 +4,46 @@ const { ObjectId } = mongoose.Types;
 
 const mongoQueries = {
   aggregations: {
+    commentSection: {
+      getComments: objectId => [
+        {
+          $match: { objectId },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'username',
+            foreignField: 'username',
+            as: 'userFull',
+          },
+        },
+        {
+          $addFields: {
+            userImages: {
+              $map: {
+                input: '$userFull',
+                as: 'userF',
+                in: {
+                  images: '$$userF.images',
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            text: 1,
+            username: 1,
+            user: 1,
+            likes: 1,
+            dislikes: 1,
+            date: 1,
+            objectId: 1,
+            userImages: { $arrayElemAt: ['$userImages', 0] },
+          },
+        },
+      ],
+    },
     user: {
       /**
        * @description gets the users that liked the album
