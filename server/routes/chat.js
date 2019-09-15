@@ -69,7 +69,12 @@ router.get(
       return res.status(404).json({ error: 'Error finding chat.' });
     }
     const notificationSum = chats.reduce((prev, chat) => {
-      if (chat.lastPerson && chat.lastPerson.user !== id) return prev + 1;
+      if (
+        chat.lastPerson &&
+        chat.lastPerson.user &&
+        String(chat.lastPerson.user) !== String(id)
+      )
+        return prev + chat.lastPerson.notification;
       return prev;
     }, 0);
     return res.json({ notificationSum });
@@ -132,15 +137,17 @@ router.post(
       ...chat.messages,
       { text, user: userIdFrom, username: from.username },
     ];
+    console.log(chat.lastPerson, userIdFrom);
     chat.lastPerson = {
       notification:
         chat.lastPerson &&
         chat.lastPerson.notification &&
-        chat.lastPerson.user === userIdFrom
+        String(chat.lastPerson.user) === String(userIdFrom)
           ? chat.lastPerson.notification + 1
           : 1,
       user: userIdFrom,
     };
+    console.log(chat.lastPerson);
     chat.users[userIdTo].notification += 1;
     chat.messages = msgs;
     chat.lastTalked = Date.now();

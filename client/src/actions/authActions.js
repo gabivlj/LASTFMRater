@@ -3,17 +3,18 @@ import axios from 'axios';
 import User from '../classes/User';
 import Auth, {
   deleteAuthTokenAxios,
-  deleteAuthTokenFromLS
+  deleteAuthTokenFromLS,
 } from '../utils/Auth';
 import { notifyError, notifyNormality } from './notifyActions';
 import handleError from '../utils/handleError';
 import socket from '../classes/SocketInstance';
+import { getNotificationsSum } from './chatActions';
 
 export const logOut = () => dispatch => {
   Auth.LogOut();
   dispatch({
     type: 'SET_API_USER',
-    payload: {}
+    payload: {},
   });
 };
 
@@ -24,7 +25,7 @@ export const setUser = (
   token,
   username,
   history = null,
-  typeoflogin = null
+  typeoflogin = null,
 ) => async dispatch => {
   axios
     .post(`/api/user/${token}`, { username })
@@ -44,7 +45,7 @@ export const getUser = () => {
     if (error) return reject(error);
     return resolve({
       type: 'SET_API_USER',
-      payload: user.data
+      payload: user.data,
     });
   });
 };
@@ -57,20 +58,26 @@ export const logFromSession = () => async dispatch => {
   }
   dispatch({
     type: 'SET_API_USER',
-    payload: user
+    payload: user,
   });
   const [res, err] = await handleError(getUser());
   if (err) {
     dispatch({
       type: 'SET_API_USER',
-      payload: null
+      payload: null,
     });
     Auth.LogOut();
     dispatch(notifyError('Error retrieving updated data.'));
     return;
   }
-  // socket.socket.updateListOfFriends(res.payload.listOfFriends);
   dispatch(res);
+  const [notificationsNumberDispatched] = await handleError(
+    getNotificationsSum(),
+  );
+  dispatch({
+    type: 'SET_TOTAL_NOTIFICATIONS',
+    payload: notificationsNumberDispatched,
+  });
 };
 
 export const logIn = user_ => async dispatch => {
@@ -80,14 +87,14 @@ export const logIn = user_ => async dispatch => {
     // dispatch error
     dispatch({
       type: 'SET_ERRORS_LOGIN',
-      payload: user.error.errors
+      payload: user.error.errors,
     });
     return;
   }
   dispatch(notifyNormality('Welcome to Grampy!'), 3000);
   dispatch({
     type: 'SET_API_USER',
-    payload: user
+    payload: user,
   });
   const [res, error] = await handleError(getUser());
   if (error) {
@@ -101,15 +108,15 @@ export const register = (
   password,
   password2,
   username,
-  history
+  history,
 ) => async dispatch => {
   const [, error] = await handleError(
     axios.post('/api/user/auth/register', {
       email,
       password,
       password2,
-      username
-    })
+      username,
+    }),
   );
   if (!error) {
     dispatch(notifyNormality('Account created succesfuly! Log in!', 3000));
@@ -119,7 +126,7 @@ export const register = (
   console.log(error);
   dispatch({
     type: 'SET_ERRORS_REGISTER',
-    payload: error.response.data
+    payload: error.response.data,
   });
 };
 
@@ -134,7 +141,7 @@ export const setUsersArtists = name => dispatch => {
       .then(res => {
         dispatch({
           type: 'SET_USER_ARTISTS',
-          payload: res.data
+          payload: res.data,
         });
       })
       .catch(err => console.log(err.response.data));

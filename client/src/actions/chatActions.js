@@ -54,15 +54,29 @@ export const sendMessage = ({
       payload: res.data.chat,
     });
   }
-  // now we don't use this snippet because we do it on the receiveMessage itself.
-  // } else {
-  //   dispatch({
-  //     type: 'SEND_MESSAGE',
-  //     payload: res.data.chat.messages[res.data.chat.messages.length - 1]
-  //   });
-  // }
 
   return dispatch(notifySuccess('Message sent succesfuly...', 1000));
+};
+
+/**
+ * @description API call to get the notification sum
+ * @returns {Number}, numberOfNotifications
+ */
+export const getNotificationsSum = () => {
+  return new Promise(async (resolve, reject) => {
+    const [res, err] = await handleError(
+      Axios.get(`/api/chat/notificationSum`),
+    );
+    if (err) {
+      return reject(err);
+    }
+    const { notificationSum } = res.data;
+    if (!notificationSum)
+      return reject(
+        new Error('Bad request, didnt return notificationSum param.'),
+      );
+    return resolve(notificationSum);
+  });
 };
 
 export const getChat = (otherId, get = '') => async dispatch => {
@@ -126,7 +140,11 @@ export const receiveMessage = e => (dispatch, state) => {
     case 'Message':
       if (userId !== id)
         dispatch(notifyNormality(`${message} from ${from}`), 10000);
-      return dispatch({
+      dispatch({
+        type: 'ADD_TOTAL_NOTIFICATIONS',
+        payload: 1,
+      });
+      dispatch({
         type: 'RECEIVE_MESSAGE',
         payload: {
           chat: {
@@ -135,6 +153,13 @@ export const receiveMessage = e => (dispatch, state) => {
             provisionalId: uuid(),
           },
           from: userId,
+        },
+      });
+      return dispatch({
+        type: 'UPDATE_CHAT_LIST',
+        payload: {
+          user: userId,
+          message: { text: message, username: from, user: userId },
         },
       });
     case 'ListOfFriends':
