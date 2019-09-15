@@ -17,10 +17,10 @@ module.exports = async function addTrack(duration, name, artist, album, Track) {
       duration,
       name,
       artist,
-      album
+      album,
     };
     const [error, mongoTrack] = await handleError(
-      Track.findOne({ name, artist })
+      Track.findOne({ name, artist }),
     );
     if (error) reject(error);
     if (!mongoTrack) {

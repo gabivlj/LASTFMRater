@@ -202,9 +202,11 @@ function ChatDialog({
               style={{
                 height: '60px',
                 width: '60px',
-                borderColor: chat.friendsConnected[chat.currentChatInfo.id]
-                  ? '#2bff8e'
-                  : 'grey',
+                borderColor:
+                  chat.friendsConnected &&
+                  chat.friendsConnected[chat.currentChatInfo.id]
+                    ? '#2bff8e'
+                    : 'grey',
                 borderWidth: '3.3px',
               }}
               goImg={profileImg.go}

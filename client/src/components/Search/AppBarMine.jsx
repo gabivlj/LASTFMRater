@@ -18,24 +18,24 @@ const style = theme => ({
   text: {
     paddingTop: theme.spacing.unit * 2,
     paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2
+    paddingRight: theme.spacing.unit * 2,
   },
   paper: {
-    paddingBottom: 50
+    paddingBottom: 50,
   },
   list: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
   },
   subHeader: {
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   appBar: {
     top: 'auto',
-    bottom: 0
+    bottom: 0,
   },
   toolbar: {
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   fabButton: {
     position: 'absolute',
@@ -43,8 +43,8 @@ const style = theme => ({
     top: -30,
     left: 0,
     right: 0,
-    margin: '0 auto'
-  }
+    margin: '0 auto',
+  },
 });
 
 class AppBarMine extends Component {
@@ -52,7 +52,7 @@ class AppBarMine extends Component {
     super(props);
     this.state = {
       extended: false,
-      valueSearch: ''
+      valueSearch: '',
     };
   }
 
@@ -68,7 +68,6 @@ class AppBarMine extends Component {
             {this.state.valueSearch.length > 0 ? (
               <LoadList
                 searchValue={this.state.valueSearch}
-                // TODO: DEXTEND WITH EASE IN OUT
                 className={this.state.extended ? 'search' : 'byeWidth'}
               />
             ) : null}
