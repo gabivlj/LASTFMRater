@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Comment from './Comment';
@@ -32,7 +33,7 @@ function CommentSection({
 
   const commentsRender = comments
     ? comments.map((comment, index) => (
-        <Comment
+      <Comment
         key={comment._id}
         user={comment.username}
         text={comment.text}
