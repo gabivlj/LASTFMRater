@@ -10,6 +10,7 @@ const router = express.Router();
 const CommentLib = require('../classes/Comment');
 const Comment = require('../models/Comment');
 const Activity = require('../classes/Activity');
+const mongoQuery = require('../lib/mongoQueries');
 
 /**
  * @GET
@@ -19,14 +20,21 @@ const Activity = require('../classes/Activity');
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const { current = 0, limit = 50, userId } = req.query;
-  const parsedLimit = parseInt(limit, 10);
+  const parsedLimit = parseInt(limit, 10) || 20;
+  console.log(parsedLimit);
   try {
-    const commentSection = await Comment.find({ objectId: id })
+    // const commentSection = await Comment.find({ objectId: id })
+    //   .sort({
+    //     date: -1,
+    //   })
+    //   .limit(parsedLimit);
+    const commentSection = await Comment.aggregate(
+      mongoQuery.aggregations.commentSection.getComments(id),
+    )
       .sort({
         date: -1,
       })
       .limit(parsedLimit);
-
     if (!commentSection) {
       return res.status(404).json({ error: 'Comment section not found.' });
     }
@@ -36,6 +44,7 @@ router.get('/:id', async (req, res) => {
         username: comment.username,
         user: comment.user,
         objectId: comment.objectId,
+        images: comment.userImages.images || [],
         __v: comment.__v,
         likes: parseInt(comment.likes.length, 10),
         dislikes: parseInt(comment.dislikes.length, 10),

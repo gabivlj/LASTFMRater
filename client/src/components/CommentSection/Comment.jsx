@@ -14,7 +14,7 @@ function Comment({
   loged,
   text,
   liked,
-  disliked
+  disliked,
 }) {
   const disabled = loged == null;
   const red = '#f23077';
@@ -26,7 +26,11 @@ function Comment({
     <div className="comment">
       <div className="row">
         <div className="col-md-4">
-          <img src={img} alt="Profile" className="comment-image" />
+          <img
+            src={img || ProfileImage}
+            alt="Profile"
+            className="comment-image"
+          />
         </div>
         <div className="col-md-8">
           <h3>{user}</h3>
@@ -55,14 +59,14 @@ Comment.propTypes = {
   dislike: PropTypes.func.isRequired,
   user: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
-  likes: PropTypes.number.isRequired
+  likes: PropTypes.number.isRequired,
 };
 
 Comment.defaultProps = {
   img: ProfileImage,
   loged: null,
   liked: false,
-  disliked: false
+  disliked: false,
 };
 
 export default Comment;

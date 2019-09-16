@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
+import linksHttp from '../../utils/links.http';
 
 function CommentSection({
   user,
@@ -9,7 +10,7 @@ function CommentSection({
   comments,
   likeComment,
   dislikeComment,
-  objectId
+  objectId,
 }) {
   function onLike(commentId, fastIndex) {
     return () => {
@@ -39,7 +40,13 @@ function CommentSection({
         loged={user}
         like={onLike(comment._id, index)}
         dislike={onDislike(comment._id, index)}
-        img={comment.img}
+        img={
+            comment.images && comment.images[0]
+              ? `${linksHttp.GO_IMAGE}/api/image/${
+                  comment.images[0].md.split('.')[0]
+                }`
+              : null
+          }
         liked={comment.liked}
         disliked={comment.disliked}
       />
@@ -61,11 +68,11 @@ CommentSection.propTypes = {
   dislikeComment: PropTypes.func.isRequired,
   comments: PropTypes.array.isRequired,
   // Object related id.
-  objectId: PropTypes.string.isRequired
+  objectId: PropTypes.string.isRequired,
 };
 
 CommentSection.defaultProps = {
-  user: null
+  user: null,
 };
 
 export default CommentSection;

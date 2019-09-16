@@ -34,6 +34,7 @@ function CommentComponent({
   paddingIfNotLoaded,
   useOwnOnScroll,
   answer,
+  preloadSomeComments,
 }) {
   // Redux refactoring.
   const userId = auth.apiUser ? auth.apiUser.id : null;
@@ -45,6 +46,20 @@ function CommentComponent({
 
   // UseEffect
   useEffect(() => {
+    if (preloadSomeComments) {
+      setLoading();
+      // We do the update of the comments here because otherwise I don't know how we will get the prev value.
+      setCurrentNOfComments(prev => {
+        getComments(objectId, 0, prev + numberOfCommentsAdd, userId);
+        // Tell the browser not to load again in 3s.
+        timeoutForLoading = true;
+        setTimeout(() => {
+          timeoutForLoading = false;
+        }, 1000);
+        // Update.
+        return prev + numberOfCommentsAdd;
+      });
+    }
     function checkBottom() {
       // When scrolling to the bottom of the component, reload comments.
       if (
@@ -141,6 +156,7 @@ CommentComponent.propTypes = {
   paddingIfNotLoaded: PropTypes.bool,
   useOwnOnScroll: PropTypes.bool,
   answer: PropTypes.bool,
+  preloadSomeComments: PropTypes.bool,
 };
 
 CommentComponent.defaultProps = {
@@ -149,6 +165,7 @@ CommentComponent.defaultProps = {
   paddingIfNotLoaded: false,
   useOwnOnScroll: false,
   answer: false,
+  preloadSomeComments: true,
 };
 
 export default withRouter(

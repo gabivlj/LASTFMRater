@@ -4,7 +4,7 @@ const initialState = {
   isLoading: false,
   playlist: {},
   sending: false,
-  currentDragTrack: {}
+  currentDragTrack: {},
 };
 
 const filterDelete = (tracks, trackid, index = null) => {
@@ -15,7 +15,7 @@ const filterDelete = (tracks, trackid, index = null) => {
   }
   return [
     ...tracks.slice(0, realIndex),
-    ...tracks.slice(realIndex + 1, tracks.length)
+    ...tracks.slice(realIndex + 1, tracks.length),
   ];
 };
 
@@ -24,22 +24,22 @@ export default (state = initialState, action) => {
     case 'SENDING_PLAYLIST':
       return {
         ...state,
-        sending: !state.sending
+        sending: !state.sending,
       };
     case 'ERROR_PLAYLIST':
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
       };
     case 'SUCCESFUL_API_CALL_PLAYLIST':
       return {
         ...state,
-        sending: false
+        sending: false,
       };
     case 'ADD_TRACK_PLAYLIST':
       return {
         ...state,
-        addedTracks: [...state.addedTracks, action.payload]
+        addedTracks: [...state.addedTracks, action.payload],
       };
     case 'REMOVE_TRACK_PLAYLIST':
       const indexOf = state.addedTracks
@@ -49,28 +49,28 @@ export default (state = initialState, action) => {
         ...state,
         addedTracks: [
           ...state.addedTracks.slice(0, indexOf),
-          ...state.addedTracks.slice(indexOf + 1, state.addedTracks.length)
-        ]
+          ...state.addedTracks.slice(indexOf + 1, state.addedTracks.length),
+        ],
       };
     case 'SEARCH_TRACK_PLAYLIST':
       return {
         ...state,
-        searchedTracks: [...action.payload]
+        searchedTracks: [...action.payload],
       };
     case 'CLEAN_TRACK_SEARCH_PLAYLIST':
       return {
         ...state,
-        searchedTracks: []
+        searchedTracks: [],
       };
     case 'SET_IS_LOADING_PLAYLIST_SEARCH':
       return {
         ...state,
-        isLoading: !state.isLoading
+        isLoading: !state.isLoading,
       };
     case 'SET_PLAYLIST':
       return {
         ...state,
-        playlist: action.payload
+        playlist: action.payload,
       };
     case 'DELETE_TRACK_FROM_PLAYLIST':
       return {
@@ -81,11 +81,26 @@ export default (state = initialState, action) => {
             ...filterDelete(
               state.playlist.tracksShow,
               action.payload.trackId,
-              action.payload.index
-            )
+              action.payload.index,
+            ),
           ],
-          tracks: [...action.payload.tracks]
-        }
+          tracks: [...action.payload.tracks],
+        },
+      };
+    case 'DELETE_TRACK_REAFIRM':
+      return {
+        ...state,
+        playlist: {
+          ...state.playlist,
+          // tracksShow: [
+          //   ...filterDelete(
+          //     state.playlist.tracksShow,
+          //     action.payload.trackId,
+          //     action.payload.index,
+          //   ),
+          // ],
+          tracks: [...action.payload.tracks],
+        },
       };
     case 'ADD_TRACK_PLAYLIST_EDIT':
       return {
@@ -93,15 +108,15 @@ export default (state = initialState, action) => {
         playlist: {
           ...state.playlist,
           tracksShow: [...state.playlist.tracksShow, action.payload.newTrack],
-          tracks: [...state.playlist.tracks, action.payload.newTrack._id]
-        }
+          tracks: [...state.playlist.tracks, action.payload.newTrack._id],
+        },
       };
     case 'SET_CURRENT_TRACK_DRAG':
       return {
         ...state,
         currentDragTrack: {
-          ...action.payload
-        }
+          ...action.payload,
+        },
       };
     case 'SET_TRACKS':
       return {
@@ -109,8 +124,8 @@ export default (state = initialState, action) => {
         playlist: {
           ...state.playlist,
           tracksShow: [...action.payload.tracksForShowing],
-          tracks: [...action.payload.tracksId]
-        }
+          tracks: [...action.payload.tracksId],
+        },
       };
     case 'ADD_PLAYLIST_RATING':
       return {
@@ -118,24 +133,24 @@ export default (state = initialState, action) => {
         playlist: {
           ...state.playlist,
           __v: action.payload.__v,
-          ratings: [...action.payload.rating]
-        }
+          ratings: [...action.payload.rating],
+        },
       };
     case 'ADD_COMMENT_PLAYLIST':
       return {
         ...state,
         playlist: {
           ...state.playlist,
-          comments: [...action.payload.comments]
-        }
+          comments: [...action.payload.comments],
+        },
       };
     case 'LIKE_COMMENT_PLAYLIST':
       return {
         ...state,
         playlist: {
           ...state.playlist,
-          comments: [...action.payload.comments]
-        }
+          comments: [...action.payload.comments],
+        },
       };
     case 'CLEAN_PLAYLIST':
       return {
@@ -145,11 +160,11 @@ export default (state = initialState, action) => {
         isLoading: false,
         playlist: {},
         sending: false,
-        currentDragTrack: {}
+        currentDragTrack: {},
       };
     default:
       return {
-        ...state
+        ...state,
       };
   }
 };
