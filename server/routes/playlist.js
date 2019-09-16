@@ -40,7 +40,7 @@ router.get(
         res.json({ playlists: playlist });
       })
       .catch(err => res.status(400).json({ error: 'Error finding playlists' }));
-  }
+  },
 );
 
 /**
@@ -62,7 +62,7 @@ router.post(
     }
     try {
       tracks = tracks.map(track =>
-        addTrack(track.duration, track.name, track.artist, track.album, Track)
+        addTrack(track.duration, track.name, track.artist, track.album, Track),
       );
       tracks = await Promise.all(tracks);
       const playlist = new Playlist({
@@ -70,14 +70,14 @@ router.post(
         playlistName,
         playlistDescription,
         playlistCover,
-        tracks
+        tracks,
       });
       const __ = await playlist.save();
       return res.json({ playlist: __ });
     } catch (err) {
       return res.status(404).json('Error posting the playlist');
     }
-  }
+  },
 );
 
 /**
@@ -92,13 +92,13 @@ router.post('/:id', async (req, res) => {
     duration,
     name,
     artist,
-    album
+    album,
   };
   // Make a simple check if the fields are all correct.
   if (!name || !artist)
     return res.status(400).json({
       error:
-        'Not all the fields are filled in, please make sure that you are passing everything right or there are no errors in the front end'
+        'Not all the fields are filled in, please make sure that you are passing everything right or there are no errors in the front end',
     });
 
   try {
@@ -115,7 +115,7 @@ router.post('/:id', async (req, res) => {
         track.name,
         track.artist,
         track.album,
-        Track
+        Track,
       );
       pl.tracks.push(trackMongo._id);
       const finalPlaylist_ = await pl.save();
@@ -159,15 +159,15 @@ router.post(
         if (index >= 0)
           playlistToEdit.tracks = [
             ...playlistToEdit.tracks.slice(0, index),
-            ...playlistToEdit.tracks.slice(index + 1, playlistToEdit.length)
+            ...playlistToEdit.tracks.slice(index + 1, playlistToEdit.length),
           ];
       } else {
         playlistToEdit.tracks = [
           ...playlistToEdit.tracks.slice(0, indexToDeleteFrom),
           ...playlistToEdit.tracks.slice(
             indexToDeleteFrom + 1,
-            playlistToEdit.length
-          )
+            playlistToEdit.length,
+          ),
         ];
       }
       playlistToEdit
@@ -180,7 +180,7 @@ router.post(
         .status(404)
         .json({ error: 'Bug with the system', message: err });
     }
-  }
+  },
 );
 
 /**
@@ -203,7 +203,7 @@ router.post(
     const { playlistId } = req.body;
     const { tracksShow } = req.body;
     const [error, playlist] = await handleError(
-      Playlist.findOne({ _id: playlistId })
+      Playlist.findOne({ _id: playlistId }),
     );
     if (error) {
       return res
@@ -219,7 +219,7 @@ router.post(
             [...prev, tracksShow[index1], current]
           : // If the index1 is equal to index, don't add the track, else do it because it's not the track we are filtering out.
             ifIndexEqualsAdd(index, index1, prev, current),
-      []
+      [],
     );
 
     // TODO. Or make this a map lol.
@@ -228,17 +228,17 @@ router.post(
         index === parseInt(indexToSet, 10)
           ? [...prev, playlist.tracks[index1], current]
           : ifIndexEqualsAdd(index, index1, prev, current),
-      []
+      [],
     );
     playlist
       .save()
       .then(pl =>
-        res.json({ tracksId: pl.tracks, tracksForShowing: tracksShowReduced })
+        res.json({ tracksId: pl.tracks, tracksForShowing: tracksShowReduced }),
       )
       .catch(err =>
-        res.status(404).json({ error: 'Error with server', msg: err })
+        res.status(404).json({ error: 'Error with server', msg: err }),
       );
-  }
+  },
 );
 
 router.post(
@@ -249,7 +249,7 @@ router.post(
     const { playlistId } = req.body;
     const { tracksShow } = req.body;
     const [error, playlist] = await handleError(
-      Playlist.findOne({ _id: playlistId })
+      Playlist.findOne({ _id: playlistId }),
     );
 
     if (error) {
@@ -267,12 +267,12 @@ router.post(
     playlist
       .save()
       .then(pl =>
-        res.json({ tracksId: pl.tracks, tracksForShowing: tracksShow })
+        res.json({ tracksId: pl.tracks, tracksForShowing: tracksShow }),
       )
       .catch(err =>
-        res.status(404).json({ error: 'Error with server', msg: err })
+        res.status(404).json({ error: 'Error with server', msg: err }),
       );
-  }
+  },
 );
 
 /**
@@ -294,7 +294,7 @@ router.post(
     const parsedPuntuation = puntuation ? parseInt(puntuation, 10) : 0;
     const ratingHelper = new RatingHelper(Playlist);
     const [error, PlaylistToReturn] = await handleError(
-      ratingHelper.addRating(id, playlistId, parsedPuntuation)
+      ratingHelper.addRating(id, playlistId, parsedPuntuation),
     );
     if (error) {
       return res
@@ -304,11 +304,11 @@ router.post(
     res.json({
       rating: PlaylistToReturn.ratings,
       // We predict the next version of playlist, so React knows when playlist has REALLY changed.
-      __v: PlaylistToReturn.__v + 1
+      __v: PlaylistToReturn.__v + 1,
     });
     // We save later because I want a fast response.
     PlaylistToReturn.save();
-  }
+  },
 );
 
 /**
@@ -344,13 +344,13 @@ router.get('/search/:query', async (req, res) => {
   */
   const regex = {
     $match: {
-      $or: [{ playlistName: { $regex: query, $options: 'i' } }]
-    }
+      $or: [{ playlistName: { $regex: query, $options: 'i' } }],
+    },
   };
   const [error, playlists] = await handleError(
     Playlist.aggregate(
-      mongoQueries.aggregations.playlist.makeAverage(regex)
-    ).sort({ averageScore: -1 })
+      mongoQueries.aggregations.playlist.makeAverage(regex),
+    ).sort({ averageScore: -1 }),
   );
 
   if (error) {
@@ -392,11 +392,11 @@ router.post(
       id,
       fastIndex,
       userId,
-      'dislikes'
+      'dislikes',
     );
 
     res.json({ comments: [...obj.instanceSaved.comments] });
-  }
+  },
 );
 
 /**
@@ -424,11 +424,11 @@ router.post(
       id,
       fastIndex,
       userId,
-      'likes'
+      'likes',
     );
 
     res.json({ comments: [...obj.instanceSaved.comments] });
-  }
+  },
 );
 
 /**
@@ -450,7 +450,7 @@ router.post(
     }
     const comment = new CommentSchema(req.user.id, username, text);
     const [errorReturn, returner] = await handleError(
-      Comment.postComment(playlist, comment)
+      Comment.postComment(playlist, comment),
     );
 
     if (errorReturn) {
@@ -458,7 +458,7 @@ router.post(
     }
 
     res.json({ comments: returner });
-  }
+  },
 );
 
 module.exports = router;
