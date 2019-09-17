@@ -5,6 +5,7 @@ import { notifySuccess, notifyNormality, notifyError } from './notifyActions';
 import handleError from '../utils/handleError';
 import testTime from '../utils/testTime';
 import wait from '../utils/wait';
+import chatReducer from '../reducer/chatReducer';
 
 export const ROUTES = {
   FRIENDS: 'FRIENDS',
@@ -17,6 +18,9 @@ export const setLoading = () => {
     type: 'SET_LOADING_CHAT',
   };
 };
+
+export const cleanChatNotifications = id =>
+  Axios.post(`/api/chat/cleanNotifications/${id}`);
 
 /**
  * @param {object} , message, to, username
@@ -86,6 +90,19 @@ export const getChat = (otherId, get = '') => async dispatch => {
     return dispatch(notifyError('Error getting chat...', 500));
   }
   const { data } = res;
+  console.log(get, otherId);
+  if (
+    data.chat &&
+    data.chat.lastPerson &&
+    data.chat.lastPerson.notification &&
+    otherId === data.chat.lastPerson.user
+  ) {
+    cleanChatNotifications(data.chat._id);
+    dispatch({
+      type: 'SUBSTRACT_TOTAL_NOTIFICATIONS',
+      payload: data.chat.lastPerson.notification,
+    });
+  }
   // Check if it exists, if it doesn't probably the user hasn't talked to that guy yet...
   const chat = data.chat || {
     messages: [],
@@ -134,16 +151,34 @@ export const receiveMessage = e => (dispatch, state) => {
   const json = JSON.parse(e.data);
   const { message, from, type, username, to, userId, friends } = json;
   const s = state();
-  const { auth } = s;
+  const { auth, chat } = s;
   const { id } = auth.apiUser;
   switch (type) {
     case 'Message':
-      if (userId !== id)
+      if (userId !== id) {
         dispatch(notifyNormality(`${message} from ${from}`), 10000);
-      dispatch({
-        type: 'ADD_TOTAL_NOTIFICATIONS',
-        payload: 1,
-      });
+        if (
+          !chat ||
+          !chat.chat ||
+          chat.route !== ROUTES.CHAT ||
+          !chat.open ||
+          !chat.currentChatInfo ||
+          chat.currentChatInfo.username !== from
+        ) {
+          dispatch({
+            type: 'ADD_TOTAL_NOTIFICATIONS',
+            payload: 1,
+          });
+        }
+      }
+      if (
+        chat.route === ROUTES.CHAT &&
+        chat.open &&
+        chat.chat &&
+        chat.currentChatInfo.username === from
+      ) {
+        cleanChatNotifications(chat.chat._id);
+      }
       dispatch({
         type: 'RECEIVE_MESSAGE',
         payload: {
