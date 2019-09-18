@@ -8,6 +8,7 @@ const handleError = require('../lib/handleError');
 const LastFm = require('../classes/Lastfm');
 const activity = require('../classes/Activity');
 const Authenticator = require('../classes/Authenticator');
+const mongoQueries = require('../lib/mongoQueries');
 
 // router.get('/god/delete/image', (req, res) => {
 //   User.findOne({ _id: '5cb88d162cd2833752b67fba' }).then(usr => {
@@ -30,6 +31,42 @@ router.get(
       return res.status(404).json({ error: 'Not found' });
     }
     return res.json(profile);
+  },
+);
+
+router.get(
+  '/getRecommendedFollowers',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { user } = req;
+    const [err, recommended] = await handleError(
+      User.aggregate(
+        mongoQueries.aggregations.user.recommendedFriends(user._id),
+      ),
+    );
+    if (err) {
+      console.log(err);
+      return res
+        .status(404)
+        .json({ error: 'Error, recommended friends not found...' });
+    }
+    const { recommendedFollow } = recommended[0];
+    const userFollowing = user.followedAccounts.reduce(
+      (prev, u) => ({ ...prev, [u]: u }),
+      {},
+    );
+    const recommendedEnd = recommendedFollow
+      .filter(
+        recommend =>
+          String(recommend._id) !== String(user._id) &&
+          !userFollowing[recommend._id],
+      )
+      .map(u => ({ username: u.username, _id: u._id, images: u.images || [] }));
+    res.json({
+      recommended: recommendedEnd,
+      followed: user.followedAccounts,
+      user: user.username,
+    });
   },
 );
 

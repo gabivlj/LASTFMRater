@@ -45,6 +45,21 @@ const mongoQueries = {
       ],
     },
     user: {
+      recommendedFriends: id => [
+        {
+          $match: { _id: ObjectId(id) },
+        },
+        {
+          $graphLookup: {
+            from: 'users',
+            startWith: '$followedAccounts',
+            connectFromField: 'followedAccounts',
+            connectToField: '_id',
+            as: 'recommendedFollow',
+            maxDepth: 4,
+          },
+        },
+      ],
       /**
        * @description gets the users that liked the album
        */
