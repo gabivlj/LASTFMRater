@@ -10,13 +10,6 @@ const activity = require('../classes/Activity');
 const Authenticator = require('../classes/Authenticator');
 const mongoQueries = require('../lib/mongoQueries');
 
-// router.get('/god/delete/image', (req, res) => {
-//   User.findOne({ _id: '5cb88d162cd2833752b67fba' }).then(usr => {
-//     usr.images = [];
-//     usr.save().then(res => console.log('...'));
-//   });
-// });
-
 /**
  * @GET
  * @PRIVATE
@@ -62,7 +55,7 @@ router.get(
           !userFollowing[recommend._id],
       )
       .map(u => ({ username: u.username, _id: u._id, images: u.images || [] }));
-    res.json({
+    return res.json({
       recommended: recommendedEnd,
       followed: user.followedAccounts,
       user: user.username,

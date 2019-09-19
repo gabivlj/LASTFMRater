@@ -1,0 +1,309 @@
+Date : 2019-09-19 02:04:54
+Directory : /Users/gabivlj/programming/Javascript/soundcloudAPI
+Total : 213 files,  36055 codes, 986 comments, 1225 blanks, all 38266 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| JSON             |          7 |     23,649 |          1 |          7 |     23,657 |
+| JavaScript       |         86 |      5,595 |        657 |        480 |      6,732 |
+| JavaScript React |         84 |      5,345 |        245 |        499 |      6,089 |
+| CSS              |         15 |        466 |         21 |         78 |        565 |
+| Go               |          6 |        462 |         37 |         63 |        562 |
+| XML              |          6 |        308 |          0 |          1 |        309 |
+| Markdown         |          7 |        170 |          0 |         89 |        259 |
+| HTML             |          1 |         45 |         20 |          1 |         66 |
+| Ignore           |          1 |         15 |          5 |          7 |         27 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                               | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                  |        213 |     36,055 |        986 |      1,225 |     38,266 |
+| client                                                                             |        153 |     26,373 |        473 |        823 |     27,669 |
+| client/src                                                                         |        147 |      8,442 |        448 |        780 |      9,670 |
+| client/src/components                                                              |         95 |      5,600 |        256 |        559 |      6,415 |
+| server                                                                             |         39 |      2,971 |        475 |        278 |      3,724 |
+| server/routes                                                                      |          9 |      1,649 |        268 |        141 |      2,058 |
+| client/src/actions                                                                 |         11 |      1,173 |         51 |         91 |      1,315 |
+| client/src/components/Search                                                       |         21 |      1,109 |         20 |        123 |      1,252 |
+| client/src/reducer                                                                 |         11 |        814 |         17 |         26 |        857 |
+| client/src/components/Playlist                                                     |         15 |        712 |         38 |         83 |        833 |
+| client/src/components/Chat                                                         |         10 |        673 |         39 |         46 |        758 |
+| client/src/components/Chat/Chat                                                    |          9 |        641 |         37 |         42 |        720 |
+| client/src/components/Search/SearchRoute                                           |         14 |        616 |         17 |         71 |        704 |
+| client/src/components/Profile                                                      |          8 |        604 |         21 |         55 |        680 |
+| server/classes                                                                     |          6 |        593 |        148 |         55 |        796 |
+| client/src/components/Common                                                       |         10 |        476 |         43 |         41 |        560 |
+| client/src/components/Profile/Profile                                              |          4 |        406 |         19 |         32 |        457 |
+| client/src/components/CommentSection                                               |          6 |        382 |         30 |         38 |        450 |
+| client/src/components/Playlist/PlaylistPage                                        |          6 |        362 |         33 |         35 |        430 |
+| client/src/utils                                                                   |         18 |        361 |         70 |         42 |        473 |
+| server/models                                                                      |         12 |        361 |          8 |         50 |        419 |
+| client/src/components/Playlist/PlaylistForm                                        |          9 |        350 |          5 |         48 |        403 |
+| client/src/components/Timeline                                                     |          6 |        348 |         17 |         36 |        401 |
+| client/src/components/Album                                                        |          2 |        319 |          6 |         23 |        348 |
+| .idea                                                                              |          5 |        301 |          0 |          0 |        301 |
+| server/lib                                                                         |         10 |        296 |         41 |         19 |        356 |
+| chat                                                                               |          3 |        286 |         17 |         30 |        333 |
+| client/src/components/Playlist/PlaylistForm/Track                                  |          6 |        213 |          0 |         29 |        242 |
+| client/src/components/AuthLastfm                                                   |          3 |        208 |         12 |         29 |        249 |
+| client/src/components/Chat/Chat/Dialog                                             |          3 |        181 |          2 |         14 |        197 |
+| image_server                                                                       |          3 |        176 |         20 |         33 |        229 |
+| client/src/components/Artist                                                       |          2 |        167 |          0 |         18 |        185 |
+| client/src/classes                                                                 |          4 |        149 |         14 |         22 |        185 |
+| client/src/components/Profile/Ratings                                              |          3 |        147 |          2 |         18 |        167 |
+| client/src/components/CommentSection/Common                                        |          1 |        147 |         27 |         10 |        184 |
+| client/src/components/Notifications                                                |          3 |        145 |         26 |         17 |        188 |
+| image_server/server                                                                |          2 |        140 |         19 |         23 |        182 |
+| client/src/components/Playlist/PlaylistForm/Track/visuals                          |          3 |        135 |          0 |         15 |        150 |
+| client/src/components/Playlist/PlaylistPage/TrackPlaylist                          |          2 |        134 |         28 |         13 |        175 |
+| client/src/components/Search/SearchRoute/artists                                   |          4 |        130 |          0 |         15 |        145 |
+| client/src/components/Search/SearchRoute/albums                                    |          3 |        127 |          0 |         14 |        141 |
+| client/src/components/Search/Popup                                                 |          1 |        116 |          0 |          9 |        125 |
+| client/src/components/Chat/Chat/Chats                                              |          2 |        114 |          2 |          9 |        125 |
+| client/src/components/Search/SearchRoute/profiles                                  |          3 |        113 |          0 |         15 |        128 |
+| client/src/components/Search/SearchRoute/playlists                                 |          3 |        112 |          0 |         12 |        124 |
+| client/src/components/Comment                                                      |          3 |        111 |          4 |         12 |        127 |
+| client/src/components/Register                                                     |          1 |        109 |          0 |         11 |        120 |
+| client/src/components/Login                                                        |          1 |         96 |          0 |         12 |        108 |
+| client/src/components/Chat/Chat/Friends                                            |          2 |         93 |          1 |          8 |        102 |
+| client/src/components/Search/SearchRoute/artists/visual                            |          2 |         73 |          0 |          7 |         80 |
+| client/src/components/Common/Hider                                                 |          2 |         63 |          0 |          6 |         69 |
+| client/public                                                                      |          2 |         60 |         20 |          2 |         82 |
+| client/src/components/Home                                                         |          1 |         55 |          0 |          3 |         58 |
+| client/src/components/Profile/Playlist                                             |          1 |         51 |          0 |          5 |         56 |
+| .github                                                                            |          2 |         45 |          0 |         15 |         60 |
+| .github/ISSUE_TEMPLATE                                                             |          2 |         45 |          0 |         15 |         60 |
+| client/src/components/Playlist/PlaylistForm/visuals                                |          2 |         41 |          0 |          6 |         47 |
+| client/src/components/Profile/Profile/ProfileArtist                                |          1 |         36 |          0 |          3 |         39 |
+| client/src/components/Configuration                                                |          1 |         34 |          0 |          5 |         39 |
+| client/src/components/not-found                                                    |          1 |         33 |          0 |          4 |         37 |
+| client/src/components/Playlist/PlaylistForm/Track/current                          |          2 |         31 |          0 |          6 |         37 |
+| client/src/components/Playlist/PlaylistPage/PlaylistRating                         |          1 |         26 |          0 |          4 |         30 |
+| server/config                                                                      |          1 |         22 |          1 |          3 |         26 |
+| client/src/components/LastfmAuth                                                   |          1 |         19 |          0 |          3 |         22 |
+| client/src/components/Playlist/PlaylistPage/Util                                   |          1 |          9 |          0 |          2 |         11 |
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                           | language         | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| .eslintrc.json                                                                     | JSON             |         32 |          1 |          1 |         34 |
+| .github/ISSUE_TEMPLATE/bug_report.md                                               | Markdown         |         30 |          0 |          9 |         39 |
+| .github/ISSUE_TEMPLATE/feature_request.md                                          | Markdown         |         15 |          0 |          6 |         21 |
+| .idea/misc.xml                                                                     | XML              |          6 |          0 |          0 |          6 |
+| .idea/modules.xml                                                                  | XML              |          8 |          0 |          0 |          8 |
+| .idea/soundcloudAPI.iml                                                            | XML              |         12 |          0 |          0 |         12 |
+| .idea/vcs.xml                                                                      | XML              |          6 |          0 |          0 |          6 |
+| .idea/workspace.xml                                                                | XML              |        269 |          0 |          0 |        269 |
+| .prettierrc                                                                        | JSON             |          4 |          0 |          1 |          5 |
+| CODE_OF_CONDUCT.md                                                                 | Markdown         |         57 |          0 |         20 |         77 |
+| CONTRIBUTING.md                                                                    | Markdown         |          2 |          0 |          1 |          3 |
+| README.md                                                                          | Markdown         |         29 |          0 |         20 |         49 |
+| TODO.md                                                                            | Markdown         |          0 |          0 |          1 |          1 |
+| chat/chat.go                                                                       | Go               |        236 |         16 |         22 |        274 |
+| chat/main.go                                                                       | Go               |         31 |          0 |          6 |         37 |
+| chat/utils.go                                                                      | Go               |         19 |          1 |          2 |         22 |
+| client/.gitignore                                                                  | Ignore           |         15 |          5 |          7 |         27 |
+| client/README.md                                                                   | Markdown         |         37 |          0 |         32 |         69 |
+| client/package-lock.json                                                           | JSON             |     17,782 |          0 |          1 |     17,783 |
+| client/package.json                                                                | JSON             |         37 |          0 |          1 |         38 |
+| client/public/index.html                                                           | HTML             |         45 |         20 |          1 |         66 |
+| client/public/manifest.json                                                        | JSON             |         15 |          0 |          1 |         16 |
+| client/src/App.css                                                                 | CSS              |         96 |          4 |         10 |        110 |
+| client/src/App.jsx                                                                 | JavaScript React |         95 |          2 |          6 |        103 |
+| client/src/App.test.js                                                             | JavaScript       |          8 |          0 |          2 |         10 |
+| client/src/actions/albumActions.js                                                 | JavaScript       |        131 |          7 |          9 |        147 |
+| client/src/actions/artistActions.js                                                | JavaScript       |         25 |          1 |          4 |         30 |
+| client/src/actions/authActions.js                                                  | JavaScript       |        132 |          7 |         10 |        149 |
+| client/src/actions/chatActions.js                                                  | JavaScript       |        230 |         15 |         15 |        260 |
+| client/src/actions/commentActions.js                                               | JavaScript       |        146 |          6 |         15 |        167 |
+| client/src/actions/notifyActions.js                                                | JavaScript       |         32 |          0 |          5 |         37 |
+| client/src/actions/playlistActions.js                                              | JavaScript       |        199 |         10 |         12 |        221 |
+| client/src/actions/profileActions.js                                               | JavaScript       |        119 |          3 |          9 |        131 |
+| client/src/actions/searchActions.js                                                | JavaScript       |         82 |          2 |          5 |         89 |
+| client/src/actions/timelineActions.js                                              | JavaScript       |         73 |          0 |          6 |         79 |
+| client/src/actions/types.js                                                        | JavaScript       |          4 |          0 |          1 |          5 |
+| client/src/classes/CommentSection.js                                               | JavaScript       |         83 |         14 |         11 |        108 |
+| client/src/classes/Socket.js                                                       | JavaScript       |         52 |          0 |          7 |         59 |
+| client/src/classes/SocketInstance.js                                               | JavaScript       |          4 |          0 |          2 |          6 |
+| client/src/classes/User.js                                                         | JavaScript       |         10 |          0 |          2 |         12 |
+| client/src/components/Album/Album.jsx                                              | JavaScript React |        185 |          2 |         12 |        199 |
+| client/src/components/Album/AlbumRating.jsx                                        | JavaScript React |        134 |          4 |         11 |        149 |
+| client/src/components/Artist/Artist.jsx                                            | JavaScript React |        115 |          0 |         13 |        128 |
+| client/src/components/Artist/ArtistAlbums.jsx                                      | JavaScript React |         52 |          0 |          5 |         57 |
+| client/src/components/AuthLastfm/ArtistsUser.jsx                                   | JavaScript React |         78 |         11 |         10 |         99 |
+| client/src/components/AuthLastfm/Auth.jsx                                          | JavaScript React |         98 |          0 |         11 |        109 |
+| client/src/components/AuthLastfm/AuthHandler.jsx                                   | JavaScript React |         32 |          1 |          8 |         41 |
+| client/src/components/Chat/Chat/Chat.jsx                                           | JavaScript React |         45 |          0 |          5 |         50 |
+| client/src/components/Chat/Chat/ChatDialog.jsx                                     | JavaScript React |        208 |         32 |          6 |        246 |
+| client/src/components/Chat/Chat/Chats/ChatItem.jsx                                 | JavaScript React |         80 |          2 |          5 |         87 |
+| client/src/components/Chat/Chat/Chats/Chats.jsx                                    | JavaScript React |         34 |          0 |          4 |         38 |
+| client/src/components/Chat/Chat/Dialog/Dialog.jsx                                  | JavaScript React |         79 |          0 |          3 |         82 |
+| client/src/components/Chat/Chat/Dialog/Messages.jsx                                | JavaScript React |         44 |          1 |          3 |         48 |
+| client/src/components/Chat/Chat/Dialog/message.style.css                           | CSS              |         58 |          1 |          8 |         67 |
+| client/src/components/Chat/Chat/Friends/FriendItem.jsx                             | JavaScript React |         75 |          1 |          5 |         81 |
+| client/src/components/Chat/Chat/Friends/Friends.jsx                                | JavaScript React |         18 |          0 |          3 |         21 |
+| client/src/components/Chat/Socket.jsx                                              | JavaScript React |         32 |          2 |          4 |         38 |
+| client/src/components/Comment/CommentDialog.jsx                                    | JavaScript React |         90 |          4 |          7 |        101 |
+| client/src/components/Comment/CommentRender.jsx                                    | JavaScript React |         16 |          0 |          2 |         18 |
+| client/src/components/Comment/CommentsDialog.jsx                                   | JavaScript React |          5 |          0 |          3 |          8 |
+| client/src/components/CommentSection/Comment.jsx                                   | JavaScript React |         67 |          0 |          6 |         73 |
+| client/src/components/CommentSection/Comment.styles.css                            | CSS              |         17 |          0 |          4 |         21 |
+| client/src/components/CommentSection/CommentForm.jsx                               | JavaScript React |         35 |          0 |          5 |         40 |
+| client/src/components/CommentSection/CommentSection.jsx                            | JavaScript React |         70 |          2 |          8 |         80 |
+| client/src/components/CommentSection/CommentShowcase.jsx                           | JavaScript React |         46 |          1 |          5 |         52 |
+| client/src/components/CommentSection/Common/CommentComponent.jsx                   | JavaScript React |        147 |         27 |         10 |        184 |
+| client/src/components/Common/GoImage.jsx                                           | JavaScript React |         11 |          0 |          2 |         13 |
+| client/src/components/Common/Hider/Hider.jsx                                       | JavaScript React |         50 |          0 |          4 |         54 |
+| client/src/components/Common/Hider/HiderButton.jsx                                 | JavaScript React |         13 |          0 |          2 |         15 |
+| client/src/components/Common/ImageUploader.jsx                                     | JavaScript React |         73 |          1 |          4 |         78 |
+| client/src/components/Common/InputBorderline.jsx                                   | JavaScript React |        103 |          2 |          4 |        109 |
+| client/src/components/Common/InvisibleInput.jsx                                    | JavaScript React |         16 |          0 |          4 |         20 |
+| client/src/components/Common/PrivateRoute.jsx                                      | JavaScript React |         23 |          0 |          3 |         26 |
+| client/src/components/Common/RatingsCommon.jsx                                     | JavaScript React |        144 |         40 |         11 |        195 |
+| client/src/components/Common/RatingsCommon.styles.css                              | CSS              |         18 |          0 |          3 |         21 |
+| client/src/components/Common/image-uploader.style.css                              | CSS              |         25 |          0 |          4 |         29 |
+| client/src/components/Configuration/Configuration.js                               | JavaScript       |         34 |          0 |          5 |         39 |
+| client/src/components/Home/Home.jsx                                                | JavaScript React |         55 |          0 |          3 |         58 |
+| client/src/components/LastfmAuth/LastfmAuth.jsx                                    | JavaScript React |         19 |          0 |          3 |         22 |
+| client/src/components/Login/Login.jsx                                              | JavaScript React |         96 |          0 |         12 |        108 |
+| client/src/components/Notifications/NotiWrap.jsx                                   | JavaScript React |         77 |         26 |          8 |        111 |
+| client/src/components/Notifications/Notification.jsx                               | JavaScript React |         36 |          0 |          4 |         40 |
+| client/src/components/Notifications/Notify.jsx                                     | JavaScript React |         32 |          0 |          5 |         37 |
+| client/src/components/Playlist/PlaylistForm/PlaylistForm.component.jsx             | JavaScript React |         96 |          5 |         13 |        114 |
+| client/src/components/Playlist/PlaylistForm/Track/TrackSearch.component.jsx        | JavaScript React |         47 |          0 |          8 |         55 |
+| client/src/components/Playlist/PlaylistForm/Track/current/CurrentTracks.jsx        | JavaScript React |         28 |          0 |          5 |         33 |
+| client/src/components/Playlist/PlaylistForm/Track/current/currentTracks.styles.css | CSS              |          3 |          0 |          1 |          4 |
+| client/src/components/Playlist/PlaylistForm/Track/visuals/TrackCard.jsx            | JavaScript React |         90 |          0 |          6 |         96 |
+| client/src/components/Playlist/PlaylistForm/Track/visuals/TrackSearch.jsx          | JavaScript React |         27 |          0 |          5 |         32 |
+| client/src/components/Playlist/PlaylistForm/Track/visuals/trackSearch.styles.css   | CSS              |         18 |          0 |          4 |         22 |
+| client/src/components/Playlist/PlaylistForm/visuals/GeneralForm.jsx                | JavaScript React |         41 |          0 |          5 |         46 |
+| client/src/components/Playlist/PlaylistForm/visuals/playlistForm.styles.css        | CSS              |          0 |          0 |          1 |          1 |
+| client/src/components/Playlist/PlaylistPage/Playlist.jsx                           | JavaScript React |        179 |          5 |         14 |        198 |
+| client/src/components/Playlist/PlaylistPage/Playlist.styles.css                    | CSS              |         14 |          0 |          2 |         16 |
+| client/src/components/Playlist/PlaylistPage/PlaylistRating/PlaylistRating.jsx      | JavaScript React |         26 |          0 |          4 |         30 |
+| client/src/components/Playlist/PlaylistPage/TrackPlaylist/TrackPlaylist.jsx        | JavaScript React |        123 |         28 |         12 |        163 |
+| client/src/components/Playlist/PlaylistPage/TrackPlaylist/TrackPlaylist.styles.css | CSS              |         11 |          0 |          1 |         12 |
+| client/src/components/Playlist/PlaylistPage/Util/UserRoute.jsx                     | JavaScript React |          9 |          0 |          2 |         11 |
+| client/src/components/Profile/Playlist/PlaylistShowcase.jsx                        | JavaScript React |         51 |          0 |          5 |         56 |
+| client/src/components/Profile/Profile/Profile.jsx                                  | JavaScript React |        203 |         17 |          6 |        226 |
+| client/src/components/Profile/Profile/Profile.styles.css                           | CSS              |         71 |          2 |         18 |         91 |
+| client/src/components/Profile/Profile/ProfileArtist/ProfileArtists.jsx             | JavaScript React |         36 |          0 |          3 |         39 |
+| client/src/components/Profile/Profile/ProfileInfo.jsx                              | JavaScript React |         96 |          0 |          5 |        101 |
+| client/src/components/Profile/Ratings/Rating.jsx                                   | JavaScript React |         37 |          0 |          5 |         42 |
+| client/src/components/Profile/Ratings/Ratings.jsx                                  | JavaScript React |         82 |          2 |          7 |         91 |
+| client/src/components/Profile/Ratings/Stars.jsx                                    | JavaScript React |         28 |          0 |          6 |         34 |
+| client/src/components/Register/Register.jsx                                        | JavaScript React |        109 |          0 |         11 |        120 |
+| client/src/components/Search/AlbumItem.jsx                                         | JavaScript React |         70 |          0 |         10 |         80 |
+| client/src/components/Search/AppBarMine.jsx                                        | JavaScript React |        103 |          0 |          9 |        112 |
+| client/src/components/Search/ChatButton.jsx                                        | JavaScript React |         22 |          0 |          4 |         26 |
+| client/src/components/Search/List.jsx                                              | JavaScript React |         79 |          0 |          8 |         87 |
+| client/src/components/Search/LoadList.jsx                                          | JavaScript React |         91 |          3 |         10 |        104 |
+| client/src/components/Search/Popup/Pop.component.jsx                               | JavaScript React |        116 |          0 |          9 |        125 |
+| client/src/components/Search/SearchButton.jsx                                      | JavaScript React |         12 |          0 |          2 |         14 |
+| client/src/components/Search/SearchRoute/SearchRoute.jsx                           | JavaScript React |        134 |         17 |         15 |        166 |
+| client/src/components/Search/SearchRoute/albums/Album.jsx                          | JavaScript React |         66 |          0 |          5 |         71 |
+| client/src/components/Search/SearchRoute/albums/Albums.jsx                         | JavaScript React |         37 |          0 |          6 |         43 |
+| client/src/components/Search/SearchRoute/albums/album.style.css                    | CSS              |         24 |          0 |          3 |         27 |
+| client/src/components/Search/SearchRoute/artists/Artists.component.jsx             | JavaScript React |         33 |          0 |          5 |         38 |
+| client/src/components/Search/SearchRoute/artists/artists.styles.css                | CSS              |         24 |          0 |          3 |         27 |
+| client/src/components/Search/SearchRoute/artists/visual/Artist.jsx                 | JavaScript React |         61 |          0 |          5 |         66 |
+| client/src/components/Search/SearchRoute/artists/visual/Artists.jsx                | JavaScript React |         12 |          0 |          2 |         14 |
+| client/src/components/Search/SearchRoute/playlists/Playlist.jsx                    | JavaScript React |         59 |          0 |          4 |         63 |
+| client/src/components/Search/SearchRoute/playlists/Playlists.jsx                   | JavaScript React |         35 |          0 |          3 |         38 |
+| client/src/components/Search/SearchRoute/playlists/PlaylistsShowcase.jsx           | JavaScript React |         18 |          0 |          5 |         23 |
+| client/src/components/Search/SearchRoute/profiles/Profile.jsx                      | JavaScript React |         62 |          0 |          5 |         67 |
+| client/src/components/Search/SearchRoute/profiles/Profiles.jsx                     | JavaScript React |         33 |          0 |          4 |         37 |
+| client/src/components/Search/SearchRoute/profiles/ProfilesShowcase.jsx             | JavaScript React |         18 |          0 |          6 |         24 |
+| client/src/components/Timeline/BodyGramp.jsx                                       | JavaScript React |         42 |          0 |          2 |         44 |
+| client/src/components/Timeline/Gramp.jsx                                           | JavaScript React |        110 |          1 |          4 |        115 |
+| client/src/components/Timeline/IconTimeline.jsx                                    | JavaScript React |         23 |          0 |          2 |         25 |
+| client/src/components/Timeline/NewGrampsNotif.jsx                                  | JavaScript React |         17 |          0 |          2 |         19 |
+| client/src/components/Timeline/Timeline.jsx                                        | JavaScript React |         82 |          2 |         12 |         96 |
+| client/src/components/Timeline/gramp.styles.css                                    | CSS              |         74 |         14 |         14 |        102 |
+| client/src/components/not-found/NotFound.jsx                                       | JavaScript React |         33 |          0 |          4 |         37 |
+| client/src/index.css                                                               | CSS              |         13 |          0 |          2 |         15 |
+| client/src/index.js                                                                | JavaScript       |          7 |          3 |          3 |         13 |
+| client/src/logo.svg                                                                | XML              |          7 |          0 |          1 |          8 |
+| client/src/reducer/albumReducer.js                                                 | JavaScript       |         61 |          0 |          2 |         63 |
+| client/src/reducer/artistReducer.js                                                | JavaScript       |         20 |          0 |          2 |         22 |
+| client/src/reducer/authReducer.js                                                  | JavaScript       |         89 |          0 |          1 |         90 |
+| client/src/reducer/chatReducer.js                                                  | JavaScript       |        148 |          3 |          4 |        155 |
+| client/src/reducer/commentReducer.js                                               | JavaScript       |         64 |          0 |          2 |         66 |
+| client/src/reducer/index.js                                                        | JavaScript       |         23 |          0 |          2 |         25 |
+| client/src/reducer/notifyReducer.js                                                | JavaScript       |         57 |          0 |          3 |         60 |
+| client/src/reducer/playlistReducer.js                                              | JavaScript       |        161 |          7 |          3 |        171 |
+| client/src/reducer/profileReducer.js                                               | JavaScript       |         53 |          6 |          3 |         62 |
+| client/src/reducer/searchReducer.js                                                | JavaScript       |        103 |          1 |          2 |        106 |
+| client/src/reducer/timelineReducer.js                                              | JavaScript       |         35 |          0 |          2 |         37 |
+| client/src/serviceWorker.js                                                        | JavaScript       |         92 |         31 |         13 |        136 |
+| client/src/store.js                                                                | JavaScript       |         27 |          0 |          3 |         30 |
+| client/src/utils/Auth.js                                                           | JavaScript       |         67 |          6 |         16 |         89 |
+| client/src/utils/SpotifyPlayer.jsx                                                 | JavaScript React |          0 |          4 |          1 |          5 |
+| client/src/utils/activityTypes.js                                                  | JavaScript       |          7 |          0 |          1 |          8 |
+| client/src/utils/getIfUserLikedOrNot.js                                            | JavaScript       |         14 |          0 |          0 |         14 |
+| client/src/utils/goImage.js                                                        | JavaScript       |         17 |          0 |          2 |         19 |
+| client/src/utils/handleError.js                                                    | JavaScript       |          1 |          5 |          1 |          7 |
+| client/src/utils/hourFormat.js                                                     | JavaScript       |          7 |          0 |          1 |          8 |
+| client/src/utils/idCreator.js                                                      | JavaScript       |          6 |          0 |          1 |          7 |
+| client/src/utils/links.http.js                                                     | JavaScript       |         11 |          0 |          1 |         12 |
+| client/src/utils/mapLikesDislikes.js                                               | JavaScript       |          5 |          0 |          0 |          5 |
+| client/src/utils/md5.js                                                            | JavaScript       |          2 |          0 |          2 |          4 |
+| client/src/utils/phrases.js                                                        | JavaScript       |         11 |          0 |          3 |         14 |
+| client/src/utils/searchFunctions.js                                                | JavaScript       |         11 |         21 |          4 |         36 |
+| client/src/utils/testTime.js                                                       | JavaScript       |          6 |          0 |          1 |          7 |
+| client/src/utils/timelineIcons.jsx                                                 | JavaScript React |         41 |          0 |          4 |         45 |
+| client/src/utils/uploadImageRoute.js                                               | JavaScript       |         16 |         10 |          2 |         28 |
+| client/src/utils/wait.js                                                           | JavaScript       |          5 |          0 |          1 |          6 |
+| client/src/utils/xmlToJson.js                                                      | JavaScript       |        134 |         24 |          1 |        159 |
+| image_server/main.go                                                               | Go               |         36 |          1 |         10 |         47 |
+| image_server/server/image.go                                                       | Go               |        106 |         15 |         17 |        138 |
+| image_server/server/middleware.go                                                  | Go               |         34 |          4 |          6 |         44 |
+| package-lock.json                                                                  | JSON             |      5,740 |          0 |          1 |      5,741 |
+| package.json                                                                       | JSON             |         39 |          0 |          1 |         40 |
+| server/classes/Activity.js                                                         | JavaScript       |        183 |         40 |         15 |        238 |
+| server/classes/Album.js                                                            | JavaScript       |         23 |          0 |          2 |         25 |
+| server/classes/Authenticator.js                                                    | JavaScript       |         50 |          0 |          7 |         57 |
+| server/classes/Comment.js                                                          | JavaScript       |        144 |         56 |         12 |        212 |
+| server/classes/CommentSchema.js                                                    | JavaScript       |         18 |         11 |          2 |         31 |
+| server/classes/Lastfm.js                                                           | JavaScript       |        175 |         41 |         17 |        233 |
+| server/config/passport.js                                                          | JavaScript       |         22 |          1 |          3 |         26 |
+| server/lib/RatingHelper.js                                                         | JavaScript       |         30 |          7 |          3 |         40 |
+| server/lib/addTrack.js                                                             | JavaScript       |         26 |          9 |          2 |         37 |
+| server/lib/dontCareWaitingForSave.js                                               | JavaScript       |         10 |          7 |          2 |         19 |
+| server/lib/getProfiles.js                                                          | JavaScript       |         12 |          0 |          2 |         14 |
+| server/lib/getRouteImage.js                                                        | JavaScript       |         14 |          0 |          2 |         16 |
+| server/lib/handleError.js                                                          | JavaScript       |          1 |          4 |          1 |          6 |
+| server/lib/mongoQueries.js                                                         | JavaScript       |        189 |         10 |          4 |        203 |
+| server/lib/routes.js                                                               | JavaScript       |          3 |          4 |          1 |          8 |
+| server/lib/time.js                                                                 | JavaScript       |          6 |          0 |          1 |          7 |
+| server/lib/wait.js                                                                 | JavaScript       |          5 |          0 |          1 |          6 |
+| server/models/Activity.js                                                          | JavaScript       |         24 |          0 |          4 |         28 |
+| server/models/Album.js                                                             | JavaScript       |         71 |          0 |          4 |         75 |
+| server/models/Artist.js                                                            | JavaScript       |         42 |          0 |          4 |         46 |
+| server/models/Chat.js                                                              | JavaScript       |         25 |          1 |          6 |         32 |
+| server/models/Comment.js                                                           | JavaScript       |         19 |          0 |          3 |         22 |
+| server/models/CommentSection.js                                                    | JavaScript       |         21 |          3 |          4 |         28 |
+| server/models/Image.js                                                             | JavaScript       |          6 |          0 |          1 |          7 |
+| server/models/Playlist.js                                                          | JavaScript       |         50 |          3 |          5 |         58 |
+| server/models/Profile.js                                                           | JavaScript       |         13 |          0 |          5 |         18 |
+| server/models/Reviews.js                                                           | JavaScript       |         14 |          1 |          5 |         20 |
+| server/models/Track.js                                                             | JavaScript       |         21 |          0 |          4 |         25 |
+| server/models/User.js                                                              | JavaScript       |         55 |          0 |          5 |         60 |
+| server/routes/album.js                                                             | JavaScript       |        347 |         66 |         31 |        444 |
+| server/routes/artist.js                                                            | JavaScript       |         44 |          0 |          6 |         50 |
+| server/routes/chat.js                                                              | JavaScript       |        219 |         17 |         11 |        247 |
+| server/routes/commentSection.js                                                    | JavaScript       |        151 |         30 |         10 |        191 |
+| server/routes/following.js                                                         | JavaScript       |         80 |          9 |          7 |         96 |
+| server/routes/playlist.js                                                          | JavaScript       |        346 |         88 |         31 |        465 |
+| server/routes/profile.js                                                           | JavaScript       |        241 |         44 |         23 |        308 |
+| server/routes/track.js                                                             | JavaScript       |         25 |          7 |          5 |         37 |
+| server/routes/user.js                                                              | JavaScript       |        196 |          7 |         17 |        220 |
+| server/server.js                                                                   | JavaScript       |         50 |          9 |         10 |         69 |
+| Total                                                                              |                  |     36,055 |        986 |      1,225 |     38,266 |
++------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
