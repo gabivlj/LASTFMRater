@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getChat, sendMessage } from '../../../actions/chatActions';
 
 function Chat({ auth, chat, match, getChat, sendMessage }) {
+  const [disabled, setDisabled] = useState(false);
   useEffect(() => {
     getChat(match.params.id);
   }, []);
@@ -15,6 +16,10 @@ function Chat({ auth, chat, match, getChat, sendMessage }) {
       fromId: auth.id,
       username: auth.user,
     });
+    setDisabled(true);
+    setTimeout(() => {
+      setDisabled(false);
+    }, 3000);
   }
   let messages;
 
@@ -29,7 +34,7 @@ function Chat({ auth, chat, match, getChat, sendMessage }) {
       {match.params.id}
       <div>{messages}</div>
       <form onSubmit={sendMessageSubm}>
-        <input type="submit" value="Send" />
+        <input type="submit" value="Send" disabled={disabled} />
       </form>
     </div>
   );

@@ -7,6 +7,8 @@ import testTime from '../utils/testTime';
 import wait from '../utils/wait';
 import chatReducer from '../reducer/chatReducer';
 
+let finishedTimeOut = true;
+
 export const ROUTES = {
   FRIENDS: 'FRIENDS',
   CHATS: 'CHATS',
@@ -34,6 +36,8 @@ export const sendMessage = ({
   toUsername,
 }) => async dispatch => {
   if (!SocketInstance.socket) return null;
+  if (!finishedTimeOut) return false;
+  finishedTimeOut = false;
   const [res, err] = await handleError(
     Axios.post('/api/chat/new', {
       from: { _id: fromId, username },
@@ -58,6 +62,10 @@ export const sendMessage = ({
       payload: res.data.chat,
     });
   }
+
+  setTimeout(() => {
+    finishedTimeOut = true;
+  }, 400);
 
   return dispatch(notifySuccess('Message sent succesfuly...', 1000));
 };
