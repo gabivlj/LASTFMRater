@@ -37,6 +37,7 @@ function ChatDialog({
 }) {
   // Variables
   const [routeBefore, setRouteBefore] = useState(ROUTES.CHATS);
+  const disabled = false;
   const [text, setText] = useState('');
   const [render, setRender] = useState(0);
   const { isLoading } = chat;
@@ -110,8 +111,9 @@ function ChatDialog({
       toUsername: chat.currentChatInfo.username,
       fromId: auth.id,
       username: auth.user,
+    }).then(result => {
+      if (result !== false) setText('');
     });
-    setText('');
   }
   // handles enter on input.
   function onEnter(e) {
