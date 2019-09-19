@@ -19,7 +19,7 @@ const propTypes = {
   comparisonInRatingUpdate: PropTypes.string,
   auth: PropTypes.object,
   showTitleGeneral: PropTypes.bool,
-  ratings: PropTypes.array
+  ratings: PropTypes.array,
 };
 
 const defaultProptypes = {
@@ -27,14 +27,14 @@ const defaultProptypes = {
   showTitleGeneral: true,
   auth: null,
   username: '',
-  ratings: []
+  ratings: [],
 };
 
 const buttonStyle = {
   textDecoration: 'none',
   border: 'none',
   background: 'none',
-  cursor: 'pointer'
+  cursor: 'pointer',
 };
 
 /**
@@ -56,14 +56,14 @@ function RatingsCommon({
   elementId,
   username,
   comparisonInRatingUpdate,
-  showTitleGeneral
+  showTitleGeneral,
 }) {
   const [state, setState] = useState({
     rating: 0,
     actualRating: 0,
     generalRating: 0,
     currentVersion: 0,
-    error: null
+    error: null,
   });
 
   useEffect(() => {
@@ -83,7 +83,7 @@ function RatingsCommon({
     // If not loged. TODO: Maybe make a possibility of executing a passed callback right here?
     setState(prev => ({
       ...prev,
-      error: 'You cannot rate an album if you are not logged!'
+      error: 'You cannot rate an album if you are not logged!',
     }));
     setTimeout(() => setState(prev => ({ ...state, error: null })), 2000);
   }
@@ -110,7 +110,7 @@ function RatingsCommon({
         if (!comparisonInRatingUpdate && auth)
           comparisonInRatingUpdate = auth.user;
         userRating = ratings.filter(
-          element => String(element.user) === String(comparisonInRatingUpdate)
+          element => String(element.user) === String(comparisonInRatingUpdate),
         );
       }
       if (userRating && userRating.length > 0)
@@ -126,7 +126,7 @@ function RatingsCommon({
         // The actual rating of the user.
         actualRating: userRating,
         // Updates the current database version on component's state.
-        currentVersion: elementWithRatings.__v
+        currentVersion: elementWithRatings.__v,
       });
     }
   }
@@ -148,7 +148,7 @@ function RatingsCommon({
             onClick={() => handleClick(i + 1)}
           >
             <i className="far fa-star" id={i} style={{ color: '#b29600' }} />
-          </button>
+          </button>,
         );
       } else {
         stars.push(
@@ -162,7 +162,7 @@ function RatingsCommon({
             onClick={() => handleClick(i + 1)}
           >
             <i className="fas fa-star" id={i} style={{ color: '#FFD700' }} />
-          </button>
+          </button>,
         );
       }
     }

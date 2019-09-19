@@ -10,25 +10,35 @@ const albumHelper = require('../classes/Album');
 const CommentSchema = require('../classes/CommentSchema');
 const Comment = require('../classes/Comment');
 const mongoQueries = require('../lib/mongoQueries');
+const cache = require('../middleware/cache');
 
 /**
  * @GET
  * @PUBLIC
  * @description Get a playlist by id
  * @OPTIONAL userId,
+ * /api/playlist/:id
  */
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.query;
-  Playlist.findById({ _id: id })
-    .then(async pl => {
-      const playlist = pl;
-      const tracks = pl.tracks.map(track => Track.findOne({ _id: track }));
-      playlist.tracksShow = await Promise.all(tracks);
-      return res.json({ playlist });
-    })
-    .catch(err => res.status(400).json({ error: 'Playlist not found.' }));
-});
+router.get(
+  '/:id',
+  cache.getNoAuth(),
+  async (req, res, next) => {
+    const { id } = req.params;
+    const { userId } = req.query;
+    Playlist.findById({ _id: id })
+      .then(async pl => {
+        const playlist = pl;
+        // todo: this should be in a mongo query
+        const tracks = pl.tracks.map(track => Track.findOne({ _id: track }));
+        playlist.tracksShow = await Promise.all(tracks);
+        req.json = { playlist };
+        // cache that thing
+        next();
+      })
+      .catch(err => res.status(400).json({ error: 'Playlist not found.' }));
+  },
+  cache.setNoAuth(),
+);
 
 router.get(
   '/user/:user',
@@ -119,10 +129,12 @@ router.post('/:id', async (req, res) => {
       );
       pl.tracks.push(trackMongo._id);
       const finalPlaylist_ = await pl.save();
+      cache.deleteCacheNoAuth(`/api/playlist/${pl._id}`);
       return res.json({ playlist: finalPlaylist_, newTrack: trackMongo });
     }
     pl.tracks.push(mongoTrack._id);
     const finalPlaylist = await pl.save();
+    cache.deleteCacheNoAuth(`/api/playlist/${pl._id}`);
     return res.json({ playlist: finalPlaylist, newTrack: mongoTrack });
   } catch (err) {
     return res
@@ -174,6 +186,7 @@ router.post(
         .save()
         .then(pl => res.json({ tracks: pl.tracks }))
         .catch(err => console.log(err));
+      cache.deleteCacheNoAuth(`/api/playlist/${playlistToEdit._id}`);
     } catch (err) {
       console.log(err);
       return res
@@ -238,6 +251,7 @@ router.post(
       .catch(err =>
         res.status(404).json({ error: 'Error with server', msg: err }),
       );
+    cache.deleteCacheNoAuth(`/api/playlist/${playlist._id}`);
   },
 );
 
@@ -272,6 +286,7 @@ router.post(
       .catch(err =>
         res.status(404).json({ error: 'Error with server', msg: err }),
       );
+    cache.deleteCacheNoAuth(`/api/playlist/${playlist._id}`);
   },
 );
 
@@ -306,6 +321,7 @@ router.post(
       // We predict the next version of playlist, so React knows when playlist has REALLY changed.
       __v: PlaylistToReturn.__v + 1,
     });
+    cache.deleteCacheNoAuth(`/api/playlist/${playlistId}`);
     // We save later because I want a fast response.
     PlaylistToReturn.save();
   },
@@ -327,21 +343,6 @@ router.get('/search/:query', async (req, res) => {
   if (query === null || query === undefined || query.trim() === '') {
     return res.json({ playlists: [] });
   }
-
-  /*
-  db.collection.aggregate([ 
-    { "$project": { 
-        "averageAge": { "$avg": "$patients.age" } 
-    }}
-]) 
-  */
-  /**
-  * {
-        $match: {
-          $or: [{ playlistName: { $regex: query, $options: 'i' } }]
-        }
-      }
-  */
   const regex = {
     $match: {
       $or: [{ playlistName: { $regex: query, $options: 'i' } }],

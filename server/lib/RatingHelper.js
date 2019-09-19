@@ -15,7 +15,7 @@ module.exports = class RatingHelper {
   addRating(user, modelId, rating, SchemaModel = this.SchemaModel) {
     return new Promise(async (resolve, reject) => {
       const [error, model] = await handleError(
-        SchemaModel.findOne({ _id: modelId })
+        SchemaModel.findOne({ _id: modelId }),
       );
       if (error) {
         console.log(error);

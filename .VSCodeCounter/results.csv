@@ -1,0 +1,215 @@
+filename, language, Markdown, JSON, Go, JavaScript, XML, Ignore, HTML, CSS, JavaScript React, comment, blank, total
+.eslintrc.json, JSON, 0, 32, 0, 0, 0, 0, 0, 0, 0, 1, 1, 34
+.github/ISSUE_TEMPLATE/bug_report.md, Markdown, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 39
+.github/ISSUE_TEMPLATE/feature_request.md, Markdown, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 21
+.idea/misc.xml, XML, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6
+.idea/modules.xml, XML, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 8
+.idea/soundcloudAPI.iml, XML, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 12
+.idea/vcs.xml, XML, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6
+.idea/workspace.xml, XML, 0, 0, 0, 0, 269, 0, 0, 0, 0, 0, 0, 269
+.prettierrc, JSON, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5
+CODE_OF_CONDUCT.md, Markdown, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 77
+CONTRIBUTING.md, Markdown, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3
+README.md, Markdown, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 49
+TODO.md, Markdown, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+chat/chat.go, Go, 0, 0, 236, 0, 0, 0, 0, 0, 0, 16, 22, 274
+chat/main.go, Go, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 6, 37
+chat/utils.go, Go, 0, 0, 19, 0, 0, 0, 0, 0, 0, 1, 2, 22
+client/.gitignore, Ignore, 0, 0, 0, 0, 0, 15, 0, 0, 0, 5, 7, 27
+client/README.md, Markdown, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 69
+client/package-lock.json, JSON, 0, 17782, 0, 0, 0, 0, 0, 0, 0, 0, 1, 17783
+client/package.json, JSON, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 1, 38
+client/public/index.html, HTML, 0, 0, 0, 0, 0, 0, 45, 0, 0, 20, 1, 66
+client/public/manifest.json, JSON, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16
+client/src/App.css, CSS, 0, 0, 0, 0, 0, 0, 0, 96, 0, 4, 10, 110
+client/src/App.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 95, 2, 6, 103
+client/src/App.test.js, JavaScript, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 2, 10
+client/src/actions/albumActions.js, JavaScript, 0, 0, 0, 131, 0, 0, 0, 0, 0, 7, 9, 147
+client/src/actions/artistActions.js, JavaScript, 0, 0, 0, 25, 0, 0, 0, 0, 0, 1, 4, 30
+client/src/actions/authActions.js, JavaScript, 0, 0, 0, 132, 0, 0, 0, 0, 0, 7, 10, 149
+client/src/actions/chatActions.js, JavaScript, 0, 0, 0, 230, 0, 0, 0, 0, 0, 15, 15, 260
+client/src/actions/commentActions.js, JavaScript, 0, 0, 0, 146, 0, 0, 0, 0, 0, 6, 15, 167
+client/src/actions/notifyActions.js, JavaScript, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 5, 37
+client/src/actions/playlistActions.js, JavaScript, 0, 0, 0, 199, 0, 0, 0, 0, 0, 10, 12, 221
+client/src/actions/profileActions.js, JavaScript, 0, 0, 0, 119, 0, 0, 0, 0, 0, 3, 9, 131
+client/src/actions/searchActions.js, JavaScript, 0, 0, 0, 82, 0, 0, 0, 0, 0, 2, 5, 89
+client/src/actions/timelineActions.js, JavaScript, 0, 0, 0, 73, 0, 0, 0, 0, 0, 0, 6, 79
+client/src/actions/types.js, JavaScript, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 1, 5
+client/src/classes/CommentSection.js, JavaScript, 0, 0, 0, 83, 0, 0, 0, 0, 0, 14, 11, 108
+client/src/classes/Socket.js, JavaScript, 0, 0, 0, 52, 0, 0, 0, 0, 0, 0, 7, 59
+client/src/classes/SocketInstance.js, JavaScript, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 2, 6
+client/src/classes/User.js, JavaScript, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 2, 12
+client/src/components/Album/Album.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 185, 2, 12, 199
+client/src/components/Album/AlbumRating.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 134, 4, 11, 149
+client/src/components/Artist/Artist.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 115, 0, 13, 128
+client/src/components/Artist/ArtistAlbums.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 5, 57
+client/src/components/AuthLastfm/ArtistsUser.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 78, 11, 10, 99
+client/src/components/AuthLastfm/Auth.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 98, 0, 11, 109
+client/src/components/AuthLastfm/AuthHandler.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 32, 1, 8, 41
+client/src/components/Chat/Chat/Chat.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 5, 50
+client/src/components/Chat/Chat/ChatDialog.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 208, 32, 6, 246
+client/src/components/Chat/Chat/Chats/ChatItem.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 80, 2, 5, 87
+client/src/components/Chat/Chat/Chats/Chats.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 4, 38
+client/src/components/Chat/Chat/Dialog/Dialog.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 79, 0, 3, 82
+client/src/components/Chat/Chat/Dialog/Messages.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 44, 1, 3, 48
+client/src/components/Chat/Chat/Dialog/message.style.css, CSS, 0, 0, 0, 0, 0, 0, 0, 58, 0, 1, 8, 67
+client/src/components/Chat/Chat/Friends/FriendItem.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 75, 1, 5, 81
+client/src/components/Chat/Chat/Friends/Friends.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 3, 21
+client/src/components/Chat/Socket.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 32, 2, 4, 38
+client/src/components/Comment/CommentDialog.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 90, 4, 7, 101
+client/src/components/Comment/CommentRender.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 2, 18
+client/src/components/Comment/CommentsDialog.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 3, 8
+client/src/components/CommentSection/Comment.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 6, 73
+client/src/components/CommentSection/Comment.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 4, 21
+client/src/components/CommentSection/CommentForm.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 5, 40
+client/src/components/CommentSection/CommentSection.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 70, 2, 8, 80
+client/src/components/CommentSection/CommentShowcase.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 46, 1, 5, 52
+client/src/components/CommentSection/Common/CommentComponent.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 147, 27, 10, 184
+client/src/components/Common/GoImage.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 2, 13
+client/src/components/Common/Hider/Hider.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 4, 54
+client/src/components/Common/Hider/HiderButton.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 2, 15
+client/src/components/Common/ImageUploader.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 73, 1, 4, 78
+client/src/components/Common/InputBorderline.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 103, 2, 4, 109
+client/src/components/Common/InvisibleInput.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 4, 20
+client/src/components/Common/PrivateRoute.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 3, 26
+client/src/components/Common/RatingsCommon.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 144, 40, 11, 195
+client/src/components/Common/RatingsCommon.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 3, 21
+client/src/components/Common/image-uploader.style.css, CSS, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 4, 29
+client/src/components/Configuration/Configuration.js, JavaScript, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 5, 39
+client/src/components/Home/Home.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 55, 0, 3, 58
+client/src/components/LastfmAuth/LastfmAuth.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 3, 22
+client/src/components/Login/Login.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 96, 0, 12, 108
+client/src/components/Notifications/NotiWrap.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 77, 26, 8, 111
+client/src/components/Notifications/Notification.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 4, 40
+client/src/components/Notifications/Notify.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 5, 37
+client/src/components/Playlist/PlaylistForm/PlaylistForm.component.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 96, 5, 13, 114
+client/src/components/Playlist/PlaylistForm/Track/TrackSearch.component.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 8, 55
+client/src/components/Playlist/PlaylistForm/Track/current/CurrentTracks.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 5, 33
+client/src/components/Playlist/PlaylistForm/Track/current/currentTracks.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1, 4
+client/src/components/Playlist/PlaylistForm/Track/visuals/TrackCard.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 90, 0, 6, 96
+client/src/components/Playlist/PlaylistForm/Track/visuals/TrackSearch.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 5, 32
+client/src/components/Playlist/PlaylistForm/Track/visuals/trackSearch.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 4, 22
+client/src/components/Playlist/PlaylistForm/visuals/GeneralForm.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 5, 46
+client/src/components/Playlist/PlaylistForm/visuals/playlistForm.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+client/src/components/Playlist/PlaylistPage/Playlist.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 179, 5, 14, 198
+client/src/components/Playlist/PlaylistPage/Playlist.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 2, 16
+client/src/components/Playlist/PlaylistPage/PlaylistRating/PlaylistRating.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 4, 30
+client/src/components/Playlist/PlaylistPage/TrackPlaylist/TrackPlaylist.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 123, 28, 12, 163
+client/src/components/Playlist/PlaylistPage/TrackPlaylist/TrackPlaylist.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 1, 12
+client/src/components/Playlist/PlaylistPage/Util/UserRoute.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 2, 11
+client/src/components/Profile/Playlist/PlaylistShowcase.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 51, 0, 5, 56
+client/src/components/Profile/Profile/Profile.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 203, 17, 6, 226
+client/src/components/Profile/Profile/Profile.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 71, 0, 2, 18, 91
+client/src/components/Profile/Profile/ProfileArtist/ProfileArtists.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 3, 39
+client/src/components/Profile/Profile/ProfileInfo.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 96, 0, 5, 101
+client/src/components/Profile/Ratings/Rating.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 5, 42
+client/src/components/Profile/Ratings/Ratings.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 82, 2, 7, 91
+client/src/components/Profile/Ratings/Stars.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 6, 34
+client/src/components/Register/Register.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 109, 0, 11, 120
+client/src/components/Search/AlbumItem.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 10, 80
+client/src/components/Search/AppBarMine.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 103, 0, 9, 112
+client/src/components/Search/ChatButton.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 4, 26
+client/src/components/Search/List.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 79, 0, 8, 87
+client/src/components/Search/LoadList.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 91, 3, 10, 104
+client/src/components/Search/Popup/Pop.component.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 116, 0, 9, 125
+client/src/components/Search/SearchButton.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 2, 14
+client/src/components/Search/SearchRoute/SearchRoute.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 134, 17, 15, 166
+client/src/components/Search/SearchRoute/albums/Album.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 5, 71
+client/src/components/Search/SearchRoute/albums/Albums.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 6, 43
+client/src/components/Search/SearchRoute/albums/album.style.css, CSS, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 3, 27
+client/src/components/Search/SearchRoute/artists/Artists.component.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 5, 38
+client/src/components/Search/SearchRoute/artists/artists.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 3, 27
+client/src/components/Search/SearchRoute/artists/visual/Artist.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 5, 66
+client/src/components/Search/SearchRoute/artists/visual/Artists.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 2, 14
+client/src/components/Search/SearchRoute/playlists/Playlist.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 4, 63
+client/src/components/Search/SearchRoute/playlists/Playlists.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 3, 38
+client/src/components/Search/SearchRoute/playlists/PlaylistsShowcase.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 5, 23
+client/src/components/Search/SearchRoute/profiles/Profile.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 62, 0, 5, 67
+client/src/components/Search/SearchRoute/profiles/Profiles.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 4, 37
+client/src/components/Search/SearchRoute/profiles/ProfilesShowcase.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 6, 24
+client/src/components/Timeline/BodyGramp.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 2, 44
+client/src/components/Timeline/Gramp.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 110, 1, 4, 115
+client/src/components/Timeline/IconTimeline.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 2, 25
+client/src/components/Timeline/NewGrampsNotif.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 2, 19
+client/src/components/Timeline/Timeline.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 82, 2, 12, 96
+client/src/components/Timeline/gramp.styles.css, CSS, 0, 0, 0, 0, 0, 0, 0, 74, 0, 14, 14, 102
+client/src/components/not-found/NotFound.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 4, 37
+client/src/index.css, CSS, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 2, 15
+client/src/index.js, JavaScript, 0, 0, 0, 7, 0, 0, 0, 0, 0, 3, 3, 13
+client/src/logo.svg, XML, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 8
+client/src/reducer/albumReducer.js, JavaScript, 0, 0, 0, 61, 0, 0, 0, 0, 0, 0, 2, 63
+client/src/reducer/artistReducer.js, JavaScript, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 2, 22
+client/src/reducer/authReducer.js, JavaScript, 0, 0, 0, 89, 0, 0, 0, 0, 0, 0, 1, 90
+client/src/reducer/chatReducer.js, JavaScript, 0, 0, 0, 148, 0, 0, 0, 0, 0, 3, 4, 155
+client/src/reducer/commentReducer.js, JavaScript, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 2, 66
+client/src/reducer/index.js, JavaScript, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 2, 25
+client/src/reducer/notifyReducer.js, JavaScript, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 3, 60
+client/src/reducer/playlistReducer.js, JavaScript, 0, 0, 0, 161, 0, 0, 0, 0, 0, 7, 3, 171
+client/src/reducer/profileReducer.js, JavaScript, 0, 0, 0, 53, 0, 0, 0, 0, 0, 6, 3, 62
+client/src/reducer/searchReducer.js, JavaScript, 0, 0, 0, 103, 0, 0, 0, 0, 0, 1, 2, 106
+client/src/reducer/timelineReducer.js, JavaScript, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 2, 37
+client/src/serviceWorker.js, JavaScript, 0, 0, 0, 92, 0, 0, 0, 0, 0, 31, 13, 136
+client/src/store.js, JavaScript, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 3, 30
+client/src/utils/Auth.js, JavaScript, 0, 0, 0, 67, 0, 0, 0, 0, 0, 6, 16, 89
+client/src/utils/SpotifyPlayer.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1, 5
+client/src/utils/activityTypes.js, JavaScript, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 1, 8
+client/src/utils/getIfUserLikedOrNot.js, JavaScript, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 14
+client/src/utils/goImage.js, JavaScript, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 2, 19
+client/src/utils/handleError.js, JavaScript, 0, 0, 0, 1, 0, 0, 0, 0, 0, 5, 1, 7
+client/src/utils/hourFormat.js, JavaScript, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 1, 8
+client/src/utils/idCreator.js, JavaScript, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 1, 7
+client/src/utils/links.http.js, JavaScript, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 1, 12
+client/src/utils/mapLikesDislikes.js, JavaScript, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5
+client/src/utils/md5.js, JavaScript, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 4
+client/src/utils/phrases.js, JavaScript, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 3, 14
+client/src/utils/searchFunctions.js, JavaScript, 0, 0, 0, 11, 0, 0, 0, 0, 0, 21, 4, 36
+client/src/utils/testTime.js, JavaScript, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 1, 7
+client/src/utils/timelineIcons.jsx, JavaScript React, 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 4, 45
+client/src/utils/uploadImageRoute.js, JavaScript, 0, 0, 0, 16, 0, 0, 0, 0, 0, 10, 2, 28
+client/src/utils/wait.js, JavaScript, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1, 6
+client/src/utils/xmlToJson.js, JavaScript, 0, 0, 0, 134, 0, 0, 0, 0, 0, 24, 1, 159
+image_server/main.go, Go, 0, 0, 36, 0, 0, 0, 0, 0, 0, 1, 10, 47
+image_server/server/image.go, Go, 0, 0, 106, 0, 0, 0, 0, 0, 0, 15, 17, 138
+image_server/server/middleware.go, Go, 0, 0, 34, 0, 0, 0, 0, 0, 0, 4, 6, 44
+package-lock.json, JSON, 0, 5740, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5741
+package.json, JSON, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40
+server/classes/Activity.js, JavaScript, 0, 0, 0, 183, 0, 0, 0, 0, 0, 40, 15, 238
+server/classes/Album.js, JavaScript, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 2, 25
+server/classes/Authenticator.js, JavaScript, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 7, 57
+server/classes/Comment.js, JavaScript, 0, 0, 0, 144, 0, 0, 0, 0, 0, 56, 12, 212
+server/classes/CommentSchema.js, JavaScript, 0, 0, 0, 18, 0, 0, 0, 0, 0, 11, 2, 31
+server/classes/Lastfm.js, JavaScript, 0, 0, 0, 175, 0, 0, 0, 0, 0, 41, 17, 233
+server/config/passport.js, JavaScript, 0, 0, 0, 22, 0, 0, 0, 0, 0, 1, 3, 26
+server/lib/RatingHelper.js, JavaScript, 0, 0, 0, 30, 0, 0, 0, 0, 0, 7, 3, 40
+server/lib/addTrack.js, JavaScript, 0, 0, 0, 26, 0, 0, 0, 0, 0, 9, 2, 37
+server/lib/dontCareWaitingForSave.js, JavaScript, 0, 0, 0, 10, 0, 0, 0, 0, 0, 7, 2, 19
+server/lib/getProfiles.js, JavaScript, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 2, 14
+server/lib/getRouteImage.js, JavaScript, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 2, 16
+server/lib/handleError.js, JavaScript, 0, 0, 0, 1, 0, 0, 0, 0, 0, 4, 1, 6
+server/lib/mongoQueries.js, JavaScript, 0, 0, 0, 189, 0, 0, 0, 0, 0, 10, 4, 203
+server/lib/routes.js, JavaScript, 0, 0, 0, 3, 0, 0, 0, 0, 0, 4, 1, 8
+server/lib/time.js, JavaScript, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 1, 7
+server/lib/wait.js, JavaScript, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1, 6
+server/models/Activity.js, JavaScript, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 4, 28
+server/models/Album.js, JavaScript, 0, 0, 0, 71, 0, 0, 0, 0, 0, 0, 4, 75
+server/models/Artist.js, JavaScript, 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 4, 46
+server/models/Chat.js, JavaScript, 0, 0, 0, 25, 0, 0, 0, 0, 0, 1, 6, 32
+server/models/Comment.js, JavaScript, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 3, 22
+server/models/CommentSection.js, JavaScript, 0, 0, 0, 21, 0, 0, 0, 0, 0, 3, 4, 28
+server/models/Image.js, JavaScript, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 1, 7
+server/models/Playlist.js, JavaScript, 0, 0, 0, 50, 0, 0, 0, 0, 0, 3, 5, 58
+server/models/Profile.js, JavaScript, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 5, 18
+server/models/Reviews.js, JavaScript, 0, 0, 0, 14, 0, 0, 0, 0, 0, 1, 5, 20
+server/models/Track.js, JavaScript, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 4, 25
+server/models/User.js, JavaScript, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 5, 60
+server/routes/album.js, JavaScript, 0, 0, 0, 347, 0, 0, 0, 0, 0, 66, 31, 444
+server/routes/artist.js, JavaScript, 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 6, 50
+server/routes/chat.js, JavaScript, 0, 0, 0, 219, 0, 0, 0, 0, 0, 17, 11, 247
+server/routes/commentSection.js, JavaScript, 0, 0, 0, 151, 0, 0, 0, 0, 0, 30, 10, 191
+server/routes/following.js, JavaScript, 0, 0, 0, 80, 0, 0, 0, 0, 0, 9, 7, 96
+server/routes/playlist.js, JavaScript, 0, 0, 0, 346, 0, 0, 0, 0, 0, 88, 31, 465
+server/routes/profile.js, JavaScript, 0, 0, 0, 241, 0, 0, 0, 0, 0, 44, 23, 308
+server/routes/track.js, JavaScript, 0, 0, 0, 25, 0, 0, 0, 0, 0, 7, 5, 37
+server/routes/user.js, JavaScript, 0, 0, 0, 196, 0, 0, 0, 0, 0, 7, 17, 220
+server/server.js, JavaScript, 0, 0, 0, 50, 0, 0, 0, 0, 0, 9, 10, 69
+Total, -, 170, 23649, 462, 5595, 308, 15, 45, 466, 5345, 986, 1225, 38266
