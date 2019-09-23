@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { LinearProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Gramp from './Gramp';
 import NewGrampsNotif from './NewGrampsNotif';
+import RecommendedFriends from './Friends/RecommendedFriends';
 
 function Timeline({
   loadGramps,
@@ -13,8 +14,15 @@ function Timeline({
   onClickGramp,
   newGramps,
 }) {
+  const ref = useRef({ current: { scrollTop: 0 } });
+  const [scrollTop, setScrollTop] = useState(0);
+  useEffect(() => {
+    window.addEventListener('scroll', e => {
+      setScrollTop(e.target.scrollingElement.scrollTop);
+    });
+  }, []);
   // let timeoutForLoading = false;
-  const ADDER_N_GRAMPS = 10;
+  const ADDER_N_GRAMPS = 25;
   const TIMEOUT = 1000;
 
   let timeoutForLoading = false;
@@ -59,15 +67,17 @@ function Timeline({
   }, [updateOnScrollTop, updateOnScrollBot]);
 
   useEffect(() => {
-    loadGramps(0, ADDER_N_GRAMPS - 1);
+    if (gramps.length === 0) loadGramps(0, ADDER_N_GRAMPS - 1);
   }, []);
 
   return (
-    <div style={{ paddingBottom: '300px' }}>
+    <div style={{ paddingBottom: '300px' }} className="timeline" ref={ref}>
       <NewGrampsNotif show={newGramps} />
       {loaded ? null : <LinearProgress />}
       <div className="row">
-        <div className="col-md-4">...</div>
+        <div className="col-md-4 col-sm-12">
+          <RecommendedFriends scrollTop={scrollTop} />
+        </div>
         <div className="gramp-container col-sm-12 col-md-8">
           {gramps.map(gramp => (
             <Gramp gramp={gramp} key={gramp._id} onClick={onClickGramp} />

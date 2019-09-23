@@ -10,6 +10,7 @@
   margin: 15px;
 }
 
+
 .hide-notification {
   top: -500px;
   z-index: 10;
@@ -19,6 +20,10 @@
   position: fixed;
 }
 
+.timeline {
+  z-index: 1;
+}
+
 .new-gramp-notification {
   top: 20px;
   z-index: 10;
@@ -26,6 +31,24 @@
   animation: NotificationFromTop 1 .7s;
   animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   right: 47.5%;
+}
+
+.recommended-friends {
+  padding-bottom: 100px;
+  height: 100%;
+  /* z-index: 1; */
+  position: fixed;  
+  overflow-y: hidden;
+  /* height: 100%; */
+  width: 100%;
+  /* padding-right: 17px; */
+  
+}
+
+@media (max-width: 1000px) {
+  .recommended-friends {
+    display: none;
+  }
 }
 
 @keyframes HideNotificationFromBottom {

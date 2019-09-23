@@ -9,6 +9,7 @@ const LastFm = require('../classes/Lastfm');
 const activity = require('../classes/Activity');
 const Authenticator = require('../classes/Authenticator');
 const mongoQueries = require('../lib/mongoQueries');
+const RecommendedFollowers = require('../models/RecommendedFriends');
 
 /**
  * @GET
@@ -28,37 +29,58 @@ router.get(
 );
 
 router.get(
-  '/getRecommendedFollowers',
+  '/recommendedFollowers',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const { user } = req;
+
+    const recommendedExcludePromise = RecommendedFollowers({ user: user._id });
     const [err, recommended] = await handleError(
       User.aggregate(
         mongoQueries.aggregations.user.recommendedFriends(user._id),
       ),
     );
+    let recommendedExclude = null;
+
     if (err) {
       console.log(err);
       return res
         .status(404)
         .json({ error: 'Error, recommended friends not found...' });
     }
+
     const { recommendedFollow } = recommended[0];
     const userFollowing = user.followedAccounts.reduce(
       (prev, u) => ({ ...prev, [u]: u }),
       {},
     );
+
+    recommendedExclude = await recommendedExcludePromise;
+    if (!recommendedExclude) {
+      const newRecommendedExclude = new RecommendedFollowers({
+        user: user._id,
+        recommended: [],
+      });
+      recommendedExclude = await newRecommendedExclude.save();
+    }
+
+    const objectExclude = recommendedExclude.recommended.reduce(
+      (prev, now) => ({ ...prev, [now]: now }),
+      {},
+    );
+    console.log(objectExclude);
     const recommendedEnd = recommendedFollow
       .filter(
         recommend =>
           String(recommend._id) !== String(user._id) &&
-          !userFollowing[recommend._id],
+          !userFollowing[recommend._id] &&
+          !objectExclude[String(recommend._id)],
       )
+      .slice(0, 3)
       .map(u => ({ username: u.username, _id: u._id, images: u.images || [] }));
+    console.log(recommendedEnd);
     return res.json({
       recommended: recommendedEnd,
-      followed: user.followedAccounts,
-      user: user.username,
     });
   },
 );
@@ -95,10 +117,16 @@ router.get(
   async (req, res) => {
     try {
       const { user } = req;
-      const listOfFriends = user.followedAccounts.filter(followed =>
-        user.followers.includes(String(followed)),
+      const reducedFollowers = user.followers.reduce(
+        (prev, u) => ({ ...prev, [String(u)]: u }),
+        {},
       );
-      // todo: when normalized the followingObjects, don't use includes();
+      const listOfFriends = user.followedAccounts.filter(
+        followed =>
+          // user.followers.includes(String(followed)),
+          reducedFollowers[String(followed)],
+      );
+
       const usersFriends = (await User.find({
         $or: [...listOfFriends.map(friend => ({ _id: friend }))],
       })).map(friend => ({
@@ -106,7 +134,7 @@ router.get(
         images: friend.images,
         username: friend.username,
       }));
-      res.json({ friends: usersFriends });
+      return res.json({ friends: usersFriends });
     } catch (err) {
       console.log(err);
       return res.status(500).json({ error: 'Internal server error. ' });

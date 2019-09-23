@@ -4,7 +4,7 @@ import {
   getPlaylist,
   deleteTrackFromPlaylist,
   addToPlaylistFromPlaylistEdit,
-  cleanPlaylist
+  cleanPlaylist,
 } from '../../../actions/playlistActions';
 import hourFormat from '../../../utils/hourFormat';
 import { LinearProgress } from '@material-ui/core';
@@ -24,7 +24,7 @@ const propTypes = {
   playlist: PropTypes.object.isRequired,
   getPlaylist: PropTypes.func.isRequired,
   deleteTrackFromPlaylist: PropTypes.func.isRequired,
-  addToPlaylistFromPlaylistEdit: PropTypes.func.isRequired
+  addToPlaylistFromPlaylistEdit: PropTypes.func.isRequired,
 };
 
 class Playlist extends Component {
@@ -33,13 +33,13 @@ class Playlist extends Component {
     edit: false,
     username: '',
     playlistName: '',
-    playlistDescription: ''
+    playlistDescription: '',
   };
 
   componentDidMount() {
     this.props.getPlaylist(
       this.props.match.params.id,
-      this.props.auth.apiUser ? this.props.auth.apiUser.id : null
+      this.props.auth.apiUser ? this.props.auth.apiUser.id : null,
     );
   }
 
@@ -47,7 +47,7 @@ class Playlist extends Component {
     if (nextProps.auth.apiUser && !this.props.auth.auth) {
       this.props.getPlaylist(
         this.props.match.params.id,
-        this.props.auth.apiUser ? this.props.auth.apiUser.id : null
+        this.props.auth.apiUser ? this.props.auth.apiUser.id : null,
       );
     }
 
@@ -58,7 +58,7 @@ class Playlist extends Component {
     ) {
       this.setState({
         username: nextProps.playlist.user,
-        playlistName: nextProps.playlist.playlistName
+        playlistName: nextProps.playlist.playlistName,
       });
     }
   }
@@ -73,7 +73,7 @@ class Playlist extends Component {
 
   onChange = e => {
     this.setState({
-      [e.target.name]: e.target.textContent
+      [e.target.name]: e.target.textContent,
     });
   };
 
@@ -93,7 +93,7 @@ class Playlist extends Component {
         >
           {this.state[name]}
         </InvisibleInput>
-      )
+      ),
     };
     // Username render (we don't want user link showing when editing.)
     const usernameRender = !edit ? (
@@ -120,7 +120,6 @@ class Playlist extends Component {
         />
       ));
     }
-
     return (
       <div className="jumbotron">
         <div className="container">
@@ -164,14 +163,16 @@ class Playlist extends Component {
                   track.user = this.props.user;
                   this.props.addToPlaylistFromPlaylistEdit(
                     track,
-                    this.props.playlist._id
+                    this.props.playlist._id,
                   );
                 }}
               />
             ) : null}
             <CommentComponent
               objectId={playlist._id}
-              name={`${playlist.playlistName} playlist from ${usernameRender}`}
+              name={`${playlist.playlistName} playlist from ${String(
+                playlist.user,
+              )}`}
             />
           </div>
         </div>
@@ -183,7 +184,7 @@ class Playlist extends Component {
 const mapStateToProps = state => ({
   playlist: state.playlist.playlist,
   user: state.auth.apiUser.user,
-  auth: state.auth
+  auth: state.auth,
 });
 
 export default connect(
@@ -192,6 +193,6 @@ export default connect(
     getPlaylist,
     deleteTrackFromPlaylist,
     addToPlaylistFromPlaylistEdit,
-    cleanPlaylist
-  }
+    cleanPlaylist,
+  },
 )(Playlist);

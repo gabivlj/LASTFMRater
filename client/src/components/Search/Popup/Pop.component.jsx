@@ -12,8 +12,8 @@ import {
 import { Link } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from 'react-redux';
-import { logOut } from '../../../actions/authActions'
 import PropTypes from 'prop-types';
+import { logOut } from '../../../actions/authActions';
 
 const propTypes = {
   auth: PropTypes.object.isRequired,
@@ -67,6 +67,12 @@ function PopComponent({ auth, logOut }) {
                   ) : null}
 
                   {auth.auth ? (
+                    <MenuItem component={Link} to="/" onClick={handleClose}>
+                      Home
+                    </MenuItem>
+                  ) : null}
+
+                  {auth.auth ? (
                     <MenuItem
                       onClick={handleClose}
                       component={Link}
@@ -84,12 +90,13 @@ function PopComponent({ auth, logOut }) {
                     </MenuItem>
                   )}
                   {auth.auth ? (
-                    <MenuItem onClick={(e) => { 
-                      handleClose(); 
-                      logOut();                      
-                    }}
-                    component={Link}
-                    to="/"
+                    <MenuItem
+                      onClick={e => {
+                        handleClose();
+                        logOut();
+                      }}
+                      component={Link}
+                      to="/"
                     >
                       Logout
                     </MenuItem>
@@ -120,5 +127,5 @@ PopComponent.propTypes = propTypes;
 
 export default connect(
   mapStateToProps,
-  { logOut }
+  { logOut },
 )(withStyles(styles)(PopComponent));
