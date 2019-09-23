@@ -14,8 +14,8 @@ import linksHttp from '../../../../utils/links.http';
 
 const styles = () => ({
   inline: {
-    display: 'inline'
-  }
+    display: 'inline',
+  },
 });
 
 function FriendItem({
@@ -23,7 +23,7 @@ function FriendItem({
   connected,
   setChatInfo,
   setChatRoute,
-  classes
+  classes,
 }) {
   let image;
   let imageMd;
@@ -45,9 +45,9 @@ function FriendItem({
             ? { image: imageMd, go: true }
             : {
                 image: profile,
-                go: false
+                go: false,
               },
-          id: friendInfo._id
+          id: friendInfo._id,
         });
         setChatRoute(ROUTES.CHAT);
       }}
