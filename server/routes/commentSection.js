@@ -110,6 +110,41 @@ router.post(
   },
 );
 
+router.get(
+  '/get/:commentID',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { id } = req.user;
+    const { commentID } = req.params;
+    const comment = await Comment.findById(commentID);
+    if (!comment) {
+      return res.status(404).json({ error: 'Comment does not exist.' });
+    }
+    const liked =
+      comment.likes.filter(like => String(like.user) === String(id)).length >=
+      1;
+    let disliked = !liked;
+    if (!liked)
+      disliked =
+        comment.dislikes.filter(like => String(like.user) === String(id))
+          .length >= 1;
+
+    const likes = comment.likes.length;
+    const dislikes = comment.dislikes.length;
+    return res.json({
+      likes,
+      dislikes,
+      liked,
+      disliked,
+      objectId: comment.objectId,
+      text: comment.text,
+      username: comment.username,
+      user: comment.user,
+      date: comment.date,
+    });
+  },
+);
+
 /**
  * @POST
  * @PRIVATE

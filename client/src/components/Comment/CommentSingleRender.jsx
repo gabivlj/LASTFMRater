@@ -20,12 +20,11 @@ function CommentSingleRender({ comment }) {
         <Comment
           img={comment.img}
           user={comment.username}
-          loged
+          loged="."
           text={comment.text}
           like={like}
-          likes={likes}
+          likes={likes - dislikes}
           liked={liked}
-          dislikes={dislikes}
           disliked={disliked}
           dislike={dislike}
         />
