@@ -94,7 +94,7 @@ router.get(
   },
 );
 
-router.get('/get/hottest', async (req, res) => {
+router.get('/get/hottest', async (_, res) => {
   // The query should return the hottest albums of the day
   // Like the most rated, but the thing is we should get only the albums
   // that got rated on the same as today and also order it by sum
