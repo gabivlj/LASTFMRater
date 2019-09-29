@@ -5,7 +5,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect
+  Redirect,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Home from './components/Home/Home';
@@ -31,6 +31,7 @@ import Notify from './components/Notifications/Notify';
 import Chat from './components/Chat/Chat/Chat';
 import ChatDialog from './components/Chat/Chat/ChatDialog';
 import CommentDialog from './components/Comment/CommentDialog';
+import ReviewEditor from './components/Review/ReviewEditor';
 // Get user from localStorage.
 store.dispatch(logFromSession());
 
@@ -62,6 +63,7 @@ function App() {
               <Route exact path="/auth/login" component={Login} />
               <Route exact path="/auth/register" component={Register} />
               <Route exact path="/profile/:id" component={Profile} />
+              <Route exact path="/edit/:id" component={ReviewEditor} />
               <PrivateRoute exact path="/me/profile" component={Auth} />
               <PrivateRoute
                 exact
@@ -84,6 +86,7 @@ function App() {
                 path="/lastfm/connect"
                 component={LastfmAuth}
               />
+
               <Route render={() => <Redirect to="/sorry/not-found" />} />
             </Switch>
 
