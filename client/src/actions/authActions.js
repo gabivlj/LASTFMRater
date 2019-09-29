@@ -96,11 +96,20 @@ export const logIn = user_ => async dispatch => {
     type: 'SET_API_USER',
     payload: user,
   });
-  const [res, error] = await handleError(getUser());
+  const res = handleError(getUser());
+  const notificationsPromise = handleError(getNotificationsSum());
+  const [[userDispatch, error], [notifications]] = await Promise.all([
+    res,
+    notificationsPromise,
+  ]);
+  dispatch({
+    type: 'SET_TOTAL_NOTIFICATIONS',
+    payload: notifications,
+  });
   if (error) {
     return;
   }
-  dispatch(res);
+  dispatch(userDispatch);
 };
 
 export const register = (
