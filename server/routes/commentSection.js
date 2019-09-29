@@ -187,4 +187,6 @@ router.post(
   },
 );
 
+router.get('/comment/:id', async (req, res) => {});
+
 module.exports = router;

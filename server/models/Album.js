@@ -67,6 +67,18 @@ const AlbumSchema = new Schema({
       },
     },
   ],
+  numberOfReviewsEachDay: [
+    {
+      date: {
+        type: Date,
+        default: Date.now(),
+      },
+      sum: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
   usersLiked: {},
   comments: [CommentSchema],
 });
