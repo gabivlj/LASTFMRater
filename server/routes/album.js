@@ -9,6 +9,7 @@ const Comment = require('../classes/Comment');
 const CommentSchema = require('../classes/CommentSchema');
 const Activity = require('../classes/Activity');
 const mongoQueries = require('../lib/mongoQueries');
+const numberReviewsDay = require('../lib/numberReviewsDay');
 const User = require('../models/User');
 
 const FM = new Lastfm(null);
@@ -82,11 +83,9 @@ router.get(
     for (const userElement of album[0].users || []) {
       for (const album of userElement.likedAlbums || []) {
         const { k, v } = album;
-        if (v) {
-          if (!user.likedAlbums[k]) {
-            recommendedAlbums.push({ [k]: v });
-            break;
-          }
+        if (k && v && !user.likedAlbums[k]) {
+          recommendedAlbums.push({ [k]: v });
+          break;
         }
       }
     }
@@ -94,6 +93,62 @@ router.get(
     return res.json({ albums: recommendedAlbums });
   },
 );
+
+router.get('/get/hottest', async (req, res) => {
+  // The query should return the hottest albums of the day
+  // Like the most rated, but the thing is we should get only the albums
+  // that got rated on the same as today and also order it by sum
+  // For the moment we will use JavaScript
+  function sameDay(d1, d2) {
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
+  }
+  const [err, albums] = await handleError(Album.find());
+  const pickReview = (a, b) => {
+    if (a.numberOfReviewsEachDay.length === 0) {
+      return 1;
+    }
+    if (b.numberOfReviewsEachDay.length === 0) {
+      return -1;
+    }
+    const elementA =
+      a.numberOfReviewsEachDay[a.numberOfReviewsEachDay.length - 1];
+    const elementB =
+      b.numberOfReviewsEachDay[b.numberOfReviewsEachDay.length - 1];
+
+    const today = new Date(Date.now());
+    const sameDayA = sameDay(new Date(a.date), today);
+    const sameDayB = sameDay(new Date(b.date), today);
+    if (sameDayA && !sameDayB) {
+      return -1;
+    }
+    if (!sameDayA && sameDayB) {
+      return 1;
+    }
+    return elementB.sum - elementA.sum;
+  };
+  if (err) {
+    console.log(err);
+    return res.status(404).json({ error: 'Error finding albums.' });
+  }
+  const sortedAlbums = albums.sort((a, b) => pickReview(a, b));
+  return res.json({
+    sortedAlbums: sortedAlbums.map(album => ({
+      _id: album._id,
+      name: album.name,
+      artist: album.artist,
+      sum:
+        album.numberOfReviewsEachDay.length > 0
+          ? album.numberOfReviewsEachDay[
+              album.numberOfReviewsEachDay.length - 1
+            ]
+          : 0,
+    })),
+  });
+});
 
 /**
  * @GET
@@ -144,12 +199,22 @@ router.post(
             puntuation: req.body.puntuation,
             user: req.body.userid,
           });
+          // Add to "today" the rating. (This is because in another calls to the api
+          // we may want to know the most hot rated albums of the day)
+          album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
+            ? numberReviewsDay.add(album.numberOfReviewsEachDay)
+            : [{ date: Date.now(), sum: 0 }];
         } else {
           // else replace
+          console.log(album);
           album.ratings.splice(index, 1, {
             puntuation: req.body.puntuation,
             user: req.body.userid,
           });
+          // // Substract from the last day that the album received a rating.
+          // album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
+          //   ? numberReviewsDay.substract(album.numberOfReviewsEachDay)
+          //   : [{ date: Date.now(), sum: 0 }];
         }
         Activity.addSomethingActivity(
           Activity.createRatedInformation(
@@ -318,8 +383,6 @@ router.post(
         },
       );
     }
-    console.log(album);
-    console.log('????', album.usersLiked[user._id]);
     res.json({ album: !!album.usersLiked[user._id] });
     const [err, [userSaved, albumSaved]] = await handleError(
       Promise.all([updatedAlbum, updatedUser]),

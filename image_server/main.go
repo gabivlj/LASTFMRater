@@ -38,9 +38,7 @@ func main() {
 		port = "2222" //localhost
 	}
 	fmt.Println("Port connected! Golang server up and runnin... 🐳 🐳 🐳  Port: " + port)
-
 	router.HandleFunc("/api/image/{id}", server.ServeImage).Methods("GET")
 	router.HandleFunc("/api/image", server.GetImage).Methods("POST")
 	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router)))
-
 }
