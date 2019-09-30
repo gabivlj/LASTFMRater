@@ -63,7 +63,7 @@ function App() {
               <Route exact path="/auth/login" component={Login} />
               <Route exact path="/auth/register" component={Register} />
               <Route exact path="/profile/:id" component={Profile} />
-              <Route exact path="/edit/:id" component={ReviewEditor} />
+              <Route exact path="/review/edit/:id" component={ReviewEditor} />
               <PrivateRoute exact path="/me/profile" component={Auth} />
               <PrivateRoute
                 exact
