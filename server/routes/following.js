@@ -27,17 +27,11 @@ router.post(
         // const followed = [...user.followedAccounts, id];
         // user.followedAccounts = followed;
         user.followedAccounts.push(id);
-        user.followedObject[id] = id;
         dontCareWaitingForSave(user, false);
         const [err, theUserItsGonnaFollow] = await handleError(
           User.findById(id),
         );
         if (err) throw err;
-        // todo: The dictionary is deprecated. Delete!
-        if (!theUserItsGonnaFollow.followedObject)
-          theUserItsGonnaFollow.followedObject = {};
-        if (!theUserItsGonnaFollow.followersObject)
-          theUserItsGonnaFollow.followersObject = {};
         const newFollowers = [...theUserItsGonnaFollow.followers, userId];
         theUserItsGonnaFollow.followers = newFollowers;
         theUserItsGonnaFollow.followersObject[userId] = userId;
@@ -60,16 +54,10 @@ router.post(
       const followed = user.followedAccounts.filter(
         followed => String(followed) !== String(id),
       );
-      user.followedObject[String(id)] = null;
       user.followedAccounts = followed;
       dontCareWaitingForSave(user, false);
       const [err, theUserItsGonnaFollow] = await handleError(User.findById(id));
-
       if (err) throw err;
-      if (!theUserItsGonnaFollow.followedObject)
-        theUserItsGonnaFollow.followedObject = {};
-      if (!theUserItsGonnaFollow.followersObject)
-        theUserItsGonnaFollow.followersObject = {};
       // We filter it out because we know he wanna unfollow.
       const newFollowers = theUserItsGonnaFollow.followers.filter(
         follower => String(follower) !== String(userId),
