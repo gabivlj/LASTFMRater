@@ -33,6 +33,7 @@ router.post(
           User.findById(id),
         );
         if (err) throw err;
+        // todo: The dictionary is deprecated. Delete!
         if (!theUserItsGonnaFollow.followedObject)
           theUserItsGonnaFollow.followedObject = {};
         if (!theUserItsGonnaFollow.followersObject)
@@ -40,6 +41,7 @@ router.post(
         const newFollowers = [...theUserItsGonnaFollow.followers, userId];
         theUserItsGonnaFollow.followers = newFollowers;
         theUserItsGonnaFollow.followersObject[userId] = userId;
+        // ...
         dontCareWaitingForSave(theUserItsGonnaFollow, false);
         user.password = null;
         Activity.addSomethingActivity(
