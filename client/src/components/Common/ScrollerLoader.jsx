@@ -55,23 +55,7 @@ function ScrollerLoader({
     });
     return () => {
       onUnload();
-      __LOADER_ELEMENT.removeEventListener('scroll', e => {
-        if (!e || !e.target) {
-          console.error('Target not working in ScrollerLoader!!');
-          return;
-        }
-        actionWhenScrolling(e);
-        if (
-          e.target.scrollTop >=
-            e.target.scrollHeight - e.target.clientHeight - 10 &&
-          !___TIMEOUT
-        ) {
-          ___TIMEOUT = true;
-          setTimeout(() => {
-            ___TIMEOUT = false;
-          }, timeoutMS);
-        }
-      });
+      __LOADER_ELEMENT.removeEventListener('scroll', e => {});
     };
   });
   return (
