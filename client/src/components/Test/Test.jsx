@@ -9,7 +9,10 @@ export default function Test() {
           console.log('scrolled b');
         }}
         actionWhenBottom={() => console.log('bottom')}
-        styles={{ width: '300px', height: '400px' }}
+        style={{ width: '300px', height: '400px' }}
+        onUnload={() => {
+          console.log('UNLOADED... ');
+        }}
       >
         <div>
           <ul>
