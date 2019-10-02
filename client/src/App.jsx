@@ -32,6 +32,7 @@ import Chat from './components/Chat/Chat/Chat';
 import ChatDialog from './components/Chat/Chat/ChatDialog';
 import CommentDialog from './components/Comment/CommentDialog';
 import ReviewEditor from './components/Review/ReviewEditor';
+import Test from './components/Test/Test';
 // Get user from localStorage.
 store.dispatch(logFromSession());
 
@@ -47,7 +48,7 @@ function App() {
               <Route exact path="/" component={Home} />
               {/* Change this route */}
               <Route exact path="/:token" component={AuthHandler} />
-
+              <Route exact path="/test/you/shouldnt/be/here" component={Test} />
               <Route exact path="/artist/:name" component={Artist} />
               <Route
                 exact
