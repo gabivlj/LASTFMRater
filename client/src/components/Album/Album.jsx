@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { LinearProgress, IconButton } from '@material-ui/core';
+import { LinearProgress, IconButton, Button } from '@material-ui/core';
 import {
   getAlbum,
   addAlbumRating,
@@ -16,6 +16,8 @@ import { Link } from 'react-router-dom';
 import CommentComponent from '../CommentSection/Common/CommentComponent';
 import HeartBorderIcon from '@material-ui/icons/FavoriteBorder';
 import HeartIcon from '@material-ui/icons/Favorite';
+import { postReview } from '../../actions/reviewActions';
+import { withRouter } from 'react-router-dom';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
@@ -72,9 +74,17 @@ class Album extends Component {
 
   render() {
     let { album } = this.props;
-    const { currentUser, addComment, likeComment, likeAlbum } = this.props;
+    const {
+      currentUser,
+      addComment,
+      likeComment,
+      likeAlbum,
+      postReview,
+      history,
+    } = this.props;
     if (album) album = album.album;
     if (album) album = album.album;
+
     let tracks;
     let duration;
     if (album) {
@@ -153,6 +163,17 @@ class Album extends Component {
                   </IconButton>
                 )}
 
+                {this.props.currentUser && this.props.currentUser.id ? (
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    component="span"
+                    onClick={() => postReview(history, album._id)}
+                  >
+                    Make a review
+                  </Button>
+                ) : null}
+
                 <h5 className="mt-3 ">Track list:</h5>
                 <ul className="list-group mt-3 w-100">
                   {tracks && tracks.length > 0
@@ -192,7 +213,16 @@ const mapStateToProps = state => ({
   currentUser: state.auth.apiUser,
   auth: state.auth,
 });
-export default connect(
-  mapStateToProps,
-  { getAlbum, addAlbumRating, addComment, likeComment, likeAlbum },
-)(Album);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    {
+      getAlbum,
+      addAlbumRating,
+      addComment,
+      likeComment,
+      likeAlbum,
+      postReview,
+    },
+  )(Album),
+);

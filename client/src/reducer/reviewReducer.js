@@ -7,20 +7,18 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_ARTICLE_FOR_EDITING':
+    case 'SET_REVIEW_EDITOR':
       return {
         ...state,
-        editReview: {
-          ...action.payload,
-        },
+        editReview: action.payload,
         loading: false,
       };
-    case 'CLEAN_ARTICLE_EDIT':
+    case 'CLEAN_REVIEW_EDIT':
       return {
         ...state,
         editReview: {},
       };
-    case 'SET_LOADING':
+    case 'SET_LOADING_REVIEW':
       return {
         ...state,
         loading: true,
@@ -28,9 +26,7 @@ export default (state = initialState, action) => {
     case 'SET_REVIEW':
       return {
         ...state,
-        review: {
-          ...action.payload,
-        },
+        review: action.payload,
         loading: false,
       };
     case 'CLEAN_REVIEW':

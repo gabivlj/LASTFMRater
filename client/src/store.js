@@ -15,14 +15,14 @@ if (
     compose(
       applyMiddleware(...middleware),
       window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__()
-    )
+        window.__REDUX_DEVTOOLS_EXTENSION__(),
+    ),
   );
 } else {
   store = createStore(
     reducer,
     initialState,
-    compose(applyMiddleware(...middleware))
+    compose(applyMiddleware(...middleware)),
   );
 }
 

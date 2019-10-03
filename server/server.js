@@ -15,16 +15,15 @@ const profile = require('./routes/profile');
 const comments = require('./routes/commentSection');
 const following = require('./routes/following');
 const chat = require('./routes/chat');
-
+const review = require('./routes/review');
 const { addRoutes } = require('./lib/routes');
-
 const passportConfig = require('./config/passport');
 
 // Database connection
 mongoose.connect(db, { useNewUrlParser: true }, err => {
   if (err) throw err;
   console.log(
-    `Connected to database! Welcome 🐋: ${db.split(':')[1].slice(2)} 🐋`
+    `Connected to database! Welcome 🐋: ${db.split(':')[1].slice(2)} 🐋`,
   );
 });
 
@@ -34,7 +33,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Passport init
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.disable('x-powered-by');
 
 passportConfig(passport);
@@ -56,7 +54,8 @@ addRoutes(
   ['/api/profile', profile],
   ['/api/comments', comments],
   ['/api/following', following],
-  ['/api/chat', chat]
+  ['/api/chat', chat],
+  ['/api/reviews', review],
 );
 
 // Port listening
@@ -64,5 +63,5 @@ const PORT = process.env.PORT || 8000;
 app.listen(PORT, err =>
   err
     ? console.log(err)
-    : console.log(`🐋  Grampy localhost:${PORT} Connected! 🐋`)
+    : console.log(`🐋  Grampy localhost:${PORT} Connected! 🐋`),
 );
