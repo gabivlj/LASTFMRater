@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import guidGenerator from '../../utils/idCreator';
 
 /**
  *
@@ -16,16 +17,24 @@ function ScrollerLoader({
   preload,
   onUnload,
   style,
+  uuid,
 }) {
   let ___TIMEOUT = false;
   useEffect(() => {
+    if (!uuid) {
+      console.error(
+        'If you are using more ScrollerLoaders in the same page they wont work properly if you dont pass a uuid',
+      );
+    }
     if (!style || style.height == null || style.width == null) {
       console.warn(
         'You REALLY should put your own height and width if you want ScrollerLoader to work...',
       );
     }
     // !! Maybe use refs? They have been 0 effective for me and prop. to failures but...
-    const __LOADER_ELEMENT = document.getElementById('_SCROLLER_LOADER_');
+    const __LOADER_ELEMENT = document.getElementById(
+      `GRAMPY_SCROLLER_LOADER_${uuid}`,
+    );
     if (!__LOADER_ELEMENT) {
       console.error('FATAL ERROR: __LOADER_ELEMENT Not found!!');
       throw new Error('Error finding scroller loader.');
@@ -59,7 +68,10 @@ function ScrollerLoader({
     };
   });
   return (
-    <div id="_SCROLLER_LOADER_" style={{ ...style, overflowY: 'scroll' }}>
+    <div
+      id={`GRAMPY_SCROLLER_LOADER_${uuid}`}
+      style={{ ...style, overflowY: 'scroll' }}
+    >
       {children}
     </div>
   );
@@ -77,6 +89,7 @@ ScrollerLoader.propTypes = {
     height: PropTypes.string,
     width: PropTypes.string,
   }).isRequired,
+  uuid: PropTypes.string.isRequired,
 };
 
 ScrollerLoader.defaultProps = {

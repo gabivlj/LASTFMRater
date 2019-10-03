@@ -8,11 +8,16 @@ const router = express.Router();
 
 router.get('/reviews/object/:objectID', async (req, res) => {
   const { objectID } = req.params;
-  const reviews = await Review.find({ objectID, show: true });
+  const startingIndex = parseInt(req.query.startingIndex, 10) || 0;
+  const endingIndex = parseInt(req.query.endingIndex, 10) || 10;
+  const reviews = await Review.find({ objectID, show: true }).limit(
+    endingIndex + 1,
+  );
   if (!reviews || reviews.length === 0) {
     return res.json({ reviews: [] });
   }
-  return res.json({ reviews });
+  const arrayReturnReviews = reviews.slice(startingIndex, endingIndex + 1);
+  return res.json({ reviews: arrayReturnReviews });
 });
 
 router.get('/reviews/user/:userID', async (req, res) => {

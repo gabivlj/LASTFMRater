@@ -1,9 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@material-ui/core';
 import ReactMarkdown from 'react-markdown';
+import { connect } from 'react-redux';
+import {
+  getReviewEditor,
+  cleanReviewEditor,
+} from '../../../actions/reviewActions';
 
-function Editor({ reviewID }) {
+function Editor({ reviewID, review, getReviewEditor, cleanReviewEditor }) {
   const [text, setText] = useState('');
+  useEffect(() => {
+    if (reviewID !== review._id) {
+      getReviewEditor(reviewID);
+    } else {
+      setText(review.text);
+    }
+  }, [reviewID, review._id]);
+  useEffect(() => {
+    return () => {
+      cleanReviewEditor();
+    };
+  }, []);
   return (
     <div>
       <div className="container">
@@ -37,4 +54,11 @@ function Editor({ reviewID }) {
   );
 }
 
-export default Editor;
+const mapStateToProps = state => ({
+  review: state.review.editReview,
+});
+
+export default connect(
+  mapStateToProps,
+  { getReviewEditor, cleanReviewEditor },
+)(Editor);
