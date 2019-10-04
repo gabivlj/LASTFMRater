@@ -62,10 +62,22 @@ export const getReviews = (
   objectId,
   beginningIndex = 0,
   endingIndex = 10,
+  type,
 ) => async dispatch => {
+  dispatch(setLoading());
   const [response, err] = await handleError(
-    axios.post(`/api/reviews/object/${objectId}`),
+    axios.get(`/api/reviews/reviews/object/${objectId}`, {
+      params: { reviewType: type, startingIndex: beginningIndex, endingIndex },
+    }),
   );
+  if (err) {
+    console.log(err);
+    return dispatch(notifyError('Error getting reviews'));
+  }
+  return dispatch({
+    type: 'ADD_REVIEWS',
+    payload: response.data.reviews,
+  });
 };
 
 const getMyReviews = () => async dispatch => {};

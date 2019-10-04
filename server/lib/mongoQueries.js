@@ -4,6 +4,72 @@ const { ObjectId } = mongoose.Types;
 
 const mongoQueries = {
   aggregations: {
+    reviews: {
+      getReview: (reviewID, model = null) => [
+        {
+          $match: {
+            _id: ObjectId(reviewID),
+          },
+        },
+        {
+          $project: {
+            username: 1,
+            userID: 1,
+            text: 1,
+            show: 1,
+            likes: 1,
+            dislikes: 1,
+            objectID: {
+              $toObjectId: '$objectID',
+            },
+          },
+        },
+        ...(model != null
+          ? [
+              {
+                $lookup: {
+                  from: model,
+                  localField: 'objectID',
+                  foreignField: '_id',
+                  as: model,
+                },
+              },
+            ]
+          : []),
+      ],
+      getReviews: (objectID, model = null) => [
+        {
+          $match: {
+            objectID,
+          },
+        },
+        {
+          $project: {
+            username: 1,
+            userID: 1,
+            text: 1,
+            show: 1,
+            likes: 1,
+            dislikes: 1,
+            objectID: {
+              $toObjectId: '$objectID',
+            },
+          },
+        },
+        ...(model
+          ? [
+              {
+                $lookup: {
+                  from: model,
+                  localField: 'objectID',
+                  foreignField: '_id',
+                  as: model,
+                },
+              },
+            ]
+          : []),
+      ],
+    },
     commentSection: {
       getComments: objectId => [
         {

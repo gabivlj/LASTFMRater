@@ -47,7 +47,6 @@ function ScrollerLoader({
       }
       actionWhenScrolling(e);
       if (e.target.scrollTop <= 0) {
-        console.log('top');
         actionWhenTop();
       }
       if (
@@ -66,7 +65,7 @@ function ScrollerLoader({
       onUnload();
       __LOADER_ELEMENT.removeEventListener('scroll', e => {});
     };
-  });
+  }, []);
   return (
     <div
       id={`GRAMPY_SCROLLER_LOADER_${uuid}`}
