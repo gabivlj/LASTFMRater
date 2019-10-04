@@ -30,8 +30,9 @@ export const cleanReviews = () => dispatch =>
   dispatch({ type: 'CLEAN_REVIEWS' });
 
 export const getReviewEditor = _id => async dispatch => {
+  dispatch(setLoading());
   const [response, error] = await handleError(
-    axios.get(`/api/reviews/reviews/review/${_id}`),
+    axios.get(`/api/reviews/reviews/review/me/${_id}`),
   );
   if (error) {
     return dispatch(notifyError('Error getting the review.'));
@@ -42,10 +43,8 @@ export const getReviewEditor = _id => async dispatch => {
   });
 };
 
-export const updateReview = (
-  review,
-  history = 'todo: THIS IS FOR PUSHING TO ANOTHER PAGE LATER',
-) => async dispatch => {
+export const updateReview = (review, history) => async dispatch => {
+  dispatch(setLoading());
   const [response, err] = await handleError(
     axios.post('/api/reviews/update', review),
   );
@@ -54,8 +53,8 @@ export const updateReview = (
   }
 
   return dispatch({
-    type: 'GET_REVIEW',
-    payload: { review: response.data.review },
+    type: 'SET_REVIEW_EDITOR',
+    payload: response.data.review,
   });
 };
 

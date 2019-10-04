@@ -4,9 +4,9 @@ import './review-editor.style.css';
 import { withRouter } from 'react-router-dom';
 import Editor from './Editor/Editor';
 
-function ReviewEditor({ match }) {
+function ReviewEditor({ match, history }) {
   const { id } = match.params;
-  return <Editor reviewID={id} />;
+  return <Editor reviewID={id} history={history} />;
 }
 
 export default withRouter(ReviewEditor);
