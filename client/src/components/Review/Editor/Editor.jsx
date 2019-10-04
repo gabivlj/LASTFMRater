@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, LinearProgress } from '@material-ui/core';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import {
   getReviewEditor,
   cleanReviewEditor,
+  updateReview,
 } from '../../../actions/reviewActions';
 
-function Editor({ reviewID, review, getReviewEditor, cleanReviewEditor }) {
+function Editor({
+  reviewID,
+  review,
+  getReviewEditor,
+  cleanReviewEditor,
+  history,
+  updateReview,
+  loading,
+}) {
   const [text, setText] = useState('');
   useEffect(() => {
     if (reviewID !== review._id) {
@@ -23,6 +32,7 @@ function Editor({ reviewID, review, getReviewEditor, cleanReviewEditor }) {
   }, []);
   return (
     <div>
+      {loading && <LinearProgress />}
       <div className="container">
         <div className="row">
           <div className="col-md-6">
@@ -36,10 +46,22 @@ function Editor({ reviewID, review, getReviewEditor, cleanReviewEditor }) {
                 onChange={e => setText(e.target.value)}
                 value={text}
               />
-              <Button color="primary" variant="contained" component="span">
-                Submit
+              <Button
+                color="primary"
+                variant="contained"
+                component="span"
+                onClick={() =>
+                  updateReview({ show: !review.show, _id: review._id }, history)
+                }
+              >
+                {review.show ? 'Unpublish' : 'Submit'}
               </Button>
-              <Button color="primary" className="ml-2" component="span">
+              <Button
+                color="primary"
+                className="ml-2"
+                component="span"
+                onClick={() => updateReview({ text, _id: review._id }, history)}
+              >
                 Save
               </Button>
             </div>
@@ -56,9 +78,10 @@ function Editor({ reviewID, review, getReviewEditor, cleanReviewEditor }) {
 
 const mapStateToProps = state => ({
   review: state.review.editReview,
+  loading: state.review.loading,
 });
 
 export default connect(
   mapStateToProps,
-  { getReviewEditor, cleanReviewEditor },
+  { getReviewEditor, cleanReviewEditor, updateReview },
 )(Editor);

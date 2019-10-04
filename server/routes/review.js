@@ -56,6 +56,27 @@ router.get(
   },
 );
 
+router.get(
+  '/reviews/review/me/:reviewID',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { reviewID } = req.params;
+      const review = await Review.findOne({
+        _id: reviewID,
+        userID: req.user.id,
+      });
+      if (!review) {
+        return res.status(404).json({ error: 'Error finding review.' });
+      }
+      return res.json({ review });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'Error with the request' });
+    }
+  },
+);
+
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
@@ -94,17 +115,23 @@ router.post(
       if (!_id) {
         return res.status(400).json({ badRequest: 'Pass a good id.' });
       }
-      let review = await Review.findById(_id);
+      const review = await Review.findById(_id);
+      if (String(review.userID) !== String(id))
+        return res
+          .status(400)
+          .json({ error: 'Review doesnt belong to that user' });
       if (!review) {
         return res.status(404).json({ error: 'Review not found.' });
       }
-      review = {
+      const reviewChanges = {
         text: text || review.text,
         show: show === null ? review.show : show,
         objectID: objectID || review.objectID,
-        userID: id || review.userID,
         username: username || review.username,
       };
+      review.text = reviewChanges.text;
+      review.show = reviewChanges.show;
+      review.objectID = reviewChanges.objectID;
       const updated = await review.save();
       return res.json({ review: updated });
     } catch (err) {
