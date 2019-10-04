@@ -18,6 +18,7 @@ import HeartBorderIcon from '@material-ui/icons/FavoriteBorder';
 import HeartIcon from '@material-ui/icons/Favorite';
 import { postReview } from '../../actions/reviewActions';
 import { withRouter } from 'react-router-dom';
+import ReviewsSection from '../Common/ReviewsSection';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
@@ -189,6 +190,8 @@ class Album extends Component {
                 <div className="badge badge-primary ml-3 mt-3">
                   Total duration: {hourFormat.fmtMSS(duration)}
                 </div>
+                <h3 className="m-2">Reviews</h3>
+                <ReviewsSection objectID={album._id} type={'ALBUM'} />
                 <br />
                 {/* TODO: We are cuerrently testing this component for reusable. */}
                 <div style={{ margin: '50px 0 20px 0' }}>

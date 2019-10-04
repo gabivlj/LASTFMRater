@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './RatingsCommon.styles.css';
@@ -137,6 +139,7 @@ function RatingsCommon({
       if (i >= state.rating) {
         stars.push(
           <button
+            type="button"
             style={buttonStyle}
             // It sets this star as the current star.
             onPointerEnter={() => setState({ ...state, rating: i + 1 })}
@@ -147,12 +150,13 @@ function RatingsCommon({
             key={i}
             onClick={() => handleClick(i + 1)}
           >
-            <i className="far fa-star" id={i} style={{ color: '#b29600' }} />
+            <i className="far fa-star" id={i} style={{ color: '#4263f5' }} />
           </button>,
         );
       } else {
         stars.push(
           <button
+            type="button"
             style={buttonStyle}
             onPointerEnter={() => setState({ ...state, rating: i + 1 })}
             onPointerLeave={() =>
@@ -161,7 +165,7 @@ function RatingsCommon({
             key={i}
             onClick={() => handleClick(i + 1)}
           >
-            <i className="fas fa-star" id={i} style={{ color: '#FFD700' }} />
+            <i className="fas fa-star" id={i} style={{ color: '#4263f5' }} />
           </button>,
         );
       }
@@ -173,14 +177,16 @@ function RatingsCommon({
         <div className="box-rating">
           <h3 className="m-3 padding-box">
             Total Score: 
-{' '}
-{state.generalRating.toFixed(2)} / 10
-                              </h3>
+            {' '}
+            {state.generalRating.toFixed(2)}
+            {' '}
+/ 10
+          </h3>
         </div>
       ) : null}
       {stars} 
-{' '}
-<div className="badge badge-primary">{state.actualRating}</div>
+      {' '}
+      <div className="badge badge-primary">{state.actualRating}</div>
       {state.error ? (
         <div className="badge badge-danger ml-3">{state.error}</div>
       ) : null}

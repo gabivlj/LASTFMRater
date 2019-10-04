@@ -48,25 +48,6 @@ const AlbumSchema = new Schema({
       },
     },
   ],
-  reviews: [
-    {
-      text: {
-        type: String,
-        required: true,
-      },
-      author: {
-        type: String,
-        isRequired: true,
-      },
-      title: {
-        type: String,
-        isRequired: true,
-      },
-      puntuation: {
-        type: Number,
-      },
-    },
-  ],
   numberOfReviewsEachDay: [
     {
       date: {

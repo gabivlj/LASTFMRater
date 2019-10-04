@@ -33,7 +33,7 @@ function Editor({
   return (
     <div>
       {loading && <LinearProgress />}
-      <div className="container">
+      <div className="container mt-3">
         <div className="row">
           <div className="col-md-6">
             <h2>Review editor:</h2>

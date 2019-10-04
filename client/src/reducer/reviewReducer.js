@@ -44,6 +44,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         reviews: [...state.reviews, ...action.payload],
+        loading: false,
       };
     case 'CLEAN_REVIEWS':
       return {

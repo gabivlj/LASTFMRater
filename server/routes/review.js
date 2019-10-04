@@ -1,22 +1,39 @@
 const express = require('express');
 const passport = require('passport');
 const Review = require('../models/Review');
+const mongoQueries = require('../lib/mongoQueries');
+const reviewUtils = require('../lib/reviewUtils');
 
 const router = express.Router();
+
+function getReviewType(reviewType) {
+  if (String(reviewType) === 'ALBUM') {
+    return 'albums';
+  }
+  return null;
+}
 
 // TODO: We will need to use aggregation for getting reviews because we want the image profiles...
 
 router.get('/reviews/object/:objectID', async (req, res) => {
   const { objectID } = req.params;
+  const { reviewType = '' } = req.query;
+  const type = getReviewType(reviewType);
   const startingIndex = parseInt(req.query.startingIndex, 10) || 0;
   const endingIndex = parseInt(req.query.endingIndex, 10) || 10;
-  const reviews = await Review.find({ objectID, show: true }).limit(
-    endingIndex + 1,
-  );
+  const reviews = await Review.aggregate(
+    mongoQueries.aggregations.reviews.getReviews(objectID, type),
+  ).limit(endingIndex + 1);
+
   if (!reviews || reviews.length === 0) {
     return res.json({ reviews: [] });
   }
-  const arrayReturnReviews = reviews.slice(startingIndex, endingIndex + 1);
+
+  const arrayReturnReviews = reviewUtils.mapAllReviewsToPuntuations(
+    reviews.slice(startingIndex, endingIndex + 1),
+    reviews[0][type] ? reviews[0][type][0] : null,
+  );
+
   return res.json({ reviews: arrayReturnReviews });
 });
 
@@ -32,11 +49,27 @@ router.get('/reviews/user/:userID', async (req, res) => {
 router.get('/reviews/review/:reviewID', async (req, res) => {
   try {
     const { reviewID } = req.params;
-    const review = await Review.findById(reviewID);
-    if (!review) {
+    const { reviewType } = req.query;
+    const type = getReviewType(reviewType);
+    const review = await Review.aggregate(
+      mongoQueries.aggregations.reviews.getReview(reviewID, type),
+    );
+    if (!review || review.length === 0) {
       return res.status(404).json({ error: 'Error finding review.' });
     }
-    return res.json({ review });
+    // Returns an array so we choose the first element.
+    const reviewObject = review[0];
+    const { username } = reviewObject;
+    // The review object is also an array.
+    const objectType = reviewObject[type] ? reviewObject[type][0] : null;
+    // Extract the puntuation. (It's -1 if it does not exist...)
+    const puntuation = reviewUtils.getPuntuationFromObject(
+      username,
+      objectType,
+    );
+    reviewObject.puntuation = puntuation;
+    delete reviewObject.albums;
+    return res.json({ review: reviewObject });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ error: 'Error with the request' });
