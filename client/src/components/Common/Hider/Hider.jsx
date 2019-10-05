@@ -45,9 +45,9 @@ Hider.propTypes = {
       name: PropTypes.string.isRequired,
       selected: PropTypes.bool,
       jsx: PropTypes.bool,
-      props: PropTypes.object
-    })
-  ).isRequired
+      props: PropTypes.object,
+    }),
+  ).isRequired,
 };
 
 export default Hider;

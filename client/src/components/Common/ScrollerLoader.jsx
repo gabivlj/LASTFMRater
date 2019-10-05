@@ -26,7 +26,13 @@ function ScrollerLoader({
         'If you are using more ScrollerLoaders in the same page they wont work properly if you dont pass a uuid',
       );
     }
-    if (!style || style.height == null || style.width == null) {
+    if (
+      !style ||
+      (style.height == null &&
+        style.minHeight == null &&
+        style.maxHeight == null) ||
+      style.width == null
+    ) {
       console.warn(
         'You REALLY should put your own height and width if you want ScrollerLoader to work...',
       );
