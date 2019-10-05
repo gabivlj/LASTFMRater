@@ -5,11 +5,13 @@ const { ObjectId } = mongoose.Types;
 const mongoQueries = {
   aggregations: {
     reviews: {
-      getReview: (reviewID, model = null) => [
+      getReview: (
+        reviewID,
+        model = null,
+        match = { _id: ObjectId(reviewID) },
+      ) => [
         {
-          $match: {
-            _id: ObjectId(reviewID),
-          },
+          $match: match,
         },
         {
           $project: {
@@ -37,11 +39,13 @@ const mongoQueries = {
             ]
           : []),
       ],
-      getReviews: (objectID, model = null) => [
+      getReviews: (
+        objectID,
+        model = null,
+        match = { objectID, show: true },
+      ) => [
         {
-          $match: {
-            objectID,
-          },
+          $match: match,
         },
         {
           $project: {

@@ -13,7 +13,7 @@ function ImageUploader({ submit }) {
   const FILE_EXTENSIONS = {
     'image/gif': true,
     'image/jpeg': true,
-    'image/png': true
+    'image/png': true,
   };
   function changeFileOnChange(e) {
     const { files } = e.target;

@@ -10,7 +10,7 @@ import {
   cleanErrors,
   uploadImage,
   followUser,
-  cleanProfile
+  cleanProfile,
 } from '../../../actions/profileActions';
 import ProfileInfo from './ProfileInfo';
 import ProfileArtists from './ProfileArtist/ProfileArtists';
@@ -20,9 +20,10 @@ import {
   open,
   setChatInfo,
   setChatRoute,
-  ROUTES
+  ROUTES,
 } from '../../../actions/chatActions';
 import Hider from '../../Common/Hider/Hider';
+import ReviewsSection from '../../Common/ReviewsSection';
 
 /**
  * @todo I think we will be changing Auth.jsx to this, Or separate or i don't know, but we must do profile page again.
@@ -101,14 +102,27 @@ function Profile({
           <h3>This user has no most listened artists!</h3>
         ),
       jsx: false,
-      name: 'Most listened artists'
+      name: 'Most listened artists',
     };
-    const h1 = {
-      Component: <h1>Hey</h1>,
+
+    const reviewSections = {
+      Component: (
+        <ReviewsSection type="ALBUM" objectID={profile.profile._id} profile />
+      ),
       jsx: false,
-      name: 'Test'
+      name: 'Reviews',
     };
-    const elementsArray = [mostListened, h1];
+    const reviewInProgress = {
+      Component: (
+        <ReviewsSection type="ALBUM" objectID={profile.profile._id} profile />
+      ),
+      jsx: false,
+      name: 'Reviews in progress',
+    };
+    const elementsArray = [mostListened, reviewSections];
+    if (sameProfile) {
+      elementsArray.push(reviewInProgress);
+    }
     return elementsArray;
   }
 
@@ -149,7 +163,7 @@ function Profile({
                   setChatInfo({
                     username: profile.profile.user,
                     id: profile.profile._id,
-                    profileImage
+                    profileImage,
                   });
                   open();
                   setChatRoute(ROUTES.CHAT);
@@ -206,7 +220,7 @@ function Profile({
 
 const mapStateToProps = state => ({
   profile: state.profile,
-  auth: state.auth
+  auth: state.auth,
 });
 
 export default connect(
@@ -220,6 +234,6 @@ export default connect(
     setChatUsername,
     setChatRoute,
     open,
-    followUser
-  }
+    followUser,
+  },
 )(Profile);

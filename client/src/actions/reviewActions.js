@@ -63,11 +63,17 @@ export const getReviews = (
   beginningIndex = 0,
   endingIndex = 10,
   type,
+  profile = false,
 ) => async dispatch => {
   dispatch(setLoading());
   const [response, err] = await handleError(
     axios.get(`/api/reviews/reviews/object/${objectId}`, {
-      params: { reviewType: type, startingIndex: beginningIndex, endingIndex },
+      params: {
+        reviewType: type,
+        startingIndex: beginningIndex,
+        endingIndex,
+        profile: profile ? 'YES' : 'NO',
+      },
     }),
   );
   if (err) {

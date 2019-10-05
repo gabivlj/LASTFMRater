@@ -13,27 +13,21 @@ function getReviewType(reviewType) {
   return null;
 }
 
-// TODO: We will need to use aggregation for getting reviews because we want the image profiles...
-
 router.get('/reviews/object/:objectID', async (req, res) => {
   const { objectID } = req.params;
-  const { reviewType = '' } = req.query;
-  const type = getReviewType(reviewType);
+  const { reviewType = '', profile = 'NO' } = req.query;
   const startingIndex = parseInt(req.query.startingIndex, 10) || 0;
   const endingIndex = parseInt(req.query.endingIndex, 10) || 10;
-  const reviews = await Review.aggregate(
-    mongoQueries.aggregations.reviews.getReviews(objectID, type),
-  ).limit(endingIndex + 1);
-
-  if (!reviews || reviews.length === 0) {
-    return res.json({ reviews: [] });
-  }
-
-  const arrayReturnReviews = reviewUtils.mapAllReviewsToPuntuations(
-    reviews.slice(startingIndex, endingIndex + 1),
-    reviews[0][type] ? reviews[0][type][0] : null,
+  const functionForReviews =
+    profile === 'NO'
+      ? reviewUtils.getReviewsObjectID
+      : reviewUtils.getReviewsUserID;
+  const arrayReturnReviews = await functionForReviews(
+    objectID,
+    startingIndex,
+    endingIndex,
+    reviewType,
   );
-
   return res.json({ reviews: arrayReturnReviews });
 });
 
