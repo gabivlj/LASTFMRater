@@ -26,7 +26,7 @@ function ReviewItem({ text, username, puntuation, profile, album, auth, id }) {
       <div>
         <Stars puntuation={puntuation} generalScore={10} />
       </div>
-      {username === auth.user && (
+      {auth && username === auth.user && (
         <Link to={`/review/edit/${id}`}>
           <Button color="primary" variant="contained">
             Edit

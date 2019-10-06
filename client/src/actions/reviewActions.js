@@ -58,14 +58,51 @@ export const updateReview = (review, history) => async dispatch => {
   });
 };
 
+export const getReviewsHidden = (
+  beginningIndex = 0,
+  endingIndex = 10,
+  type,
+) => {
+  return new Promise(async (res, err) => {
+    const [response, error] = await handleError(
+      axios.get('/api/reviews/reviews/user/auth', {
+        params: {
+          reviewType: type,
+          startingIndex: beginningIndex,
+          endingIndex,
+        },
+      }),
+    );
+    if (error) {
+      return err(error);
+    }
+    return res(response.data);
+  });
+};
+
 export const getReviews = (
   objectId,
   beginningIndex = 0,
   endingIndex = 10,
   type,
   profile = false,
+  show = true,
 ) => async dispatch => {
   dispatch(setLoading());
+  if (!show) {
+    const [response, err] = await handleError(
+      getReviewsHidden(beginningIndex, endingIndex, type),
+    );
+
+    if (err) {
+      console.log(err);
+      return dispatch(notifyError('Error getting reviews'));
+    }
+    return dispatch({
+      type: 'ADD_REVIEWS',
+      payload: response.reviews,
+    });
+  }
   const [response, err] = await handleError(
     axios.get(`/api/reviews/reviews/object/${objectId}`, {
       params: {

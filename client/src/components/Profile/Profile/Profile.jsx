@@ -107,14 +107,26 @@ function Profile({
 
     const reviewSections = {
       Component: (
-        <ReviewsSection type="ALBUM" objectID={profile.profile._id} profile />
+        <ReviewsSection
+          type="ALBUM"
+          objectID={profile.profile._id}
+          profile
+          key="1"
+        />
       ),
       jsx: false,
       name: 'Reviews',
     };
     const reviewInProgress = {
       Component: (
-        <ReviewsSection type="ALBUM" objectID={profile.profile._id} profile />
+        <ReviewsSection
+          type="ALBUM"
+          objectID={profile.profile._id}
+          profile
+          uuid="SCROLLER_HIDDEN"
+          key="2"
+          show={false}
+        />
       ),
       jsx: false,
       name: 'Reviews in progress',
