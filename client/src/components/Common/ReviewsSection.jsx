@@ -6,6 +6,18 @@ import { getReviews, cleanReviews } from '../../actions/reviewActions';
 import ScrollerLoader from './ScrollerLoader';
 import ReviewItem from './Review/ReviewItem';
 
+/**
+ * @param {String} type The type of reviews, I think we are just gonna use albums but just incase...
+ * @param {String} objectID The object ID, it will be the user if it's a profile, it will be an album if its an album... etc
+ * @param {Function} getReviews Redux function.
+ * @param {Object} reviewState Redux object state
+ * @param {Function} cleanreviews Redux function
+ * @param {Boolean} profile Boolean that says if this is in a profile (So it loads only the reviews of the user.)
+ * @param {Boolean} show Boolean that says if the reviews with show: true or show: false should be rendered
+ * @param {Boolean} cleanReviewsWhenDestroy Boolean that says if the reviews should be cleaned when the component is not rendering.
+ * @param {String} uuid when we are having various ReviewsSections.
+ * @description ReviewSection includes a ScrollerLoader component, it loads the specified reviews (Depending on the ObjectID or if it's a profile or the type)
+ */
 function ReviewsSection({
   type,
   objectID,
