@@ -288,20 +288,32 @@ router.get('/search/:query', async (req, res) => {
  */
 router.get('/ratings/:user', async (req, res) => {
   const { user } = req.params;
+  const beginning = parseInt(req.query.beginning || 0, 10);
+  const limit = parseInt(req.query.limit || 10, 10);
   const userdb = await User.findOne({ username: user });
   if (!userdb) {
     return res.status(404).json({ error: 'No user found.' });
   }
-  const orArray = userdb.ratedAlbums.map(album => ({ _id: album }));
+  const orArray = userdb.ratedAlbums
+    .slice(beginning, limit + 1)
+    .map(album => ({ _id: album }));
+  if (orArray.length === 0) return res.json({ puntuations: [] });
   const albumsdb = await Album.find({
     $or: orArray,
   });
+  const findRating = album => {
+    for (let i = 0; i < album.ratings.length; i += 1) {
+      if (String(album.ratings[i].user) === String(user)) {
+        return album.ratings[i];
+      }
+    }
+    return null;
+  };
+
   const albumShortened = albumsdb.map(album => ({
     name: album.name,
     artist: album.artist,
-    rating: album.ratings.filter(
-      rating => String(rating.user) === String(user),
-    )[0],
+    rating: findRating(album),
     mbid: album.mbid,
     _id: album._id,
   }));
