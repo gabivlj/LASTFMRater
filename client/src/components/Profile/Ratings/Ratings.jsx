@@ -72,7 +72,7 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
         minHeight: '200px',
         maxHeight: '400px',
         width: '100%',
-        overScrollY: 'hidden',
+        overflowX: 'hidden',
       }}
     >
       <div>

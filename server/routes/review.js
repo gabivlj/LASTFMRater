@@ -31,6 +31,29 @@ router.get('/reviews/object/:objectID', async (req, res) => {
   return res.json({ reviews: arrayReturnReviews });
 });
 
+router.get(
+  '/reviews/user/auth',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { reviewType = 'ALBUM' } = req.query;
+      const { _id } = req.user;
+      const startingIndex = parseInt(req.query.startingIndex, 10) || 0;
+      const endingIndex = parseInt(req.query.endingIndex, 10) || 10;
+      const arrayReturnReviews = await reviewUtils.getReviewsUserID(
+        _id,
+        startingIndex,
+        endingIndex,
+        reviewType,
+        false,
+      );
+      return res.json({ reviews: arrayReturnReviews });
+    } catch (err) {
+      return res.status(400).json({ error: 'Error retrieving the reviews.' });
+    }
+  },
+);
+
 router.get('/reviews/user/:userID', async (req, res) => {
   const { userID } = req.params;
   const reviews = await Review.find({ userID, show: true });

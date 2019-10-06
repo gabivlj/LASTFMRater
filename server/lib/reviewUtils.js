@@ -67,12 +67,13 @@ const functions = {
     startingIndex,
     endingIndex,
     reviewType = 'ALBUM',
+    show = true,
   ) {
     const type = getReviewType(reviewType);
     const reviews = await Review.aggregate(
       mongoQueries.aggregations.reviews.getReviews(null, type, {
         userID: ObjectId(userID),
-        show: true,
+        show,
       }),
     ).limit(endingIndex + 1);
     if (!reviews || reviews.length === 0) {
