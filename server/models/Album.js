@@ -19,10 +19,12 @@ const AlbumSchema = new Schema({
   name: {
     type: String,
     required: true,
+    text: true,
   },
   artist: {
     type: String,
     required: true,
+    text: true,
   },
   images: [Image],
   tracks: [
@@ -31,6 +33,20 @@ const AlbumSchema = new Schema({
         ref: 'tracks',
         type: Schema.Types.ObjectId,
       },
+      duration: {
+        type: Number,
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      },
+      features: [
+        {
+          artistId: String,
+          artist: String,
+        },
+      ],
     },
   ],
   mbid: {

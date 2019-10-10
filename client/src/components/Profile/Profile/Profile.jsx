@@ -220,7 +220,7 @@ function Profile({
           )} */}
           <div>
             <Hider
-              style={{ marginLeft: '13.5%' }}
+              style={{ marginLeft: '6.5%', marginTop: '100px' }}
               components={returnElements()}
             />
           </div>

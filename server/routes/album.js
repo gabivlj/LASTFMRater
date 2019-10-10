@@ -246,7 +246,19 @@ router.post(
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
   const { username, userId, mbid } = req.query;
-  console.log(userId);
+  // todo: change
+  const isMbid = mbid => mbid === 'null' || mbid.includes('-');
+  const isIdMbid = isMbid(mbid);
+  if (!isIdMbid) {
+    const [err, album] = await handleError(
+      albumHelper.getAlbumViaMbid(mbid, username, FM, userId),
+    );
+    if (err) {
+      return res.status(404).json({ error: err });
+    }
+    return res.json({ album });
+  }
+
   const AlbumData = {
     albumname: req.params.albumname,
     username,
@@ -276,14 +288,12 @@ router.get('/:albumname/:artistname', async (req, res) => {
       albumDB.lastfmSource = true;
       dontCareWaitingForSave(albumDB, false);
     }
-
     albumFM.ratings = albumDB.ratings;
     albumFM.reviews = albumDB.reviews;
     albumFM._id = albumDB._id;
     albumFM.__v = albumDB.__v;
     albumFM.images = albumDB.images;
     albumFM.lastfmSource = albumDB.lastfmSource;
-    console.log(userId);
     albumFM.liked = !!(albumDB.usersLiked ? albumDB.usersLiked[userId] : false);
     return res.json({ album: albumFM });
   }
@@ -502,5 +512,34 @@ router.post(
     return res.json({ images: album.images });
   },
 );
+
+router.get('/test/album/:text', async (req, res) => {
+  const a = await Album.find({
+    ...mongoQueries.find.album.getAlbumSearch(req.params.text),
+    lastfmSource: true,
+  });
+
+  res.json({ albums: a });
+});
+
+router.get('/epic/deep/copy', async (req, res) => {
+  const albums = await Album.find().limit(20);
+  const response = await new Promise(async res => {
+    const albums12 = [];
+    for (const album of albums) {
+      const albumFM = FM.getAlbum({
+        artist: album.artist,
+        albumname: album.name,
+        mbid: album.mbid,
+      });
+      albums12.push(albumFM);
+    }
+    const albumsEnd = Promise.all(albums12);
+    res(albumsEnd);
+  });
+  return res.json({
+    lol: response,
+  });
+});
 
 module.exports = router;
