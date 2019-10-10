@@ -3,6 +3,15 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 
 const mongoQueries = {
+  find: {
+    album: {
+      getAlbumSearch: text => ({
+        $text: {
+          $search: text,
+        },
+      }),
+    },
+  },
   aggregations: {
     reviews: {
       getReview: (
