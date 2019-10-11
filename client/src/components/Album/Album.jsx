@@ -116,7 +116,9 @@ class Album extends Component {
                 <div className="row">
                   <div className="col-md-4 " style={{ marginTop: '10%' }}>
                     <h1 className="display-6">
-                      <Link to={`/artist/${this.state.artist}`}>
+                      <Link
+                        to={`/artist/${this.state.artist}/${album.artistId}`}
+                      >
                         {this.state.artist}
                       </Link>
                     </h1>

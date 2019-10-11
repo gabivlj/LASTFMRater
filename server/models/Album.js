@@ -15,11 +15,16 @@ const CommentSchema = new Schema({
 });
 
 const AlbumSchema = new Schema({
+  userArtist: String,
   lastfmSource: Boolean,
   name: {
     type: String,
     required: true,
     text: true,
+  },
+  artistId: {
+    type: Schema.Types.ObjectId,
+    ref: 'artists',
   },
   artist: {
     type: String,

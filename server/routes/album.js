@@ -57,6 +57,15 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post(
+  '/form',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { user, body } = req;
+    const { name, artist, artistId } = body;
+  },
+);
+
 /**
  * @POST
  * @PRIVATE
@@ -295,6 +304,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
     albumFM.images = albumDB.images;
     albumFM.lastfmSource = albumDB.lastfmSource;
     albumFM.liked = !!(albumDB.usersLiked ? albumDB.usersLiked[userId] : false);
+    albumFM.artistId = albumDB.artistId;
     return res.json({ album: albumFM });
   }
   const album = await Album.findOne({

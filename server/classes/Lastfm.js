@@ -82,12 +82,19 @@ class Lastfm {
     });
   }
 
-  async getArtist(artist) {
+  async getArtist(artist, mbid = null) {
     return new Promise(async (resolve, reject) => {
       try {
-        const artist__ = await axios.get(
-          `${this.LASTFMROUTE}/?method=artist.getinfo&artist=${artist}&api_key=${this.API_KEY}&format=json`,
-        );
+        let query = `${this.LASTFMROUTE}/?method=artist.getinfo&artist=${artist}&api_key=${this.API_KEY}`;
+        if (
+          mbid !== 'null' &&
+          mbid !== 'undefined' &&
+          typeof mbid === 'string' &&
+          mbid.includes('-')
+        ) {
+          query += `&mbid=${mbid}`;
+        }
+        const artist__ = await axios.get(`${query}&format=json`);
         if (!artist__) {
           resolve({ error: 'Error.', moreinfo: artist__ });
         }
