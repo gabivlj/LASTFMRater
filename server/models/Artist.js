@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const Image = require('./Image');
+
 const { Schema } = mongoose;
 
 const ArtistSchema = new Schema({
@@ -7,25 +9,8 @@ const ArtistSchema = new Schema({
     type: String,
     required: true,
   },
-  comments: [
-    {
-      text: {
-        type: String,
-      },
-      user: {
-        type: Schema.Types.ObjectId,
-        required: true,
-      },
-      username: {
-        type: String,
-        required: true,
-      },
-      Date: {
-        type: Date,
-        default: Date.now(),
-      },
-    },
-  ],
+  mbid: String,
+  images: [Image],
   albums: [
     {
       ref: 'albums',
@@ -38,6 +23,21 @@ const ArtistSchema = new Schema({
   genres: [
     {
       type: String,
+    },
+  ],
+  networks: {
+    twitter: String,
+    spotify: String,
+    itunes: String,
+    facebook: String,
+    instagram: String,
+    youtube: String,
+    soundcloud: String,
+  },
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
     },
   ],
 });

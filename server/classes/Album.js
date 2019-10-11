@@ -47,6 +47,7 @@ const albumHelper = {
         albumFM.album.__v = album.__v;
         albumFM.album.images = album.images;
         albumFM.album.lastfmSource = album.lastfmSource;
+        albumFM.artistId = album.artistId;
         albumFM.album.liked = !!(album.usersLiked
           ? album.usersLiked[userId]
           : false);

@@ -49,7 +49,7 @@ function App() {
               {/* Change this route */}
               <Route exact path="/:token" component={AuthHandler} />
               <Route exact path="/test/you/shouldnt/be/here" component={Test} />
-              <Route exact path="/artist/:name" component={Artist} />
+              <Route exact path="/artist/:name/:_id" component={Artist} />
               <Route
                 exact
                 path="/album/:artist/:albumname/:mbid"

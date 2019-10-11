@@ -28,7 +28,9 @@ const Artist = ({ artist, className, ...props }) => {
   return (
     <Card className={`${classes.card} ${className}`}>
       <CardActionArea
-        onClick={() => (window.location.href = `/artist/${artist.name}`)}
+        onClick={() =>
+          (window.location.href = `/artist/${artist.name}/${artist.mbid}`)
+        }
       >
         <CardMedia
           className={classes.media}

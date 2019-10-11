@@ -8,7 +8,7 @@ import ArtistAlbums from './ArtistAlbums';
 const __propTypes = {
   getArtist: PropTypes.func.isRequired,
   cleanArtist: PropTypes.func.isRequired,
-  artist: PropTypes.object.isRequired
+  artist: PropTypes.object.isRequired,
 };
 
 class Artist extends Component {
@@ -17,7 +17,7 @@ class Artist extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      artist: null
+      artist: null,
     };
     this.loadedArtist = false;
   }
@@ -28,7 +28,8 @@ class Artist extends Component {
 
   componentDidMount() {
     this.props.getArtist({
-      name: this.props.match.params.name
+      name: this.props.match.params.name,
+      _id: this.props.match.params._id,
     });
   }
 
@@ -42,7 +43,7 @@ class Artist extends Component {
     ) {
       this.loadedArtist = true;
       this.setState({
-        artist: this.props.artist.artist
+        artist: this.props.artist.artist,
       });
     }
   }
@@ -61,7 +62,7 @@ class Artist extends Component {
                   src={artist.image[4]['#text']}
                   style={{
                     height: 'auto',
-                    width: '40%'
+                    width: '40%',
                   }}
                   className="rounded"
                   alt="Responsive"
@@ -119,9 +120,9 @@ class Artist extends Component {
 }
 
 const mapStateToProps = state => ({
-  artist: state.artist
+  artist: state.artist,
 });
 export default connect(
   mapStateToProps,
-  { getArtist, cleanArtist }
+  { getArtist, cleanArtist },
 )(Artist);
