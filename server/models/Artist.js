@@ -5,10 +5,16 @@ const Image = require('./Image');
 const { Schema } = mongoose;
 
 const ArtistSchema = new Schema({
+  notProcessed: {
+    type: Boolean,
+    default: true,
+  },
+  grampyAccount: String,
   name: {
     type: String,
     required: true,
   },
+  dateOfBirth: Date,
   mbid: String,
   images: [Image],
   albums: [
@@ -38,6 +44,15 @@ const ArtistSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'users',
+    },
+  ],
+  pendingChanges: [
+    {
+      typeOfChange: {
+        required: true,
+        type: String,
+      },
+      data: Object,
     },
   ],
 });
