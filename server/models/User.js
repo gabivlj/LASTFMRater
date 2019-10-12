@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const Image = require('./Image');
 
 const UserSchema = new Schema({
+  admin: Boolean,
   username: {
     type: String,
     required: true,

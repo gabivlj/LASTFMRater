@@ -15,8 +15,18 @@ const CommentSchema = new Schema({
 });
 
 const AlbumSchema = new Schema({
+  notProcessed: {
+    type: Boolean,
+    default: false,
+  },
   userArtist: String,
   lastfmSource: Boolean,
+  dateOfCreation: {
+    year: Number,
+    month: Number,
+    day: Number,
+    date: Date,
+  },
   name: {
     type: String,
     required: true,
@@ -82,7 +92,15 @@ const AlbumSchema = new Schema({
     },
   ],
   usersLiked: {},
-  comments: [CommentSchema],
+  pendingChanges: [
+    {
+      typeOfChange: {
+        required: true,
+        type: String,
+      },
+      data: Object,
+    },
+  ],
 });
 
 module.exports = mongoose.model('albums', AlbumSchema);
