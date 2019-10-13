@@ -33,75 +33,84 @@ import ChatDialog from './components/Chat/Chat/ChatDialog';
 import CommentDialog from './components/Comment/CommentDialog';
 import ReviewEditor from './components/Review/ReviewEditor';
 import Test from './components/Test/Test';
-// Get user from localStorage.
+import { StyleJSX } from './styles/StyleIt';
+import theme from './css/theme';
+import css from './css';
+
 store.dispatch(logFromSession());
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <div>
+        <StyleJSX theme={theme} style={css}>
           <div>
-            {/* Create a Not found page... */}
-            <Socket />
-            <Switch>
-              <Route exact path="/" component={Home} />
-              {/* Change this route */}
-              <Route exact path="/:token" component={AuthHandler} />
-              <Route exact path="/test/you/shouldnt/be/here" component={Test} />
-              <Route exact path="/artist/:name/:_id" component={Artist} />
-              <Route
-                exact
-                path="/album/:artist/:albumname/:mbid"
-                component={Album}
-              />
+            <div>
+              {/* Create a Not found page... */}
+              <Socket />
+              <Switch>
+                <Route exact path="/" component={Home} />
+                {/* Change this route */}
+                <Route exact path="/:token" component={AuthHandler} />
+                <Route
+                  exact
+                  path="/test/you/shouldnt/be/here"
+                  component={Test}
+                />
+                <Route exact path="/artist/:name/:_id" component={Artist} />
+                <Route
+                  exact
+                  path="/album/:artist/:albumname/:mbid"
+                  component={Album}
+                />
 
-              <Route
-                exact
-                path="/search/:searchquery"
-                component={SearchRoute}
-              />
-              <Route exact path="/auth/login" component={Login} />
-              <Route exact path="/auth/register" component={Register} />
-              <Route exact path="/profile/:id" component={Profile} />
-              <PrivateRoute
-                exact
-                path="/review/edit/:id"
-                component={ReviewEditor}
-              />
-              <PrivateRoute exact path="/me/profile" component={Auth} />
-              <PrivateRoute
-                exact
-                path="/playlist/create"
-                component={PlaylistFormComponent}
-              />
-              <PrivateRoute exact path="/chat/:id" component={Chat} />
-              <PrivateRoute
-                exact
-                path="/playlist/view/:id"
-                component={Playlist}
-              />
-              <PrivateRoute
-                exact
-                path="/me/configuration"
-                component={Configuration}
-              />
-              <PrivateRoute
-                exact
-                path="/lastfm/connect"
-                component={LastfmAuth}
-              />
+                <Route
+                  exact
+                  path="/search/:searchquery"
+                  component={SearchRoute}
+                />
+                <Route exact path="/auth/login" component={Login} />
+                <Route exact path="/auth/register" component={Register} />
+                <Route exact path="/profile/:id" component={Profile} />
+                <PrivateRoute
+                  exact
+                  path="/review/edit/:id"
+                  component={ReviewEditor}
+                />
+                <PrivateRoute exact path="/me/profile" component={Auth} />
+                <PrivateRoute
+                  exact
+                  path="/playlist/create"
+                  component={PlaylistFormComponent}
+                />
+                <PrivateRoute exact path="/chat/:id" component={Chat} />
+                <PrivateRoute
+                  exact
+                  path="/playlist/view/:id"
+                  component={Playlist}
+                />
+                <PrivateRoute
+                  exact
+                  path="/me/configuration"
+                  component={Configuration}
+                />
+                <PrivateRoute
+                  exact
+                  path="/lastfm/connect"
+                  component={LastfmAuth}
+                />
 
-              <Route render={() => <Redirect to="/sorry/not-found" />} />
-            </Switch>
+                <Route render={() => <Redirect to="/sorry/not-found" />} />
+              </Switch>
 
-            <Route component={NotFound} exact path="/sorry/not-found" />
+              <Route component={NotFound} exact path="/sorry/not-found" />
+            </div>
+            <ChatDialog />
+            <CommentDialog />
+            <Notify />
+            <AppBarMine />
           </div>
-          <ChatDialog />
-          <CommentDialog />
-          <Notify />
-          <AppBarMine />
-        </div>
+        </StyleJSX>
       </Router>
     </Provider>
   );

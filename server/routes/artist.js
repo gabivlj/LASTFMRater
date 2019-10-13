@@ -184,7 +184,13 @@ router.post(
       '',
       body,
     );
-    res.json({ artist: item, error: err });
+    if (err) {
+      console.log(err);
+      return res
+        .status(400)
+        .json({ error: 'Error posting update.', moredetails: err });
+    }
+    return res.json({ artist: item, error: err });
   },
 );
 
@@ -195,13 +201,45 @@ router.post(
     const { user } = req;
     const { id, specificId } = req.params;
     if (user.username === 'gabivlj3') user.admin = true;
+    if (!user.admin) {
+      return res.status(400).json({ error: 'Unauthorized.' });
+    }
     const [item, err] = await acceptNewItem(
       'UPDATE_ARTIST',
       id,
       specificId,
       {},
     );
-    res.json({ artist: item, error: err });
+    if (err) {
+      console.log(err);
+      return res
+        .status(400)
+        .json({ error: 'Error accepting update.', moredetails: err });
+    }
+    return res.json({ artist: item, error: err });
+  },
+);
+
+router.post(
+  '/refuse_update/:id/:specificId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { user } = req;
+    if (!user.admin) {
+      return res.status(400).json({ error: 'Unauthorized.' });
+    }
+    const { id, specificId, reason } = req.params;
+    const [item, err] = await acceptNewItem(
+      'DELETE_UPD_ARTIST',
+      id,
+      specificId,
+      { reason },
+    );
+    if (err) {
+      console.log(err);
+      return res.status(404).json({ error: 'Error refusing update.' });
+    }
+    return res.json({ artist: item });
   },
 );
 
