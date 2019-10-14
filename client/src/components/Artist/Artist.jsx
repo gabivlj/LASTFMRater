@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { LinearProgress } from '@material-ui/core';
-import { getArtist, cleanArtist } from '../../actions/artistActions';
+import { withRouter } from 'react-router-dom';
+import { LinearProgress, Button } from '@material-ui/core';
+import {
+  getArtist,
+  cleanArtist,
+  setArtistForm,
+} from '../../actions/artistActions';
 import ArtistAlbums from './ArtistAlbums';
 
 const __propTypes = {
@@ -69,6 +74,7 @@ class Artist extends Component {
                 />
               </div>
             </div>
+
             <p className="lead">{artist.bio.summary.split('<')[0]}</p>
             {artist.tags.tag.map((t, index) => (
               <span key={index} className="badge badge-primary ml-3">
@@ -76,6 +82,16 @@ class Artist extends Component {
               </span>
             ))}
             <br />
+            <Button
+              className="mt-3"
+              onClick={() => {
+                this.props.setArtistForm(artist);
+                this.props.history.push(`/artist-edit/form/${artist._id}`);
+              }}
+              color="primary"
+            >
+              Suggest an edit!
+            </Button>
 
             <hr className="my-4" />
 
@@ -122,7 +138,9 @@ class Artist extends Component {
 const mapStateToProps = state => ({
   artist: state.artist,
 });
-export default connect(
-  mapStateToProps,
-  { getArtist, cleanArtist },
-)(Artist);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { getArtist, cleanArtist, setArtistForm },
+  )(Artist),
+);

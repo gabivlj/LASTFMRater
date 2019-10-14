@@ -8,11 +8,11 @@ export default async file => {
   fileData.append('grumpy-file', file, uuid());
   const config = {
     headers: {
-      'content-type': 'multipart/form-data'
-    }
+      'content-type': 'multipart/form-data',
+    },
   };
   const [res, error] = await handleError(
-    Axios.post(`${linksHttp.GO_IMAGE}/api/image`, fileData, config)
+    Axios.post(`${linksHttp.GO_IMAGE}/api/image`, fileData, config),
   );
   return [res, error];
 };
