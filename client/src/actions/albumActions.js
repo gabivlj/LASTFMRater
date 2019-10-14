@@ -144,3 +144,6 @@ export const uploadImage = (file, id) => async dispatch => {
   );
   return _;
 };
+
+// Form actions album.
+export const uploadUpdateAlbum = () => async dispatch => {};

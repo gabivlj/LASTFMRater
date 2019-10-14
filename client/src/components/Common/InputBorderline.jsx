@@ -10,7 +10,7 @@ const propTypes__ = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   multiline: PropTypes.bool.isRequired,
-  error: PropTypes.string
+  error: PropTypes.string,
 };
 const InputBorderline = ({
   classes,
@@ -20,6 +20,7 @@ const InputBorderline = ({
   error,
   onChange,
   cleanErrors,
+  type,
   ...props
 }) => {
   return (
@@ -38,20 +39,22 @@ const InputBorderline = ({
 
       <div>
         <TextField
+          id={type}
+          type={type}
           className={`${classes.margin} ${props.className}`}
           InputLabelProps={{
             classes: {
               root: classes.cssLabel,
-              focused: classes.cssFocused
-            }
+              focused: classes.cssFocused,
+            },
           }}
           fullWidth
           InputProps={{
             classes: {
               root: classes.cssOutlinedInput,
               focused: classes.cssFocused,
-              notchedOutline: classes.notchedOutline
-            }
+              notchedOutline: classes.notchedOutline,
+            },
           }}
           onChange={onChange}
           value={value}
@@ -71,38 +74,38 @@ InputBorderline.propTypes = propTypes__;
 const styles = theme => ({
   container: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   notchedOutline: {},
   root: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   margin: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   chip: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   cssLabel: {
     '&$cssFocused': {
-      color: purple[500]
-    }
+      color: purple[500],
+    },
   },
   cssFocused: {},
   cssUnderline: {
     '&:after': {
-      borderBottomColor: purple[500]
-    }
+      borderBottomColor: purple[500],
+    },
   },
   cssOutlinedInput: {
     '&$cssFocused $notchedOutline': {
-      borderColor: purple[500]
-    }
+      borderColor: purple[500],
+    },
   },
   formControl: {
-    margin: theme.spacing.unit
-  }
+    margin: theme.spacing.unit,
+  },
 });
 
 export default withStyles(styles)(InputBorderline);

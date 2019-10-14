@@ -36,6 +36,7 @@ import Test from './components/Test/Test';
 import { StyleJSX } from './styles/StyleIt';
 import theme from './css/theme';
 import css from './css';
+import ArtistForm from './components/Artist/Form/ArtistForm';
 
 store.dispatch(logFromSession());
 
@@ -72,6 +73,11 @@ function App() {
                 <Route exact path="/auth/login" component={Login} />
                 <Route exact path="/auth/register" component={Register} />
                 <Route exact path="/profile/:id" component={Profile} />
+                <PrivateRoute
+                  exact
+                  path="/artist-edit/form/:id"
+                  component={ArtistForm}
+                />
                 <PrivateRoute
                   exact
                   path="/review/edit/:id"

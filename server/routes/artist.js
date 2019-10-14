@@ -67,6 +67,7 @@ router.get('/:name', async (req, res) => {
         fmArtist.artist.networks = artist.networks || {};
         fmArtist.artist._id = artist._id;
         fmArtist.artist.__v = artist.__v;
+        fmArtist.artist.dateOfBirth = artist.dateOfBirth || '';
         return res.json(fmArtist);
       }
     }
@@ -80,6 +81,8 @@ router.get('/:name', async (req, res) => {
       fmArtist.artist.networks = artist.networks || {};
       fmArtist.artist._id = artist._id;
       fmArtist.artist.__v = artist.__v;
+      fmArtist.artist.dateOfBirth = artist.dateOfBirth || '';
+
       return res.json(fmArtist);
     }
     return res.json({ artist, notLastfm: true });

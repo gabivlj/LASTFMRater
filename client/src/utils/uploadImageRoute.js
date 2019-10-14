@@ -18,7 +18,7 @@ export default async (
   dispatchCallback,
   { lg, md, lz, sm },
   msgSuccess = 'Image uploaded succesfuly!',
-  msgError = 'Error uploading image!'
+  msgError = 'Error uploading image!',
 ) => {
   const [final, err] = await handleError(Axios.post(route, { lz, md, lg, sm }));
   if (err) return dispatch(notifySuccess(msgError, 2000));

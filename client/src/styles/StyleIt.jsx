@@ -117,6 +117,8 @@ export const StyleIt = (Component, what) => {
       };
     }, [_]);
     // Pass the styles depending on what the caller wants.
-    return <Component {...props} styles={GetStyle(what)} />;
+    return (
+      <Component {...props} styles={GetStyle(what)} theme={__VALUES.theme} />
+    );
   };
 };

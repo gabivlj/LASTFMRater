@@ -1,6 +1,7 @@
 const initialState = {
   artist: {},
   albums: null,
+  artistForm: {},
 };
 
 export default (state = initialState, action) => {
@@ -14,6 +15,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         artist: action.payload ? action.payload : null,
+      };
+    case 'SET_ARTIST_FORM':
+      return {
+        ...state,
+        artistForm: action.payload,
+      };
+    case 'CLEAN_ARTIST_FORM':
+      return {
+        ...state,
+        artistForm: {},
       };
     default:
       return state;
