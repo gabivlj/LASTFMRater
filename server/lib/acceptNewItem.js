@@ -67,7 +67,7 @@ async function findAndUpdateAPending(_id, Model, idOfSpecificUpdate) {
   }
 }
 
-async function addUpdateRequest(_id, Model, body, type) {
+async function addUpdateRequest(_id, Model, { body }, type) {
   try {
     const model = await Model.findById(_id);
     if (!model) return [false, 'Not found.'];
