@@ -1,6 +1,7 @@
 const handleError = require('../lib/handleError');
 const Comment = require('./CommentSchema');
 const albumHelper = require('./Album');
+const zip = require('../lib/zip');
 
 /**
  * @DEPRECATED
@@ -12,7 +13,7 @@ const albumHelper = require('./Album');
  * @param {Object} CommentSchemaInstances
  * @description Basically, just remove (if it exists) from this array of opinions the opinion from the desired user
  */
-function checkOtherOpinionArrayAndDelete(userId, otherType, comment) {
+function filterOutFromOpinions(userId, otherType, comment) {
   if (Array.isArray(comment[otherType])) {
     const opinions = comment[otherType].filter(
       opinion => String(opinion.user) !== String(userId),
@@ -137,7 +138,7 @@ class CommentHandler {
             SchemaInstance.comments[fastIndex],
             type,
           );
-          SchemaInstance.comments[fastIndex] = checkOtherOpinionArrayAndDelete(
+          SchemaInstance.comments[fastIndex] = filterOutFromOpinions(
             userGivingOpinion,
             otherType,
             SchemaInstance.comments[fastIndex],
@@ -151,7 +152,7 @@ class CommentHandler {
               addOpinionToSpecific(userGivingOpinion, _comment_, type),
           );
           finalIndex = index;
-          const finalComment = checkOtherOpinionArrayAndDelete(
+          const finalComment = filterOutFromOpinions(
             userGivingOpinion,
             otherType,
             SchemaInstance.comments[finalIndex],
@@ -184,15 +185,12 @@ class CommentHandler {
    * @description Adds an opinion to the comment (A Like or a Dislike.)
    */
   static addOpinionToSingleComment(comment, userId, type, otherType) {
-    const index = comment[type]
-      .map(op => String(op.user))
-      .indexOf(String(userId));
-    if (index > -1) {
-      comment[type].splice(index, 1);
-      return comment;
+    const zippedComment = zip(comment[type], now => now.user);
+    if (zippedComment[String(userId)]) {
+      return filterOutFromOpinions(userId, type, comment);
     }
     comment[type].push({ user: userId });
-    return checkOtherOpinionArrayAndDelete(userId, otherType, comment);
+    return filterOutFromOpinions(userId, otherType, comment);
   }
 
   static setHasLikedOrDislikedProperty(comment, userId) {

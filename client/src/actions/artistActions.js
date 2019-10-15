@@ -53,12 +53,13 @@ export const uploadImageArtist = (file, images, id) => async dispatch => {
   return console.log(finalResponse.data);
 };
 
-export const uploadUpdateArtist = body => async dispatch => {
-  const [res, err] = await handleError(
-    axios.post(`/api/artist/update/${body._id}`, { body }),
+export const uploadUpdateArtist = (body, artist, history) => async dispatch => {
+  const [, err] = await handleError(
+    axios.post(`/api/artist/update/${artist._id}`, { body }),
   );
   if (err) {
     return dispatch(notifyError('Error uploading an update request.'));
   }
+  history.push(`/artist/${artist.name}/${artist._id}`);
   return null;
 };

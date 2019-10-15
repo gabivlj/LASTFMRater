@@ -37,7 +37,6 @@ const PlaylistModel = new Schema({
       puntuation: { type: Number },
     },
   ],
-  comments: [CommentSchema],
   playlistName: {
     type: String,
     default: '',
