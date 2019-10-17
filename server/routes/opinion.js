@@ -2,7 +2,7 @@ const passport = require('passport');
 const router = require('express').Router();
 const Opinion = require('../models/Opinions');
 const handleError = require('../lib/handleError');
-const commentHelper = require('../classes/Comment').addOpinionToSingleComment;
+const { addOpinionToSingleComment } = require('../classes/Comment');
 
 /**
  * @description Returns number of likes and dislikes of an object and say if the user liked it or disliked it.
@@ -68,7 +68,7 @@ router.post(
   async (req, res) => {
     const { type = '', id } = req.params;
     const { user } = req;
-    if (type !== 'like' && type !== 'dislike') {
+    if (type !== 'likes' && type !== 'dislikes') {
       return res.status(400).json({ error: 'Unknown action.' });
     }
     const [error, opinion] = await handleError(Opinion.findById(id));
@@ -78,14 +78,21 @@ router.post(
     if (!opinion) {
       const newOpinion = new Opinion({
         objectID: id,
-        likes: type === 'like' ? [{ user: user._id }] : [],
-        dislikes: [type === 'dislike' ? [{ user: user._id }] : []],
+        likes: type === 'likes' ? [{ user: user._id }] : [],
+        dislikes: [type === 'dislikes' ? [{ user: user._id }] : []],
       });
       const [err, opinionSaved] = await handleError(newOpinion.save());
       if (err) return res.status(404).json({ error: 'Error saving opinon.' });
       return res.json({ opinion: opinionSaved });
     }
     // todo: Add or remove like/dislike from array of opinions.
+    const opinionReturn = addOpinionToSingleComment(
+      opinion,
+      user.id,
+      type,
+      type === 'likes' ? 'dislikes' : 'likes',
+    );
+    return res.json({ opinion: opinionReturn });
   },
 );
 

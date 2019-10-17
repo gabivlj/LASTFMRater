@@ -15,6 +15,7 @@ const CommentSchema = new Schema({
 });
 
 const AlbumSchema = new Schema({
+  genres: [String],
   notProcessed: {
     type: Boolean,
     default: false,

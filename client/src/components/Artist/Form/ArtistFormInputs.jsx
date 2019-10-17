@@ -1,10 +1,14 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
 import InputBorderline from '../../Common/InputBorderline';
+import ImageUploader from '../../Common/ImageUploader';
 
 function ArtistFormInputs({
   artistState,
   onChange,
+  setNetwork,
+  addGenre,
+  addImage,
   changedState,
   reset,
   submit,
@@ -28,7 +32,12 @@ function ArtistFormInputs({
           onChange={onChange}
           multiline={false}
         />
-
+        {/* TODO: Put here the networks input. When on change an input call setNetwork */}
+        {/* <NetworksInput setNetwork={setNetwork} networks={artistState.networks} /> */}
+        <h3>Add image</h3>
+        <ImageUploader submit={addImage} />
+        {/* TODO: Put here MultipleInput. That you can write something enter it and add it to an array. */}
+        {/** <MultipleInput onSubmit={addGenre} elements={artistState.genres} /> */}
         {Object.keys(changedState).length !== 0 && (
           <div>
             <Button

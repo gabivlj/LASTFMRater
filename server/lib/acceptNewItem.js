@@ -3,6 +3,7 @@ const Artist = require('../models/Artist');
 const handleError = require('./handleError');
 const remove = require('./remove');
 const parse = require('./parse');
+const createOpinionObject = require('./createOpinionObject');
 
 // TESTING.
 const time = () => {
@@ -91,6 +92,12 @@ async function addUpdateRequest(_id, Model, { body }, type) {
     });
     changes.forEach(change => model.pendingChanges.push(change));
     const modelSaved = await model.save();
+    createOpinionObject(
+      modelSaved.pendingChanges.slice(
+        modelSaved.pendingChanges.length - changes.length,
+        modelSaved.pendingChanges.length,
+      ),
+    );
     return [modelSaved, null];
   } catch (err) {
     console.log(err);
