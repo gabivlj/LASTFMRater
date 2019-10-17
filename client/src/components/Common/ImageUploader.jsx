@@ -33,16 +33,15 @@ function ImageUploader({ submit }) {
     }
     changeFile(file);
   }
-  const renderError =
-    error !== '' ? (
-      <Chip
-        // icon=<FaceIcon />}
-        label={error}
-        onDelete={() => setError('')}
-        className="p-2 mr-3 mt-3 mb-3"
-        color="secondary"
-      />
-    ) : null;
+  const renderError = error !== '' && (
+    <Chip
+      // icon=<FaceIcon />}
+      label={error}
+      onDelete={() => setError('')}
+      className="p-2 mr-3 mt-3 mb-3"
+      color="secondary"
+    />
+  );
   return (
     <form onSubmit={onSubmit}>
       {renderError}
@@ -54,7 +53,7 @@ function ImageUploader({ submit }) {
         onChange={changeFileOnChange}
       />
       <label
-        htmlFor="grumpy-file"
+        htmlFor="grampy-file"
         nesting=""
         id="grumpy-file"
         className="input-grumpy"
@@ -63,13 +62,13 @@ function ImageUploader({ submit }) {
       </label>
       <br />
 
-      {file ? (
+      {!!file && (
         <input
           type="submit"
           value="Upload image"
           className="btn btn-primary mt-1"
         />
-      ) : null}
+      )}
     </form>
   );
 }

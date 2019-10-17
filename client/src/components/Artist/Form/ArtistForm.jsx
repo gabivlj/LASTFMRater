@@ -11,6 +11,7 @@ function ArtistForm({ artist, history, uploadUpdateArtist }) {
     description = '',
     networks = {},
     name,
+    genres = [],
     dateOfBirth = '31/09/2019',
   } = artist;
   const [artistState, setArtistState] = useState({
@@ -19,16 +20,17 @@ function ArtistForm({ artist, history, uploadUpdateArtist }) {
     images,
     name,
     dateOfBirth,
+    genres,
   });
 
   const [changedState, setChangedState] = useState({});
-
   useEffect(() => {
     const {
       images = [],
       description = '',
       networks = {},
       name,
+      genres = [],
       dateOfBirth = '2019/09/31',
     } = artist;
     setArtistState({
@@ -37,6 +39,7 @@ function ArtistForm({ artist, history, uploadUpdateArtist }) {
       images,
       name,
       dateOfBirth,
+      genres,
     });
   }, [artist]);
 
@@ -57,7 +60,14 @@ function ArtistForm({ artist, history, uploadUpdateArtist }) {
 
   function reset() {
     setChangedState({});
-    setArtistState({ description, networks, images, name, dateOfBirth });
+    setArtistState({
+      description,
+      networks,
+      images,
+      name,
+      dateOfBirth,
+      genres,
+    });
   }
 
   return (
