@@ -110,6 +110,10 @@ function Profile({
         <ReviewsSection
           type="ALBUM"
           objectID={profile.profile._id}
+          profileImage={{
+            image: profileImage.image,
+            goImage: !!profile.profile.images[currentImg],
+          }}
           profile
           key="1"
         />

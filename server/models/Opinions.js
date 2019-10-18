@@ -7,4 +7,4 @@ const OpinionSchema = new Schema({
   dislikes: [{ user: { type: Schema.Types.ObjectId, ref: 'users' } }],
 });
 
-module.exports = mongoose.model('comments', OpinionSchema);
+module.exports = mongoose.model('opinions', OpinionSchema);

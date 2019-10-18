@@ -12,16 +12,16 @@ const CommentSchema = new Schema({
   dislikes: [{ user: { type: Schema.Types.ObjectId, ref: 'users' } }],
   date: {
     type: Date,
-    default: Date.now()
-  }
+    default: Date.now(),
+  },
 });
 
 const CommentSectionSchema = new Schema({
   comments: [CommentSchema],
   referencedObjectId: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('comment_sections', CommentSectionSchema);
