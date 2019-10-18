@@ -69,6 +69,37 @@ const mongoQueries = {
             },
           },
         },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'username',
+            foreignField: 'username',
+            as: 'users',
+          },
+        },
+        {
+          $project: {
+            userProfileImages: {
+              $arrayElemAt: [
+                {
+                  $map: {
+                    input: '$users',
+                    as: 'user',
+                    in: '$$user.images',
+                  },
+                },
+                0,
+              ],
+            },
+            username: 1,
+            userID: 1,
+            text: 1,
+            show: 1,
+            likes: 1,
+            dislikes: 1,
+            objectID: 1,
+          },
+        },
         ...(model
           ? [
               {

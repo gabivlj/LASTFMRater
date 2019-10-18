@@ -6,8 +6,19 @@ import './reviewItem.style.css';
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 import Stars from '../../Profile/Ratings/Stars';
+import GoImage from '../GoImage';
 
-function ReviewItem({ text, username, puntuation, profile, album, auth, id }) {
+function ReviewItem({
+  text,
+  username,
+  puntuation,
+  profile,
+  album,
+  auth,
+  id,
+  goImg,
+  image,
+}) {
   return (
     <div className="review-item">
       {profile && album && (
@@ -17,10 +28,18 @@ function ReviewItem({ text, username, puntuation, profile, album, auth, id }) {
           {album.artist}
         </Link>
       )}
-      <div>
-        <h3>{username}</h3>
+      <div className="row">
+        <GoImage
+          src={image}
+          style={{ width: '2.75vw', height: '2.75vw' }}
+          className="profileImage borderProfile"
+          alt="The profile caption"
+          goImg={goImg}
+        />
+
+        <h3 className="mt-3 ml-3">{username}</h3>
       </div>
-      <div>
+      <div className="mt-3">
         <ReactMarkdown source={text} skipHtml />
       </div>
       <div>

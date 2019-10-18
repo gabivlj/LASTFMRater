@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { getReviews, cleanReviews } from '../../actions/reviewActions';
 import ScrollerLoader from './ScrollerLoader';
 import ReviewItem from './Review/ReviewItem';
+import ProfileImg from '../../images/profile.png';
 
 /**
  * @param {String} type The type of reviews, I think we are just gonna use albums but just incase...
@@ -27,6 +28,7 @@ function ReviewsSection({
   profile,
   show,
   cleanReviewsWhenDestroy,
+  profileImage,
   uuid,
 }) {
   let currentReviews = 0;
@@ -44,6 +46,12 @@ function ReviewsSection({
   }
   useEffect(() => () => cleanReviewsWhenDestroy && cleanReviews(), []);
   const { reviews, loading } = reviewState;
+  const profileImg = review => {
+    if (review.userProfileImages[0]) {
+      return review.userProfileImages[0].md;
+    }
+    return ProfileImg;
+  };
   return (
     <ScrollerLoader
       uuid={uuid}
@@ -63,6 +71,8 @@ function ReviewsSection({
                   key={review._id}
                   id={review._id}
                   profile={profile}
+                  image={profile ? profileImage.image : profileImg(review)}
+                  goImg={profile ? true : !!review.userProfileImages[0]}
                   album={profile && review.album}
                 />
               ),
