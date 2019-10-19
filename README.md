@@ -36,6 +36,16 @@
 
 - If you want to collaborate, contact me, but if you wanna check how is the development going (more or less), check the board on [Notion](https://www.notion.so/f6eda5848a904825aa40831e7c5d37b5?v=5571f489d7924d9a84747816e48c0736)
 
+### Executing It In Your Local Machine
+
+I use keys for secrets etc. so if you really wanna execute in your machine you will need to set those by yourself and then:
+
+```
+  docker-compose up --build
+```
+
+in the main root of the application.
+
 ## Credits:
 
 - Made by Gabriel Villalonga Simón
