@@ -14,11 +14,17 @@ func wsPage(res http.ResponseWriter, req *http.Request) {
 		http.NotFound(res, req)
 		return
 	}
-	uid, err := uuid.NewV4()
-	if err != nil {
-		return
+	uid := uuid.NewV4()
+
+	client := &Client{
+		id:                     uid.String(),
+		socket:                 conn,
+		send:                   make(chan []byte),
+		connected:              make(chan map[string]bool),
+		newFriendConnection:    make(chan *Client),
+		newFriendDisconnection: make(chan *Client),
+		friends:                make([]string, 0),
 	}
-	client := &Client{id: uid.String(), socket: conn, send: make(chan []byte)}
 	manager.register <- client
 	go client.read()
 	go client.write()
@@ -28,7 +34,7 @@ func startServer() {
 	fmt.Println("Starting app...")
 	go manager.start()
 	http.HandleFunc("/ws", wsPage)
-	http.ListenAndServe(":12345", nil)
+	http.ListenAndServe(":1234", nil)
 }
 
 func main() {

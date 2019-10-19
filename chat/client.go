@@ -34,7 +34,7 @@ var manager = ClientManager{
 }
 
 type ListOfFriends struct {
-	Friends map[string]bool `json:"friends`
+	Friends map[string]bool `json:"friends"`
 	Type    string          `json:"type"`
 }
 
@@ -118,9 +118,9 @@ func (manager *ClientManager) start() {
 			}
 			fmt.Println(manager.clientsStr[friends.UserID])
 			if _, ok := manager.clients[friends]; ok {
-				mapFriends := InformFriendsOfConnection(friends, true, manager.clientsStr[friends.UserID] == 1)
+				mapFriends := InformFriendsOfConnection(friends, true, manager.clientsStr[friends.UserID] >= 1)
 				select {
-				// Send to socket all of their connected/disconnected friends.
+				// Send to socket all of his connected/disconnected friends.
 				case friends.connected <- mapFriends:
 				}
 			}
@@ -244,6 +244,7 @@ func (c *Client) read() {
 			fmt.Println(er.Error())
 			continue
 		}
+		fmt.Println(msg)
 		switch msg.Type {
 		// When someone connects
 		case "Open":
@@ -254,8 +255,6 @@ func (c *Client) read() {
 			continue
 			// When user gets followed.
 		case "NewGramp":
-			fmt.Println("HEY")
-			fmt.Println(msg.Friends)
 			// new activity for followers
 			manager.gramps <- msg.Friends
 			continue
