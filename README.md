@@ -21,6 +21,7 @@
 - Node.js, Express.js - Server
 - Go, Mux - Server Image
 - MongoDB
+- Docker (NEW)
 
 ## Questions
 
@@ -38,7 +39,7 @@
 
 ### Executing It In Your Local Machine
 
-I use keys for secrets etc. so if you really wanna execute in your machine you will need to set those by yourself and then:
+I use keys for Mongo, JWT secret, Lastfm keys etc. so if you really wanna execute in your machine you will need to set those by yourself and then:
 
 ```
   docker-compose up --build
