@@ -1,6 +1,7 @@
 // Libraries
+const express = require('express');
 const passport = require('passport');
-const app = require('express')();
+const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 // Mongodb Key
@@ -19,6 +20,10 @@ const review = require('./routes/review');
 const { addRoutes } = require('./lib/routes');
 const passportConfig = require('./config/passport');
 
+const app = express();
+
+const DEV = false;
+
 // Database connection
 mongoose.connect(db, { useNewUrlParser: true }, err => {
   if (err) throw err;
@@ -26,6 +31,10 @@ mongoose.connect(db, { useNewUrlParser: true }, err => {
     `Connected to database! Welcome 🐋: ${db.split(':')[1].slice(2)} 🐋`,
   );
 });
+
+if (DEV) {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+}
 
 // BodyParser Init.
 app.use(bodyParser.json());

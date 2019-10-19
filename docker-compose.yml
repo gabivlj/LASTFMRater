@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  chat:
+    build: ./chat
+    expose:
+      - ${CHAT_PORT}
+    domainname: local
+    environment:
+      CHAT_HOST: ${CHAT_HOST}
+      CHAT_PORT: ${CHAT_PORT}
+    ports:
+      - ${CHAT_PORT}:${CHAT_PORT}
+    volumes:
+      - ./chat/:/srv/app/grampy-chat
   server:
     build: ./server
     expose:

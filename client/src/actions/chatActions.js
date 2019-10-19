@@ -157,6 +157,8 @@ export const setChatInfo = ({ username, id, profileImage }) => dispatch => {
  */
 export const receiveMessage = e => (dispatch, state) => {
   const json = JSON.parse(e.data);
+  console.log(e);
+  console.log(json);
   const { message, from, type, username, to, userId, friends } = json;
   const s = state();
   const { auth, chat } = s;
