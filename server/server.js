@@ -2,8 +2,11 @@
 const express = require('express');
 const passport = require('passport');
 const path = require('path');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const https = require('https');
+const http = require('http');
 // Mongodb Key
 const db = require('./config/keys').MONGOURI;
 // Routes
@@ -20,21 +23,27 @@ const review = require('./routes/review');
 const { addRoutes } = require('./lib/routes');
 const passportConfig = require('./config/passport');
 
+const privateKey = fs.readFileSync('./sslcert/selfsigned.key', 'utf8');
+const certificate = fs.readFileSync('sslcert/selfsigned.crt', 'utf8');
+
+const credentials = { key: privateKey, cert: certificate };
+
 const app = express();
 
-const DEV = false;
+const DEV = true;
 
 // Database connection
-mongoose.connect(db, { useNewUrlParser: true }, err => {
-  if (err) throw err;
-  console.log(
-    `Connected to database! Welcome 🐋: ${db.split(':')[1].slice(2)} 🐋`,
-  );
-});
-
-if (DEV) {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-}
+mongoose.connect(
+  db,
+  // Anti-deprecation messages
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
+  err => {
+    if (err) throw err;
+    console.log(
+      `Connected to database! Welcome 🐋: ${db.split(':')[1].slice(2)} 🐋`,
+    );
+  },
+);
 
 // BodyParser Init.
 app.use(bodyParser.json());
@@ -67,10 +76,26 @@ addRoutes(
   ['/api/reviews', review],
 );
 
+if (DEV) {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
+  });
+}
+
+const httpsServer = https.createServer(credentials, app);
+const httpServer = http.createServer(app);
+
 // Port listening
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, err =>
+httpServer.listen(PORT, err =>
   err
     ? console.log(err)
-    : console.log(`🐋  Grampy localhost:${PORT} Connected! 🐋`),
+    : console.log(`🐋  Grampy http://localhost:${PORT} Connected! 🐋`),
+);
+
+httpsServer.listen(8443, err =>
+  err
+    ? console.log(err)
+    : console.log(`🐋  Grampy secure https://localhost:${8443} Connected! 🐋`),
 );

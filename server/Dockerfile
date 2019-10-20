@@ -7,8 +7,10 @@ WORKDIR /srv/app/grampy-server
 COPY package.json /srv/app/grampy-server
 COPY package-lock.json /srv/app/grampy-server
 
+
 RUN npm install
 
 COPY . /srv/app/grampy-server
+
 
 CMD ["npm", "run", "server"]

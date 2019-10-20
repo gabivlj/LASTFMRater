@@ -34,6 +34,7 @@ func startServer() {
 	fmt.Println("Starting app...")
 	go manager.start()
 	http.HandleFunc("/ws", wsPage)
+	http.ListenAndServeTLS(":1443", "server.crt", "server.key", nil)
 	http.ListenAndServe(":1234", nil)
 }
 
