@@ -1,6 +1,9 @@
 export default {
-  GO_IMAGE: process.env.GO_IMAGE_ROUTE || 'http://localhost:2222',
-  GO_CHAT: process.env.GO_CHAT_ROUTE || 'ws://localhost:1234',
+  // todo: Create go image server instance and set it here.
+  GO_IMAGE:
+    process.env.NODE_ENV === 'development' ? 'http://localhost:2222' : '',
+  // todo: Create go server
+  GO_CHAT: process.env.NODE_ENV === 'development' ? 'ws://localhost:1234' : '',
   isLocalhost: Boolean(
     window.location.hostname === 'localhost' ||
       window.location.hostname === '[::1]' ||

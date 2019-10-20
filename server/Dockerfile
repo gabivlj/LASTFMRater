@@ -10,6 +10,8 @@ COPY package-lock.json /srv/app/grampy-server
 
 RUN npm install
 
+ENV DEVELOPMENT "TRUE"
+
 COPY . /srv/app/grampy-server
 
 

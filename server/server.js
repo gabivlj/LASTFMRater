@@ -23,14 +23,10 @@ const review = require('./routes/review');
 const { addRoutes } = require('./lib/routes');
 const passportConfig = require('./config/passport');
 
-const privateKey = fs.readFileSync('./sslcert/selfsigned.key', 'utf8');
-const certificate = fs.readFileSync('sslcert/selfsigned.crt', 'utf8');
-
-const credentials = { key: privateKey, cert: certificate };
-
 const app = express();
 
-const DEV = true;
+console.log(process.env.DEVELOPMENT);
+const DEV = !process.env.DEVELOPMENT;
 
 // Database connection
 mongoose.connect(
@@ -77,13 +73,19 @@ addRoutes(
 );
 
 if (DEV) {
+  // TODO:
+  // const privateKey = fs.readFileSync('./sslcert/selfsigned.key', 'utf8');
+  // const certificate = fs.readFileSync('sslcert/selfsigned.crt', 'utf8');
+
+  // const credentials = { key: privateKey, cert: certificate };
+
   app.use(express.static(path.join(__dirname, '../client/build')));
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
   });
 }
 
-const httpsServer = https.createServer(credentials, app);
+const httpsServer = https.createServer({}, app);
 const httpServer = http.createServer(app);
 
 // Port listening

@@ -9,6 +9,7 @@ COPY package-lock.json /srv/app/grampy-client
 
 RUN npm install
 
+ENV DEVELOPMENT "TRUE"
 COPY . /srv/app/grampy-client
 
 CMD ["npm", "start"]
