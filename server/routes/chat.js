@@ -19,6 +19,9 @@ router.get(
         [`users.${id}.id`]: id,
       }).sort({ lastTalked: -1 }),
     );
+    if (!chats || chats.length <= 0) {
+      return res.json({ chats: [] });
+    }
     const users = [];
     chats.forEach(chat => {
       // get other user

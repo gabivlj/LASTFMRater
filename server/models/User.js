@@ -35,8 +35,8 @@ const UserSchema = new Schema({
       ref: 'users',
     },
   ],
-  followersObject: Object,
-  followedObject: Object,
+  followersObject: { type: Object, default: {} },
+  followedObject: { type: Object, default: {} },
   followers: [
     {
       ref: 'users',
@@ -53,7 +53,7 @@ const UserSchema = new Schema({
       name: { type: String, required: true },
     },
   ],
-  description: String,
+  description: { type: String, default: '' },
   likedAlbums: {},
 });
 
