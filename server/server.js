@@ -26,7 +26,7 @@ const passportConfig = require('./config/passport');
 const app = express();
 
 console.log(process.env.DEVELOPMENT);
-const DEV = !process.env.DEVELOPMENT;
+const production = !process.env.DEVELOPMENT;
 
 // Database connection
 mongoose.connect(
@@ -72,8 +72,8 @@ addRoutes(
   ['/api/reviews', review],
 );
 
-if (DEV) {
-  // TODO:
+if (production) {
+  // TODO: HTTPS.
   // const privateKey = fs.readFileSync('./sslcert/selfsigned.key', 'utf8');
   // const certificate = fs.readFileSync('sslcert/selfsigned.crt', 'utf8');
 

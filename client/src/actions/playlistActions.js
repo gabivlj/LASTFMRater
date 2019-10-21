@@ -84,9 +84,6 @@ export const getPlaylist = (_id, userId) => async dispatch => {
     axios.get(`/api/playlist/${_id}${query}`),
   );
   if (error) console.log(error.response.data);
-  let comments = getIfUserLikedOrNot(playlist.data.playlist.comments, userId);
-  comments = mapLikesDislikes(playlist.data.playlist.comments);
-  playlist.data.playlist.comments = comments;
   dispatch({
     type: 'SET_PLAYLIST',
     payload: playlist.data.playlist,

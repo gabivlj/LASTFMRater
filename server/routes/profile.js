@@ -126,10 +126,16 @@ router.get(
           // user.followers.includes(String(followed)),
           reducedFollowers[String(followed)],
       );
-
-      const usersFriends = (await User.find({
+      if (listOfFriends.length <= 0) {
+        return res.json({ friends: [] });
+      }
+      const friends = await User.find({
         $or: [...listOfFriends.map(friend => ({ _id: friend }))],
-      })).map(friend => ({
+      });
+      if (!friends || friends.length <= 0) {
+        return res.json({ friends: [] });
+      }
+      const usersFriends = friends.map(friend => ({
         _id: friend._id,
         images: friend.images,
         username: friend.username,
