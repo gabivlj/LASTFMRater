@@ -4,16 +4,25 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
+const mongo = require('../lib/mongoQueries');
 const Lastfm = require('../classes/Lastfm');
 const Authenticator = require('../classes/Authenticator');
 const secret = require('../config/keys').keyOrSecret;
 
 const FM = new Lastfm();
 
-router.get('/godmode', (req, res) => {
-  User.find()
-    .then(users => res.json(users))
-    .catch(err => console.log(err));
+router.get('/godmode', async (req, res) => {
+  try {
+    const u = await User.aggregate(
+      mongo.aggregations.user.getUsersThatCoincideInLikes([
+        '5cb35b647c7ae04862108a6d',
+      ]),
+    ).sort({ followerCount: -1 });
+    return res.json({ results: u });
+  } catch (err) {
+    console.log(err);
+    return res.json({ err: 'error', error: err });
+  }
 });
 
 router.get(

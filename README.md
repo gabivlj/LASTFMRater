@@ -21,13 +21,14 @@
 - Node.js, Express.js - Server
 - Go, Mux - Server Image
 - MongoDB
-- Docker (NEW)
+- Docker
+- AWS
 
 ## Questions
 
 #### Why A Music Rater?
 
-- Because a lot of musical pages are not that good and I think the community would benefit for a better site. Also I don't know when is Sonemic is comming out lol
+- Because a lot of musical pages are not that good and I think the community would benefit for a better site. Also I don't know when is Sonemic is coming out lol
 
 #### Can I collaborate with you?
 
