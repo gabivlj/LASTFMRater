@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 
 const { ObjectId } = mongoose.Types;
 
+function isArrayReturnCount(strArr) {
+  return {
+    $cond: [
+      {
+        $isArray: strArr,
+      },
+      { $size: strArr },
+      0,
+    ],
+  };
+}
+
 const mongoQueries = {
   find: {
     album: {
@@ -205,6 +217,96 @@ const mongoQueries = {
           },
         },
       ],
+
+      getUsersThatCoincideInLikes(
+        albumsIDS,
+        include = {
+          username: 1,
+          email: 1,
+          followerCount: isArrayReturnCount('$followers'),
+        },
+        aggregations = [],
+      ) {
+        return [
+          ...aggregations,
+          {
+            $project: {
+              _id: 1,
+              likedAlbumsArray: { $objectToArray: '$likedAlbums' },
+              ...include,
+            },
+          },
+          {
+            $unwind: '$likedAlbumsArray',
+          },
+          {
+            $match: {
+              'likedAlbumsArray.k': {
+                $in: [...albumsIDS],
+              },
+              'likedAlbumsArray.v': { $ne: null },
+            },
+          },
+        ];
+      },
+      /** {
+  $project: {
+    _id: 1, _id: 1
+    tags: 1, likedAlbumsArray: { $objectToArray: '$likedAlbums' }
+    killFlag: {
+      $const: [true, false]
+    }
+  }
+}, {
+  $unwind: "$tags" $unwind: $likedAlbumsArray
+}, {
+  $unwind: "$killFlag" $unwind: killFlag
+}, {
+  $match: {
+    $nor: [{
+        'likedAlbumsArray.k': {
+          $in: ['tag1', 'tag2', 'tag4']  --> $nor [{
+                                                 $in: [arrayalbums]
+                                              }]
+        },
+        killFlag: true
+      }
+    ]
+  }
+}, {
+  $group: {
+    _id: "$_id",
+    tags: {
+      $addToSet: "$tags"
+    },
+    killFlag: {
+      $max: "$killFlag"
+    }
+  }
+}, {
+  $match: {
+    killFlag: false
+  }
+}, {
+  $project: {
+    _id: 1,
+    tags: 1
+  }
+} */
+      followerCount(agreggation = []) {
+        return [
+          ...agreggation,
+          {
+            $project: {
+              username: 1,
+              email: 1,
+              _id: 1,
+              images: 1,
+              followerCount: { $size: '$followers' },
+            },
+          },
+        ];
+      },
       /**
        * @description Gets the 3 most prestigious users of an album.
        */

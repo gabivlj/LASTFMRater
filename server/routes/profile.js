@@ -9,6 +9,7 @@ const LastFm = require('../classes/Lastfm');
 const activity = require('../classes/Activity');
 const Authenticator = require('../classes/Authenticator');
 const mongoQueries = require('../lib/mongoQueries');
+const getRecommendedUsers = require('../lib/getRecommendedUsers');
 const RecommendedFollowers = require('../models/RecommendedFriends');
 
 /**
@@ -34,7 +35,9 @@ router.get(
   async (req, res) => {
     const { user } = req;
 
-    const recommendedExcludePromise = RecommendedFollowers({ user: user._id });
+    const recommendedExcludePromise = RecommendedFollowers.findOne({
+      user: user._id,
+    });
     const [err, recommended] = await handleError(
       User.aggregate(
         mongoQueries.aggregations.user.recommendedFriends(user._id),
@@ -78,7 +81,17 @@ router.get(
       )
       .slice(0, 3)
       .map(u => ({ username: u.username, _id: u._id, images: u.images || [] }));
-    console.log(recommendedEnd);
+    if (recommendedEnd.length === 0) {
+      const recommendedAdjust = await getRecommendedUsers(
+        user,
+        recommendedExclude.recommend,
+        objectExclude,
+        userFollowing,
+      );
+      return res.json({
+        recommended: recommendedAdjust,
+      });
+    }
     return res.json({
       recommended: recommendedEnd,
     });
