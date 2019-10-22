@@ -18,8 +18,8 @@
 ## Tech stack
 
 - React.js
-- Node.js, Express.js - Server
-- Go, Mux - Server Image
+- Node.js, Express.js -> Server
+- Go -> Image server and Chat websockets
 - MongoDB
 - Docker
 - AWS
