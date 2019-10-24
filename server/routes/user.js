@@ -209,7 +209,7 @@ router.post('/auth/register', async (req, res) => {
         } catch (err) {
           console.log(err);
           return res
-            .status(401)
+            .status(402)
             .json({ auth: 'Error with authentification', err });
         }
       });

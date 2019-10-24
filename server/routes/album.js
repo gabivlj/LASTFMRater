@@ -191,6 +191,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
+      const { user } = req;
       const album = await Album.findOne({
         _id: req.params.albumid,
       });
@@ -215,7 +216,6 @@ router.post(
             : [{ date: Date.now(), sum: 0 }];
         } else {
           // else replace
-          console.log(album);
           album.ratings.splice(index, 1, {
             puntuation: req.body.puntuation,
             user: req.body.userid,
@@ -225,6 +225,10 @@ router.post(
           //   ? numberReviewsDay.substract(album.numberOfReviewsEachDay)
           //   : [{ date: Date.now(), sum: 0 }];
         }
+        const indexUser = user.ratedAlbums.indexOf(req.params.albumid);
+        if (indexUser <= -1) user.ratedAlbums.push(req.params.albumid);
+        const userProfile = await user.save();
+        delete userProfile.password;
         Activity.addSomethingActivity(
           Activity.createRatedInformation(
             {
@@ -236,13 +240,18 @@ router.post(
             { userId: req.user.id, username: req.user.username },
           ),
         );
-        album
+        return album
           .save()
-          .then(res_ => res.json({ ratings: res_.ratings, __v: res_.__v }))
+          .then(res_ =>
+            res.json({
+              ratings: res_.ratings,
+              __v: res_.__v,
+              user: userProfile,
+            }),
+          )
           .catch(err => console.log(err));
-      } else {
-        return res.status(400).json('Error finding the album.');
       }
+      return res.status(400).json('Error finding the album.');
     } catch (err) {
       console.log(err);
       return res.status(404).json('Error.');

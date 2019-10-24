@@ -9,6 +9,7 @@ const https = require('https');
 const http = require('http');
 // Mongodb Key
 const db = require('./config/keys').MONGOURI;
+
 // Routes
 const album = require('./routes/album');
 const user = require('./routes/user');
@@ -29,18 +30,26 @@ console.log(process.env.DEVELOPMENT);
 const production = !process.env.DEVELOPMENT;
 
 // Database connection
-mongoose.connect(
-  db,
-  // Anti-deprecation messages
-  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
-  err => {
-    if (err) throw err;
-    console.log(
-      `Connected to database! Welcome 🐋: ${db.split(':')[1].slice(2)} 🐋`,
-    );
-  },
-);
+function connect() {
+  mongoose.connect(
+    db,
+    // Anti-deprecation messages
+    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
+    err => {
+      if (err) {
+        console.log(`ERROR: ${err}`);
+        console.log('Trying again :P...');
+        setTimeout(() => {}, 1000);
+        return;
+      }
+      console.log(
+        `Connected to database! Welcome 🐋: ${db.split(':')[1].slice(2)} 🐋`,
+      );
+    },
+  );
+}
 
+connect();
 // BodyParser Init.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -249,50 +249,7 @@ const mongoQueries = {
           },
         ];
       },
-      /** {
-  $project: {
-    _id: 1, _id: 1
-    tags: 1, likedAlbumsArray: { $objectToArray: '$likedAlbums' }
-    killFlag: {
-      $const: [true, false]
-    }
-  }
-}, {
-  $unwind: "$tags" $unwind: $likedAlbumsArray
-}, {
-  $unwind: "$killFlag" $unwind: killFlag
-}, {
-  $match: {
-    $nor: [{
-        'likedAlbumsArray.k': {
-          $in: ['tag1', 'tag2', 'tag4']  --> $nor [{
-                                                 $in: [arrayalbums]
-                                              }]
-        },
-        killFlag: true
-      }
-    ]
-  }
-}, {
-  $group: {
-    _id: "$_id",
-    tags: {
-      $addToSet: "$tags"
-    },
-    killFlag: {
-      $max: "$killFlag"
-    }
-  }
-}, {
-  $match: {
-    killFlag: false
-  }
-}, {
-  $project: {
-    _id: 1,
-    tags: 1
-  }
-} */
+
       followerCount(agreggation = []) {
         return [
           ...agreggation,
@@ -303,6 +260,28 @@ const mongoQueries = {
               _id: 1,
               images: 1,
               followerCount: { $size: '$followers' },
+            },
+          },
+        ];
+      },
+
+      mostPopular() {
+        return [
+          ...mongoQueries.aggregationss.user.this.followerCount(),
+          {
+            $project: {
+              username: 1,
+              email: 1,
+              _id: 1,
+              images: 1,
+              totalScore: {
+                $sum: [
+                  '$followerCount',
+                  { $size: '$playlists' },
+                  { $size: '$playlists' },
+                  { $size: '$ratedAlbums' },
+                ],
+              },
             },
           },
         ];
