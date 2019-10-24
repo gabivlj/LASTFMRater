@@ -127,6 +127,10 @@ function Profile({
           type="ALBUM"
           objectID={profile.profile._id}
           profile
+          profileImage={{
+            image: profileImage.image,
+            goImage: !!profile.profile.images[currentImg],
+          }}
           uuid="SCROLLER_HIDDEN"
           key="2"
           show={false}

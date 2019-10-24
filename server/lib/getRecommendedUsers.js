@@ -17,7 +17,7 @@ function getRecommendedUsers(
 
       if (recommendedExclude.recommended.length === 0 && lenLikedAlbums === 0) {
         // find only by popular users...
-        return res('notimplemented');
+        return res(await User.aggregate(mongo.aggregations.user.mostPopular()));
       }
       if (lenLikedAlbums > 0) {
         const albumIDS = likedAlbumsKeys.filter(
@@ -42,14 +42,12 @@ function getRecommendedUsers(
           return res(finalRecommended);
         }
       }
-      return res('not implemented');
+      return res(await User.aggregate(mongo.aggregations.user.mostPopular()));
     } catch (err) {
       console.log(err);
       return reject(err);
     }
   });
-  // if recommendedExclude and no likedAlbums find by popular users...
-  // if likedAlbums find by popular users that liked these albums.
 }
 
 module.exports = getRecommendedUsers;

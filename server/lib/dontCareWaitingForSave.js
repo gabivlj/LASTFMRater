@@ -8,7 +8,7 @@ const handleError = require('./handleError');
  */
 module.exports = async function dontCareWaitingForSave(
   instance,
-  careAboutError = true
+  careAboutError = true,
 ) {
   const [err, _] = await handleError(instance.save());
   if (err && careAboutError) throw err;

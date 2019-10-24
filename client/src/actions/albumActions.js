@@ -59,22 +59,28 @@ export const addAlbumRating = (
   axios
     .post(`/api/album/rate/${albumId}`, infoToSendToApi)
     .then(res => {
+      const { user } = res.data;
+      dispatch(notifyNormality('Rating added!', 1500));
+      dispatch({
+        type: 'SET_RATING_USER',
+        payload: user,
+      });
       dispatch({
         type: 'ADD_ALBUM',
         payload: res.data,
       });
     })
     .catch(err => console.log(err));
-  axios
-    .post('/api/user/rate', { userid, albumId })
-    .then(res => {
-      dispatch(notifyNormality('Rating added!', 1500));
-      dispatch({
-        type: 'SET_RATING_USER',
-        payload: res.data,
-      });
-    })
-    .catch(err => console.log(err));
+  // axios
+  //   .post('/api/user/rate', { userid, albumId })
+  //   .then(res => {
+  //     dispatch(notifyNormality('Rating added!', 1500));
+  //     dispatch({
+  //       type: 'SET_RATING_USER',
+  //       payload: res.data,
+  //     });
+  //   })
+  //   .catch(err => console.log(err));
 };
 
 export const addComment = (user, album, text) => async dispatch => {

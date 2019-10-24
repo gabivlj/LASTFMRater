@@ -229,6 +229,7 @@ router.get('/:id', async (req, res) => {
     lastfm: user.lastfm || '',
     images: user.images || [],
     _id: user._id,
+    likedAlbums: user.likedAlbums,
     followed,
     follows,
     mutuals,
