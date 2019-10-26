@@ -27,8 +27,14 @@ export const setCommentOverlay = ({
   });
 };
 
-export const commentOverlay = open => dispatch =>
+export const commentOverlay = open => dispatch => {
+  if (!open) {
+    dispatch({
+      type: 'CLOSE_OVERLAY',
+    });
+  }
   dispatch(showCommentOverlay(open));
+};
 
 export const actionToComment = (
   id,
@@ -57,6 +63,7 @@ export const comment = (
   name,
   answer = false,
 ) => async (dispatch, store) => {
+  console.log(name);
   if (!username || text === '' || !objectId || !pathname || !name) {
     return null;
   }

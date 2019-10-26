@@ -41,6 +41,7 @@ function CommentSection({
         loged={user}
         like={onLike(comment._id, index)}
         dislike={onDislike(comment._id, index)}
+        _id={comment._id}
         img={
             comment.images && comment.images[0]
               ? `${linksHttp.GO_IMAGE}/api/image/${

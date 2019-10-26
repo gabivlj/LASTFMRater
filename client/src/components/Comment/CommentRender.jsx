@@ -8,6 +8,8 @@ export default function CommentRender({ comment }) {
       <CommentSingleRender comment={comment} />
       <br />
       <CommentComponent
+        isOverlay
+        key={1}
         useOwnOnScroll
         objectId={comment._id}
         name={comment.username}
