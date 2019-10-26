@@ -259,7 +259,7 @@ const mongoQueries = {
               email: 1,
               _id: 1,
               images: 1,
-              followerCount: { $size: '$followers' },
+              followerCount: isArrayReturnCount('$followers'),
             },
           },
         ];
@@ -267,7 +267,7 @@ const mongoQueries = {
 
       mostPopular() {
         return [
-          ...mongoQueries.aggregationss.user.this.followerCount(),
+          ...mongoQueries.aggregations.user.followerCount(),
           {
             $project: {
               username: 1,
@@ -277,9 +277,8 @@ const mongoQueries = {
               totalScore: {
                 $sum: [
                   '$followerCount',
-                  { $size: '$playlists' },
-                  { $size: '$playlists' },
-                  { $size: '$ratedAlbums' },
+                  isArrayReturnCount('$playlists'),
+                  isArrayReturnCount('$ratedAlbums'),
                 ],
               },
             },

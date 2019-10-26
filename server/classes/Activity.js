@@ -43,6 +43,7 @@ class Activity {
   async getActivityFromUsersFollowers(followingArray, beginning = 0, end = 4) {
     // $or array
     const following = followingArray.map(follow => ({ user: follow }));
+    if (following.length === 0) return [];
     const activity = await ActivityModel.aggregate([
       {
         $match: {

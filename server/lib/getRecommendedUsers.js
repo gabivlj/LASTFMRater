@@ -12,12 +12,18 @@ function getRecommendedUsers(
 ) {
   return new Promise(async (res, reject) => {
     try {
-      const likedAlbumsKeys = Object.keys(user.likedAlbums);
+      const likedAlbumsKeys = user.likedAlbums
+        ? Object.keys(user.likedAlbums)
+        : {};
       const lenLikedAlbums = likedAlbumsKeys.length;
-
+      console.log(`len${lenLikedAlbums}`);
       if (recommendedExclude.recommended.length === 0 && lenLikedAlbums === 0) {
         // find only by popular users...
-        return res(await User.aggregate(mongo.aggregations.user.mostPopular()));
+        return res(
+          await User.aggregate(mongo.aggregations.user.mostPopular())
+            .sort({ totalScore: -1 })
+            .limit(3),
+        );
       }
       if (lenLikedAlbums > 0) {
         const albumIDS = likedAlbumsKeys.filter(
@@ -25,12 +31,10 @@ function getRecommendedUsers(
         );
         if (albumIDS.length) {
           const recommendedUsers = await User.aggregate(
-            mongo.aggregations.user.getUsersThatCoincideInLikes(albumIDS, {
-              images: 1,
-              username: 1,
-              followerCount: 1,
-            }),
-          ).sort({ followerCount: 1 });
+            mongo.aggregations.user.getUsersThatCoincideInLikes(albumIDS),
+          )
+            .sort({ followerCount: -1 })
+            .limit(20);
           const finalRecommended = recommendedUsers
             .filter(
               u =>
@@ -42,7 +46,11 @@ function getRecommendedUsers(
           return res(finalRecommended);
         }
       }
-      return res(await User.aggregate(mongo.aggregations.user.mostPopular()));
+      return res(
+        await User.aggregate(mongo.aggregations.user.mostPopular())
+          .sort({ totalScore: -1 })
+          .limit(3),
+      );
     } catch (err) {
       console.log(err);
       return reject(err);
