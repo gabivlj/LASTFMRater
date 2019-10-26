@@ -71,7 +71,6 @@ router.get(
       (prev, now) => ({ ...prev, [now]: now }),
       {},
     );
-    console.log(objectExclude);
     const recommendedEnd = recommendedFollow
       .filter(
         recommend =>
@@ -81,10 +80,10 @@ router.get(
       )
       .slice(0, 3)
       .map(u => ({ username: u.username, _id: u._id, images: u.images || [] }));
-    if (recommendedEnd.length === 0) {
+    if (recommendedEnd.length < 3) {
       const recommendedAdjust = await getRecommendedUsers(
         user,
-        recommendedExclude.recommend,
+        recommendedExclude,
         objectExclude,
         userFollowing,
       );

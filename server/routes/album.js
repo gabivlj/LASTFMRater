@@ -207,7 +207,7 @@ router.post(
           // Add it.
           album.ratings.push({
             puntuation: req.body.puntuation,
-            user: req.body.userid,
+            user: user.username,
           });
           // Add to "today" the rating. (This is because in another calls to the api
           // we may want to know the most hot rated albums of the day)
@@ -218,7 +218,7 @@ router.post(
           // else replace
           album.ratings.splice(index, 1, {
             puntuation: req.body.puntuation,
-            user: req.body.userid,
+            user: user.username,
           });
           // // Substract from the last day that the album received a rating.
           // album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
@@ -255,6 +255,33 @@ router.post(
     } catch (err) {
       console.log(err);
       return res.status(404).json('Error.');
+    }
+  },
+);
+
+router.delete(
+  '/rate/:albumID',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { user, params } = req;
+      const { albumID } = params;
+      const album = await Album.findById(albumID);
+      if (!album) {
+        return res.status(404).json({ error: 'Album not found.' });
+      }
+      album.ratings = album.ratings.filter(
+        rating => String(rating.user) !== user.username,
+      );
+      const albumSaved = await album.save();
+      user.ratedAlbums = user.ratedAlbums.filter(
+        album => String(album) !== albumID,
+      );
+      user.save();
+      res.json({ ratings: albumSaved.ratings, user });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'Error requesting an album.' });
     }
   },
 );
