@@ -198,6 +198,7 @@ class Album extends Component {
                 {/* TODO: We are cuerrently testing this component for reusable. */}
                 <div style={{ margin: '50px 0 20px 0' }}>
                   <CommentComponent
+                    key={2}
                     objectId={album._id}
                     numberOfCommentsAdd={20}
                     name={`${album.name} by ${this.state.artist}`}

@@ -34,7 +34,6 @@ function CommentDialog({
         open={showCommentOverlay}
         handleClose={() => {
           commentOverlay(false);
-          cleanComments();
         }}
         Render={CommentRender}
         isLoading={false}

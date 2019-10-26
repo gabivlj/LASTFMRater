@@ -13,6 +13,7 @@ import {
 } from '../../../actions/commentActions';
 
 import CommentSection from '../CommentSection';
+import guidGenerator from '../../../utils/idCreator';
 
 /**
  * @description Component that you only have to pass the objectId and it will handle the rest for your comment section. It's very
@@ -35,6 +36,7 @@ function CommentComponent({
   useOwnOnScroll,
   answer,
   preloadSomeComments,
+  isOverlay,
 }) {
   // Redux refactoring.
   const userId = auth.apiUser ? auth.apiUser.id : null;
@@ -47,6 +49,7 @@ function CommentComponent({
   // UseEffect
   useEffect(() => {
     if (preloadSomeComments) {
+      console.log('a0d0asdsda');
       setLoading();
       // We do the update of the comments here because otherwise I don't know how we will get the prev value.
       setCurrentNOfComments(prev => {
@@ -66,7 +69,8 @@ function CommentComponent({
         window.innerHeight + window.scrollY >=
           document.body.offsetHeight - 20 &&
         loaded &&
-        !timeoutForLoading
+        !timeoutForLoading &&
+        (!useOwnOnScroll && !comments.showCommentOverlay)
       ) {
         setLoading();
         // We do the update of the comments here because otherwise I don't know how we will get the prev value.
@@ -113,17 +117,19 @@ function CommentComponent({
    * @description passed fn. to CommentSection (Check component for more information).
    */
   function commentSubmit(user, _, txt) {
+    console.log(pathname);
     comment(user, txt, objectId, pathname, name, answer);
   }
 
   return (
     <>
       <CommentSection
+        key={guidGenerator()}
         addComment={commentSubmit}
         likeComment={like}
         dislikeComment={dislike}
         objectId={objectId}
-        comments={comments.comments}
+        comments={isOverlay ? comments.commentsOverlay : comments.comments}
         user={userName}
       />
       {paddingIfNotLoaded && comments.comments.length === 0 ? (
@@ -157,6 +163,7 @@ CommentComponent.propTypes = {
   useOwnOnScroll: PropTypes.bool,
   answer: PropTypes.bool,
   preloadSomeComments: PropTypes.bool,
+  isOverlay: PropTypes.bool,
 };
 
 CommentComponent.defaultProps = {
@@ -166,6 +173,7 @@ CommentComponent.defaultProps = {
   useOwnOnScroll: false,
   answer: false,
   preloadSomeComments: true,
+  isOverlay: false,
 };
 
 export default withRouter(

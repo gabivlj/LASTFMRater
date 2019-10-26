@@ -19,3 +19,8 @@
 .likes-span {
   margin: 0 5% 0 5%;
 }
+
+.comment:hover {
+  background-color: #cac8c8;
+  cursor: pointer;
+}
