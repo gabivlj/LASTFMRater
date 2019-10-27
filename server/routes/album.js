@@ -292,6 +292,7 @@ router.delete(
 router.get('/:albumname/:artistname', async (req, res) => {
   const { username, userId, mbid } = req.query;
   // todo: change
+  console.log(req.query, req.params);
   const isMbid = mbid => mbid === 'null' || mbid.includes('-');
   const isIdMbid = isMbid(mbid);
   if (!isIdMbid) {
@@ -310,7 +311,14 @@ router.get('/:albumname/:artistname', async (req, res) => {
     artist: req.params.artistname,
     mbid,
   };
-  let albumFM = await FM.getAlbum(AlbumData);
+  // eslint-disable-next-line prefer-const
+  let [errFM, albumFM] = await handleError(FM.getAlbum(AlbumData));
+  if (errFM) {
+    console.log(errFM);
+    return res.status(400).json({ error: 'Error requesting album' });
+  }
+
+  console.log(albumFM);
 
   if (albumFM && albumFM.album) {
     albumFM = albumFM.album;

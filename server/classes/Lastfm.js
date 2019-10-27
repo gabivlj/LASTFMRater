@@ -21,7 +21,9 @@ class Lastfm {
       );
       try {
         const user = await axios.get(
-          `${this.LASTFMROUTE}?token=${token}&api_key=${this.API_KEY}&api_sig=${this.API_SIGNATURE}&method=auth.getSession`,
+          encodeURI(
+            `${this.LASTFMROUTE}?token=${token}&api_key=${this.API_KEY}&api_sig=${this.API_SIGNATURE}&method=auth.getSession`,
+          ),
         );
         if (!user.data || !user) {
           resolve({ error: 'Error with Lasftm API', moreinfo: user });
@@ -42,7 +44,9 @@ class Lastfm {
     return new Promise(async (resolve, reject) => {
       try {
         const albums = await axios.get(
-          `${this.LASTFMROUTE}/?method=library.getartists&api_key=${this.API_KEY}&user=${username}&format=json`,
+          encodeURI(
+            `${this.LASTFMROUTE}/?method=library.getartists&api_key=${this.API_KEY}&user=${username}&format=json`,
+          ),
         );
         if (!albums) {
           resolve({ error: 'Error.', moreinfo: albums });
@@ -69,7 +73,7 @@ class Lastfm {
       try {
         params.api_key = this.API_KEY;
         const albums = await axios.get(
-          `${this.LASTFMROUTE}/?method=album.search&format=json`,
+          encodeURI(`${this.LASTFMROUTE}/?method=album.search&format=json`),
           { params },
         );
         if (!albums) {
@@ -94,7 +98,8 @@ class Lastfm {
         ) {
           query += `&mbid=${mbid}`;
         }
-        const artist__ = await axios.get(`${query}&format=json`);
+        const queryEncoded = encodeURI(query);
+        const artist__ = await axios.get(`${queryEncoded}&format=json`);
         if (!artist__) {
           resolve({ error: 'Error.', moreinfo: artist__ });
         }
@@ -134,7 +139,9 @@ class Lastfm {
           mbidStr = `&mbid=${mbid}`;
         }
         const album = await axios.get(
-          `${this.LASTFMROUTE}/?method=album.getinfo&api_key=${this.API_KEY}&artist=${artist}&album=${albumname}${userStr}${mbidStr}&format=json`,
+          encodeURI(
+            `${this.LASTFMROUTE}/?method=album.getinfo&api_key=${this.API_KEY}&artist=${artist}&album=${albumname}${userStr}${mbidStr}&format=json`,
+          ),
         );
         if (!album) {
           resolve(null);
@@ -150,7 +157,9 @@ class Lastfm {
     return new Promise((resolve, reject) => {
       axios
         .get(
-          `${this.LASTFMROUTE}/?method=album.search&album=${search}&api_key=${this.API_KEY}&page=${page}&limit=${limit}&format=json`,
+          encodeURI(
+            `${this.LASTFMROUTE}/?method=album.search&album=${search}&api_key=${this.API_KEY}&page=${page}&limit=${limit}&format=json`,
+          ),
         )
         .then(res => {
           resolve(res.data.results.albummatches.album);
@@ -163,7 +172,9 @@ class Lastfm {
     return new Promise((resolve, reject) => {
       axios
         .get(
-          `${this.LASTFMROUTE}/?method=artist.search&api_key=${this.API_KEY}&artist=${searchValue}&page=${page}&limit=${limit}&format=json`,
+          encodeURI(
+            `${this.LASTFMROUTE}/?method=artist.search&api_key=${this.API_KEY}&artist=${searchValue}&page=${page}&limit=${limit}&format=json`,
+          ),
         )
         .then(res => {
           resolve(res.data.results.artistmatches.artist);
@@ -214,7 +225,9 @@ class Lastfm {
     return new Promise((resolve, reject) =>
       axios
         .get(
-          `${this.LASTFMROUTE}/?method=artist.gettopalbums&artist=${artist}&api_key=${this.API_KEY}&format=json`,
+          encodeURI(
+            `${this.LASTFMROUTE}/?method=artist.gettopalbums&artist=${artist}&api_key=${this.API_KEY}&format=json`,
+          ),
         )
         .then(res => {
           resolve(res.data);
@@ -227,7 +240,9 @@ class Lastfm {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await axios.get(
-          `${this.LASTFMROUTE}/?method=track.search&track=${search}&api_key=${this.API_KEY}&format=json`,
+          encodeURI(
+            `${this.LASTFMROUTE}/?method=track.search&track=${search}&api_key=${this.API_KEY}&format=json`,
+          ),
         );
 
         resolve({ tracks: response.data.results.trackmatches });

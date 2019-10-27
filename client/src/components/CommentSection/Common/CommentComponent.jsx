@@ -36,6 +36,7 @@ function CommentComponent({
   useOwnOnScroll,
   answer,
   preloadSomeComments,
+  // Check if use the overlay array or the other.
   isOverlay,
 }) {
   // Redux refactoring.
@@ -49,7 +50,6 @@ function CommentComponent({
   // UseEffect
   useEffect(() => {
     if (preloadSomeComments) {
-      console.log('a0d0asdsda');
       setLoading();
       // We do the update of the comments here because otherwise I don't know how we will get the prev value.
       setCurrentNOfComments(prev => {
