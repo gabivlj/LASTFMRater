@@ -27,6 +27,7 @@ function CommentSingleRender({ comment }) {
           liked={liked}
           disliked={disliked}
           dislike={dislike}
+          _id={comment._id}
         />
       ) : (
         <LinearProgress />

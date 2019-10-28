@@ -39,7 +39,7 @@ function CommentDialog({
         isLoading={false}
         title="Comment"
         titleButton="Testing"
-        propsRender={{ comment }}
+        propsRender={{ comment, showCommentOverlay }}
         renderActions="a"
         scrollableGeneral={false}
         onScroll={checkBottom}

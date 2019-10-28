@@ -42,14 +42,14 @@ function CommentComponent({
   // Redux refactoring.
   const userId = auth.apiUser ? auth.apiUser.id : null;
   const userName = auth.apiUser ? auth.apiUser.user : null;
-  const { loaded } = comments;
-  const [, setCurrentNOfComments] = useState(0);
+  const { loaded, showCommentOverlay } = comments;
+  const [current, setCurrentNOfComments] = useState(0);
   let timeoutForLoading = false;
   const { pathname } = location;
 
   // UseEffect
   useEffect(() => {
-    if (preloadSomeComments) {
+    if (preloadSomeComments && current === 0 && !isOverlay) {
       setLoading();
       // We do the update of the comments here because otherwise I don't know how we will get the prev value.
       setCurrentNOfComments(prev => {
@@ -117,7 +117,6 @@ function CommentComponent({
    * @description passed fn. to CommentSection (Check component for more information).
    */
   function commentSubmit(user, _, txt) {
-    console.log(pathname);
     comment(user, txt, objectId, pathname, name, answer);
   }
 
@@ -135,7 +134,10 @@ function CommentComponent({
       {paddingIfNotLoaded && comments.comments.length === 0 ? (
         <div style={{ paddingBottom: '2000px' }} />
       ) : null}
-      {!loaded ? <LinearProgress /> : null}
+      {/* We do this second check so it doesnt appear loading while the overlay comment section is loading */}
+      {!loaded && (isOverlay || !showCommentOverlay) ? (
+        <LinearProgress />
+      ) : null}
     </>
   );
 }
