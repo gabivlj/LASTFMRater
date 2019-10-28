@@ -19,6 +19,7 @@ import HeartIcon from '@material-ui/icons/Favorite';
 import { postReview } from '../../actions/reviewActions';
 import { withRouter } from 'react-router-dom';
 import ReviewsSection from '../Common/ReviewsSection';
+import guidGenerator from '../../utils/idCreator';
 
 const __propTypes = {
   getAlbum: PropTypes.func.isRequired,
@@ -198,7 +199,7 @@ class Album extends Component {
                 {/* TODO: We are cuerrently testing this component for reusable. */}
                 <div style={{ margin: '50px 0 20px 0' }}>
                   <CommentComponent
-                    key={2}
+                    keyy={'999'}
                     objectId={album._id}
                     numberOfCommentsAdd={20}
                     name={`${album.name} by ${this.state.artist}`}

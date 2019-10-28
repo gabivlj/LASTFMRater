@@ -100,7 +100,6 @@ export const getComments = (
   current = 0,
   limit = 50,
   userId = null,
-  slice = false,
 ) => async dispatch => {
   const [res, error] = await handleError(
     axios.get(`/api/comments/${objectId}`, {
@@ -113,7 +112,6 @@ export const getComments = (
       type: 'ERROR_GETTING_COMMENTS',
     });
   }
-
   return dispatch({
     type: 'SET_COMMENTS',
     payload: res.data.comments,

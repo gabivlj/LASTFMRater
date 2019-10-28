@@ -103,6 +103,9 @@ router.get(
   },
 );
 
+/**
+ * @description Each hour do this.
+ */
 router.get('/get/hottest', async (_, res) => {
   // The query should return the hottest albums of the day
   // Like the most rated, but the thing is we should get only the albums

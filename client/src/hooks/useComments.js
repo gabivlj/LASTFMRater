@@ -57,7 +57,7 @@ export default function useComments(
     setCheck(() => checkBottom());
   }, [comment._id]);
   useEffect(() => {
-    if (comment) {
+    if (comment && comment._id) {
       setLoading();
       setCurrentNOfComments(prev => {
         getComments(
@@ -70,7 +70,7 @@ export default function useComments(
       });
     }
     return () => setCurrentNOfComments(0);
-  }, [comment]);
+  }, [comment ? comment._id : '']);
 
   return [check];
 }
