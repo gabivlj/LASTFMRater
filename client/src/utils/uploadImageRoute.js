@@ -1,6 +1,6 @@
-import Axios from 'axios';
 import handleError from './handleError';
 import { notifySuccess } from '../actions/notifyActions';
+import { axiosAPI } from './axios';
 
 /**
  * @param {String}, Route that we wanna call post to.
@@ -20,7 +20,9 @@ export default async (
   msgSuccess = 'Image uploaded succesfuly!',
   msgError = 'Error uploading image!',
 ) => {
-  const [final, err] = await handleError(Axios.post(route, { lz, md, lg, sm }));
+  const [final, err] = await handleError(
+    axiosAPI.post(route, { lz, md, lg, sm }),
+  );
   if (err) return dispatch(notifySuccess(msgError, 2000));
   dispatch(notifySuccess(msgSuccess, 2000));
   return dispatchCallback(final.data.images);

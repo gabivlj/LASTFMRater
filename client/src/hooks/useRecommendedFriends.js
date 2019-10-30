@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Axios from 'axios';
 import handleError from '../utils/handleError';
+import { axiosAPI } from '../utils/axios';
 
 export default function useRecommendedFollowers() {
   const [recommendedFollowers, setRecommendedFriends] = useState([]);
@@ -10,7 +10,7 @@ export default function useRecommendedFollowers() {
     (async () => {
       setLoading(true);
       const [res, err] = await handleError(
-        Axios.get('/api/profile/recommendedFollowers'),
+        axiosAPI.get('/profile/recommendedFollowers'),
       );
       setLoading(false);
       if (err) {

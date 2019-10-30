@@ -1,11 +1,8 @@
-import Axios from 'axios';
 import uuid from 'uuid/v1';
 import SocketInstance from '../classes/SocketInstance';
 import { notifySuccess, notifyNormality, notifyError } from './notifyActions';
 import handleError from '../utils/handleError';
-import testTime from '../utils/testTime';
-import wait from '../utils/wait';
-import chatReducer from '../reducer/chatReducer';
+import { axiosAPI } from '../utils/axios';
 
 let finishedTimeOut = true;
 
@@ -22,7 +19,7 @@ export const setLoading = () => {
 };
 
 export const cleanChatNotifications = id =>
-  Axios.post(`/api/chat/cleanNotifications/${id}`);
+  axiosAPI.post(`/chat/cleanNotifications/${id}`);
 
 /**
  * @param {object} , message, to, username
@@ -39,7 +36,7 @@ export const sendMessage = ({
   if (!finishedTimeOut) return false;
   finishedTimeOut = false;
   const [res, err] = await handleError(
-    Axios.post('/api/chat/new', {
+    axiosAPI.post('/chat/new', {
       from: { _id: fromId, username },
       to: { _id: to, username: toUsername },
       text: message,
@@ -76,9 +73,7 @@ export const sendMessage = ({
  */
 export const getNotificationsSum = () => {
   return new Promise(async (resolve, reject) => {
-    const [res, err] = await handleError(
-      Axios.get(`/api/chat/notificationSum`),
-    );
+    const [res, err] = await handleError(axiosAPI.get(`/chat/notificationSum`));
     if (err) {
       return reject(err);
     }
@@ -93,7 +88,7 @@ export const getNotificationsSum = () => {
 
 export const getChat = (otherId, get = '') => async dispatch => {
   dispatch(setLoading());
-  const [res, err] = await handleError(Axios.get(`/api/chat/${get}${otherId}`));
+  const [res, err] = await handleError(axiosAPI.get(`/chat/${get}${otherId}`));
   if (err) {
     return dispatch(notifyError('Error getting chat...', 500));
   }
@@ -240,7 +235,7 @@ export const receiveMessage = e => (dispatch, state) => {
 
 export const getChats = () => async dispatch => {
   dispatch(setLoading());
-  const [res, err] = await handleError(Axios.get('/api/chat'));
+  const [res, err] = await handleError(axiosAPI.get('/chat'));
   if (err) {
     console.log(err);
     return dispatch(notifyError('Error retrieving chats...', 3000));
@@ -255,7 +250,7 @@ export const getChats = () => async dispatch => {
 
 export const getFriendsProfiles = () => async dispatch => {
   dispatch(setLoading());
-  const [res, err] = await handleError(Axios.get('/api/profile/get/friends'));
+  const [res, err] = await handleError(axiosAPI.get('/profile/get/friends'));
   if (err) {
     console.log(err);
     return dispatch(notifyError('Error retrieving friends profiles...', 3000));

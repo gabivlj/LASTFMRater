@@ -1,8 +1,15 @@
+/**
+ * @description In the comment section he have: comments of comment section and comments of the overlay that shows the response of a comment.
+ *              Thats why are booleans of isOverlay etc. in JSX CommentSection components, because each have diff. behaviours
+ *              and should load depending of what is happening in each piece
+ */
+
 import axios from 'axios';
 import CommentSection from '../classes/CommentSection';
 import handleError from '../utils/handleError';
 import { notifyError, notifySuccess } from './notifyActions';
 import SocketInstance from '../classes/SocketInstance';
+import { axiosAPI } from '../utils/axios';
 
 export const addComment = (type, user, id, text, userId) => dispatch => {
   CommentSection.addComment(dispatch, type, id, user || null, text, userId);
@@ -68,7 +75,7 @@ export const comment = (
     return null;
   }
   const [res, error] = await handleError(
-    axios.post(`/api/comments/${objectId}`, {
+    axiosAPI.post(`/comments/${objectId}`, {
       username,
       text,
       pathname,
@@ -102,7 +109,7 @@ export const getComments = (
   userId = null,
 ) => async dispatch => {
   const [res, error] = await handleError(
-    axios.get(`/api/comments/${objectId}`, {
+    axiosAPI.get(`/comments/${objectId}`, {
       params: { current, limit, userId },
     }),
   );
@@ -149,7 +156,7 @@ export const addOpinionToComment = (
     });
   }
   const [res, error] = await handleError(
-    axios.post(`/api/comments/${type}/${commentId}`),
+    axiosAPI.post(`/comments/${type}/${commentId}`),
   );
   if (error) {
     return dispatch({

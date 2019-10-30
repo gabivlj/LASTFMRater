@@ -1,13 +1,11 @@
-import axios from 'axios';
 import API_KEYS from '../API';
 import handleError from '../utils/handleError';
+import { axiosAPI, axiosFM } from '../utils/axios';
 
 export const searchThingsForSearchBar = searchValue => dispatch => {
-  axios
+  axiosFM
     .get(
-      `http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=${
-        API_KEYS.API_KEY
-      }&album=${searchValue}&limit=6&format=json`
+      `/?method=album.search&api_key=${API_KEYS.API_KEY}&album=${searchValue}&limit=6&format=json`,
     )
     .then(res => {
       dispatch({
@@ -22,7 +20,7 @@ export const searchThingsForSearchBar = searchValue => dispatch => {
 export const searchAlbums = (search, limit = 5, page = 1) => async dispatch => {
   if (page <= 0) page = 1;
   try {
-    const response = await axios.get(`/api/album/search/${search}`, {
+    const response = await axiosAPI.get(`/album/search/${search}`, {
       params: {
         limit,
         page,
@@ -40,7 +38,7 @@ export const searchAlbums = (search, limit = 5, page = 1) => async dispatch => {
 export const searchArtists = (name, limit = 5, page = 1) => async dispatch => {
   if (page <= 0) page = 1;
   try {
-    const response = await axios.get(`/api/artist/search/${name}`, {
+    const response = await axiosAPI.get(`/artist/search/${name}`, {
       params: {
         limit,
         page,
@@ -54,36 +52,44 @@ export const searchArtists = (name, limit = 5, page = 1) => async dispatch => {
   }
 };
 
-export const searchPlaylists = (query, limit = 5, page = 1) => async dispatch => {
+export const searchPlaylists = (
+  query,
+  limit = 5,
+  page = 1,
+) => async dispatch => {
   page = page <= 0 ? 1 : page;
   const [response, error] = await handleError(
-    axios.get(`/api/playlist/search/${query}`)
+    axiosAPI.get(`/playlist/search/${query}`),
   );
   if (error) {
     return dispatch({
-      type: 'ERROR_FINDING_PLAYLIST_SEARCH'
-    })
+      type: 'ERROR_FINDING_PLAYLIST_SEARCH',
+    });
   }
   const { data } = response;
   dispatch({
     type: 'SEARCH_PLAYLISTS_FOR_SEARCH',
     payload: data.playlists,
-  })
-}
+  });
+};
 
-export const searchProfiles = (query, limit = 5, page = 1) => async dispatch => {
+export const searchProfiles = (
+  query,
+  limit = 5,
+  page = 1,
+) => async dispatch => {
   page = page <= 0 ? 1 : page;
   const [response, error] = await handleError(
-    axios.get(`/api/profile/search/${query}`)
+    axiosAPI.get(`/profile/search/${query}`),
   );
   if (error) {
     return dispatch({
-      type: 'ERROR_FINDING_PLAYLIST_SEARCH'
-    })
+      type: 'ERROR_FINDING_PLAYLIST_SEARCH',
+    });
   }
   const { data } = response;
   dispatch({
     type: 'SEARCH_PROFILES_FOR_SEARCH',
     payload: data.profiles,
-  })
-}
+  });
+};

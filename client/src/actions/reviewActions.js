@@ -1,13 +1,13 @@
-import axios from 'axios';
 import handleError from '../utils/handleError';
 import { notifyError } from './notifyActions';
+import { axiosAPI } from '../utils/axios';
 
 const setLoading = () => ({ type: 'SET_LOADING_REVIEW' });
 
 export const postReview = (history, objectId) => async dispatch => {
   dispatch(setLoading());
   const [response, err] = await handleError(
-    axios.post('/api/reviews', { objectID: objectId }),
+    axiosAPI.post('/reviews', { objectID: objectId }),
   );
   if (err) {
     return dispatch(notifyError('Error creating a review!!'));
@@ -32,7 +32,7 @@ export const cleanReviews = () => dispatch =>
 export const getReviewEditor = _id => async dispatch => {
   dispatch(setLoading());
   const [response, error] = await handleError(
-    axios.get(`/api/reviews/reviews/review/me/${_id}`),
+    axiosAPI.get(`/reviews/reviews/review/me/${_id}`),
   );
   if (error) {
     return dispatch(notifyError('Error getting the review.'));
@@ -46,7 +46,7 @@ export const getReviewEditor = _id => async dispatch => {
 export const updateReview = (review, history) => async dispatch => {
   dispatch(setLoading());
   const [response, err] = await handleError(
-    axios.post('/api/reviews/update', review),
+    axiosAPI.post('/reviews/update', review),
   );
   if (err) {
     return dispatch(notifyError('Error updating the review.'));
@@ -65,7 +65,7 @@ export const getReviewsHidden = (
 ) => {
   return new Promise(async (res, err) => {
     const [response, error] = await handleError(
-      axios.get('/api/reviews/reviews/user/auth', {
+      axiosAPI.get('/reviews/reviews/user/auth', {
         params: {
           reviewType: type,
           startingIndex: beginningIndex,
@@ -104,7 +104,7 @@ export const getReviews = (
     });
   }
   const [response, err] = await handleError(
-    axios.get(`/api/reviews/reviews/object/${objectId}`, {
+    axiosAPI.get(`/reviews/reviews/object/${objectId}`, {
       params: {
         reviewType: type,
         startingIndex: beginningIndex,

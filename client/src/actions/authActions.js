@@ -9,6 +9,7 @@ import { notifyError, notifyNormality } from './notifyActions';
 import handleError from '../utils/handleError';
 import socket from '../classes/SocketInstance';
 import { getNotificationsSum } from './chatActions';
+import { axiosAPI } from '../utils/axios';
 
 export const logOut = () => dispatch => {
   Auth.LogOut();
@@ -27,12 +28,12 @@ export const setUser = (
   history = null,
   typeoflogin = null,
 ) => async dispatch => {
-  axios
+  axiosAPI
     .post(`/api/user/${token}`, { username })
     .then(async res => {
       history.push('/auth/login');
       const user = new User(res.data);
-      const apiUser = await axios.post(`/api/user/lastfm/${username}`, user);
+      const apiUser = await axiosAPI.post(`/user/lastfm/${username}`, user);
       deleteAuthTokenFromLS();
       dispatch(logOut());
     })
@@ -41,7 +42,7 @@ export const setUser = (
 
 export const getUser = () => {
   return new Promise(async (resolve, reject) => {
-    const [user, error] = await handleError(axios.get('/api/user/info'));
+    const [user, error] = await handleError(axiosAPI.get('/user/info'));
     if (error) return reject(error);
     return resolve({
       type: 'SET_API_USER',
@@ -120,7 +121,7 @@ export const register = (
   history,
 ) => async dispatch => {
   const [, error] = await handleError(
-    axios.post('/api/user/auth/register', {
+    axiosAPI.post('/user/auth/register', {
       email,
       password,
       password2,
@@ -145,8 +146,8 @@ export const register = (
 
 export const setUsersArtists = name => dispatch => {
   if (name)
-    axios
-      .get(`/api/user/artists/${name}`)
+    axiosAPI
+      .get(`/user/artists/${name}`)
       .then(res => {
         dispatch({
           type: 'SET_USER_ARTISTS',

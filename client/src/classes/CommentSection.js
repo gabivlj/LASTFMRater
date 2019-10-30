@@ -1,15 +1,15 @@
-import axios from 'axios';
 import mapLikesDislikes from '../utils/mapLikesDislikes';
 import handleError from '../utils/handleError';
 import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
+import { axiosAPI } from '../utils/axios';
 
 const getStringsForActions = type => {
   return {
     addDispatch: `ADD_COMMENT_${type.toUpperCase()}`,
     errorDispatch: `ERROR_ADDING_COMMENT_${type.toUpperCase()}`,
-    queryAddingComment: id => `/api/${type.toLowerCase()}/comment/${id}`,
+    queryAddingComment: id => `/${type.toLowerCase()}/comment/${id}`,
     queryAddingOpinion: (id, opinion, commentId) =>
-      `/api/${type}/comment/${opinion}/${id}/${commentId}`
+      `/${type}/comment/${opinion}/${id}/${commentId}`,
   };
 };
 
@@ -32,7 +32,7 @@ class CommentSection {
     elementId,
     username,
     text,
-    userId
+    userId,
   ) {
     const actions = getStringsForActions(element);
 
@@ -43,17 +43,17 @@ class CommentSection {
       text.length < 1
     ) {
       return dispatch({
-        type: actions.errorDispatch
+        type: actions.errorDispatch,
       });
     }
 
     const [response, error] = await handleError(
-      axios.post(actions.queryAddingComment(elementId), { username, text })
+      axiosAPI.post(actions.queryAddingComment(elementId), { username, text }),
     );
 
     if (error) {
       return dispatch({
-        type: actions.errorDispatch
+        type: actions.errorDispatch,
       });
     }
 
@@ -63,7 +63,7 @@ class CommentSection {
 
     dispatch({
       type: actions.addDispatch,
-      payload: { comments }
+      payload: { comments },
     });
   }
 
@@ -74,20 +74,20 @@ class CommentSection {
     elementId,
     commentId,
     fastIndex,
-    userId
+    userId,
   ) {
     const actions = getStringsForActions(element);
 
     const [response, error] = await handleError(
-      axios.post(
+      axiosAPI.post(
         actions.queryAddingOpinion(elementId, typeofOpinion, commentId),
-        { fastIndex }
-      )
+        { fastIndex },
+      ),
     );
     if (error) {
       console.log(error);
       return dispatch({
-        type: 'ERROR_LIKING_COMMENT'
+        type: 'ERROR_LIKING_COMMENT',
       });
     }
     const { data } = response;
@@ -98,8 +98,8 @@ class CommentSection {
       // Maybe generalize this ??
       type: actions.addDispatch,
       payload: {
-        comments
-      }
+        comments,
+      },
     });
   }
 }

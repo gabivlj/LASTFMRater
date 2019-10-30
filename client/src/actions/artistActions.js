@@ -2,14 +2,15 @@ import axios from 'axios';
 import handleError from '../utils/handleError';
 import { notifyError } from './notifyActions';
 import goImage from '../utils/goImage';
+import { axiosAPI } from '../utils/axios';
 
 export const getArtist = artist => dispatch => {
-  axios
-    .get(`/api/artist/${artist.name}?artistId=${artist._id}`)
+  axiosAPI
+    .get(`/artist/${artist.name}?artistId=${artist._id}`)
     .then(res => {
       dispatch({ type: 'SET_ARTIST', payload: res.data.artist });
-      axios
-        .get(`/api/artist/albums/${artist.name}`)
+      axiosAPI
+        .get(`/artist/albums/${artist.name}`)
         .then(res => {
           dispatch({ type: 'SET_ARTIST_ALBUMS', payload: res.data });
         })
@@ -43,7 +44,7 @@ export const uploadImageArtist = (file, images, id) => async dispatch => {
   }
   const { data } = res;
   const [finalResponse, err] = await handleError(
-    axios.post(`/api/artist/update/${id}`, {
+    axiosAPI.post(`/artist/update/${id}`, {
       body: { images: [...images, data] },
     }),
   );
@@ -55,7 +56,7 @@ export const uploadImageArtist = (file, images, id) => async dispatch => {
 
 export const uploadUpdateArtist = (body, artist, history) => async dispatch => {
   const [, err] = await handleError(
-    axios.post(`/api/artist/update/${artist._id}`, { body }),
+    axiosAPI.post(`/artist/update/${artist._id}`, { body }),
   );
   if (err) {
     return dispatch(notifyError('Error uploading an update request.'));
