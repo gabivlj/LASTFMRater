@@ -1,5 +1,5 @@
-import axios from 'axios';
 import jwt from 'jwt-decode';
+import { axiosAPI } from './axios';
 import API from '../API';
 
 // Function that handles await async errors, handles the promise that you pass.
@@ -16,13 +16,13 @@ export function LogUser(token) {
 }
 
 export function setAuthTokenAxios(token) {
-  axios.defaults.headers.common.Authorization = token;
-  axios.defaults.headers.common.CLIENT_KEY =
+  axiosAPI.defaults.headers.common.Authorization = token;
+  axiosAPI.defaults.headers.common.CLIENT_KEY =
     process.env.CLIENT_KEY || API.CLIENT_KEY;
 }
 
 export function deleteAuthTokenAxios() {
-  delete axios.defaults.headers.common.Authorization;
+  delete axiosAPI.defaults.headers.common.Authorization;
 }
 
 export function deleteAuthTokenFromLS() {
@@ -45,7 +45,7 @@ class Auth {
    */
   static async LogUserFromLogin({ email, password }) {
     const [error, authResponse] = await handleError(
-      axios.post(`/api/user/auth/login`, { email, password })
+      axiosAPI.post(`/user/auth/login`, { email, password }),
     );
 
     if (error) {
@@ -59,7 +59,7 @@ class Auth {
 
   // Not used method.
   static async IsUserLoged() {
-    const [error, data] = await handleError(axios.get('/api/user/loged'));
+    const [error, data] = await handleError(axiosAPI.get('/user/loged'));
     if (error) {
       return false;
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Axios from 'axios';
 import handleError from '../utils/handleError';
+import { axiosAPI } from '../utils/axios';
 
 function useLikesDislikes(commentID) {
   const [state, setStateOfLikes] = useState({
@@ -14,7 +14,7 @@ function useLikesDislikes(commentID) {
   useEffect(() => {
     (async () => {
       const [response, error] = await handleError(
-        Axios.get(`/api/comments/get/${commentID}`),
+        axiosAPI.get(`/comments/get/${commentID}`),
       );
       if (error) {
         return setStateOfLikes(previousState => ({
@@ -35,7 +35,7 @@ function useLikesDislikes(commentID) {
 
   async function like() {
     const [response, error] = await handleError(
-      Axios.post(`/api/comments/like/${commentID}`),
+      axiosAPI.post(`/comments/like/${commentID}`),
     );
 
     if (error) {
@@ -58,7 +58,7 @@ function useLikesDislikes(commentID) {
 
   async function dislike() {
     const [response, error] = await handleError(
-      Axios.post(`/api/comments/dislike/${commentID}`),
+      axiosAPI.post(`/comments/dislike/${commentID}`),
     );
 
     if (error) {

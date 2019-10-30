@@ -1,17 +1,16 @@
-import axios from 'axios';
-import uuid from 'uuid/v1';
 import handleError from '../utils/handleError';
 import { notifySuccess, notifyError } from './notifyActions';
 import goImage from '../utils/goImage';
 import uploadImageRoute from '../utils/uploadImageRoute';
 import socket from '../classes/SocketInstance';
+import { axiosAPI } from '../utils/axios';
 
 export const getPlaylists = userName => async dispatch => {
   dispatch({
     type: 'LOADING_PLAYLISTS_PROFILE',
   });
   const [response, error] = await handleError(
-    axios.get(`/api/profile/playlists/${userName}`),
+    axiosAPI.get(`/profile/playlists/${userName}`),
   );
   // If erorr console log and dispatch error
   if (error) {
@@ -34,7 +33,7 @@ export const getProfile = (id, userId = '') => async dispatch => {
     type: 'LOADING_PROFILE',
   });
   const [response, error] = await handleError(
-    axios.get(`/api/profile/${id}?userId=${userId}`),
+    axiosAPI.get(`/profile/${id}?userId=${userId}`),
   );
 
   if (error) {
@@ -53,7 +52,7 @@ export const getProfile = (id, userId = '') => async dispatch => {
 export const setListenedArtists = lastfm => async dispatch => {
   if (lastfm) {
     const [response, error] = await handleError(
-      axios.get(`/api/user/artists/${lastfm}`),
+      axiosAPI.get(`/user/artists/${lastfm}`),
     );
     if (error) {
       return dispatch({ type: 'ERROR_LOADING_ARTISTS ' });
@@ -79,7 +78,7 @@ export const uploadImage = file => async dispatch => {
   }
   const { data } = res;
   const _ = await uploadImageRoute(
-    '/api/profile/image',
+    '/profile/image',
     dispatch,
     images =>
       dispatch({
@@ -99,7 +98,7 @@ export const cleanProfile = () => dispatch => {
 
 export const followUser = id => async (dispatch, state) => {
   const [response, error] = await handleError(
-    axios.post(`/api/following/follow/${id}`),
+    axiosAPI.post(`/following/follow/${id}`),
   );
   if (error) {
     return dispatch(notifyError('Error following user!', 2000));

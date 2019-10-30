@@ -1,14 +1,13 @@
-import axios from 'axios';
 import handleError from '../utils/handleError';
 import mapLikesDislikes from '../utils/mapLikesDislikes';
-import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
 import { notifyNormality, notifyError } from './notifyActions';
 import goImage from '../utils/goImage';
 import uploadImageRoute from '../utils/uploadImageRoute';
+import { axiosAPI } from '../utils/axios';
 
 export const likeAlbum = id => async dispatch => {
   const [response, err] = await handleError(
-    axios.post(`/api/album/loved/${id}`),
+    axiosAPI.post(`/album/loved/${id}`),
   );
   if (err) {
     return dispatch(notifyError('Error liking album'));
@@ -23,7 +22,7 @@ export const likeAlbum = id => async dispatch => {
   });
   if (!album) return {};
   const [res, error] = await handleError(
-    axios.get(`/api/album/recommend_like/${id}`),
+    axiosAPI.get(`/album/recommend_like/${id}`),
   );
   if (error) return console.log(error);
   console.log(res);
@@ -35,9 +34,9 @@ export const getAlbum = albumData => async dispatch => {
   const username = albumData.username ? `?username=${albumData.username}` : '?';
   const userId = `&userId=${albumData.userId}&mbid=${albumData.mbid}`;
 
-  axios
+  axiosAPI
     .get(
-      `/api/album/${albumData.albumname}/${albumData.artist}${username}${userId}`,
+      `/album/${albumData.albumname}/${albumData.artist}${username}${userId}`,
     )
     .then(res => {
       dispatch({
@@ -56,8 +55,8 @@ export const addAlbumRating = (
 ) => dispatch => {
   const infoToSendToApi = { puntuation, userid: username };
 
-  axios
-    .post(`/api/album/rate/${albumId}`, infoToSendToApi)
+  axiosAPI
+    .post(`/album/rate/${albumId}`, infoToSendToApi)
     .then(res => {
       const { user } = res.data;
       dispatch(notifyNormality('Rating added!', 1500));
@@ -71,8 +70,8 @@ export const addAlbumRating = (
       });
     })
     .catch(err => console.log(err));
-  // axios
-  //   .post('/api/user/rate', { userid, albumId })
+  // axiosAPI
+  //   .post('/user/rate', { userid, albumId })
   //   .then(res => {
   //     dispatch(notifyNormality('Rating added!', 1500));
   //     dispatch({
@@ -85,7 +84,7 @@ export const addAlbumRating = (
 
 export const addComment = (user, album, text) => async dispatch => {
   const [response, error] = await handleError(
-    axios.post(`/api/album/comment/${album}`, { text, username: user }),
+    axiosAPI.post(`/album/comment/${album}`, { text, username: user }),
   );
   if (error) {
     return dispatch({
@@ -111,7 +110,7 @@ export const likeComment = (
   fastIndex,
 ) => async dispatch => {
   const [response, error] = await handleError(
-    axios.post(`/api/album/comment/like/${albumId}/${commentId}`, {
+    axiosAPI.post(`/album/comment/like/${albumId}/${commentId}`, {
       fastIndex,
     }),
   );
@@ -140,7 +139,7 @@ export const uploadImage = (file, id) => async dispatch => {
   }
   const { data } = res;
   const _ = await uploadImageRoute(
-    `/api/profile/image/upload/${id}`,
+    `/album/image/upload/${id}`,
     dispatch,
     images => ({
       type: 'UPDATE_ALBUM',

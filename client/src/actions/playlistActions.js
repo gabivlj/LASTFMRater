@@ -1,14 +1,12 @@
 /* eslint-disable no-param-reassign */
-import axios from 'axios';
 import handleError from '../utils/handleError';
 import guidGenerator from '../utils/idCreator';
-import getIfUserLikedOrNot from '../utils/getIfUserLikedOrNot';
-import mapLikesDislikes from '../utils/mapLikesDislikes';
 import { notifyNormality, notifySuccess, notifyError } from './notifyActions';
+import { axiosAPI } from '../utils/axios';
 
 export const searchTracks = query => async dispatch => {
   const [response, error] = await handleError(
-    axios.get(`/api/track/tracks`, {
+    axiosAPI.get(`/track/tracks`, {
       params: { searchData: query },
     }),
   );
@@ -66,7 +64,7 @@ export const sendPlaylist = (
     type: 'SENDING_PLAYLIST',
   });
   const [response, errors] = await handleError(
-    axios.post('/api/playlist', sendToApi),
+    axiosAPI.post('/playlist', sendToApi),
   );
   if (errors) {
     return dispatch({ type: 'ERRORS_PLAYLIST_CREATION' });
@@ -81,7 +79,7 @@ export const sendPlaylist = (
 export const getPlaylist = (_id, userId) => async dispatch => {
   const query = userId ? `?userId=${userId}` : '';
   const [playlist, error] = await handleError(
-    axios.get(`/api/playlist/${_id}${query}`),
+    axiosAPI.get(`/playlist/${_id}${query}`),
   );
   if (error) console.log(error.response.data);
   dispatch({
@@ -96,7 +94,7 @@ export const deleteTrackFromPlaylist = (
   index = null,
 ) => async (dispatch, store) => {
   const promise = handleError(
-    axios.post(`/api/playlist/delete/${playlistId}/${trackId}`, {
+    axiosAPI.post(`/playlist/delete/${playlistId}/${trackId}`, {
       indexToDeleteFrom: index,
     }),
   );
@@ -132,7 +130,7 @@ export const addToPlaylistFromPlaylistEdit = (
   playlistId,
 ) => async dispatch => {
   const [response, error] = await handleError(
-    axios.post(`/api/playlist/${playlistId}`, track),
+    axiosAPI.post(`/playlist/${playlistId}`, track),
   );
   if (error) {
     return console.log(error);
@@ -152,7 +150,7 @@ export const interchangeTracks = (
   tracksShow,
 ) => async dispatch => {
   const promise = handleError(
-    axios.post(`/api/playlist/change/${index1}/${index2}`, {
+    axiosAPI.post(`/playlist/change/${index1}/${index2}`, {
       playlistId,
       tracksShow,
     }),
@@ -198,8 +196,8 @@ export const addPlaylistRating = (
   userid,
 ) => dispatch => {
   const infoToSendToApi = { puntuation, userId: username };
-  axios
-    .post(`/api/playlist/rate/${playlistId}`, infoToSendToApi)
+  axiosAPI
+    .post(`/playlist/rate/${playlistId}`, infoToSendToApi)
     .then(res => {
       dispatch(notifyNormality('Rating added!', 1500));
       dispatch({

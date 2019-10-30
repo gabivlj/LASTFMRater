@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import { CircularProgress } from '@material-ui/core';
 import Rating from './Rating';
 import handleError from '../../../utils/handleError';
 import ScrollerLoader from '../../Common/ScrollerLoader';
+import { axiosAPI } from '../../../utils/axios';
 
 const propTypes = {
   // A rating has: { name, artist, rating: { puntuation, id }, mbid}
@@ -33,7 +33,7 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
     if (trueRatings && trueRatings.length > 0 && areThereStillMoreRatings) {
       setLoading(true);
       const [res, error] = await handleError(
-        axios.get(`/api/profile/ratings/${trueUsername}`, {
+        axiosAPI.get(`/profile/ratings/${trueUsername}`, {
           params: { beginning, limit: ending },
         }),
       );

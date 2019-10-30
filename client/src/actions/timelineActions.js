@@ -1,6 +1,6 @@
-import Axios from 'axios';
 import handleError from '../utils/handleError';
 import { notifyError, notifyNormality } from './notifyActions';
+import { axiosAPI } from '../utils/axios';
 
 export const setNewGramps = set => dispatch =>
   dispatch({ type: 'NEW_GRAMPS', payload: set });
@@ -13,7 +13,7 @@ export const loadGramps = (beginning, end, restart) => async (
 ) => {
   dispatch(loading());
   const [res, error] = await handleError(
-    Axios.get('/api/profile/gramps', {
+    axiosAPI.get('/profile/gramps', {
       params: { beginning, end },
     }),
   );
@@ -49,7 +49,7 @@ export const loadProfileGramps = (beginning, end, restart) => async (
 ) => {
   dispatch(loading());
   const [res, error] = await handleError(
-    Axios.get('/api/profile/gramps', {
+    axiosAPI.get('/profile/gramps', {
       params: { beginning, end },
     }),
   );
