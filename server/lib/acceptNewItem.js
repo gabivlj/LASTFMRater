@@ -26,10 +26,11 @@ const AVAILABLE_UPDATES = {
   },
 };
 
-async function findAndProcess(_id, Model) {
-  const [err] = await handleError(
+async function findAndProcess(_id, Model, type) {
+  const [err, model] = await handleError(
     Model.updateOne({ _id }, { notProcessed: false }),
   );
+
   if (err) {
     return [false, err];
   }
@@ -114,9 +115,9 @@ async function addUpdateRequest(_id, Model, { body }, type) {
 module.exports = async (type, _id, idOfSpecificUpdate = null, body = {}) => {
   switch (type) {
     case 'ALBUM':
-      return findAndProcess(_id, Album);
+      return findAndProcess(_id, Album, type);
     case 'ARTIST':
-      return findAndProcess(_id, Artist);
+      return findAndProcess(_id, Artist, type);
     case 'UPDATE_ALBUM':
       return findAndUpdateAPending(_id, Album, idOfSpecificUpdate);
     case 'UPDATE_ARTIST':

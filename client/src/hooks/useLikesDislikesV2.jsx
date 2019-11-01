@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import handleError from '../utils/handleError';
 import { axiosAPI } from '../utils/axios';
 
-function useLikesDislikes(commentID) {
+/**
+ * @description useLikesDislikesV2 is different from useLikesDislikes.jsx because this uses the Opinion API
+ * @param {String} objectID The objectID that you wanna like.
+ */
+function useLikesDislikesV2(objectID) {
   const [state, setStateOfLikes] = useState({
     likes: 0,
     dislikes: 0,
@@ -14,15 +18,30 @@ function useLikesDislikes(commentID) {
   useEffect(() => {
     (async () => {
       const [response, error] = await handleError(
-        axiosAPI.get(`/comments/get/${commentID}`),
+        axiosAPI.get(`/opinions/${objectID}`),
       );
       if (error) {
+        if (error.response.status === 404) {
+          const {
+            likes,
+            dislikes,
+            liked,
+            disliked,
+          } = error.response.data.opinion;
+          return setStateOfLikes(previousState => ({
+            ...previousState,
+            likes,
+            disliked,
+            liked,
+            dislikes,
+          }));
+        }
         return setStateOfLikes(previousState => ({
           ...previousState,
           refusedConnection: true,
         }));
       }
-      const { likes, dislikes, liked, disliked } = response.data;
+      const { likes, dislikes, liked, disliked } = response.data.opinion;
       return setStateOfLikes(previousState => ({
         ...previousState,
         likes,
@@ -31,11 +50,11 @@ function useLikesDislikes(commentID) {
         dislikes,
       }));
     })();
-  }, [commentID]);
+  }, [objectID]);
 
   async function like() {
     const [response, error] = await handleError(
-      axiosAPI.post(`/comments/like/${commentID}`),
+      axiosAPI.post(`/opinions/opinion/${objectID}/likes`),
     );
 
     if (error) {
@@ -45,7 +64,7 @@ function useLikesDislikes(commentID) {
       }));
     }
 
-    const { likes, dislikes, liked, disliked } = response.data.comment;
+    const { likes, dislikes, liked, disliked } = response.data.opinion;
     return setStateOfLikes(previousState => ({
       ...previousState,
       likes,
@@ -57,7 +76,7 @@ function useLikesDislikes(commentID) {
 
   async function dislike() {
     const [response, error] = await handleError(
-      axiosAPI.post(`/comments/dislike/${commentID}`),
+      axiosAPI.post(`/opinions/opinion/${objectID}/dislikes`),
     );
 
     if (error) {
@@ -68,7 +87,7 @@ function useLikesDislikes(commentID) {
       }));
     }
 
-    const { likes, dislikes, liked, disliked } = response.data.comment;
+    const { likes, dislikes, liked, disliked } = response.data.opinion;
     return setStateOfLikes(previousState => ({
       ...previousState,
       likes,
@@ -89,4 +108,4 @@ function useLikesDislikes(commentID) {
   ];
 }
 
-export default useLikesDislikes;
+export default useLikesDislikesV2;

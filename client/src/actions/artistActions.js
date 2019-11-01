@@ -1,4 +1,3 @@
-import axios from 'axios';
 import handleError from '../utils/handleError';
 import { notifyError } from './notifyActions';
 import goImage from '../utils/goImage';

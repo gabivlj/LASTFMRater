@@ -2,6 +2,7 @@ const passport = require('passport');
 const router = require('express').Router();
 const Opinion = require('../models/Opinions');
 const handleError = require('../lib/handleError');
+const zip = require('../lib/zip');
 const { addOpinionToSingleComment } = require('../classes/Comment');
 
 /**
@@ -9,13 +10,15 @@ const { addOpinionToSingleComment } = require('../classes/Comment');
  * @query {String? || ObjectID?} userID
  */
 router.get('/:id', async (req, res) => {
-  const [err, opinion] = await handleError(Opinion.findById(req.params.id));
+  const [err, opinion] = await handleError(
+    Opinion.findOne({ objectID: req.params.id }),
+  );
   if (err) {
     return res.status(400).json({ error: 'Error finding opinion.' });
   }
   if (!opinion) {
     return res.status(404).json({
-      error: 'Opinion not found.',
+      error: 'Opinion not found. Create one and use .opinion as placeholder.',
       opinion: { likes: 0, dislikes: 0, liked: false, disliked: false },
     });
   }
@@ -71,20 +74,31 @@ router.post(
     if (type !== 'likes' && type !== 'dislikes') {
       return res.status(400).json({ error: 'Unknown action.' });
     }
-    const [error, opinion] = await handleError(Opinion.findById(id));
+    const [error, opinion] = await handleError(
+      Opinion.findOne({ objectID: id }),
+    );
     if (error) {
       return res.status(400).json({ error: 'Error finding opinion.' });
     }
+    console.log(opinion);
     if (!opinion) {
       const newOpinion = new Opinion({
         objectID: id,
         likes: type === 'likes' ? [{ user: user._id }] : [],
-        dislikes: [type === 'dislikes' ? [{ user: user._id }] : []],
+        dislikes: type === 'dislikes' ? [{ user: user._id }] : [],
       });
       const [err, opinionSaved] = await handleError(newOpinion.save());
       if (err) return res.status(404).json({ error: 'Error saving opinon.' });
-      return res.json({ opinion: opinionSaved });
+      return res.json({
+        opinion: {
+          likes: newOpinion.likes.length,
+          dislikes: newOpinion.dislikes.length,
+          liked: !!newOpinion.likes.length,
+          disliked: !!newOpinion.dislikes.length,
+        },
+      });
     }
+
     // todo: Add or remove like/dislike from array of opinions.
     const opinionReturn = addOpinionToSingleComment(
       opinion,
@@ -92,7 +106,21 @@ router.post(
       type,
       type === 'likes' ? 'dislikes' : 'likes',
     );
-    return res.json({ opinion: opinionReturn });
+    const liked = !!zip(opinionReturn.likes, k => String(k.user))[
+      String(user._id)
+    ];
+    const disliked = !!zip(opinionReturn.dislikes, k => String(k.user))[
+      String(user._id)
+    ];
+    await opinionReturn.save();
+    return res.json({
+      opinion: {
+        likes: opinionReturn.likes.length,
+        dislikes: opinionReturn.dislikes.length,
+        liked,
+        disliked,
+      },
+    });
   },
 );
 

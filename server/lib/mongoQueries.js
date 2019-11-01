@@ -345,6 +345,48 @@ const mongoQueries = {
         ];
       },
     },
+    artist: {
+      getSuggestions: id => [
+        {
+          $match: {
+            _id: ObjectId(id),
+          },
+        },
+        {
+          $unwind: '$pendingChanges',
+        },
+        {
+          $project: {
+            typeOfChange: '$pendingChanges.typeOfChange',
+            data: '$pendingChanges.data',
+            _id: {
+              $toString: '$pendingChanges._id',
+            },
+            name: '$name',
+            artistId: '$_id',
+          },
+        },
+        {
+          $lookup: {
+            from: 'opinions',
+            localField: 'pendingChanges._id',
+            foreignField: 'objectID',
+            as: 'likes',
+          },
+        },
+        {
+          $project: {
+            typeOfChange: '$typeOfChange',
+            data: '$data',
+            name: 1,
+            artistId: 1,
+            _id: 1,
+            likes: isArrayReturnCount('$likes.likes'),
+            dislikes: isArrayReturnCount('$likes.dislikes'),
+          },
+        },
+      ],
+    },
     playlist: {
       /**
        * @description Makes average of a playlist. (AGGREGATION)

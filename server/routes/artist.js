@@ -4,6 +4,7 @@ const Artist = require('../models/Artist');
 const Album = require('../models/Album');
 const Lastfm = require('../classes/Lastfm');
 const acceptNewItem = require('../lib/acceptNewItem');
+const mongo = require('../lib/mongoQueries');
 
 const fm = new Lastfm(null);
 
@@ -160,6 +161,36 @@ router.post(
   },
 );
 
+/**
+ *  @SECTION Suggestion API for Artists.
+ */
+
+router.get(
+  '/suggestion/:artistID',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { artistID } = req.params;
+    try {
+      const artist = await Artist.aggregate(
+        mongo.aggregations.artist.getSuggestions(artistID),
+      );
+      if (!artist) {
+        return res.status(404).json({ error: 'Artist not found!' });
+      }
+
+      return res.json({ pendingChanges: artist });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(401)
+        .json({ error: `${artistID} artist id is invalid or bad request.` });
+    }
+  },
+);
+
+/**
+ * @description Approves an Artist.
+ */
 router.post(
   '/approve/:id',
   passport.authenticate('jwt', { session: false }),
@@ -178,6 +209,9 @@ router.post(
   },
 );
 
+/**
+ * @description Adds a pending to an artist.
+ */
 router.post(
   '/update/:id',
   passport.authenticate('jwt', { session: false }),
@@ -199,6 +233,9 @@ router.post(
   },
 );
 
+/**
+ * @description Accepts a pending to an artist.
+ */
 router.post(
   '/accept_update/:id/:specificId',
   passport.authenticate('jwt', { session: false }),
@@ -207,7 +244,7 @@ router.post(
     const { id, specificId } = req.params;
     if (user.username === 'gabivlj3') user.admin = true;
     if (!user.admin) {
-      return res.status(400).json({ error: 'Unauthorized.' });
+      return res.status(403).json({ error: 'Unauthorized.' });
     }
     const [item, err] = await acceptNewItem(
       'UPDATE_ARTIST',
@@ -225,13 +262,16 @@ router.post(
   },
 );
 
+/**
+ * @description Refuses and update.
+ */
 router.post(
   '/refuse_update/:id/:specificId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const { user } = req;
     if (!user.admin) {
-      return res.status(400).json({ error: 'Unauthorized.' });
+      return res.status(403).json({ error: 'Unauthorized.' });
     }
     const { id, specificId, reason } = req.params;
     const [item, err] = await acceptNewItem(

@@ -4,7 +4,6 @@
  *              and should load depending of what is happening in each piece
  */
 
-import axios from 'axios';
 import CommentSection from '../classes/CommentSection';
 import handleError from '../utils/handleError';
 import { notifyError, notifySuccess } from './notifyActions';
@@ -42,6 +41,14 @@ export const commentOverlay = open => dispatch => {
   }
   dispatch(showCommentOverlay(open));
 };
+
+/**
+ * @description Slices the end comment on the list of comments when navigating through comments on the overlay
+ */
+export const goBackCommentOverlay = () => (dispatch, store) =>
+  store().comments.comment.length > 1
+    ? dispatch({ type: 'GO_BACK_COMMENT' })
+    : dispatch({ type: 'CLOSE_OVERLAY' });
 
 export const actionToComment = (
   id,

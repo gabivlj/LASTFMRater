@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { useState, useEffect } from 'react';
 /**
  *
@@ -9,6 +10,7 @@ import { useState, useEffect } from 'react';
  * @param {*} numberOfCommentsAdd
  * @param {*} preloadSomeComments
  * @description useComments returns the checkBottom function to check whenever it hits bottom of the web and it loads more comments.
+ *              comments has attribute comment that is an array, it will use the current useComment the last item.
  * @returns {Function} checkBottom
  */
 export default function useComments(
@@ -20,15 +22,17 @@ export default function useComments(
   numberOfCommentsAdd = 50,
   preloadSomeComments = true,
 ) {
-  const { comment, loaded } = comments;
+  let { comment, loaded } = comments;
   const [, setCurrentNOfComments] = useState(0);
   let timeoutForLoading = false;
   const [check, setCheck] = useState(function() {});
   useEffect(() => {
     function checkBottom() {
+      const commentItem = comment.length && comment[comment.length - 1];
       // When scrolling to the bottom of the component, reload comments.
       return e => {
         if (
+          commentItem &&
           e.target.scrollTop >=
             e.target.scrollHeight - e.target.clientHeight - 10 &&
           loaded &&
@@ -38,7 +42,7 @@ export default function useComments(
           // We do the update of the comments here because otherwise I don't know how we will get the prev value.
           setCurrentNOfComments(prev => {
             getComments(
-              comment._id,
+              commentItem._id,
               0,
               prev + numberOfCommentsAdd,
               auth.apiUser ? auth.apiUser.id : null,
@@ -55,13 +59,14 @@ export default function useComments(
       };
     }
     setCheck(() => checkBottom());
-  }, [comment._id]);
+  }, [comment.length]);
   useEffect(() => {
-    if (comment && comment._id) {
+    const commentItem = comment.length && comment[comment.length - 1];
+    if (commentItem && comment.length) {
       setLoading();
       setCurrentNOfComments(prev => {
         getComments(
-          comment._id,
+          commentItem._id,
           0,
           prev + numberOfCommentsAdd,
           auth.apiUser ? auth.apiUser.id : null,
@@ -70,7 +75,7 @@ export default function useComments(
       });
     }
     return () => setCurrentNOfComments(0);
-  }, [comment ? comment._id : '']);
+  }, [comment.length]);
 
   return [check];
 }

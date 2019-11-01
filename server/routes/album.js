@@ -290,7 +290,7 @@ router.delete(
 );
 
 // @GET
-// TODO This should be a PUT request please.
+// TODO This should be a POST request please.
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
   const { username, userId, mbid } = req.query;
@@ -302,8 +302,9 @@ router.get('/:albumname/:artistname', async (req, res) => {
     const [err, album] = await handleError(
       albumHelper.getAlbumViaMbid(mbid, username, FM, userId),
     );
+    if (!album) return res.status(404).json({ error: 'Album not found.' });
     if (err) {
-      return res.status(404).json({ error: err });
+      return res.status(400).json({ error: err });
     }
     return res.json({ album });
   }
@@ -320,8 +321,6 @@ router.get('/:albumname/:artistname', async (req, res) => {
     console.log(errFM);
     return res.status(400).json({ error: 'Error requesting album' });
   }
-
-  console.log(albumFM);
 
   if (albumFM && albumFM.album) {
     albumFM = albumFM.album;
@@ -361,7 +360,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
     lastfmSource: false,
   });
   if (!album) {
-    return res.status(400).json('Album not found!');
+    return res.status(404).json('Album not found!');
   }
   return res.json({ album });
 });

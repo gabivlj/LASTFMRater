@@ -10,6 +10,7 @@ import notifyReducer from './notifyReducer';
 import chatReducer from './chatReducer';
 import timelineReducer from './timelineReducer';
 import reviewReducer from './reviewReducer';
+import suggestionReducer from './suggestionReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -23,4 +24,5 @@ export default combineReducers({
   chat: chatReducer,
   timeline: timelineReducer,
   review: reviewReducer,
+  suggestions: suggestionReducer,
 });

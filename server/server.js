@@ -21,6 +21,7 @@ const comments = require('./routes/commentSection');
 const following = require('./routes/following');
 const chat = require('./routes/chat');
 const review = require('./routes/review');
+const opinion = require('./routes/opinion');
 const { addRoutes } = require('./lib/routes');
 const passportConfig = require('./config/passport');
 
@@ -79,6 +80,7 @@ addRoutes(
   ['/api/following', following],
   ['/api/chat', chat],
   ['/api/reviews', review],
+  ['/api/opinions', opinion],
 );
 
 if (production) {

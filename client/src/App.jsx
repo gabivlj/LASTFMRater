@@ -37,6 +37,7 @@ import { StyleJSX } from './styles/StyleIt';
 import theme from './css/theme';
 import css from './css';
 import ArtistForm from './components/Artist/Form/ArtistForm';
+import Suggestions from './components/Suggestion/Suggestions';
 
 store.dispatch(logFromSession());
 
@@ -64,7 +65,11 @@ function App() {
                   path="/album/:artist/:albumname/:mbid"
                   component={Album}
                 />
-
+                <Route
+                  exact
+                  path="/suggestion/:type/:id"
+                  component={Suggestions}
+                />
                 <Route
                   exact
                   path="/search/:searchquery"

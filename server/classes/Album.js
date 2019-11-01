@@ -27,9 +27,9 @@ const albumHelper = {
       try {
         const album = await Album.findById(mbid);
         const tracksFromAlbum = !!(album.tracks || album.tracks.length);
-        if (!album) return reject(new Error('Album not found.'));
+        if (!album) return res(null);
         const realMBID = album.mbid;
-        if (typeof realMBID !== 'string' || realMBID.length <= 0) {
+        if (!album.lastfmSource) {
           return res(album);
         }
         const albumFM = await FM.getAlbum({

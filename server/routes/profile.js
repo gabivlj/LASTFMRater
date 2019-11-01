@@ -112,16 +112,22 @@ router.get(
   },
 );
 
-router.get(
-  '/gramps/:id',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
+router.get('/gramps/:id', async (req, res) => {
+  try {
     const { params, query } = req;
-    const { id } = params;
-    const { beginning = 0, end = 4 } = query;
-    return res.status(501, { error: 'Not implemented.' });
-  },
-);
+    const { userID } = params;
+    const { beginning, end } = query;
+    const activities = await activity.getActivityFromUsersFollowers(
+      [userID],
+      parseInt(beginning || 0, 10),
+      parseInt(end || 4, 10),
+    );
+    return res.json({ gramps: activities });
+  } catch (err) {
+    console.log(err);
+    return res.status(400, { error: 'Bad request' });
+  }
+});
 
 router.get(
   '/get/friends',
@@ -155,7 +161,7 @@ router.get(
       return res.json({ friends: usersFriends });
     } catch (err) {
       console.log(err);
-      return res.status(500).json({ error: 'Internal server error. ' });
+      return res.status(400).json({ error: 'Internal server error. ' });
     }
   },
 );

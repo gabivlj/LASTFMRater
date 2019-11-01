@@ -4,7 +4,9 @@ const initialState = {
   commentsCache: [],
   showCommentOverlay: false,
   loaded: true,
-  comment: {},
+  // List of comments for the overlay. Adds a comment when clicking on a comment. Pops a comment when pressing
+  // back button. useComment is prepared for this task, CommentRender and CommentDialog as well.
+  comment: [],
 };
 
 export default (state = initialState, action) => {
@@ -17,13 +19,18 @@ export default (state = initialState, action) => {
     case 'CLOSE_OVERLAY':
       return {
         ...state,
-        comment: {},
+        comment: [],
         commentsOverlay: [],
+      };
+    case 'GO_BACK_COMMENT':
+      return {
+        ...state,
+        comment: [...state.comment.slice(0, state.comment.length - 1)],
       };
     case 'SET_COMMENT_OVERLAY':
       return {
         ...state,
-        comment: action.payload,
+        comment: [...state.comment, action.payload],
       };
     case 'SHOW_OVERLAY':
       return {

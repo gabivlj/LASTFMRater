@@ -3,18 +3,20 @@ import CommentComponent from '../CommentSection/Common/CommentComponent';
 import CommentSingleRender from './CommentSingleRender';
 
 export default function CommentRender({ comment, showCommentOverlay }) {
+  const commentItem = comment.length && comment[comment.length - 1];
+  console.log(commentItem);
   return (
     <div>
-      {showCommentOverlay && (
+      {showCommentOverlay && commentItem && (
         <div>
-          <CommentSingleRender comment={comment} />
+          <CommentSingleRender comment={commentItem} />
           <br />
           <CommentComponent
             isOverlay
             key="1"
             useOwnOnScroll
-            objectId={comment._id}
-            name={comment.username}
+            objectId={commentItem._id}
+            name={commentItem.username}
             paddingIfNotLoaded
             answer
           />

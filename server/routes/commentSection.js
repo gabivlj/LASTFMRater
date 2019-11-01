@@ -47,6 +47,7 @@ router.get('/:id', async (req, res) => {
         objectId: comment.objectId,
         images: comment.userImages.images || [],
         __v: comment.__v,
+        date: comment.date,
         likes: parseInt(comment.likes.length, 10),
         dislikes: parseInt(comment.dislikes.length, 10),
         _id: comment._id,
@@ -91,6 +92,7 @@ router.post(
       likes: [],
       dislikes: [],
       user: userId,
+      date: Date.now(),
     });
     const commentSaved = await comment.save();
     Activity.addSomethingActivity(
