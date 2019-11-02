@@ -155,7 +155,7 @@ router.post('/auth/login', async (req, res) => {
       {
         email,
         user: user.username,
-        lastfm: user.lastfm,
+        lastfm: user.lastfm || '',
         id: user.id,
       },
       secret,

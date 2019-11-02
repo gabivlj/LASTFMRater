@@ -80,7 +80,6 @@ router.post(
     if (error) {
       return res.status(400).json({ error: 'Error finding opinion.' });
     }
-    console.log(opinion);
     if (!opinion) {
       const newOpinion = new Opinion({
         objectID: id,

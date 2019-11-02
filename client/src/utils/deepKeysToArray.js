@@ -10,8 +10,13 @@ function deepKeysToArray(obj) {
     keys.forEach(key => {
       if (typeof object[key] !== 'object') {
         arr.push({ type: key, data: object[key] });
-      } else {
+      } else if (!Array.isArray(object)) {
         recursive(object[key]);
+      } else {
+        arr.push({
+          type: key,
+          data: object[key].reduce((prev, now) => `${prev}, ${now}`, ''),
+        });
       }
     });
   }

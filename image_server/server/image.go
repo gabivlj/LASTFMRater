@@ -18,6 +18,41 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var SecretKey string
+
+// // LogIn Logs in with mongodb.
+// func LogIn(w http.ResponseWriter, r *http.Request) {
+// 	logInCreds := &LogInBody{}
+// 	json.NewDecoder(r.Body).Decode(logInCreds)
+// 	w.Header().Add("Content-Type", "application/json")
+// 	if logInCreds.Email == "" || logInCreds.Password == "" {
+// 		response := map[string]interface{}{"status": false, "message": "Bad credentials"}
+// 		json.NewEncoder(w).Encode(response)
+// 		return
+// 	}
+// 	user := mongodb.GetCollection("users").FindOne(context.TODO(), map[string]string{"email": logInCreds.Email})
+// 	userJSON := &LogInBody{}
+// 	err := user.Decode(userJSON)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		response := map[string]interface{}{"status": false, "message": "Bad credentials"}
+// 		json.NewEncoder(w).Encode(response)
+// 		return
+// 	}
+// 	err = bcrypt.CompareHashAndPassword([]byte(userJSON.Password), []byte(logInCreds.Password))
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		response := map[string]interface{}{"status": false, "message": "Bad credentials"}
+// 		json.NewEncoder(w).Encode(response)
+// 		return
+// 	}
+// 	tk := JwtSigning{Email: userJSON.Email}
+// 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
+// 	tokenStr, _ := token.SignedString([]byte(SecretKey))
+// 	response := map[string]interface{}{"status": true, "token": tokenStr}
+// 	json.NewEncoder(w).Encode(response)
+// }
+
 // ServeImage ...
 func ServeImage(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
