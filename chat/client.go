@@ -67,7 +67,7 @@ type MessageChat struct {
 	Message  string   `json:"message,omitempty"`
 	Type     string   `json:"type,omitempty"`
 	Friends  []string `json:"friends,omitempty"`
-	Jwt      string   `json:"jwt"`
+	Jwt      string   `json:"jwt,omitempty"`
 }
 
 func (manager *ClientManager) start() {
@@ -75,9 +75,6 @@ func (manager *ClientManager) start() {
 		select {
 		case connection := <-manager.register:
 			manager.clients[connection] = true
-			message := &Message{Content: "/A new socket!"}
-			jsonMessage, _ := json.Marshal(message)
-			manager.send(jsonMessage, connection)
 			fmt.Println("new connection ", connection.id)
 
 		case connection := <-manager.unregister:
@@ -270,6 +267,7 @@ func (c *Client) read() {
 			c.UserID = msg.UserID
 			c.username = msg.Username
 			c.friends = msg.Friends
+			msg.Jwt = ""
 			manager.friends <- c
 			continue
 			// When user gets followed.
@@ -281,14 +279,22 @@ func (c *Client) read() {
 		case "UpdateFriendList":
 			c.friends = msg.Friends
 		case "Followed":
+			// needs: to (userId). -> So we can inform their front end and they can do whatever they need to.
+			msg.Jwt = ""
 			msg.Message = c.username + " followed you!"
 			// When someone sends a message
+		case "Unfollowed":
+			msg.Jwt = ""
+			msg.Message = c.username + " unfollowed you!"
 		case "Send":
 		default:
 		}
 		msg.Jwt = ""
-		finalMsg := &ChanMessage{message: msg, bytes: message}
-		finalMsg.message.Jwt = "---"
+		bytesMessage, err := json.Marshal(msg)
+		if err != nil {
+			c.socket.WriteMessage(websocket.TextMessage, []byte("Error parsing message!"))
+		}
+		finalMsg := &ChanMessage{message: msg, bytes: bytesMessage}
 		manager.broadcast <- finalMsg
 	}
 }

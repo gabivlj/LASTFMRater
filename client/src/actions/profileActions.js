@@ -96,6 +96,10 @@ export const cleanProfile = () => dispatch => {
   });
 };
 
+/**
+ * @param {String} id
+ * @description Follow user button action.
+ */
 export const followUser = id => async (dispatch, state) => {
   const [response, error] = await handleError(
     axiosAPI.post(`/following/follow/${id}`),
@@ -117,6 +121,7 @@ export const followUser = id => async (dispatch, state) => {
       payload: id,
     });
   }
+  // Inform sockets if there is a change in the list of friends so they can handle connections
   socket.socket.updateListOfFriends(state().auth.apiUser.listOfFriends);
   // socket.socket.updateListOfFriends()
   return dispatch({
