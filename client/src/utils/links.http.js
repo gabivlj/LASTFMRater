@@ -10,7 +10,10 @@ export default {
       : // Create image server...
         'http://127.0.0.1:2222',
   // todo: Create go server
-  GO_CHAT: process.env.NODE_ENV === 'development' ? 'ws://localhost:1234' : '',
+  GO_CHAT: token =>
+    process.env.NODE_ENV === 'development'
+      ? `ws://${token}@localhost:1234`
+      : '',
   isLocalhost: Boolean(
     window.location.hostname === 'localhost' ||
       window.location.hostname === '[::1]' ||

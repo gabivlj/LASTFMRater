@@ -1,5 +1,19 @@
 package main
 
+import (
+	"strings"
+
+	"github.com/dgrijalva/jwt-go"
+)
+
+type Token struct {
+	Email  string `json:"email"`
+	Lastfm string `json:"lastfm"`
+	User   string `json:"user"`
+	ID     string `json:"id"`
+	jwt.StandardClaims
+}
+
 // InformFriendsOfConnection :: Takes a Client type and finds in their friendlist the correspondent client socket and sends them if they just connected or disconnected
 func InformFriendsOfConnection(friends *Client, connected bool, inform bool) map[string]bool {
 	mapFriends := make(map[string]bool)
@@ -18,4 +32,43 @@ func InformFriendsOfConnection(friends *Client, connected bool, inform bool) map
 		}
 	}
 	return mapFriends
+}
+
+func checkCreds(client *Client, message *MessageChat) bool {
+	if client.bearerToken != message.Jwt {
+		return false
+	}
+	if client.UserID != message.UserID {
+		return false
+	}
+	if client.username != message.Username {
+		return false
+	}
+	return true
+}
+
+func checkJWT(msg *MessageChat) bool {
+	if msg.Jwt == "" {
+		return false
+	}
+	splitted := strings.Split(msg.Jwt, " ")
+	if len(splitted) != 2 {
+		return false
+	}
+	tokenPart := splitted[1]
+	tk := &Token{}
+	token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
+		return []byte(SecretKey), nil
+	})
+	if err != nil || !token.Valid {
+		return false
+	}
+	if tk.User != msg.Username {
+		return false
+	}
+	if tk.ID != msg.UserID {
+		return false
+	}
+	return true
+
 }

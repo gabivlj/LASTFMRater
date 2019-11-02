@@ -12,6 +12,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+// Token .
 type Token struct {
 	Email  string `json:"email"`
 	Lastfm string `json:"lastfm"`

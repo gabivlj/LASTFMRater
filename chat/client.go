@@ -46,6 +46,7 @@ type Client struct {
 	id                     string
 	UserID                 string
 	friends                []string
+	bearerToken            string
 	connected              chan map[string]bool
 	newFriendConnection    chan *Client
 	newFriendDisconnection chan *Client
@@ -66,6 +67,7 @@ type MessageChat struct {
 	Message  string   `json:"message,omitempty"`
 	Type     string   `json:"type,omitempty"`
 	Friends  []string `json:"friends,omitempty"`
+	Jwt      string   `json:"jwt"`
 }
 
 func (manager *ClientManager) start() {
@@ -79,21 +81,22 @@ func (manager *ClientManager) start() {
 			fmt.Println("new connection ", connection.id)
 
 		case connection := <-manager.unregister:
-
 			if _, ok := manager.clients[connection]; ok {
 				// Check if element exists
-				fmt.Println("DISCONNECTED: ", manager.clientsStr[connection.UserID])
 				if manager.clientsStr[connection.UserID] > 0 {
 					manager.clientsStr[connection.UserID]--
 					InformFriendsOfConnection(connection, false, manager.clientsStr[connection.UserID] <= 0)
 				}
-				// Inform friends of disconnection... If they have other sessions open dont inform...
-
-				close(connection.send)
-				delete(manager.clients, connection)
-				message := &Message{Content: "/Bye bye!"}
+				message := &MessageChat{Message: "/Bye bye!", Type: "DISCONNECT"}
 				jsonMessage, _ := json.Marshal(message)
 				manager.send(jsonMessage, connection)
+				// Inform friends of disconnection... If they have other sessions open dont inform...
+				close(connection.send)
+				close(connection.connected)
+				close(connection.newFriendConnection)
+				close(connection.newFriendDisconnection)
+				delete(manager.clients, connection)
+
 				fmt.Println("closed connection")
 			}
 
@@ -244,10 +247,26 @@ func (c *Client) read() {
 			fmt.Println(er.Error())
 			continue
 		}
-		fmt.Println(msg)
+		ok := false
+		errorMsg := ""
+
+		if c.bearerToken == "" {
+			ok = checkJWT(msg)
+			errorMsg = "Error checking for a bearer token."
+		} else {
+			ok = checkCreds(c, msg)
+			errorMsg = "INVALID TOKEN"
+		}
+
+		if !ok {
+			c.socket.WriteMessage(websocket.TextMessage, []byte(errorMsg))
+			break
+		}
+
 		switch msg.Type {
 		// When someone connects
 		case "Open":
+			c.bearerToken = msg.Jwt
 			c.UserID = msg.UserID
 			c.username = msg.Username
 			c.friends = msg.Friends
@@ -256,6 +275,7 @@ func (c *Client) read() {
 			// When user gets followed.
 		case "NewGramp":
 			// new activity for followers
+			msg.Jwt = ""
 			manager.gramps <- msg.Friends
 			continue
 		case "UpdateFriendList":
@@ -266,7 +286,9 @@ func (c *Client) read() {
 		case "Send":
 		default:
 		}
+		msg.Jwt = ""
 		finalMsg := &ChanMessage{message: msg, bytes: message}
+		finalMsg.message.Jwt = "---"
 		manager.broadcast <- finalMsg
 	}
 }

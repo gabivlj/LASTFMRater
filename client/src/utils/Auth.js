@@ -1,5 +1,5 @@
 import jwt from 'jwt-decode';
-import { axiosAPI } from './axios';
+import { axiosAPI, axiosImage, axiosChat } from './axios';
 import API from '../API';
 
 // Function that handles await async errors, handles the promise that you pass.
@@ -17,7 +17,9 @@ export function LogUser(token) {
 
 export function setAuthTokenAxios(token) {
   axiosAPI.defaults.headers.common.Authorization = token;
-  axiosAPI.defaults.headers.common.CLIENT_KEY =
+  axiosChat.defaults.headers.common.Authorization = token;
+  axiosImage.defaults.headers.common.Authorization = token;
+  axiosImage.defaults.headers.common.CLIENT_KEY =
     process.env.CLIENT_KEY || API.CLIENT_KEY;
 }
 

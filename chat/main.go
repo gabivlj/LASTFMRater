@@ -3,12 +3,17 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/websocket"
+	"github.com/joho/godotenv"
 	uuid "github.com/satori/go.uuid"
 )
 
+var SecretKey string = ""
+
 func wsPage(res http.ResponseWriter, req *http.Request) {
+
 	conn, error := (&websocket.Upgrader{CheckOrigin: func(r *http.Request) bool { return true }}).Upgrade(res, req, nil)
 	if error != nil {
 		http.NotFound(res, req)
@@ -39,5 +44,16 @@ func startServer() {
 }
 
 func main() {
+	ok := false
+	if err := godotenv.Load(); err != nil {
+		fmt.Println(".env file not found.")
+		return
+	}
+	SecretKey, ok = os.LookupEnv("SECRET_KEY")
+	if !ok {
+		fmt.Println("Error.")
+		return
+	}
+
 	startServer()
 }

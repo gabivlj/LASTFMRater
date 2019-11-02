@@ -9,6 +9,7 @@
 .pnp.js
 /server/config/keys.js
 /server/config/api.js
+/chat/.env
 # testing
 /coverage
 
