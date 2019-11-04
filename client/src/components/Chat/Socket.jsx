@@ -6,27 +6,27 @@ import { receiveMessage } from '../../actions/chatActions';
 
 function Socket({ auth, receiveMessage, ...props }) {
   useEffect(() => {
-    if (!auth) {
+    if (!auth.auth || !auth.fullyLoaded) {
       return () => {};
     }
     // This means that auth has not loaded fully yet.
-    if (!auth.listOfFriends) return () => {};
+    if (!auth.apiUser && !auth.apiUser.listOfFriends) return () => {};
     SocketInstance.socket = new SocketClass(
-      auth.id,
+      auth.apiUser.id,
       receiveMessage,
-      auth.user,
-      auth.listOfFriends,
+      auth.apiUser.user,
+      auth.apiUser.listOfFriends,
     );
     return () => {
       SocketInstance.socket.close();
       // delete SocketInstance.socket;
     };
-  }, [auth]);
+  }, [auth.auth, auth.fullyLoaded]);
   return <></>;
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth.apiUser,
+  auth: state.auth,
 });
 
 export default connect(

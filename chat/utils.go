@@ -72,3 +72,15 @@ func checkJWT(msg *MessageChat) bool {
 	return true
 
 }
+
+func (newInformation *Client) updateAllSameUserClientsInfo(mapFriends map[string]bool) {
+	for client, ok := range manager.clients {
+		if !ok && client.UserID != newInformation.UserID {
+			continue
+		}
+		client.friends = newInformation.friends
+		select {
+		case client.connected <- mapFriends:
+		}
+	}
+}

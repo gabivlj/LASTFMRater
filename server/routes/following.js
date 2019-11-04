@@ -4,6 +4,7 @@ const passport = require('passport');
 const Activity = require('../classes/Activity');
 const User = require('../models/User');
 const dontCareWaitingForSave = require('../lib/dontCareWaitingForSave');
+const zip = require('../lib/zip');
 const handleError = require('../lib/handleError');
 
 /**
@@ -35,6 +36,10 @@ router.post(
         const newFollowers = [...theUserItsGonnaFollow.followers, userId];
         theUserItsGonnaFollow.followers = newFollowers;
         theUserItsGonnaFollow.followersObject[userId] = userId;
+        const followedObject = zip(
+          theUserItsGonnaFollow.followedAccounts,
+          k => k,
+        );
         // ...
         dontCareWaitingForSave(theUserItsGonnaFollow, false);
         user.password = null;
@@ -42,9 +47,7 @@ router.post(
           Activity.createFollowedInformation(theUserItsGonnaFollow, user),
         );
 
-        const followsUser = !!theUserItsGonnaFollow.followedObject[
-          String(userId)
-        ];
+        const followsUser = !!followedObject[String(userId)];
         return res.json({
           followed: true,
           followers: newFollowers,
@@ -66,9 +69,11 @@ router.post(
 
       theUserItsGonnaFollow.followers = newFollowers;
       dontCareWaitingForSave(theUserItsGonnaFollow, false);
-      const followsUser = !!theUserItsGonnaFollow.followedObject[
-        String(userId)
-      ];
+      const followedObject = zip(
+        theUserItsGonnaFollow.followedAccounts,
+        k => k,
+      );
+      const followsUser = !!followedObject[String(userId)];
       user.password = null;
       return res.json({
         followed: false,

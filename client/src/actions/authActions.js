@@ -1,4 +1,3 @@
-
 import User from '../classes/User';
 import Auth, {
   deleteAuthTokenAxios,
@@ -74,6 +73,7 @@ export const logFromSession = () => async dispatch => {
   const [notificationsNumberDispatched] = await handleError(
     getNotificationsSum(),
   );
+  dispatch({ type: 'SET_FULLY_LOADED' });
   dispatch({
     type: 'SET_TOTAL_NOTIFICATIONS',
     payload: notificationsNumberDispatched,
@@ -110,6 +110,7 @@ export const logIn = user_ => async dispatch => {
     return;
   }
   dispatch(userDispatch);
+  dispatch({ type: 'SET_FULLY_LOADED' });
 };
 
 export const register = (

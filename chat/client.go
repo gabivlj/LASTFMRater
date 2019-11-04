@@ -47,6 +47,7 @@ type Client struct {
 	UserID                 string
 	friends                []string
 	bearerToken            string
+	lastSent               string
 	connected              chan map[string]bool
 	newFriendConnection    chan *Client
 	newFriendDisconnection chan *Client
@@ -104,26 +105,28 @@ func (manager *ClientManager) start() {
 				}
 				select {
 				case connection.send <- message.bytes:
-				default:
-					close(connection.send)
-					delete(manager.clients, connection)
 				}
 			}
 		case friends := <-manager.friends:
+			// We check if the user just connected or is just updating friend list.
+			isFriendListUpdate := friends.lastSent == "UpdateFriendList"
 			_, ok := manager.clientsStr[friends.UserID]
 			if !ok {
 				manager.clientsStr[friends.UserID] = 1
 			} else {
 				manager.clientsStr[friends.UserID]++
 			}
-			fmt.Println(manager.clientsStr[friends.UserID])
+			if isFriendListUpdate {
+				manager.clientsStr[friends.UserID]--
+			}
 			if _, ok := manager.clients[friends]; ok {
-				mapFriends := InformFriendsOfConnection(friends, true, manager.clientsStr[friends.UserID] >= 1)
+				mapFriends := InformFriendsOfConnection(friends, true, manager.clientsStr[friends.UserID] >= 1 && !isFriendListUpdate)
 				select {
 				// Send to socket all of his connected/disconnected friends.
 				case friends.connected <- mapFriends:
 				}
 			}
+
 		case followers := <-manager.gramps:
 			message := MessageChat{Type: "NewGramp"}
 			for _, id := range followers {
@@ -246,7 +249,7 @@ func (c *Client) read() {
 		}
 		ok := false
 		errorMsg := ""
-
+		fmt.Println(msg)
 		if c.bearerToken == "" {
 			ok = checkJWT(msg)
 			errorMsg = "Error checking for a bearer token."
@@ -254,11 +257,14 @@ func (c *Client) read() {
 			ok = checkCreds(c, msg)
 			errorMsg = "INVALID TOKEN"
 		}
+		fmt.Println(ok)
 
 		if !ok {
 			c.socket.WriteMessage(websocket.TextMessage, []byte(errorMsg))
 			break
 		}
+
+		c.lastSent = msg.Type
 
 		switch msg.Type {
 		// When someone connects
@@ -278,6 +284,7 @@ func (c *Client) read() {
 			continue
 		case "UpdateFriendList":
 			c.friends = msg.Friends
+			manager.friends <- c
 		case "Followed":
 			// needs: to (userId). -> So we can inform their front end and they can do whatever they need to.
 			msg.Jwt = ""

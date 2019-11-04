@@ -3,6 +3,7 @@ import SocketInstance from '../classes/SocketInstance';
 import { notifySuccess, notifyNormality, notifyError } from './notifyActions';
 import handleError from '../utils/handleError';
 import { axiosAPI } from '../utils/axios';
+import socket from '../classes/SocketInstance';
 
 let finishedTimeOut = true;
 
@@ -54,6 +55,8 @@ export const sendMessage = ({
   socket.sendMessage(message, to, username);
   // CHECK IF FIRST MESSAGE, IF IT IS FIRST MESSAGE UPDATE WHOLE CHAT, BECAUSE AT FIRST WE DON'T GET THE ENTIRE INFORMATION OF THE CHAT.
   if (res.data.chat.messages.length === 1) {
+    // Reset messages because socket is gonna send us the message anyways.
+    res.data.chat.messages = [];
     dispatch({
       type: 'GET_CHAT',
       payload: res.data.chat,
@@ -152,13 +155,36 @@ export const setChatInfo = ({ username, id, profileImage }) => dispatch => {
  */
 export const receiveMessage = e => (dispatch, state) => {
   const json = JSON.parse(e.data);
-  console.log(e);
   console.log(json);
   const { message, from, type, username, to, userId, friends } = json;
   const s = state();
   const { auth, chat } = s;
   const { id } = auth.apiUser;
+  console.log(id, userId);
   switch (type) {
+    case 'Followed':
+      // that means that it comes from another client. add it to followedAccounts state
+      if (
+        String(userId) === String(id) &&
+        auth.apiUser.followedAccounts.indexOf(String(to)) < 0
+      ) {
+        return dispatch({
+          type: 'ADD_AUTH',
+          payload: { type: 'followedAccounts', data: to },
+        });
+      }
+      // Check if with this follow they are friends
+      if (
+        auth.apiUser.followedAccounts.indexOf(String(userId)) >= 0 &&
+        auth.apiUser.followers.indexOf(String(userId)) < 0
+      ) {
+        dispatch({
+          type: 'ADD_TO_FRIEND_LIST',
+          payload: id,
+        });
+        socket.socket.updateListOfFriends(state().auth.apiUser.listOfFriends);
+      }
+      return dispatch(notifyNormality(`${username} followed you!`));
     case 'Message':
       if (userId !== id) {
         dispatch(notifyNormality(`${message} from ${from}`), 10000);

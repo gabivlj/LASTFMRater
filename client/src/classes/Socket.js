@@ -56,6 +56,20 @@ class Socket {
     this.socket.send(json);
   }
 
+  notifyFollowed(to) {
+    const data = {
+      userId: this.userId,
+      username: this.username,
+      message: '',
+      to,
+      type: 'Followed',
+      from: this.username,
+      jwt: axiosChat.defaults.headers.common.Authorization,
+    };
+    const json = JSON.stringify(data);
+    this.socket.send(json);
+  }
+
   informOfGramps(followers) {
     console.log(followers);
     const data = JSON.stringify({
