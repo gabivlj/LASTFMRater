@@ -80,6 +80,9 @@ export const logFromSession = () => async dispatch => {
   });
 };
 
+export const freeFriendState = () => dispatch =>
+  dispatch({ type: 'FREE_FRIEND_LISTS' });
+
 export const logIn = user_ => async dispatch => {
   const user = await Auth.LogUserFromLogin(user_);
   if (user.error) {

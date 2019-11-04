@@ -163,28 +163,9 @@ export const receiveMessage = e => (dispatch, state) => {
   console.log(id, userId);
   switch (type) {
     case 'Followed':
-      // that means that it comes from another client. add it to followedAccounts state
-      if (
-        String(userId) === String(id) &&
-        auth.apiUser.followedAccounts.indexOf(String(to)) < 0
-      ) {
-        return dispatch({
-          type: 'ADD_AUTH',
-          payload: { type: 'followedAccounts', data: to },
-        });
-      }
-      // Check if with this follow they are friends
-      if (
-        auth.apiUser.followedAccounts.indexOf(String(userId)) >= 0 &&
-        auth.apiUser.followers.indexOf(String(userId)) < 0
-      ) {
-        dispatch({
-          type: 'ADD_TO_FRIEND_LIST',
-          payload: id,
-        });
-        socket.socket.updateListOfFriends(state().auth.apiUser.listOfFriends);
-      }
-      return dispatch(notifyNormality(`${username} followed you!`));
+      return dispatch(notifyNormality(`${message}`));
+    case 'Unfollowed':
+      return dispatch(notifyNormality(`${message}`));
     case 'Message':
       if (userId !== id) {
         dispatch(notifyNormality(`${message} from ${from}`), 10000);

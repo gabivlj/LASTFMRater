@@ -79,6 +79,16 @@ export default (
         ...state,
         fullyLoaded: true,
       };
+    case 'FREE_FRIEND_LISTS':
+      return {
+        ...state,
+        apiUser: {
+          ...state.apiUser,
+          listOfFriends: [],
+          followers: [],
+          followedAccounts: [],
+        },
+      };
     case 'SET_API_USER':
       return {
         ...state,

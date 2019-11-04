@@ -111,33 +111,34 @@ export const followUser = id => async (dispatch, state) => {
   const { data } = response;
   const { followed, followers, followsUser } = data;
 
-  if (followed) {
-    dispatch({
-      type: 'ADD_AUTH',
-      payload: { type: 'followedAccounts', data: id },
-    });
-  } else {
-    dispatch({
-      type: 'SLICE_AUTH',
-      payload: { type: 'followedAccounts', data: id },
-    });
-  }
+  // if (followed) {
+  //   dispatch({
+  //     type: 'ADD_AUTH',
+  //     payload: { type: 'followedAccounts', data: id },
+  //   });
+  // } else {
+  //   dispatch({
+  //     type: 'SLICE_AUTH',
+  //     payload: { type: 'followedAccounts', data: id },
+  //   });
+  // }
 
-  if (followsUser && !followed) {
-    dispatch({
-      type: 'SLICE_OFF_FRIEND_LIST',
-      payload: id,
-    });
-  } else if (followsUser && followed) {
-    dispatch({
-      type: 'ADD_TO_FRIEND_LIST',
-      payload: id,
-    });
-  }
-  // Inform sockets if there is a change in the list of friends so they can handle connections
+  // if (followsUser && !followed) {
+  //   dispatch({
+  //     type: 'SLICE_OFF_FRIEND_LIST',
+  //     payload: id,
+  //   });
+  // } else if (followsUser && followed) {
+  //   dispatch({
+  //     type: 'ADD_TO_FRIEND_LIST',
+  //     payload: id,
+  //   });
+  // }
+  // // Inform sockets if there is a change in the list of friends so they can handle connections
   if (followed) socket.socket.notifyFollowed(id);
-  socket.socket.updateListOfFriends(state().auth.apiUser.listOfFriends);
-  // socket.socket.updateListOfFriends()
+  else socket.socket.notifyUnfollowed(id);
+  // socket.socket.updateListOfFriends(state().auth.apiUser.listOfFriends);
+  // // socket.socket.updateListOfFriends()
 
   return dispatch({
     type: 'UPDATE_PROFILE',

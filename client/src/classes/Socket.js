@@ -2,7 +2,14 @@ import linksHttp from '../utils/links.http';
 import { axiosAPI, axiosChat } from '../utils/axios';
 
 class Socket {
-  constructor(userId, receiveMessage, username, friends = []) {
+  constructor(
+    userId,
+    receiveMessage,
+    username,
+    friends = [],
+    followers = [],
+    following = [],
+  ) {
     this.socket = new WebSocket(
       `${linksHttp.GO_CHAT(axiosAPI.defaults.headers.common.Authorization)}/ws`,
     );
@@ -16,6 +23,8 @@ class Socket {
           message: 'Connected!',
           type: 'Open',
           friends,
+          following,
+          followers,
           jwt: axiosChat.defaults.headers.common.Authorization,
         }),
       );
@@ -63,6 +72,20 @@ class Socket {
       message: '',
       to,
       type: 'Followed',
+      from: this.username,
+      jwt: axiosChat.defaults.headers.common.Authorization,
+    };
+    const json = JSON.stringify(data);
+    this.socket.send(json);
+  }
+
+  notifyUnfollowed(to) {
+    const data = {
+      userId: this.userId,
+      username: this.username,
+      message: '',
+      to,
+      type: 'Unfollowed',
       from: this.username,
       jwt: axiosChat.defaults.headers.common.Authorization,
     };

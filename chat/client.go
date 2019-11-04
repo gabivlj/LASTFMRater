@@ -21,6 +21,7 @@ type ClientManager struct {
 	unregister chan *Client
 	friends    chan *Client
 	gramps     chan []string
+	users      map[string]*User
 }
 
 var manager = ClientManager{
@@ -31,11 +32,22 @@ var manager = ClientManager{
 	clientsStr: make(map[string]uint16),
 	friends:    make(chan *Client),
 	gramps:     make(chan []string),
+	users:      make(map[string]*User),
 }
 
 type ListOfFriends struct {
 	Friends map[string]bool `json:"friends"`
 	Type    string          `json:"type"`
+}
+
+// FUTURE...
+type User struct {
+	username  string
+	userID    string
+	friends   []string
+	followers []string
+	following []string
+	clients   []*Client
 }
 
 // Client :: Client struct.
@@ -45,7 +57,10 @@ type Client struct {
 	send                   chan []byte
 	id                     string
 	UserID                 string
+	MainUser               *User
 	friends                []string
+	followers              []string
+	following              []string
 	bearerToken            string
 	lastSent               string
 	connected              chan map[string]bool
@@ -61,14 +76,16 @@ type Message struct {
 }
 
 type MessageChat struct {
-	Username string   `json:"username,omitempty"`
-	UserID   string   `json:"userId,omitempty"`
-	From     string   `json:"from,omitempty"`
-	To       string   `json:"to,omitempty"`
-	Message  string   `json:"message,omitempty"`
-	Type     string   `json:"type,omitempty"`
-	Friends  []string `json:"friends,omitempty"`
-	Jwt      string   `json:"jwt,omitempty"`
+	Username  string   `json:"username,omitempty"`
+	UserID    string   `json:"userId,omitempty"`
+	From      string   `json:"from,omitempty"`
+	To        string   `json:"to,omitempty"`
+	Message   string   `json:"message,omitempty"`
+	Type      string   `json:"type,omitempty"`
+	Friends   []string `json:"friends,omitempty"`
+	Following []string `json:"following,omitempty"`
+	Followers []string `json:"followers,omitempty"`
+	Jwt       string   `json:"jwt,omitempty"`
 }
 
 func (manager *ClientManager) start() {
@@ -81,9 +98,12 @@ func (manager *ClientManager) start() {
 		case connection := <-manager.unregister:
 			if _, ok := manager.clients[connection]; ok {
 				// Check if element exists
-				if manager.clientsStr[connection.UserID] > 0 {
-					manager.clientsStr[connection.UserID]--
-					InformFriendsOfConnection(connection, false, manager.clientsStr[connection.UserID] <= 0)
+				if manager.clientsStr[connection.MainUser.userID] > 0 {
+					manager.clientsStr[connection.MainUser.userID]--
+					InformFriendsOfConnection(connection, false, manager.clientsStr[connection.MainUser.userID] <= 0)
+					if manager.clientsStr[connection.MainUser.userID] <= 0 {
+						manager.users[connection.MainUser.userID] = nil
+					}
 				}
 				message := &MessageChat{Message: "/Bye bye!", Type: "DISCONNECT"}
 				jsonMessage, _ := json.Marshal(message)
@@ -100,7 +120,7 @@ func (manager *ClientManager) start() {
 
 		case message := <-manager.broadcast:
 			for connection := range manager.clients {
-				if connection.UserID != message.message.To && connection.UserID != message.message.UserID {
+				if connection.MainUser.userID != message.message.To && connection.MainUser.userID != message.message.UserID {
 					continue
 				}
 				select {
@@ -110,17 +130,18 @@ func (manager *ClientManager) start() {
 		case friends := <-manager.friends:
 			// We check if the user just connected or is just updating friend list.
 			isFriendListUpdate := friends.lastSent == "UpdateFriendList"
-			_, ok := manager.clientsStr[friends.UserID]
+			_, ok := manager.clientsStr[friends.MainUser.userID]
 			if !ok {
-				manager.clientsStr[friends.UserID] = 1
+				manager.clientsStr[friends.MainUser.userID] = 1
 			} else {
-				manager.clientsStr[friends.UserID]++
+				manager.clientsStr[friends.MainUser.userID]++
 			}
 			if isFriendListUpdate {
 				manager.clientsStr[friends.UserID]--
 			}
 			if _, ok := manager.clients[friends]; ok {
-				mapFriends := InformFriendsOfConnection(friends, true, manager.clientsStr[friends.UserID] >= 1 && !isFriendListUpdate)
+				mapFriends := InformFriendsOfConnection(friends, true, manager.clientsStr[friends.MainUser.userID] >= 1 && !isFriendListUpdate)
+				fmt.Print(mapFriends)
 				select {
 				// Send to socket all of his connected/disconnected friends.
 				case friends.connected <- mapFriends:
@@ -134,7 +155,7 @@ func (manager *ClientManager) start() {
 					if !ok {
 						continue
 					}
-					if client.UserID == id {
+					if client.MainUser.userID == id {
 						bytesMessage, err := json.Marshal(message)
 						if err != nil {
 							continue
@@ -269,30 +290,61 @@ func (c *Client) read() {
 		switch msg.Type {
 		// When someone connects
 		case "Open":
+			if manager.users[msg.UserID] == nil {
+				manager.users[msg.UserID] = &User{following: msg.Following, followers: msg.Followers, userID: msg.UserID, username: msg.Username, friends: msg.Friends}
+			}
+			fmt.Println(manager.users[msg.UserID])
 			c.bearerToken = msg.Jwt
 			c.UserID = msg.UserID
 			c.username = msg.Username
-			c.friends = msg.Friends
+			c.MainUser = manager.users[msg.UserID]
 			msg.Jwt = ""
 			manager.friends <- c
+
 			continue
 			// When user gets followed.
 		case "NewGramp":
 			// new activity for followers
 			msg.Jwt = ""
-			manager.gramps <- msg.Friends
+			manager.gramps <- c.MainUser.followers
 			continue
+			// GONNA BE DEPRECATED
 		case "UpdateFriendList":
-			c.friends = msg.Friends
-			manager.friends <- c
 		case "Followed":
 			// needs: to (userId). -> So we can inform their front end and they can do whatever they need to.
 			msg.Jwt = ""
 			msg.Message = c.username + " followed you!"
-			// When someone sends a message
+			c.MainUser.following = append(c.MainUser.following, msg.To)
+			u, ok := manager.users[msg.To]
+			if ok && u != nil {
+				manager.users[msg.To].followers = append(manager.users[msg.To].followers, msg.UserID)
+				for _, user := range manager.users[msg.To].following {
+					if user == msg.UserID {
+						c.lastSent = "UpdateFriendList"
+						msg.Message = c.username + " and you now are friends!"
+						c.MainUser.friends = append(c.MainUser.friends, msg.To)
+						manager.users[msg.To].friends = append(manager.users[msg.To].friends, msg.UserID)
+						manager.friends <- c
+					}
+				}
+			}
 		case "Unfollowed":
 			msg.Jwt = ""
 			msg.Message = c.username + " unfollowed you!"
+			c.MainUser.following = remove(c.MainUser.following, msg.To)
+			u, ok := manager.users[msg.To]
+			if ok && u != nil {
+				manager.users[msg.To].followers = remove(manager.users[msg.To].followers, msg.UserID)
+				for _, user := range manager.users[msg.To].friends {
+					if user == msg.UserID {
+						c.lastSent = "UpdateFriendList"
+						c.MainUser.friends = remove(c.MainUser.friends, msg.To)
+						msg.Message = c.username + " and you are no longer friends :("
+						manager.users[msg.To].friends = remove(manager.users[msg.To].friends, msg.UserID)
+						manager.friends <- c
+					}
+				}
+			}
 		case "Send":
 		default:
 		}

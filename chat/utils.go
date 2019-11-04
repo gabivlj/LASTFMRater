@@ -17,11 +17,11 @@ type Token struct {
 // InformFriendsOfConnection :: Takes a Client type and finds in their friendlist the correspondent client socket and sends them if they just connected or disconnected
 func InformFriendsOfConnection(friends *Client, connected bool, inform bool) map[string]bool {
 	mapFriends := make(map[string]bool)
-	for _, friend := range friends.friends {
+	for _, friend := range friends.MainUser.friends {
 		mapFriends[friend] = manager.clientsStr[friend] > 0
 		if mapFriends[friend] && inform {
 			for client, ok := range manager.clients {
-				if ok && client.UserID == friend {
+				if ok && client.MainUser.userID == friend {
 					if connected {
 						client.newFriendConnection <- friends
 					} else {
@@ -83,4 +83,19 @@ func (newInformation *Client) updateAllSameUserClientsInfo(mapFriends map[string
 		case client.connected <- mapFriends:
 		}
 	}
+}
+
+func remove(arr []string, element string) []string {
+	indexFound := -1
+	for index, el := range arr {
+		if element == el {
+			indexFound = index
+			break
+		}
+	}
+	if indexFound < 0 {
+		return arr
+	}
+	arr[len(arr)-1], arr[indexFound] = arr[indexFound], arr[len(arr)-1]
+	return arr[:len(arr)-1]
 }

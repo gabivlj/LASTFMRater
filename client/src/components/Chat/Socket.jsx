@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import SocketClass from '../../classes/Socket';
 import SocketInstance from '../../classes/SocketInstance';
 import { receiveMessage } from '../../actions/chatActions';
+import { freeFriendState } from '../../actions/authActions';
 
-function Socket({ auth, receiveMessage, ...props }) {
+function Socket({ auth, receiveMessage, freeFriendState, ...props }) {
   useEffect(() => {
     if (!auth.auth || !auth.fullyLoaded) {
       return () => {};
@@ -16,7 +17,10 @@ function Socket({ auth, receiveMessage, ...props }) {
       receiveMessage,
       auth.apiUser.user,
       auth.apiUser.listOfFriends,
+      auth.apiUser.followers,
+      auth.apiUser.followedAccounts,
     );
+    freeFriendState();
     return () => {
       SocketInstance.socket.close();
       // delete SocketInstance.socket;
@@ -33,5 +37,6 @@ export default connect(
   mapStateToProps,
   {
     receiveMessage,
+    freeFriendState,
   },
 )(Socket);
