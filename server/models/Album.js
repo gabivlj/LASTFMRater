@@ -4,6 +4,10 @@ const Image = require('./Image');
 const { Schema } = mongoose;
 
 const AlbumSchema = new Schema({
+  score: {
+    type: Number,
+    default: 0,
+  },
   genres: [String],
   notProcessed: {
     type: Boolean,
@@ -59,6 +63,10 @@ const AlbumSchema = new Schema({
   },
   ratings: [
     {
+      powerLevel: {
+        type: Number,
+        default: 1,
+      },
       puntuation: {
         type: Number,
         required: true,

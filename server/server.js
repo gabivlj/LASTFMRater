@@ -2,13 +2,19 @@
 const express = require('express');
 const passport = require('passport');
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const https = require('https');
 const http = require('http');
 // Mongodb Key
 const db = require('./config/keys').MONGOURI;
+
+// Charts PL for initializing processes:
+const Chart = require('./classes/Chart');
+
+Chart.StartProcessingPowerLevels();
+// Chart.UpdateAlbumsScore();
 
 // Routes
 const album = require('./routes/album');
@@ -23,6 +29,8 @@ const chat = require('./routes/chat');
 const review = require('./routes/review');
 const opinion = require('./routes/opinion');
 const { addRoutes } = require('./lib/routes');
+
+// Passport configuration.
 const passportConfig = require('./config/passport');
 
 const app = express();

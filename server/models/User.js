@@ -5,6 +5,10 @@ const { Schema } = mongoose;
 const Image = require('./Image');
 
 const UserSchema = new Schema({
+  powerLevel: {
+    type: Number,
+    default: 1,
+  },
   admin: Boolean,
   username: {
     type: String,

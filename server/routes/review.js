@@ -77,7 +77,7 @@ router.get('/reviews/review/:reviewID', async (req, res) => {
     // Returns an array so we choose the first element.
     const reviewObject = review[0];
     const { username } = reviewObject;
-    // The review object is also an array.
+    // In the review object there is the 'model' object, but the aggregate returns it as an array with the first element as the object itself.
     const objectType = reviewObject[type] ? reviewObject[type][0] : null;
     // Extract the puntuation. (It's -1 if it does not exist...)
     const puntuation = reviewUtils.getPuntuationFromObject(

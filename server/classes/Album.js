@@ -22,6 +22,8 @@ const albumHelper = {
     return commentsMod;
   },
 
+  getAverage() {},
+
   getAlbumViaMbid(mbid, username, FM, userId) {
     return new Promise(async (res, reject) => {
       try {

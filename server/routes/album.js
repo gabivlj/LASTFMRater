@@ -9,6 +9,7 @@ const Comment = require('../classes/Comment');
 const CommentSchema = require('../classes/CommentSchema');
 const Activity = require('../classes/Activity');
 const mongoQueries = require('../lib/mongoQueries');
+const averageWithPowerLevel = require('../lib/averageWithPowerLevel');
 const numberReviewsDay = require('../lib/numberReviewsDay');
 const User = require('../models/User');
 
@@ -211,6 +212,7 @@ router.post(
           album.ratings.push({
             puntuation: req.body.puntuation,
             user: user.username,
+            powerLevel: user.powerLevel,
           });
           // Add to "today" the rating. (This is because in another calls to the api
           // we may want to know the most hot rated albums of the day)
@@ -222,6 +224,7 @@ router.post(
           album.ratings.splice(index, 1, {
             puntuation: req.body.puntuation,
             user: user.username,
+            powerLevel: user.powerLevel,
           });
           // // Substract from the last day that the album received a rating.
           // album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
@@ -293,7 +296,7 @@ router.delete(
 // TODO This should be a POST request please.
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
-  const { username, userId, mbid } = req.query;
+  const { username, userId, mbid = 'null' } = req.query;
   // todo: change
   console.log(req.query, req.params);
   const isMbid = mbid => mbid === 'null' || mbid.includes('-');
@@ -351,6 +354,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
     albumFM.lastfmSource = albumDB.lastfmSource;
     albumFM.liked = !!(albumDB.usersLiked ? albumDB.usersLiked[userId] : false);
     albumFM.artistId = albumDB.artistId;
+    albumFM.score = averageWithPowerLevel(albumFM.ratings);
     return res.json({ album: albumFM });
   }
   const album = await Album.findOne({
