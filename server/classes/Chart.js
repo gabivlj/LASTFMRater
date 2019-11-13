@@ -32,6 +32,15 @@ async function calculatePowerLevels(users) {
  * @description Handles power levels and charts
  */
 class ChartPL {
+  static averageWithPowerLevel(array) {
+    let len = 0;
+    const total = array.reduce((prev, now) => {
+      len += now.powerLevel;
+      return prev + now.puntuation * now.powerLevel;
+    }, 0);
+    return isNaN(total / len) ? 0 : total / len;
+  }
+
   /**
    * @description Temporal function to update albums puntuations to the new power level system.
    */

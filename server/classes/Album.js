@@ -1,4 +1,5 @@
 const Album = require('../models/Album');
+const Chart = require('./Chart');
 
 const albumHelper = {
   mapLikesDislikes: comments =>
@@ -30,7 +31,6 @@ const albumHelper = {
         const album = await Album.findById(mbid);
         const tracksFromAlbum = !!(album.tracks || album.tracks.length);
         if (!album) return res(null);
-        const realMBID = album.mbid;
         if (!album.lastfmSource) {
           return res(album);
         }
@@ -43,7 +43,13 @@ const albumHelper = {
         if (!albumFM || !albumFM.album || albumFM.error) {
           return res(album);
         }
-        albumFM.album.ratings = album.ratings;
+        // albumFM.album.ratings = album.ratings;
+        albumFM.album.score = Chart.averageWithPowerLevel(album.ratings);
+        albumFM.userScore =
+          (username &&
+            (album.ratings.filter(r => r.user !== username)[0] || {})
+              .puntuation) ||
+          0;
         albumFM.album.reviews = album.reviews;
         albumFM.album._id = album._id;
         albumFM.album.__v = album.__v;

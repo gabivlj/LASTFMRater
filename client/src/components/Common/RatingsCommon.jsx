@@ -59,6 +59,7 @@ function RatingsCommon({
   username,
   comparisonInRatingUpdate,
   showTitleGeneral,
+  model,
 }) {
   const [state, setState] = useState({
     rating: 0,
@@ -94,44 +95,57 @@ function RatingsCommon({
    * @description Updates the rating if there is any changes.
    */
   function ratingUpdate() {
-    if (
-      ratings &&
-      ratings.length > 0 &&
-      // Checkes the version of the database and the current version.
-      elementWithRatings.__v !== state.currentVersion
-    ) {
-      // let generalRating = 0;
-      // for (const rating of ratings) {
-      //   generalRating += rating.puntuation;
-      // }
-      const sumRating = ratings.reduce((p, c) => p + c.puntuation, 0);
-      const generalRating = sumRating / ratings.length;
-      let userRating = null;
-      // Check if it's auth
-      if (auth !== null && typeof auth === 'object' && auth !== undefined) {
-        if (!comparisonInRatingUpdate && auth)
-          comparisonInRatingUpdate = auth.user;
-        userRating = ratings.filter(
-          element => String(element.user) === String(comparisonInRatingUpdate),
-        );
-      }
-      if (userRating && userRating.length > 0)
-        userRating = userRating[0].puntuation;
-      else {
-        userRating = generalRating;
-      }
+    if (model && model.score && model.__v !== state.currentVersion) {
+      console.log('xd', model);
+      const actualRating = model.score;
+      const userRating = model.userScore;
       setState({
-        // The general rating (What the social network thinks of this.)
-        generalRating,
-        // The user rating for checking the current stars
+        generalRating: actualRating,
         rating: userRating,
-        // The actual rating of the user.
         actualRating: userRating,
-        // Updates the current database version on component's state.
-        currentVersion: elementWithRatings.__v,
+        currentVersion: model.__v,
       });
     }
   }
+  // function ratingUpdate() {
+  //   if (
+  //     ratings &&
+  //     ratings.length > 0 &&
+  //     // Checkes the version of the database and the current version.
+  //     elementWithRatings.__v !== state.currentVersion
+  //   ) {
+  //     // let generalRating = 0;
+  //     // for (const rating of ratings) {
+  //     //   generalRating += rating.puntuation;
+  //     // }
+  //     const sumRating = ratings.reduce((p, c) => p + c.puntuation, 0);
+  //     const generalRating = sumRating / ratings.length;
+  //     let userRating = null;
+  //     // Check if it's auth
+  //     if (auth !== null && typeof auth === 'object' && auth !== undefined) {
+  //       if (!comparisonInRatingUpdate && auth)
+  //         comparisonInRatingUpdate = auth.user;
+  //       userRating = ratings.filter(
+  //         element => String(element.user) === String(comparisonInRatingUpdate),
+  //       );
+  //     }
+  //     if (userRating && userRating.length > 0)
+  //       userRating = userRating[0].puntuation;
+  //     else {
+  //       userRating = generalRating;
+  //     }
+  //     setState({
+  //       // The general rating (What the social network thinks of this.)
+  //       generalRating,
+  //       // The user rating for checking the current stars
+  //       rating: userRating,
+  //       // The actual rating of the user.
+  //       actualRating: userRating,
+  //       // Updates the current database version on component's state.
+  //       currentVersion: elementWithRatings.__v,
+  //     });
+  //   }
+  // }
 
   const stars = [];
   if (ratings && ratings.length >= 0) {

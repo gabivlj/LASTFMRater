@@ -7,10 +7,10 @@ const dontCareWaitingForSave = require('../lib/dontCareWaitingForSave');
 const albumHelper = require('../classes/Album');
 const Comment = require('../classes/Comment');
 const CommentSchema = require('../classes/CommentSchema');
-const Activity = require('../classes/Activity');
+const Chart = require('../classes/Chart');
 const mongoQueries = require('../lib/mongoQueries');
 const averageWithPowerLevel = require('../lib/averageWithPowerLevel');
-const numberReviewsDay = require('../lib/numberReviewsDay');
+const Rating = require('../classes/Rating');
 const User = require('../models/User');
 
 const FM = new Lastfm(null);
@@ -191,73 +191,95 @@ router.get('/search/:name', async (req, res) => {
  */
 
 router.post(
-  '/rate/:albumid',
+  '/rate/:albumID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
       const { user } = req;
-      const album = await Album.findOne({
-        _id: req.params.albumid,
-      });
-      // const userPromise = User.findOne({ _id: req.user._id });
-      // const [user, album] = await Promise.all([userPromise, albumPromise]);
-
-      if (album) {
-        const index = album.ratings
-          .map(rating => rating.user)
-          .indexOf(req.body.userid);
-        // If rating does not exist.
-        if (index <= -1) {
-          // Add it.
-          album.ratings.push({
-            puntuation: req.body.puntuation,
-            user: user.username,
-            powerLevel: user.powerLevel,
-          });
-          // Add to "today" the rating. (This is because in another calls to the api
-          // we may want to know the most hot rated albums of the day)
-          album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
-            ? numberReviewsDay.add(album.numberOfReviewsEachDay)
-            : [{ date: Date.now(), sum: 0 }];
-        } else {
-          // else replace
-          album.ratings.splice(index, 1, {
-            puntuation: req.body.puntuation,
-            user: user.username,
-            powerLevel: user.powerLevel,
-          });
-          // // Substract from the last day that the album received a rating.
-          // album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
-          //   ? numberReviewsDay.substract(album.numberOfReviewsEachDay)
-          //   : [{ date: Date.now(), sum: 0 }];
-        }
-        const indexUser = user.ratedAlbums.indexOf(req.params.albumid);
-        if (indexUser <= -1) user.ratedAlbums.push(req.params.albumid);
-        const userProfile = await user.save();
-        delete userProfile.password;
-        Activity.addSomethingActivity(
-          Activity.createRatedInformation(
-            {
-              _id: album._id,
-              name: `${album.name} by ${album.artist}`,
-              score: req.body.puntuation,
-              pathname: `/album/${album.artist}/${album.name}/${album.mbid}`,
-            },
-            { userId: req.user.id, username: req.user.username },
-          ),
-        );
-        return album
-          .save()
-          .then(res_ =>
-            res.json({
-              ratings: res_.ratings,
-              __v: res_.__v,
-              user: userProfile,
-            }),
-          )
-          .catch(err => console.log(err));
+      const { puntuation } = req.body;
+      const album = await Rating.addRating(
+        Album,
+        req.params.albumID,
+        {
+          puntuation,
+          powerLevel: user.powerLevel,
+        },
+        user,
+        album => ({
+          _id: album._id,
+          name: `${album.name} by ${album.artist}`,
+          score: puntuation,
+          pathname: `/album/${album.artist}/${album.name}/${album.mbid}`,
+        }),
+      );
+      console.log(album);
+      if (!album) {
+        return res.status(404).json({ error: 'Error in the request.' });
       }
-      return res.status(400).json('Error finding the album.');
+      return res.json({ album, user });
+      // const { user } = req;
+      // const album = await Album.findOne({
+      //   _id: req.params.albumid,
+      // });
+      // // const userPromise = User.findOne({ _id: req.user._id });
+      // // const [user, album] = await Promise.all([userPromise, albumPromise]);
+
+      // if (album) {
+      //   const index = album.ratings
+      //     .map(rating => rating.user)
+      //     .indexOf(req.body.userid);
+      //   // If rating does not exist.
+      //   if (index <= -1) {
+      //     // Add it.
+      //     album.ratings.push({
+      //       puntuation: req.body.puntuation,
+      //       user: user.username,
+      //       powerLevel: user.powerLevel,
+      //     });
+      //     // Add to "today" the rating. (This is because in another calls to the api
+      //     // we may want to know the most hot rated albums of the day)
+      //     album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
+      //       ? numberReviewsDay.add(album.numberOfReviewsEachDay)
+      //       : [{ date: Date.now(), sum: 0 }];
+      //   } else {
+      //     // else replace
+      //     album.ratings.splice(index, 1, {
+      //       puntuation: req.body.puntuation,
+      //       user: user.username,
+      //       powerLevel: user.powerLevel,
+      //     });
+      //     // // Substract from the last day that the album received a rating.
+      //     // album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
+      //     //   ? numberReviewsDay.substract(album.numberOfReviewsEachDay)
+      //     //   : [{ date: Date.now(), sum: 0 }];
+      //   }
+      //   const indexUser = user.ratedAlbums.indexOf(req.params.albumid);
+      //   if (indexUser <= -1) user.ratedAlbums.push(req.params.albumid);
+      //   const userProfile = await user.save();
+      //   delete userProfile.password;
+      //   Activity.addSomethingActivity(
+      //     Activity.createRatedInformation(
+      //       {
+      //         _id: album._id,
+      //         name: `${album.name} by ${album.artist}`,
+      //         score: req.body.puntuation,
+      //         pathname: `/album/${album.artist}/${album.name}/${album.mbid}`,
+      //       },
+      //       { userId: req.user.id, username: req.user.username },
+      //     ),
+      //   );
+      //   return album
+      //     .save()
+      //     .then(res_ =>
+      //       res.json({
+      //         ratings: res_.ratings,
+      //         __v: res_.__v,
+      //         user: userProfile,
+      //       }),
+      //     )
+      //     .catch(err => console.log(err));
+      // }
+      // return res.status(400).json('Error finding the album.');
     } catch (err) {
       console.log(err);
       return res.status(404).json('Error.');
@@ -297,9 +319,7 @@ router.delete(
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
   const { username, userId, mbid = 'null' } = req.query;
-  // todo: change
-  console.log(req.query, req.params);
-  const isMbid = mbid => mbid === 'null' || mbid.includes('-');
+  const isMbid = mbid => mbid === 'null' || mbid === '' || mbid.includes('-');
   const isIdMbid = isMbid(mbid);
   if (!isIdMbid) {
     const [err, album] = await handleError(
@@ -346,7 +366,13 @@ router.get('/:albumname/:artistname', async (req, res) => {
       albumDB.lastfmSource = true;
       dontCareWaitingForSave(albumDB, false);
     }
-    albumFM.ratings = albumDB.ratings;
+    // albumFM.ratings = albumDB.ratings;
+    // albumFM.album.score = Chart.averageWithPowerLevel(albumDB.ratings);
+    albumFM.userScore =
+      (username &&
+        (albumDB.ratings.filter(r => r.user !== username)[0] || {})
+          .puntuation) ||
+      0;
     albumFM.reviews = albumDB.reviews;
     albumFM._id = albumDB._id;
     albumFM.__v = albumDB.__v;
@@ -354,7 +380,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
     albumFM.lastfmSource = albumDB.lastfmSource;
     albumFM.liked = !!(albumDB.usersLiked ? albumDB.usersLiked[userId] : false);
     albumFM.artistId = albumDB.artistId;
-    albumFM.score = averageWithPowerLevel(albumFM.ratings);
+    albumFM.score = averageWithPowerLevel(albumDB.ratings);
     return res.json({ album: albumFM });
   }
   const album = await Album.findOne({

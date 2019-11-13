@@ -16,8 +16,8 @@ export default (state = initialState, action) => {
         album: {
           album: {
             ...state.album.album,
+            ...action.payload,
             __v: action.payload.__v,
-            ratings: action.payload.ratings,
           },
         },
       };

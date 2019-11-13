@@ -64,9 +64,14 @@ export const addAlbumRating = (
         type: 'SET_RATING_USER',
         payload: user,
       });
+      console.log('XD', res.data);
       dispatch({
         type: 'ADD_ALBUM',
-        payload: res.data,
+        payload: {
+          score: res.data.album.score,
+          userScore: res.data.album.userScore,
+          __v: res.data.album.__v,
+        },
       });
     })
     .catch(err => console.log(err));

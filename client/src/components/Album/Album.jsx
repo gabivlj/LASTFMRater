@@ -143,6 +143,7 @@ class Album extends Component {
                   </div>
                 </div>
                 <RatingsCommon
+                  model={album}
                   ratings={album.ratings}
                   auth={this.props.currentUser || null}
                   elementWithRatings={album}

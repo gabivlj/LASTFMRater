@@ -6,14 +6,14 @@ import { addAlbumRating } from '../../actions/albumActions';
 const __propTypes = {
   album: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  addAlbumRating: PropTypes.func.isRequired
+  addAlbumRating: PropTypes.func.isRequired,
 };
 
 const buttonStyle = {
   textDecoration: 'none',
   border: 'none',
   background: 'none',
-  cursor: 'pointer'
+  cursor: 'pointer',
 };
 
 class AlbumRating extends Component {
@@ -22,11 +22,15 @@ class AlbumRating extends Component {
   constructor() {
     super();
     this.state = {
+      // rating (the rating showcase)
       rating: 0,
+      // rating (the rating that should be displayed when not hovering)
       actualRating: 0,
+      // grampy rating
       generalRating: 0,
+      // detect real changes
       currentVersion: 0,
-      error: null
+      error: null,
     };
   }
 
@@ -40,32 +44,14 @@ class AlbumRating extends Component {
 
   ratingUpdate = () => {
     const { album } = this.props.album.album;
-    if (
-      album &&
-      album.ratings.length > 0 &&
-      album.__v !== this.state.currentVersion
-    ) {
-      // let actualRating = 0;
-      // for (const rating of album.ratings) {
-      //   actualRating += rating.puntuation;
-      // }
-      let actualRating = album.ratings.reduce((r, c) => r + c, 0);
-      actualRating /= album.ratings.length;
-      let userRating = null;
-      if (this.props.auth.auth)
-        userRating = album.ratings.filter(
-          element => element.user === this.props.auth.apiUser.user
-        );
-      if (userRating && userRating.length > 0)
-        userRating = userRating[0].puntuation;
-      else {
-        userRating = actualRating;
-      }
+    if (album && album.score && album.__v !== this.state.currentVersion) {
+      actualRating = album.score;
+      const userRating = album.userScore;
       this.setState({
         generalRating: actualRating,
         rating: userRating,
         actualRating: userRating,
-        currentVersion: album.__v
+        currentVersion: album.__v,
       });
       this.changedRating = true;
     }
@@ -79,11 +65,11 @@ class AlbumRating extends Component {
         this.props.album.album.album._id,
         i,
         this.props.auth.apiUser.user,
-        this.props.auth.apiUser.id
+        this.props.auth.apiUser.id,
       );
     } else {
       this.setState({
-        error: 'You cannot rate an album if you are not logged!'
+        error: 'You cannot rate an album if you are not logged!',
       });
       setTimeout(() => this.setState({ error: null }), 2000);
     }
@@ -106,7 +92,7 @@ class AlbumRating extends Component {
               onClick={() => this.handleClick(i + 1)}
             >
               <i className="far fa-star" id={i} style={{ color: '#b29600' }} />
-            </button>
+            </button>,
           );
         } else {
           stars.push(
@@ -120,7 +106,7 @@ class AlbumRating extends Component {
               onClick={() => this.handleClick(i + 1)}
             >
               <i className="fas fa-star" id={i} style={{ color: '#FFD700' }} />
-            </button>
+            </button>,
           );
         }
       }
@@ -140,9 +126,9 @@ class AlbumRating extends Component {
 const mapStateToProps = state => ({
   album: state.album,
   auth: state.auth,
-  ratings: state.album.album.album.ratings
+  ratings: state.album.album.album.ratings,
 });
 export default connect(
   mapStateToProps,
-  { addAlbumRating }
+  { addAlbumRating },
 )(AlbumRating);
