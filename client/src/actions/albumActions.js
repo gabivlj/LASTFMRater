@@ -30,14 +30,12 @@ export const likeAlbum = id => async dispatch => {
 
 export const getAlbum = albumData => async dispatch => {
   if (albumData.mbid === '0') albumData.mbid = null;
-  console.log(albumData);
-  const username = albumData.username ? `?username=${albumData.username}` : '?';
-  const userId = `&userId=${albumData.userId}&mbid=${albumData.mbid}`;
+  const lastfm = albumData.lastfm ? `?lastfm=${albumData.lastfm}` : '?';
+  const username = albumData.username ? `&username=${albumData.username}` : ``;
+  const userId = `&userId=${albumData.userId}&mbid=${albumData.mbid}${username}`;
 
   axiosAPI
-    .get(
-      `/album/${albumData.albumname}/${albumData.artist}${username}${userId}`,
-    )
+    .get(`/album/${albumData.albumname}/${albumData.artist}${lastfm}${userId}`)
     .then(res => {
       dispatch({
         type: 'GET_ALBUM',

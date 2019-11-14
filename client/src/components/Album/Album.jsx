@@ -52,13 +52,16 @@ class Album extends Component {
     this.setState({
       artist,
     });
-    console.log(this.props.currentUser);
     this.props.getAlbum({
       artist,
       albumname,
       mbid,
       userId: this.props.currentUser ? this.props.currentUser.id : null,
       username:
+        this.props.currentUser && this.props.currentUser.user
+          ? this.props.currentUser.user
+          : null,
+      lastfm:
         this.props.currentUser && this.props.currentUser.lastfm
           ? this.props.currentUser.lastfm
           : null,

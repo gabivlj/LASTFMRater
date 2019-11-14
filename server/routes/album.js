@@ -318,12 +318,12 @@ router.delete(
 // TODO This should be a POST request please.
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
-  const { username, userId, mbid = 'null' } = req.query;
+  const { lastfm, username = '', userId, mbid = 'null' } = req.query;
   const isMbid = mbid => mbid === 'null' || mbid === '' || mbid.includes('-');
   const isIdMbid = isMbid(mbid);
   if (!isIdMbid) {
     const [err, album] = await handleError(
-      albumHelper.getAlbumViaMbid(mbid, username, FM, userId),
+      albumHelper.getAlbumViaMbid(mbid, lastfm, FM, userId, username),
     );
     if (!album) return res.status(404).json({ error: 'Album not found.' });
     if (err) {
@@ -332,14 +332,14 @@ router.get('/:albumname/:artistname', async (req, res) => {
     return res.json({ album });
   }
 
-  const AlbumData = {
+  const AlbumDataForLastFM = {
     albumname: req.params.albumname,
-    username,
+    username: lastfm,
     artist: req.params.artistname,
     mbid,
   };
   // eslint-disable-next-line prefer-const
-  let [errFM, albumFM] = await handleError(FM.getAlbum(AlbumData));
+  let [errFM, albumFM] = await handleError(FM.getAlbum(AlbumDataForLastFM));
   if (errFM) {
     console.log(errFM);
     return res.status(400).json({ error: 'Error requesting album' });
@@ -370,8 +370,10 @@ router.get('/:albumname/:artistname', async (req, res) => {
     // albumFM.album.score = Chart.averageWithPowerLevel(albumDB.ratings);
     albumFM.userScore =
       (username &&
-        (albumDB.ratings.filter(r => r.user !== username)[0] || {})
-          .puntuation) ||
+        (
+          albumDB.ratings.filter(r => String(r.user) === String(username))[0] ||
+          {}
+        ).puntuation) ||
       0;
     albumFM.reviews = albumDB.reviews;
     albumFM._id = albumDB._id;

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropType from 'prop-types';
-import RatingsCommon from '../../../Common/RatingsCommon';
-import { addPlaylistRating} from '../../../../actions/playlistActions';
 import { connect } from 'react-redux';
+import RatingsCommon from '../../../Common/RatingsCommon';
+import { addPlaylistRating } from '../../../../actions/playlistActions';
 
-function PlaylistRating({ playlist, auth, addPlaylistRating}) {
-
+function PlaylistRating({ playlist, auth, addPlaylistRating }) {
   return (
     <div className="mt-3">
       <RatingsCommon
+        model={playlist}
         ratings={playlist.ratings}
         auth={auth}
         elementWithRatings={playlist}
@@ -18,13 +18,16 @@ function PlaylistRating({ playlist, auth, addPlaylistRating}) {
         comparisonInRatingUpdate={auth.apiUser.id}
       />
     </div>
-  )
+  );
 }
 
 PlaylistRating.propTypes = {
   playlist: PropType.object.isRequired,
   auth: PropType.object.isRequired,
   addPlaylistRating: PropType.func.isRequired,
-}
+};
 
-export default connect(null, { addPlaylistRating })(PlaylistRating);
+export default connect(
+  null,
+  { addPlaylistRating },
+)(PlaylistRating);

@@ -6,11 +6,13 @@ const addTrack = require('../lib/addTrack');
 const Playlist = require('../models/Playlist');
 const Track = require('../models/Track');
 const RatingHelper = require('../lib/RatingHelper');
+const Rating = require('../classes/Rating');
 const albumHelper = require('../classes/Album');
 const CommentSchema = require('../classes/CommentSchema');
 const Comment = require('../classes/Comment');
 const mongoQueries = require('../lib/mongoQueries');
 const cache = require('../middleware/cache');
+const Chart = require('../classes/Chart');
 
 /**
  * @GET
@@ -19,23 +21,39 @@ const cache = require('../middleware/cache');
  * @OPTIONAL userId,
  * /api/playlist/:id
  */
+
 router.get(
   '/:id',
   cache.getNoAuth(),
   async (req, res, next) => {
     const { id } = req.params;
+    // update playlists
     const { userId } = req.query;
+    console.log(userId);
     Playlist.findById({ _id: id })
       .then(async pl => {
         const playlist = pl;
         // todo: this should be in a mongo query
         const tracks = pl.tracks.map(track => Track.findOne({ _id: track }));
+
+        playlist.userScore =
+          (userId &&
+            (
+              playlist.ratings.filter(
+                play => String(play.user) === String(userId),
+              )[0] || {}
+            ).puntuation) ||
+          0;
+        playlist.score = Chart.averageWithPowerLevel(playlist.ratings);
         playlist.tracksShow = await Promise.all(tracks);
         req.json = { playlist };
         // cache that thing
         next();
       })
-      .catch(err => res.status(400).json({ error: 'Playlist not found.' }));
+      .catch(err => {
+        console.log(err);
+        res.status(400).json({ error: 'Playlist not found.' });
+      });
   },
   cache.setNoAuth(),
 );
@@ -208,7 +226,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     function ifIndexEqualsAdd(currentIndex, badIndex, prev, current) {
-      return parseInt(badIndex) === currentIndex
+      return parseInt(badIndex, 10) === currentIndex
         ? [...prev]
         : [...prev, current];
     }
@@ -300,30 +318,51 @@ router.post(
  */
 
 router.post(
-  '/rate/:playlistId',
+  '/rate/:playlistID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const { id } = req.user;
-    const { playlistId } = req.params;
+    const { id, powerLevel } = req.user;
+    const { playlistID } = req.params;
     const { puntuation } = req.body;
     const parsedPuntuation = puntuation ? parseInt(puntuation, 10) : 0;
-    const ratingHelper = new RatingHelper(Playlist);
-    const [error, PlaylistToReturn] = await handleError(
-      ratingHelper.addRating(id, playlistId, parsedPuntuation),
+    const playlist = await Rating.addRating(
+      Playlist,
+      playlistID,
+      {
+        puntuation: parsedPuntuation,
+        powerLevel,
+        pathRatedUserArray: 'ratedPlaylists',
+        useUserID: true,
+      },
+      req.user,
+      playlist => ({
+        _id: playlistID,
+        name: `${playlist.playlistName} by ${playlist.user}`,
+        score: parsedPuntuation,
+        pathname: `/playlist/view/${playlistID}`,
+      }),
     );
-    if (error) {
-      return res
-        .status(404)
-        .json({ error: 'Error handling the puntuation...' });
+    if (!playlist) {
+      return res.status(404).json({ wtf: 'error' });
     }
-    res.json({
-      rating: PlaylistToReturn.ratings,
-      // We predict the next version of playlist, so React knows when playlist has REALLY changed.
-      __v: PlaylistToReturn.__v + 1,
-    });
-    cache.deleteCacheNoAuth(`/api/playlist/${playlistId}`);
+    console.log(playlist);
+    res.json({ playlist, user: req.user });
+    // const [error, PlaylistToReturn] = await handleError(
+    //   ratingHelper.addRating(id, playlistId, parsedPuntuation),
+    // );
+    // if (error) {
+    //   return res
+    //     .status(404)
+    //     .json({ error: 'Error handling the puntuation...' });
+    // }
+    // res.json({
+    //   rating: PlaylistToReturn.ratings,
+    //   // We predict the next version of playlist, so React knows when playlist has REALLY changed.
+    //   __v: PlaylistToReturn.__v + 1,
+    // });
+    cache.deleteCacheNoAuth(`/api/playlist/${playlistID}`);
     // We save later because I want a fast response.
-    PlaylistToReturn.save();
+    // PlaylistToReturn.save();
   },
 );
 

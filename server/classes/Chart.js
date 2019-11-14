@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 const Albums = require('../models/Album');
+const Playlist = require('../models/Playlist');
 const User = require('../models/User');
 const Review = require('../models/Review');
 
@@ -45,10 +46,10 @@ class ChartPL {
    * @description Temporal function to update albums puntuations to the new power level system.
    */
   static async UpdateEveryAlbumPuntuationArray() {
-    const albums = await Albums.find();
+    const albums = await Playlist.find();
     albums.forEach(album => {
       album.ratings.forEach(r => {
-        User.findOne({ username: r.user }).then(u => {
+        User.findOne({ _id: r.user }).then(u => {
           if (u == null) return console.log(r.user);
           r.powerLevel = u.powerLevel;
         });

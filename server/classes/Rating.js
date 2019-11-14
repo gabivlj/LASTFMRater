@@ -10,27 +10,34 @@ class Rating {
   static async addRating(
     Model,
     _id,
-    { puntuation, powerLevel },
+    {
+      puntuation,
+      powerLevel,
+      pathRatedUserArray = 'ratedAlbums',
+      useUserID = false,
+    },
     user,
     activityInformationCallback,
   ) {
     try {
+      const comparisonUser = useUserID ? user._id : user.username;
       const model = await Model.findOne({
         _id,
       });
       if (!model) {
+        console.log('Not found');
         return null;
       }
       const index = model.ratings
         .map(rating => rating.user)
-        .indexOf(user.username);
+        .indexOf(comparisonUser);
       // If rating does not exist.
       if (index <= -1) {
         // Add it.
         model.ratings.push({
           puntuation,
           // Username.
-          user: user.username,
+          user: comparisonUser,
           powerLevel,
         });
         // Add to "today" the rating. (This is because in another calls to the api
@@ -42,7 +49,7 @@ class Rating {
         // else replace
         model.ratings.splice(index, 1, {
           puntuation,
-          user: user.username,
+          user: comparisonUser,
           powerLevel,
         });
         // // Substract from the last day that the album received a rating.
@@ -50,8 +57,8 @@ class Rating {
         //   ? numberReviewsDay.substract(album.numberOfReviewsEachDay)
         //   : [{ date: Date.now(), sum: 0 }];
       }
-      const indexUser = user.ratedAlbums.indexOf(_id);
-      if (indexUser <= -1) user.ratedAlbums.push(_id);
+      const indexUser = user[pathRatedUserArray].indexOf(_id);
+      if (indexUser <= -1) user[pathRatedUserArray].push(_id);
       user.save();
       model.save();
       Activity.addSomethingActivity(

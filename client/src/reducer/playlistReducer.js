@@ -132,8 +132,7 @@ export default (state = initialState, action) => {
         ...state,
         playlist: {
           ...state.playlist,
-          __v: action.payload.__v,
-          ratings: [...action.payload.rating],
+          ...action.payload.playlist,
         },
       };
     case 'ADD_COMMENT_PLAYLIST':

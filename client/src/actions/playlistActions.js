@@ -202,7 +202,7 @@ export const addPlaylistRating = (
       dispatch(notifyNormality('Rating added!', 1500));
       dispatch({
         type: 'ADD_PLAYLIST_RATING',
-        payload: res.data,
+        payload: { playlist: res.data.playlist },
       });
     })
     .catch(err => console.log(err));

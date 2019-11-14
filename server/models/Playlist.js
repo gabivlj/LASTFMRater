@@ -10,6 +10,10 @@ const PlaylistModel = new Schema({
     type: String,
     required: true,
   },
+  // SET IN THE CLIENT
+  score: Number,
+  userScore: Number,
+  // ...
   tracksShow: [{}],
   tracks: [
     {
@@ -23,6 +27,7 @@ const PlaylistModel = new Schema({
     {
       user: { type: Schema.Types.ObjectId, ref: 'users' },
       puntuation: { type: Number },
+      powerLevel: { type: Number },
     },
   ],
   playlistName: {

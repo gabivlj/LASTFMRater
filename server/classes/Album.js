@@ -25,7 +25,7 @@ const albumHelper = {
 
   getAverage() {},
 
-  getAlbumViaMbid(mbid, username, FM, userId) {
+  getAlbumViaMbid(mbid, username, FM, userId, usernameGrampy) {
     return new Promise(async (res, reject) => {
       try {
         const album = await Album.findById(mbid);
@@ -47,8 +47,11 @@ const albumHelper = {
         albumFM.album.score = Chart.averageWithPowerLevel(album.ratings);
         albumFM.userScore =
           (username &&
-            (album.ratings.filter(r => r.user !== username)[0] || {})
-              .puntuation) ||
+            (
+              album.ratings.filter(
+                r => String(r.user) === String(usernameGrampy),
+              )[0] || {}
+            ).puntuation) ||
           0;
         albumFM.album.reviews = album.reviews;
         albumFM.album._id = album._id;
