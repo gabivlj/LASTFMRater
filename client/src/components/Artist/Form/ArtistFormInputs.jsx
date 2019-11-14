@@ -15,7 +15,7 @@ function ArtistFormInputs({
 }) {
   return (
     <div>
-      <form className="container">
+      <div className="container">
         <InputBorderline
           type="text"
           name="description"
@@ -58,7 +58,7 @@ function ArtistFormInputs({
             </Button>
           </div>
         )}
-      </form>
+      </div>
     </div>
   );
 }

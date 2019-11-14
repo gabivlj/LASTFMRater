@@ -56,8 +56,12 @@ var SecretKey string
 // ServeImage ...
 func ServeImage(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-
-	img, err := os.Open("./temp/" + id + ".jpeg")
+	includedJpeg := strings.Index(".jpeg", id)
+	openStr := "./temp/" + id
+	if includedJpeg < 0 {
+		openStr += ".jpeg"
+	}
+	img, err := os.Open("./temp/" + id)
 	if err != nil {
 		w.Header().Add("Content-Type", "application/json")
 		response := map[string]interface{}{"status": false, "message": err.Error()}

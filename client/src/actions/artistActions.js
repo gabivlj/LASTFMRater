@@ -1,7 +1,23 @@
 import handleError from '../utils/handleError';
-import { notifyError } from './notifyActions';
+import { notifyError, notifySuccess } from './notifyActions';
 import goImage from '../utils/goImage';
 import { axiosAPI } from '../utils/axios';
+import uploadImageRoute from '../utils/uploadImageRoute';
+
+// export const submitImage = file => async dispatch => {
+//   const [response, error] = await handleError(goImage(file));
+//   if (error) {
+//     return dispatch(notifyError('Error submiting image...'));
+//   }
+//   const { data } = response;
+//   const _ = await uploadImageRoute(
+//     '/artist/image',
+//     dispatch,
+//     images => dispatch(notifySuccess('Image proposed to Grampy correctly!')),
+//     data,
+//   );
+//   return _;
+// };
 
 export const getArtist = artist => dispatch => {
   axiosAPI
@@ -36,15 +52,15 @@ export const setArtistForm = artist => dispatch => {
   });
 };
 
-export const uploadImageArtist = (file, images, id) => async dispatch => {
-  const [res, error] = await handleError(goImage(file));
+export const uploadImageArtist = (file, images = [], id) => async dispatch => {
+  const [res, error] = await goImage(file);
   if (error) {
     return dispatch(notifyError('Error uploading an image request.'));
   }
   const { data } = res;
   const [finalResponse, err] = await handleError(
     axiosAPI.post(`/artist/update/${id}`, {
-      body: { images: [...images, data] },
+      body: { images: [...(images || []), data] },
     }),
   );
   if (err) {

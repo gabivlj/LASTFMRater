@@ -47,15 +47,15 @@ function ImageUploader({ submit }) {
       {renderError}
       <input
         type="file"
-        id="grumpy-file"
-        name="grumpy-file"
-        className="grumpy-file"
+        id="grampy-file"
+        name="grampy-file"
+        className="grampy-file"
         onChange={changeFileOnChange}
       />
       <label
         htmlFor="grampy-file"
-        nesting=""
-        id="grumpy-file"
+        nesting="--"
+        id="grampy-file"
         className="input-grumpy"
       >
         <i className="fa fa-cloud-upload-alt pl-3 pr-3" aria-hidden="true" />

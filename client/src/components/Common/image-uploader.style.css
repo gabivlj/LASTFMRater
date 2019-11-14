@@ -1,4 +1,4 @@
-.input-grumpy  {
+.input-grumpy {
   font-size: 1.25em;
   font-weight: 700;
   color: rgb(238, 229, 248);
@@ -13,17 +13,16 @@
   margin: 0 0 0 18.75%;
 }
 
-.input-grumpy:focus ,
+.input-grumpy:focus,
 .input-grumpy:hover {
   background-color: rgb(25, 0, 255);
-  
 }
 
-.grumpy-file {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+.grampy-file {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }

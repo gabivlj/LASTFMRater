@@ -3,9 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import ArtistFormInputs from './ArtistFormInputs';
-import { uploadUpdateArtist } from '../../../actions/artistActions';
+import {
+  uploadUpdateArtist,
+  uploadImageArtist,
+} from '../../../actions/artistActions';
 
-function ArtistForm({ artist, history, uploadUpdateArtist }) {
+function ArtistForm({
+  artist,
+  history,
+  uploadUpdateArtist,
+  uploadImageArtist,
+}) {
   const {
     images = [],
     description = '',
@@ -58,6 +66,11 @@ function ArtistForm({ artist, history, uploadUpdateArtist }) {
     uploadUpdateArtist(buildObject, artist, history);
   }
 
+  function addImage(file) {
+    console.log(file);
+    uploadImageArtist(file, images, artist._id);
+  }
+
   function reset() {
     setChangedState({});
     setArtistState({
@@ -81,6 +94,7 @@ function ArtistForm({ artist, history, uploadUpdateArtist }) {
         submit={submit}
         reset={reset}
         artistState={artistState}
+        addImage={addImage}
       />
     </div>
   );
@@ -94,5 +108,6 @@ export default connect(
   mapStateToProps,
   {
     uploadUpdateArtist,
+    uploadImageArtist,
   },
 )(withRouter(ArtistForm));
