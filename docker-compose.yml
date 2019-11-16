@@ -1,6 +1,22 @@
 version: '3'
 
 services:
+  elasticsearch:
+    container_name: 'elasticsearch'
+    environment:
+      - node.name=elasticsearch
+      - cluster.initial_master_nodes=elasticsearch
+      - network.host=0.0.0.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.1
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+
   chat:
     build: ./chat
     expose:
@@ -13,6 +29,9 @@ services:
       - ${CHAT_PORT}:${CHAT_PORT}
     volumes:
       - ./chat/:/srv/app/grampy-chat
+    depends_on:
+      - elasticsearch
+
   server:
     build: ./server
     expose:

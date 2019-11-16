@@ -9,6 +9,7 @@ import {
   setArtistForm,
 } from '../../actions/artistActions';
 import ArtistAlbums from './ArtistAlbums';
+import ArtistSuggestions from './ArtistSuggestions';
 
 const __propTypes = {
   getArtist: PropTypes.func.isRequired,
@@ -23,6 +24,7 @@ class Artist extends Component {
     super(props);
     this.state = {
       artist: null,
+      showSuggestions: false,
     };
     this.loadedArtist = false;
   }
@@ -86,13 +88,24 @@ class Artist extends Component {
               className="mt-3"
               onClick={() => {
                 this.props.setArtistForm(artist);
-                this.props.history.push(`/artist-edit/form/${artist._id}`);
+                this.props.history.push(
+                  `/artist-edit/form/${artist.name}/${artist._id}`,
+                );
               }}
               color="primary"
             >
               Suggest an edit!
             </Button>
 
+            <Button
+              className="mt-3"
+              onClick={() => {
+                this.setState({ showSuggestions: !this.state.showSuggestions });
+              }}
+              color="primary"
+            >
+              Show suggestions
+            </Button>
             <hr className="my-4" />
 
             <div
@@ -124,6 +137,11 @@ class Artist extends Component {
         ) : (
           <LinearProgress />
         )}
+
+        {this.state.showSuggestions && artist && (
+          <ArtistSuggestions artist={artist} />
+        )}
+
         {this.props.artist.albums && artist ? (
           <ArtistAlbums
             album={this.props.artist.albums.album}

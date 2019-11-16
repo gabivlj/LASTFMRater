@@ -76,16 +76,17 @@ type Message struct {
 }
 
 type MessageChat struct {
-	Username  string   `json:"username,omitempty"`
-	UserID    string   `json:"userId,omitempty"`
-	From      string   `json:"from,omitempty"`
-	To        string   `json:"to,omitempty"`
-	Message   string   `json:"message,omitempty"`
-	Type      string   `json:"type,omitempty"`
-	Friends   []string `json:"friends,omitempty"`
-	Following []string `json:"following,omitempty"`
-	Followers []string `json:"followers,omitempty"`
-	Jwt       string   `json:"jwt,omitempty"`
+	Username     string   `json:"username,omitempty"`
+	UserID       string   `json:"userId,omitempty"`
+	From         string   `json:"from,omitempty"`
+	To           string   `json:"to,omitempty"`
+	Message      string   `json:"message,omitempty"`
+	Type         string   `json:"type,omitempty"`
+	Friends      []string `json:"friends,omitempty"`
+	Following    []string `json:"following,omitempty"`
+	Followers    []string `json:"followers,omitempty"`
+	Jwt          string   `json:"jwt,omitempty"`
+	IndexMessage int64    `json:"indexMessage,omitempty"`
 }
 
 func (manager *ClientManager) start() {
@@ -248,12 +249,14 @@ func (manager *ClientManager) send(message []byte, client *Client) {
 
 // read :: Reads the message sent from user.
 func (c *Client) read() {
+
 	// if for some reason we exit the forloop we execute this.
 	defer func() {
 		manager.unregister <- c
 		c.socket.Close()
 	}()
 
+	testID := 0
 	for {
 		_, message, err := c.socket.ReadMessage()
 		if err != nil {
@@ -261,7 +264,7 @@ func (c *Client) read() {
 			c.socket.Close()
 			break
 		}
-		msg := &MessageChat{}
+		msg := &MessageChat{IndexMessage: -1}
 		er := json.Unmarshal(message, msg)
 		if er != nil {
 			c.socket.WriteMessage(websocket.CloseMessage, []byte{})
@@ -346,6 +349,22 @@ func (c *Client) read() {
 				}
 			}
 		case "Send":
+		case "Find":
+
+		case "Message":
+			if msg.IndexMessage == -1 {
+				// b, err := json.Marshal(map[string]string{"error": "Index for the message is missing !"})
+				// if err != nil {
+				// 	fmt.Print("Error formatting the json:\n")
+				// 	fmt.Print(err)
+				// }
+				// c.socket.WriteMessage(websocket.TextMessage, b)
+
+				// continue
+				testID++
+				msg.IndexMessage = int64(testID)
+			}
+			SaveMessage(msg)
 		default:
 		}
 		msg.Jwt = ""

@@ -6,6 +6,7 @@ import ArtistFormInputs from './ArtistFormInputs';
 import {
   uploadUpdateArtist,
   uploadImageArtist,
+  getArtistForm,
 } from '../../../actions/artistActions';
 
 function ArtistForm({
@@ -13,6 +14,8 @@ function ArtistForm({
   history,
   uploadUpdateArtist,
   uploadImageArtist,
+  match,
+  getArtistForm,
 }) {
   const {
     images = [],
@@ -33,6 +36,9 @@ function ArtistForm({
 
   const [changedState, setChangedState] = useState({});
   useEffect(() => {
+    if (!artist.name) {
+      getArtistForm({ _id: match.params.id, name: artist.name });
+    }
     const {
       images = [],
       description = '',
@@ -109,5 +115,6 @@ export default connect(
   {
     uploadUpdateArtist,
     uploadImageArtist,
+    getArtistForm,
   },
 )(withRouter(ArtistForm));

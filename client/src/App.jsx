@@ -80,7 +80,7 @@ function App() {
                 <Route exact path="/profile/:id" component={Profile} />
                 <PrivateRoute
                   exact
-                  path="/artist-edit/form/:id"
+                  path="/artist-edit/form/:name/:id"
                   component={ArtistForm}
                 />
                 <PrivateRoute

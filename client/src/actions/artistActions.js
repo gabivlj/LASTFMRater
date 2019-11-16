@@ -2,22 +2,6 @@ import handleError from '../utils/handleError';
 import { notifyError, notifySuccess } from './notifyActions';
 import goImage from '../utils/goImage';
 import { axiosAPI } from '../utils/axios';
-import uploadImageRoute from '../utils/uploadImageRoute';
-
-// export const submitImage = file => async dispatch => {
-//   const [response, error] = await handleError(goImage(file));
-//   if (error) {
-//     return dispatch(notifyError('Error submiting image...'));
-//   }
-//   const { data } = response;
-//   const _ = await uploadImageRoute(
-//     '/artist/image',
-//     dispatch,
-//     images => dispatch(notifySuccess('Image proposed to Grampy correctly!')),
-//     data,
-//   );
-//   return _;
-// };
 
 export const getArtist = artist => dispatch => {
   axiosAPI
@@ -78,4 +62,13 @@ export const uploadUpdateArtist = (body, artist, history) => async dispatch => {
   }
   history.push(`/artist/${artist.name}/${artist._id}`);
   return null;
+};
+
+export const getArtistForm = artist => dispatch => {
+  axiosAPI
+    .get(`/artist/${artist.name}?artistId=${artist._id}`)
+    .then(res => {
+      dispatch(setArtistForm(res.data.artist));
+    })
+    .catch(err => console.log(err));
 };

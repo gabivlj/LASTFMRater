@@ -50,6 +50,16 @@ func main() {
 		return
 	}
 	SecretKey, ok = os.LookupEnv("SECRET_KEY")
+
+	InitElasticSearch()
+
+	PingElastic()
+
+	// Uncomment when testing.
+	RestartChat()
+
+	StartIndex("chat")
+
 	if !ok {
 		fmt.Println("Error.")
 		return
