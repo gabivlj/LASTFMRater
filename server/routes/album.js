@@ -319,7 +319,8 @@ router.delete(
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
   const { lastfm, username = '', userId, mbid = 'null' } = req.query;
-  const isMbid = mbid => mbid === 'null' || mbid === '' || mbid.includes('-');
+  const isSNull = mbid => mbid === 'null' || mbid === '';
+  const isMbid = mbid => isSNull(mbid) || mbid.includes('-');
   const isIdMbid = isMbid(mbid);
   if (!isIdMbid) {
     const [err, album] = await handleError(
@@ -355,9 +356,10 @@ router.get('/:albumname/:artistname', async (req, res) => {
       const newAlbum = new Album({
         artist: albumFM.artist,
         name: albumFM.name,
-        mbid: albumFM.mbid,
+        mbid: isSNull(albumFM.mbid) ? '0' : albumFM.mbid,
         lastfmSource: true,
       });
+      console.log(newAlbum);
       const saved = await newAlbum.save();
       albumDB = saved;
     }
@@ -378,6 +380,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
     albumFM.reviews = albumDB.reviews;
     albumFM._id = albumDB._id;
     albumFM.__v = albumDB.__v;
+    albumFM.typeAlbum = albumDB.typeAlbum;
     albumFM.images = albumDB.images;
     albumFM.lastfmSource = albumDB.lastfmSource;
     albumFM.liked = !!(albumDB.usersLiked ? albumDB.usersLiked[userId] : false);

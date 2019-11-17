@@ -9,7 +9,7 @@ export const getArtist = artist => dispatch => {
     .then(res => {
       dispatch({ type: 'SET_ARTIST', payload: res.data.artist });
       axiosAPI
-        .get(`/artist/albums/${artist.name}`)
+        .get(`/artist/albums/${artist.name}/${res.data.artist._id}`)
         .then(res => {
           dispatch({ type: 'SET_ARTIST_ALBUMS', payload: res.data });
         })

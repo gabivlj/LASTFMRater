@@ -5,6 +5,10 @@ const Image = require('./Image');
 const { Schema } = mongoose;
 
 const ArtistSchema = new Schema({
+  addedMainAlbums: {
+    type: Boolean,
+    default: false,
+  },
   notProcessed: {
     type: Boolean,
     default: true,

@@ -60,6 +60,7 @@ const AlbumSchema = new Schema({
   ],
   mbid: {
     type: String,
+    default: '0',
   },
   ratings: [
     {
@@ -99,6 +100,10 @@ const AlbumSchema = new Schema({
       data: Object,
     },
   ],
+  // EP, LP, SINGLE...
+  typeAlbum: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model('albums', AlbumSchema);

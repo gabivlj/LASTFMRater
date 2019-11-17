@@ -95,13 +95,51 @@ router.get('/:name', async (req, res) => {
   }
 });
 
-router.get('/albums/:name', async (req, res) => {
+router.get('/albums/:name/:id', async (req, res) => {
   try {
     const albums =
       (await fm.getArtistAlbums(req.params.name)) ||
-      (await Album.find({ artist: req.params.name }));
+      (await Album.find({ artist: req.params.name, artistId: req.params.id }));
     res.json(albums);
+    const artist = await Artist.findOne({
+      name: req.params.name,
+      _id: req.params.id,
+    });
+    if (!artist) return;
+    if (artist.addedMainAlbums) return;
+    albums.topalbums.album.forEach(a => {
+      const newAlbum = new Album({
+        artist: req.params.name,
+        name: a.name,
+        mbid: a.mbid,
+        artistId: artist._id,
+        lastfmSource: true,
+      });
+      Album.findOne({
+        artist: req.params.name,
+        name: a.name,
+        mbid: a.mbid,
+        artistId: artist._id,
+      }).then(a => {
+        if (!a) {
+          newAlbum.save();
+        }
+      });
+    });
+    artist.addedMainAlbums = true;
+    artist.save();
+    const albumsThen = await Album.find({
+      artist: req.params.name,
+      $or: [
+        ...albums.topalbums.album.map(a => ({ mbid: String(a.mbid || '0') })),
+      ],
+    });
+    albumsThen.forEach(a => {
+      a.artistId = artist._id;
+      a.save();
+    });
   } catch (err) {
+    console.log(err);
     res.status(400).json('Error finding albums from the artist.');
   }
 });
