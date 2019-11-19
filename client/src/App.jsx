@@ -38,6 +38,7 @@ import theme from './css/theme';
 import css from './css';
 import ArtistForm from './components/Artist/Form/ArtistForm';
 import Suggestions from './components/Suggestion/Suggestions';
+import TrackPage from './components/Track/TrackPage';
 
 store.dispatch(logFromSession());
 
@@ -75,14 +76,21 @@ function App() {
                   path="/search/:searchquery"
                   component={SearchRoute}
                 />
+
                 <Route exact path="/auth/login" component={Login} />
                 <Route exact path="/auth/register" component={Register} />
                 <Route exact path="/profile/:id" component={Profile} />
+                <Route
+                  exact
+                  path="/track/:artist/:album/:name/:trackID"
+                  component={TrackPage}
+                />
                 <PrivateRoute
                   exact
                   path="/artist-edit/form/:name/:id"
                   component={ArtistForm}
                 />
+
                 <PrivateRoute
                   exact
                   path="/review/edit/:id"

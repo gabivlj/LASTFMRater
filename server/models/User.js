@@ -26,6 +26,12 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  ratedTracks: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'tracks',
+    },
+  ],
   ratedPlaylists: [
     {
       type: Schema.Types.ObjectId,

@@ -14,9 +14,9 @@ import './RatingsCommon.styles.css';
  * @param {Boolean} showTitleGeneral
  */
 const propTypes = {
-  elementWithRatings: PropTypes.object.isRequired,
+  elementWithRatings: PropTypes.object,
   setRatings: PropTypes.func.isRequired,
-  elementId: PropTypes.string.isRequired,
+  // elementId: PropTypes.string.isRequired,
   username: PropTypes.string,
   comparisonInRatingUpdate: PropTypes.string,
   auth: PropTypes.object,
@@ -45,7 +45,6 @@ const buttonStyle = {
  * @param {Object} Auth Object (In Grumpy social network redux it's apiUser)
  * @param {Object} elementWithRatings Is the mongodb object, with __v and _id.
  * @param {Callback} setRatings Is a function that sets the ratings, params: ( item_id, rating, username, user_id )
- * @param {String} elementId
  * @param {String} username
  * @param {String} comparisonInRatingUpdate What you wanna compare .user to.
  * @param {Boolean} showTitleGeneral If you wanna show the total score
@@ -191,16 +190,16 @@ function RatingsCommon({
         <div className="box-rating">
           <h3 className="m-3 padding-box">
             Total Score: 
-            {' '}
-            {state.generalRating.toFixed(2)}
-            {' '}
+{' '}
+{state.generalRating.toFixed(2)}
+{' '}
 / 10
-          </h3>
+</h3>
         </div>
       ) : null}
       {stars} 
-      {' '}
-      <div className="badge badge-primary">{state.actualRating}</div>
+{' '}
+<div className="badge badge-primary">{state.actualRating}</div>
       {state.error ? (
         <div className="badge badge-danger ml-3">{state.error}</div>
       ) : null}

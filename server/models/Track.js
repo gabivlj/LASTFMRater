@@ -19,6 +19,22 @@ const TrackSchema = new Schema({
     type: String,
     default: 'None',
   },
+  ratings: [
+    {
+      powerLevel: {
+        type: Number,
+        default: 1,
+      },
+      puntuation: {
+        type: Number,
+        required: true,
+      },
+      user: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 module.exports = mongoose.model('tracks', TrackSchema);

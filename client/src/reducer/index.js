@@ -11,6 +11,7 @@ import chatReducer from './chatReducer';
 import timelineReducer from './timelineReducer';
 import reviewReducer from './reviewReducer';
 import suggestionReducer from './suggestionReducer';
+import trackReducer from './trackReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -25,4 +26,5 @@ export default combineReducers({
   timeline: timelineReducer,
   review: reviewReducer,
   suggestions: suggestionReducer,
+  track: trackReducer,
 });

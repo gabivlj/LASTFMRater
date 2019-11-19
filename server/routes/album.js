@@ -12,7 +12,10 @@ const mongoQueries = require('../lib/mongoQueries');
 const averageWithPowerLevel = require('../lib/averageWithPowerLevel');
 const Rating = require('../classes/Rating');
 const User = require('../models/User');
+const Track = require('../models/Track');
 
+const isSNull = mbid => mbid === 'null' || mbid === '' || !mbid || mbid === '0';
+const isMbid = mbid => isSNull(mbid) || mbid.includes('-');
 const FM = new Lastfm(null);
 
 /**
@@ -212,74 +215,10 @@ router.post(
           pathname: `/album/${album.artist}/${album.name}/${album.mbid}`,
         }),
       );
-      console.log(album);
       if (!album) {
         return res.status(404).json({ error: 'Error in the request.' });
       }
       return res.json({ album, user });
-      // const { user } = req;
-      // const album = await Album.findOne({
-      //   _id: req.params.albumid,
-      // });
-      // // const userPromise = User.findOne({ _id: req.user._id });
-      // // const [user, album] = await Promise.all([userPromise, albumPromise]);
-
-      // if (album) {
-      //   const index = album.ratings
-      //     .map(rating => rating.user)
-      //     .indexOf(req.body.userid);
-      //   // If rating does not exist.
-      //   if (index <= -1) {
-      //     // Add it.
-      //     album.ratings.push({
-      //       puntuation: req.body.puntuation,
-      //       user: user.username,
-      //       powerLevel: user.powerLevel,
-      //     });
-      //     // Add to "today" the rating. (This is because in another calls to the api
-      //     // we may want to know the most hot rated albums of the day)
-      //     album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
-      //       ? numberReviewsDay.add(album.numberOfReviewsEachDay)
-      //       : [{ date: Date.now(), sum: 0 }];
-      //   } else {
-      //     // else replace
-      //     album.ratings.splice(index, 1, {
-      //       puntuation: req.body.puntuation,
-      //       user: user.username,
-      //       powerLevel: user.powerLevel,
-      //     });
-      //     // // Substract from the last day that the album received a rating.
-      //     // album.numberOfReviewsEachDay = album.numberOfReviewsEachDay
-      //     //   ? numberReviewsDay.substract(album.numberOfReviewsEachDay)
-      //     //   : [{ date: Date.now(), sum: 0 }];
-      //   }
-      //   const indexUser = user.ratedAlbums.indexOf(req.params.albumid);
-      //   if (indexUser <= -1) user.ratedAlbums.push(req.params.albumid);
-      //   const userProfile = await user.save();
-      //   delete userProfile.password;
-      //   Activity.addSomethingActivity(
-      //     Activity.createRatedInformation(
-      //       {
-      //         _id: album._id,
-      //         name: `${album.name} by ${album.artist}`,
-      //         score: req.body.puntuation,
-      //         pathname: `/album/${album.artist}/${album.name}/${album.mbid}`,
-      //       },
-      //       { userId: req.user.id, username: req.user.username },
-      //     ),
-      //   );
-      //   return album
-      //     .save()
-      //     .then(res_ =>
-      //       res.json({
-      //         ratings: res_.ratings,
-      //         __v: res_.__v,
-      //         user: userProfile,
-      //       }),
-      //     )
-      //     .catch(err => console.log(err));
-      // }
-      // return res.status(400).json('Error finding the album.');
     } catch (err) {
       console.log(err);
       return res.status(404).json('Error.');
@@ -319,8 +258,7 @@ router.delete(
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
   const { lastfm, username = '', userId, mbid = 'null' } = req.query;
-  const isSNull = mbid => mbid === 'null' || mbid === '';
-  const isMbid = mbid => isSNull(mbid) || mbid.includes('-');
+
   const isIdMbid = isMbid(mbid);
   if (!isIdMbid) {
     const [err, album] = await handleError(
@@ -399,6 +337,126 @@ router.get('/:albumname/:artistname', async (req, res) => {
   }
   return res.json({ album });
 });
+
+router.get('/track/:album/:artist/:trackName', async (req, res) => {
+  const { album = 'None', artist, trackName } = req.params;
+  const { mbid = '', username = '' } = req.query;
+  const doesMbid = isMbid(mbid);
+  if (doesMbid) {
+    const trackFM = await FM.getTrack(trackName, artist);
+    let track = await Track.findOne({
+      name: trackName,
+      artist,
+      album,
+    });
+    trackFM.album = trackFM.album ? trackFM.album : {};
+    if (!track)
+      if (album !== trackFM.album.title && album !== 'None') {
+        const albumObject = await FM.getAlbum({ artist, albumname: album });
+        // This is the last check, if this doesn't pass this ain't it.
+        if (
+          !albumObject.album.tracks.track.filter(t => t.name === trackName)[0]
+        )
+          return res.status(404).json({
+            error:
+              'Track not found. Found a track but album does not coincide.',
+            album: trackFM.album.title,
+          });
+      }
+
+    if (!trackFM || trackFM.error) {
+      if (!track) {
+        return res.status(404).json({ error: 'Track not found.' });
+      }
+      return res.json({ track });
+    }
+    if (!track) {
+      track = new Track({
+        artist,
+        album,
+        name: trackName,
+        duration: trackFM.duration,
+        ratings: [],
+      });
+      await track.save();
+    }
+    const trackJSON = {
+      artist: track.artist,
+      album: track.album,
+      name: track.name,
+      duration: track.duration,
+      _id: track._id,
+      userScore: username.length
+        ? (
+            track.ratings.filter(r => String(r.user) === username)[0] || {
+              puntuation: 0,
+            }
+          ).puntuation
+        : 0,
+      score: averageWithPowerLevel(track.ratings),
+    };
+    return res.json({ track: trackJSON });
+  }
+  const track = await Track.findOne({
+    name: trackName,
+    artist,
+    album,
+  });
+  if (!track) {
+    return res.status(404).json({ error: 'Track not found.' });
+  }
+  const trackJSON = {
+    artist: track.artist,
+    album: track.album,
+    name: track.name,
+    _id: track._id,
+    duration: track.duration,
+    // this maybe should go into a function i don't know.
+    userScore: username.length
+      ? (
+          track.ratings.filter(r => String(r.user) === username)[0] || {
+            puntuation: 0,
+          }
+        ).puntuation
+      : 0,
+    score: averageWithPowerLevel(track.ratings),
+  };
+  return res.json({ track: trackJSON });
+});
+
+router.post(
+  '/rate/track/:trackID',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { user } = req;
+      const { puntuation } = req.body;
+      const track = await Rating.addRating(
+        Track,
+        req.params.trackID,
+        {
+          puntuation,
+          powerLevel: user.powerLevel,
+          pathRatedUserArray: 'ratedTracks',
+        },
+        user,
+        track => ({
+          _id: track._id,
+          name: `${track.name} by ${track.artist}`,
+          score: puntuation,
+          pathname: `/album/${track.artist}/${track.album}/0`,
+        }),
+      );
+      if (!track) {
+        return res.status(404).json({ error: 'Error in the request.' });
+      }
+      return res.json({ track, user });
+    } catch (err) {
+      console.log(err);
+      return res.status(404).json('Error.');
+    }
+  },
+);
 
 /**
  * @POST
