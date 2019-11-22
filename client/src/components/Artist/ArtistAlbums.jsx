@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const propTypes = {
   album: PropTypes.array.isRequired,
   image: PropTypes.string,
-  artist: PropTypes.string
+  artist: PropTypes.string,
 };
 
 const ArtistAlbums = ({ album, image, artist, ...props }) => (
@@ -36,16 +36,20 @@ const ArtistAlbums = ({ album, image, artist, ...props }) => (
                   </span>
                 </p>
                 <Link
-                  to={`/album/${element.artist.name}/${element.name}/${
-                    element.mbid ? element.mbid : 0
-                  }`}
+                  to={encodeURI(
+                    `/album/${encodeURIComponent(
+                      element.artist.name,
+                    )}/${encodeURIComponent(element.name)}/${
+                      element.mbid ? element.mbid : 0
+                    }`,
+                  )}
                   className="btn btn-primary"
                 >
                   {`Go to album's profile`}
                 </Link>
               </div>
             </div>
-          ) : null
+          ) : null,
         )
       : null}
   </div>

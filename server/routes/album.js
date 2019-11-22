@@ -258,8 +258,9 @@ router.delete(
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
   const { lastfm, username = '', userId, mbid = 'null' } = req.query;
-
+  console.log(req.params);
   const isIdMbid = isMbid(mbid);
+  console.log(mbid, isIdMbid);
   if (!isIdMbid) {
     const [err, album] = await handleError(
       albumHelper.getAlbumViaMbid(mbid, lastfm, FM, userId, username),
@@ -283,6 +284,8 @@ router.get('/:albumname/:artistname', async (req, res) => {
     console.log(errFM);
     return res.status(400).json({ error: 'Error requesting album' });
   }
+
+  console.log(albumFM);
 
   if (albumFM && albumFM.album) {
     albumFM = albumFM.album;
