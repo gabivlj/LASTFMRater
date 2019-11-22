@@ -139,10 +139,54 @@ function Profile({
       jsx: false,
       name: 'Reviews in progress',
     };
-    const elementsArray = [mostListened, reviewSections];
-    if (sameProfile) {
-      elementsArray.push(reviewInProgress);
-    }
+
+    const trackReviews = {
+      Component: (
+        <ReviewsSection
+          type="TRACK"
+          objectID={profile.profile._id}
+          profile
+          profileImage={{
+            image: profileImage.image,
+            goImage: !!profile.profile.images[currentImg],
+          }}
+          uuid="SCROLLER_HIDDEN_TRACK"
+          key="3"
+        />
+      ),
+      jsx: false,
+      name: 'Track reviews',
+    };
+
+    const trackReviewsHidden = {
+      Component: (
+        <ReviewsSection
+          type="TRACK"
+          objectID={profile.profile._id}
+          profile
+          profileImage={{
+            image: profileImage.image,
+            goImage: !!profile.profile.images[currentImg],
+          }}
+          uuid="SCROLLER_HIDDEN_TRACK_PRIVATE"
+          key="4"
+          show={false}
+        />
+      ),
+      jsx: false,
+      name: 'Track reviews',
+    };
+
+    const elementsArray = sameProfile
+      ? [
+          mostListened,
+          reviewSections,
+          reviewInProgress,
+          trackReviews,
+          trackReviewsHidden,
+        ]
+      : [mostListened, reviewSections, trackReviews];
+
     return elementsArray;
   }
 

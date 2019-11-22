@@ -10,6 +10,10 @@ const ReviewsSchema = new Schema({
     ref: 'users',
     type: Schema.Types.ObjectId,
   },
+  modelType: {
+    type: String,
+    default: 'albums',
+  },
   text: String,
   show: {
     type: Boolean,

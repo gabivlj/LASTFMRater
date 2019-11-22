@@ -42,6 +42,7 @@ const mongoQueries = {
             show: 1,
             likes: 1,
             dislikes: 1,
+            modelType: 1,
             objectID: {
               $toObjectId: '$objectID',
             },
@@ -76,6 +77,7 @@ const mongoQueries = {
             show: 1,
             likes: 1,
             dislikes: 1,
+            modelType: 1,
             objectID: {
               $toObjectId: '$objectID',
             },
@@ -110,6 +112,7 @@ const mongoQueries = {
             likes: 1,
             dislikes: 1,
             objectID: 1,
+            modelType: 1,
           },
         },
         ...(model

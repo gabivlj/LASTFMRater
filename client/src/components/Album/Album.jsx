@@ -99,7 +99,9 @@ class Album extends Component {
           key={index}
           className="list-group-item d-flex justify-content-between align-items-center"
         >
-          {tr.name}
+          <Link to={`/track/${this.state.artist}/${album.name}/${tr.name}/0`}>
+            {tr.name}
+          </Link>
           <span className="badge badge-primary badge-pill">
             {hourFormat.fmtMSS(tr.duration)}
           </span>

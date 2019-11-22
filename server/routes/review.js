@@ -133,7 +133,7 @@ router.post(
   async (req, res) => {
     try {
       const { id, username } = req.user;
-      const { text, show = false, objectID } = req.body;
+      const { text, show = false, objectID, type = 'albums' } = req.body;
       const review = new Review({
         text,
         objectID,
@@ -142,6 +142,7 @@ router.post(
         show,
         likes: [],
         dislikes: [],
+        modelType: type,
       });
       const saved = await review.save();
       return res.json({ review: saved });

@@ -34,6 +34,7 @@ function ReviewsSection({
   let currentReviews = 0;
   const ADDER_REVIEWS = 3;
   function getReviewsScroll() {
+    console.log('get reviews???');
     getReviews(
       objectID,
       currentReviews,

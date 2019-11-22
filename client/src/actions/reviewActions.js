@@ -4,10 +4,14 @@ import { axiosAPI } from '../utils/axios';
 
 const setLoading = () => ({ type: 'SET_LOADING_REVIEW' });
 
-export const postReview = (history, objectId) => async dispatch => {
+export const postReview = (
+  history,
+  objectId,
+  type = 'albums',
+) => async dispatch => {
   dispatch(setLoading());
   const [response, err] = await handleError(
-    axiosAPI.post('/reviews', { objectID: objectId }),
+    axiosAPI.post('/reviews', { objectID: objectId, type }),
   );
   if (err) {
     return dispatch(notifyError('Error creating a review!!'));

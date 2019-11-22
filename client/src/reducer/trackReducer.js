@@ -15,6 +15,7 @@ export default (state = initial, action) => {
     case 'CLEAN_TRACK_PAGE':
       return {
         ...state,
+        track: {},
         loading: false,
       };
     case 'ERROR_GETTING_TRACK':

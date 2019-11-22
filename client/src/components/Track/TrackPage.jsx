@@ -3,15 +3,33 @@ import { connect } from 'react-redux';
 import { LinearProgress, IconButton, Button } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import RatingsCommon from '../Common/RatingsCommon';
-import { rateTrack, getTrack } from '../../actions/trackActions';
+import {
+  rateTrack,
+  getTrack,
+  cleanTrackPage,
+} from '../../actions/trackActions';
 import CommentComponent from '../CommentSection/Common/CommentComponent';
 import ReviewsSection from '../Common/ReviewsSection';
+import { postReview, cleanReviews } from '../../actions/reviewActions';
 
-function TrackPage({ track, auth, getTrack, rateTrack, match }) {
+function TrackPage({
+  track,
+  auth,
+  getTrack,
+  rateTrack,
+  match,
+  history,
+  postReview,
+  cleanTrackPage,
+  cleanReviews,
+}) {
   useEffect(() => {
     const { artist, album, name, trackID } = match.params;
     getTrack(name, artist, album, trackID, auth ? auth.user : '');
-    return () => {};
+    return () => {
+      cleanReviews();
+      cleanTrackPage();
+    };
   }, []);
   return (
     <div>
@@ -27,8 +45,24 @@ function TrackPage({ track, auth, getTrack, rateTrack, match }) {
             }}
           />
           <div>
-            <ReviewsSection objectID={track.track._id} type="TRACK" />
+            <ReviewsSection
+              objectID={track.track._id}
+              type="TRACK"
+              uuid="TRACK_SECT"
+            />
           </div>
+
+          {auth && auth.id ? (
+            <Button
+              color="primary"
+              variant="contained"
+              component="span"
+              onClick={() => postReview(history, track.track._id, 'tracks')}
+            >
+              Make a review
+            </Button>
+          ) : null}
+
           <CommentComponent
             keyy="999"
             objectId={track.track._id}
@@ -49,6 +83,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { rateTrack, getTrack },
+    { rateTrack, getTrack, postReview, cleanReviews, cleanTrackPage },
   )(TrackPage),
 );
