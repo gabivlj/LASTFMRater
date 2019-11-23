@@ -95,7 +95,6 @@ function RatingsCommon({
    */
   function ratingUpdate() {
     if (model && model.score && model.__v !== state.currentVersion) {
-      console.log('xd', model);
       const actualRating = model.score;
       const userRating = model.userScore;
       setState({

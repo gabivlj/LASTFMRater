@@ -389,6 +389,7 @@ router.get('/track/:album/:artist/:trackName', async (req, res) => {
       name: track.name,
       duration: track.duration,
       _id: track._id,
+      __v: track.__v,
       userScore: username.length
         ? (
             track.ratings.filter(r => String(r.user) === username)[0] || {
@@ -413,6 +414,7 @@ router.get('/track/:album/:artist/:trackName', async (req, res) => {
     album: track.album,
     name: track.name,
     _id: track._id,
+    __v: track.__v,
     duration: track.duration,
     // this maybe should go into a function i don't know.
     userScore: username.length

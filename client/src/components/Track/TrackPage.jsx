@@ -39,6 +39,8 @@ function TrackPage({
           <h1>{`${track.track.name} by ${track.track.artist}`}</h1>
           <RatingsCommon
             auth={auth}
+            elementWithRatings={track.track}
+            elementId={track.track._id}
             model={track.track}
             setRatings={(_id, rating) => {
               rateTrack(rating, track.track._id);

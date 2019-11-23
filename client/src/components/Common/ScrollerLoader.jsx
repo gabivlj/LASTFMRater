@@ -45,7 +45,11 @@ function ScrollerLoader({
       console.error('FATAL ERROR: __LOADER_ELEMENT Not found!!');
       throw new Error('Error finding scroller loader.');
     }
-    if (preload) actionWhenBottom(true);
+    if (preload) {
+      actionWhenBottom(true);
+      actionWhenTop(true);
+      actionWhenScrolling(true);
+    }
     __LOADER_ELEMENT.addEventListener('scroll', e => {
       if (!e || !e.target) {
         console.error('Target not working in ScrollerLoader!!');

@@ -98,10 +98,24 @@ router.get(
 );
 
 router.get(
-  '/gramps',
-  passport.authenticate('jwt', { session: false }),
+  '/gramps/:id',
+  // passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const { user, query } = req;
+    const [er, user] = await handleError(User.findById(req.params.id));
+    if (er) {
+      return res.status(400).json({
+        error: 'Not a valid _id, or maybe a problem with the database!',
+      });
+    }
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'User not found...',
+      });
+    }
+
+    delete user.password;
+    const { query } = req;
     const { beginning = 0, end = 4 } = query;
     const activities = await activity.getActivityFromUsersFollowers(
       user.followedAccounts,

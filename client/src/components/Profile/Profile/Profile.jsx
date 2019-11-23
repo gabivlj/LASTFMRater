@@ -24,6 +24,7 @@ import {
 } from '../../../actions/chatActions';
 import Hider from '../../Common/Hider/Hider';
 import ReviewsSection from '../../Common/ReviewsSection';
+import TimelineScroll from '../../Timeline/TimelineScroll/TimelineScroll';
 
 /**
  * @todo I think we will be changing Auth.jsx to this, Or separate or i don't know, but we must do profile page again.
@@ -105,6 +106,12 @@ function Profile({
       name: 'Most listened artists',
     };
 
+    const timeline = {
+      Component: <TimelineScroll id={profile.profile._id} />,
+      jsx: false,
+      name: 'Gramps',
+    };
+
     const reviewSections = {
       Component: (
         <ReviewsSection
@@ -174,18 +181,19 @@ function Profile({
         />
       ),
       jsx: false,
-      name: 'Track reviews',
+      name: 'Started track reviews',
     };
 
     const elementsArray = sameProfile
       ? [
+          timeline,
           mostListened,
           reviewSections,
           reviewInProgress,
           trackReviews,
           trackReviewsHidden,
         ]
-      : [mostListened, reviewSections, trackReviews];
+      : [timeline, mostListened, reviewSections, trackReviews];
 
     return elementsArray;
   }
