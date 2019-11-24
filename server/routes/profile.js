@@ -98,49 +98,49 @@ router.get(
 );
 
 router.get(
-  '/gramps/:id',
-  // passport.authenticate('jwt', { session: false }),
+  '/gramps',
+  passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const [er, user] = await handleError(User.findById(req.params.id));
-    if (er) {
-      return res.status(400).json({
-        error: 'Not a valid _id, or maybe a problem with the database!',
-      });
+    try {
+      const { query, user } = req;
+      const { beginning, end } = query;
+      const activities = await activity.getActivityFromUsersFollowers(
+        user.followedAccounts,
+        parseInt(beginning || 0, 10),
+        parseInt(end || 4, 10),
+      );
+      return res.json({ gramps: activities });
+    } catch (err) {
+      console.log(err);
+      return res.status(400, { error: 'Bad request' });
     }
-
-    if (!user) {
-      return res.status(404).json({
-        error: 'User not found...',
-      });
-    }
-
-    delete user.password;
-    const { query } = req;
-    const { beginning = 0, end = 4 } = query;
-    const activities = await activity.getActivityFromUsersFollowers(
-      user.followedAccounts,
-      parseInt(beginning || 0, 10),
-      parseInt(end || 4, 10),
-    );
-    return res.json({ gramps: activities });
   },
 );
 
 router.get('/gramps/:id', async (req, res) => {
-  try {
-    const { params, query } = req;
-    const { userID } = params;
-    const { beginning, end } = query;
-    const activities = await activity.getActivityFromUsersFollowers(
-      [userID],
-      parseInt(beginning || 0, 10),
-      parseInt(end || 4, 10),
-    );
-    return res.json({ gramps: activities });
-  } catch (err) {
-    console.log(err);
-    return res.status(400, { error: 'Bad request' });
+  console.log('SADJSADJDHS');
+  const [er, user] = await handleError(User.findById(req.params.id));
+  if (er) {
+    return res.status(400).json({
+      error: 'Not a valid _id, or maybe a problem with the database!',
+    });
   }
+
+  if (!user) {
+    return res.status(404).json({
+      error: 'User not found...',
+    });
+  }
+
+  delete user.password;
+  const { query } = req;
+  const { beginning = 0, end = 4 } = query;
+  const activities = await activity.getActivityFromUsersFollowers(
+    [user._id],
+    parseInt(beginning || 0, 10),
+    parseInt(end || 4, 10),
+  );
+  return res.json({ gramps: activities });
 });
 
 router.get(

@@ -55,7 +55,7 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
   }
   useEffect(() => {
     getRatings();
-  }, [ratings, ratingsProps]);
+  }, [username]);
   const renderError =
     loading === true ? (
       <div className="m-3">
