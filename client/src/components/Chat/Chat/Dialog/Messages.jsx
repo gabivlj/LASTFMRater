@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useRef, useEffect } from 'react';
 import './message.style.css';
+import { CircularProgress } from '@material-ui/core';
 
 export default function Messages({ messages, otherUser, loadingMessages }) {
   const list = useRef(null);
@@ -31,30 +32,49 @@ export default function Messages({ messages, otherUser, loadingMessages }) {
   }, [messages, loadingMessages]);
   let messagesRender;
   let messagesRenderLoading;
+  let before;
   if (messages)
-    messagesRender = messages.map((msg, index) => (
-      <div
-        key={msg._id || msg.provisionalId}
-        className={classes.padding(msg.username)}
-      >
+    messagesRender = messages.map((msg, index) => {
+      let renderName = false;
+      if (before !== msg.username) {
+        renderName = true;
+      }
+      before = msg.username;
+      return (
         <div
-          className={`${classes.message(msg.username)} ${classes.lastmsg(
-            msg.username,
-            index,
-          )}`}
+          key={msg._id || msg.provisionalId}
+          className={classes.padding(msg.username)}
         >
-          <p>{`${msg.text}`}</p>
+          {renderName && (
+            <span className="badge badge-primary">
+              {msg.username === otherUser ? otherUser : 'You'}
+            </span>
+          )}
+          <div
+            className={`${classes.message(msg.username)} ${classes.lastmsg(
+              msg.username,
+              index,
+            )}`}
+          >
+            <p>{`${msg.text}`}</p>
+          </div>
         </div>
-      </div>
-    ));
+      );
+    });
   if (loadingMessages) {
     messagesRenderLoading = loadingMessages.map(msg => (
       <div
         key={msg._id || msg.provisionalId}
         className={`${classes.padding(msg.username)} ${classes.margin()}`}
       >
-        <div className={`${classes.loadingMsg()}`}>{`${msg.text}   `}</div>
-        <p>sending...</p>
+        <div className="row">
+          <div className="col-2">
+            <CircularProgress />
+          </div>
+          <div className="col-10">
+            <div className={`${classes.loadingMsg()}`}>{msg.text}</div>
+          </div>
+        </div>
       </div>
     ));
   }

@@ -5,7 +5,7 @@
   border-radius: 4px;
   font-size: 1rem;
   line-height: 1.3;
-  margin: 0 auto 30px;
+  margin: 0 auto 5px;
   max-width: 400px;
   padding: 8px;
   text-align: start;
@@ -21,8 +21,9 @@
   border-radius: 4px;
   font-size: 1rem;
   line-height: 1.3;
-  margin: 0 auto 30px;
-  max-width: 300px;
+  margin: 0 10% 5px;
+  max-width: 600px;
+  min-width: 400px;
   padding: 8px;
   word-wrap: break-word;
   position: relative;
@@ -39,7 +40,7 @@
 
 .last-msg-them {
   animation: WidthMsg 1 0.3s;
-  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation-timing-function: cubic-bezier(0.98, -0.8, 0.5, 30);
 }
 
 .last-msg-me::after {
@@ -84,7 +85,7 @@
   border-radius: 4px;
   font-size: 1rem;
   line-height: 1.3;
-  margin: 0 0 30px;
+  margin: 0 0 5px;
   max-width: 400px;
   padding: 10px;
   position: relative;
