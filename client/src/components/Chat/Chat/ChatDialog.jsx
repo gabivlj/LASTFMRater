@@ -105,14 +105,13 @@ function ChatDialog({
   }
   // handles the sendMessage action
   function sendMessageSubm() {
+    setText('');
     sendMessage({
       message: text,
       to: chat.currentChatInfo.id,
       toUsername: chat.currentChatInfo.username,
       fromId: auth.id,
       username: auth.user,
-    }).then(result => {
-      if (result !== false) setText('');
     });
   }
   // handles enter on input.
@@ -161,6 +160,10 @@ function ChatDialog({
           onChange={onChange}
           multiline={false}
           onKeyDown={onEnter}
+          style={{
+            marginTop: '20px',
+            width: '90%',
+          }}
         />
       </div>
       <div className="col-md-2 mt-3">

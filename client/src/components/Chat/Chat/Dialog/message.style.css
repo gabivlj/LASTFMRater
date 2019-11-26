@@ -7,11 +7,20 @@
   line-height: 1.3;
   margin: 0 auto 5px;
   max-width: 400px;
-  padding: 8px;
+  padding: 10px 1px 0.3px 10px;
   text-align: start;
   height: auto;
   word-wrap: break-word;
   position: relative;
+}
+
+.input-chat {
+  width: 80%;
+  margin-top: 20px;
+}
+
+.message-loading {
+  margin-left: 27%;
 }
 
 .speech-bubble-me-loading {
@@ -23,42 +32,69 @@
   line-height: 1.3;
   margin: 0 10% 5px;
   max-width: 600px;
-  min-width: 400px;
+  min-width: 475px;
   padding: 8px;
   word-wrap: break-word;
   position: relative;
 }
 
 .margin-top-speech {
-  margin-top: 90px;
+  margin-top: 20px;
 }
 
 .last-msg-me {
-  animation: WidthMsg 1 0.3s;
-  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation: WidthMsg 1 0.7s;
+  /* animation-timing-function: cubic-bezier(0.98, -0.8, 0.5, 10); */
+  animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .last-msg-them {
-  animation: WidthMsg 1 0.3s;
-  animation-timing-function: cubic-bezier(0.98, -0.8, 0.5, 30);
+  animation: WidthMsg 1 1.4s;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .last-msg-me::after {
   border-left: 20px solid transparent;
   border-top: 20px solid rgb(87, 142, 245);
-  bottom: -20px;
+  bottom: -9.6px;
+  transform: rotate(-30deg);
   content: '';
   position: absolute;
-  right: 60px;
+  left: 96.5%;
+}
+
+@media (max-width: 880px) {
+  .last-msg-me::after {
+    border-left: 20px solid transparent;
+    border-top: 20px solid rgb(87, 142, 245);
+    bottom: -9.6px;
+    transform: rotate(-30deg);
+    content: '';
+    position: absolute;
+    left: 92.5%;
+  }
+}
+
+@media (max-width: 375px) {
+  .last-msg-me::after {
+    border-left: 20px solid transparent;
+    border-top: 20px solid rgb(87, 142, 245);
+    bottom: -9.6px;
+    transform: rotate(-30deg);
+    content: '';
+    position: absolute;
+    left: 80.5%;
+  }
 }
 
 .last-msg-them::after {
   border-right: 20px solid transparent;
   border-top: 20px solid rgb(211, 208, 255);
-  bottom: -20px;
+  bottom: -7.6px;
+  transform: rotate(30deg);
   content: '';
   position: absolute;
-  right: 90%;
+  right: 95.6%;
 }
 
 .padding-l-100 {
@@ -103,7 +139,7 @@
 
 @keyframes WidthMsg {
   from {
-    max-width: 0px;
+    max-width: 200px;
     /* display: inline; */
   }
   to {

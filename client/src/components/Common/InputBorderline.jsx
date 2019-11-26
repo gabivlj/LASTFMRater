@@ -11,7 +11,13 @@ const propTypes__ = {
   onChange: PropTypes.func.isRequired,
   multiline: PropTypes.bool.isRequired,
   error: PropTypes.string,
+  style: PropTypes.object,
 };
+
+const defaultProps = {
+  style: {},
+};
+
 const InputBorderline = ({
   classes,
   label,
@@ -21,6 +27,7 @@ const InputBorderline = ({
   onChange,
   cleanErrors,
   type,
+  style,
   ...props
 }) => {
   return (
@@ -42,6 +49,7 @@ const InputBorderline = ({
           id={type}
           type={type}
           className={`${classes.margin} ${props.className}`}
+          style={style}
           InputLabelProps={{
             classes: {
               root: classes.cssLabel,
@@ -70,6 +78,7 @@ const InputBorderline = ({
 };
 // proptypes
 InputBorderline.propTypes = propTypes__;
+InputBorderline.defaultProps = defaultProps;
 // styles for material-ui
 const styles = theme => ({
   container: {

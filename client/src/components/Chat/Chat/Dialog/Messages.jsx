@@ -18,8 +18,8 @@ export default function Messages({ messages, otherUser, loadingMessages }) {
     padding: user => (user === otherUser ? '' : 'padding-l-100'),
     message: user =>
       user === otherUser ? 'speech-bubble-them' : 'speech-bubble-me',
-    lastmsg: (user, index) =>
-      index === messages.length - 1
+    lastmsg: (user, render) =>
+      render === true
         ? user === otherUser
           ? 'last-msg-them'
           : 'last-msg-me'
@@ -36,6 +36,10 @@ export default function Messages({ messages, otherUser, loadingMessages }) {
   if (messages)
     messagesRender = messages.map((msg, index) => {
       let renderName = false;
+      let renderArrow = false;
+      if (index === messages.length - 1) renderArrow = true;
+      else if (messages[index + 1].username !== msg.username)
+        renderArrow = true;
       if (before !== msg.username) {
         renderName = true;
       }
@@ -53,7 +57,7 @@ export default function Messages({ messages, otherUser, loadingMessages }) {
           <div
             className={`${classes.message(msg.username)} ${classes.lastmsg(
               msg.username,
-              index,
+              renderArrow,
             )}`}
           >
             <p>{`${msg.text}`}</p>
@@ -65,7 +69,7 @@ export default function Messages({ messages, otherUser, loadingMessages }) {
     messagesRenderLoading = loadingMessages.map(msg => (
       <div
         key={msg._id || msg.provisionalId}
-        className={`${classes.padding(msg.username)} ${classes.margin()}`}
+        className={`message-loading ${classes.margin()}`}
       >
         <div className="row">
           <div className="col-2">
@@ -78,7 +82,6 @@ export default function Messages({ messages, otherUser, loadingMessages }) {
       </div>
     ));
   }
-  console.log(loadingMessages);
   return (
     <div>
       {messagesRender}
