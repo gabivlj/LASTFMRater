@@ -34,7 +34,6 @@ function ReviewsSection({
   let currentReviews = 0;
   const ADDER_REVIEWS = 3;
   function getReviewsScroll() {
-    console.log('get reviews???');
     getReviews(
       objectID,
       currentReviews,
@@ -46,6 +45,10 @@ function ReviewsSection({
     currentReviews += ADDER_REVIEWS + 1;
   }
   useEffect(() => () => cleanReviewsWhenDestroy && cleanReviews(), []);
+  useEffect(() => {
+    cleanReviews();
+    getReviewsScroll();
+  }, [objectID]);
   const { reviews, loading } = reviewState;
   const profileImg = review => {
     if (review.userProfileImages[0]) {
@@ -58,7 +61,7 @@ function ReviewsSection({
       uuid={uuid}
       style={{ maxHeight: '500px', width: '100%', minHeight: '200px' }}
       actionWhenBottom={getReviewsScroll}
-      preload
+      // preload
     >
       <div>
         {reviews &&

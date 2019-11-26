@@ -77,7 +77,7 @@ export const sendMessage = ({
     finishedTimeOut = true;
   }, 400);
 
-  return dispatch(notifySuccess('Message sent succesfuly...', 1000));
+  // return dispatch(notifySuccess('Message sent succesfuly...', 1000));
 };
 
 /**

@@ -8,7 +8,12 @@ function Hider({ components, styles, ...props }) {
   const [currentElement, setCurrentElement] = useState(0);
   let Render;
   if (MAX_ELEMENT > 0) {
-    Render = components[currentElement].Component;
+    if (currentElement >= components.length) {
+      setCurrentElement(components.length - 1);
+      Render = components[components.length - 1].Component;
+    } else {
+      Render = components[currentElement].Component;
+    }
   }
   function selectButton(index) {
     return () => {
@@ -28,7 +33,7 @@ function Hider({ components, styles, ...props }) {
     <div className="hider" styles={styles} {...props}>
       <div className="row">{buttons}</div>
       <div className="render-hider">
-        {components[currentElement].jsx ? (
+        {components[currentElement] && components[currentElement].jsx ? (
           <Render {...components[currentElement].props} />
         ) : (
           Render

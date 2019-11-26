@@ -54,7 +54,7 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
     setLoading(false);
   }
   useEffect(() => {
-    console.log(username);
+    setAlbums([]);
     beginning = 0;
     ending = 10;
     areThereStillMoreRatings = true;
@@ -65,7 +65,7 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
       areThereStillMoreRatings = true;
       setAlbums([]);
     };
-  }, [username]);
+  }, [usernameProps]);
   const renderError =
     loading === true ? (
       <div className="m-3">
@@ -84,6 +84,7 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
         width: '100%',
         overflowX: 'hidden',
       }}
+      preload={false}
     >
       <div>
         {albums && albums.length > 0

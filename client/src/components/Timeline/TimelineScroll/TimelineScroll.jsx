@@ -21,18 +21,26 @@ function TimelineScroll({
   let timeoutForLoading = false;
   let timeoutForLoadingBottom = false;
   let nGramps = ADDER_N_GRAMPS;
-  console.log(id);
+
   useEffect(() => {
     timeoutForLoading = false;
     timeoutForLoadingBottom = false;
     nGramps = ADDER_N_GRAMPS;
     cleanGrampsProfile();
+    if (timeline.loaded && !timeoutForLoading) {
+      setTimeout(() => {
+        timeoutForLoading = false;
+      }, TIMEOUT);
+      // Update.
+      loadGrampsOwnTimeline(id, 0, nGramps - 1, true);
+      timeoutForLoading = true;
+    }
     return () => cleanGrampsProfile();
   }, [id]);
 
   function checkTop(preload) {
     // asds
-    if ((timeline.loaded && !timeoutForLoading) || preload) {
+    if (timeline.loaded && !timeoutForLoading) {
       setTimeout(() => {
         timeoutForLoading = false;
       }, TIMEOUT);
@@ -64,7 +72,7 @@ function TimelineScroll({
         actionWhenBottom={checkBottom}
         actionWhenTop={checkTop}
         uuid="Timeliner"
-        preload
+        preload={false}
         style={{ maxHeight: '500px', width: '100%', minHeight: '200px' }}
       >
         {!timeline.loaded && timeline.restartTimelineProfile ? (
