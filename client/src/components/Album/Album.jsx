@@ -127,7 +127,7 @@ class Album extends Component {
                           `/artist/${this.state.artist}/${album.artistId}`,
                         )}
                       >
-                        {this.state.artist}
+                        {album.artist}
                       </Link>
                     </h1>
                     <h2 className="display-3">{album.name}</h2>

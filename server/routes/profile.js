@@ -118,7 +118,6 @@ router.get(
 );
 
 router.get('/gramps/:id', async (req, res) => {
-  console.log('SADJSADJDHS');
   const [er, user] = await handleError(User.findById(req.params.id));
   if (er) {
     return res.status(400).json({

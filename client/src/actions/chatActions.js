@@ -3,7 +3,6 @@ import SocketInstance from '../classes/SocketInstance';
 import { notifySuccess, notifyNormality, notifyError } from './notifyActions';
 import handleError from '../utils/handleError';
 import { axiosAPI } from '../utils/axios';
-import socket from '../classes/SocketInstance';
 
 let finishedTimeOut = true;
 
@@ -35,6 +34,17 @@ export const sendMessage = ({
 }) => async dispatch => {
   if (!SocketInstance.socket) return null;
   if (!finishedTimeOut) return false;
+  if (!message.length) return false;
+  dispatch({
+    type: 'TEMPORARY_MESSAGE',
+    payload: {
+      text: message,
+      to,
+      username,
+      toUsername,
+      provisionalId: uuid(),
+    },
+  });
   finishedTimeOut = false;
   const [res, err] = await handleError(
     axiosAPI.post('/chat/new', {
@@ -182,6 +192,11 @@ export const receiveMessage = e => (dispatch, state) => {
             payload: 1,
           });
         }
+      } else {
+        dispatch({
+          type: 'CLEAN_TEMPORARY_MESSAGE',
+          payload: { text: message, username: from },
+        });
       }
       if (
         chat.route === ROUTES.CHAT &&

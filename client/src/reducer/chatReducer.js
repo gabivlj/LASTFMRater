@@ -1,3 +1,5 @@
+import filterOne from '../utils/filterOne';
+
 const initialState = {
   chats: null,
   chat: null,
@@ -84,10 +86,32 @@ export default (state = initialState, action) => {
         ...state,
         currentChatUsername: action.payload,
       };
+    case 'TEMPORARY_MESSAGE':
+      return {
+        ...state,
+        chat: {
+          ...state.chat,
+          tempMessages: [...state.chat.tempMessages, action.payload],
+        },
+      };
+    case 'CLEAN_TEMPORARY_MESSAGE':
+      return {
+        ...state,
+        chat: {
+          ...state.chat,
+          tempMessages: filterOne(state.chat.tempMessages, (element, index) => {
+            console.log(action.payload);
+            return (
+              element.username === action.payload.username &&
+              element.text === action.payload.text
+            );
+          }),
+        },
+      };
     case 'GET_CHAT':
       return {
         ...state,
-        chat: action.payload,
+        chat: { ...action.payload, tempMessages: [] },
       };
     case 'SEND_MESSAGE':
       return {

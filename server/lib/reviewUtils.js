@@ -23,6 +23,9 @@ const functions = {
     differentElements = false,
     // ownWayToGetModelInfo = index => album,
   ) {
+    if (!reviews.length) {
+      return reviews;
+    }
     // No album no party.
     if (!type) {
       return reviews;

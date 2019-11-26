@@ -30,9 +30,9 @@ const Album = ({ album, className, ...props }) => {
     <Card className={`${classes.card} ${className}`}>
       <CardActionArea
         onClick={() =>
-          (window.location.href = `/album/${album.artist}/${
-            album.name
-          }/${mbid}`)
+          (window.location.href = `/album/${encodeURIComponent(
+            album.artist,
+          )}/${encodeURIComponent(album.name)}/${mbid}`)
         }
       >
         <CardMedia
@@ -48,7 +48,9 @@ const Album = ({ album, className, ...props }) => {
             {album.name}
           </Typography>
           <Typography component="p">
-            {album.artist} <br />
+            {album.artist} 
+{' '}
+<br />
             {album.mbid}
           </Typography>
         </CardContent>

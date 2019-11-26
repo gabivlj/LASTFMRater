@@ -54,7 +54,17 @@ function Ratings({ ratings, username, ratingsProps, usernameProps }) {
     setLoading(false);
   }
   useEffect(() => {
+    console.log(username);
+    beginning = 0;
+    ending = 10;
+    areThereStillMoreRatings = true;
     getRatings();
+    return () => {
+      beginning = 0;
+      ending = 10;
+      areThereStillMoreRatings = true;
+      setAlbums([]);
+    };
   }, [username]);
   const renderError =
     loading === true ? (

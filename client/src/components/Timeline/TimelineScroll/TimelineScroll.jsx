@@ -21,10 +21,17 @@ function TimelineScroll({
   let timeoutForLoading = false;
   let timeoutForLoadingBottom = false;
   let nGramps = ADDER_N_GRAMPS;
-
-  useEffect(() => () => cleanGrampsProfile(), []);
+  console.log(id);
+  useEffect(() => {
+    timeoutForLoading = false;
+    timeoutForLoadingBottom = false;
+    nGramps = ADDER_N_GRAMPS;
+    cleanGrampsProfile();
+    return () => cleanGrampsProfile();
+  }, [id]);
 
   function checkTop(preload) {
+    // asds
     if ((timeline.loaded && !timeoutForLoading) || preload) {
       setTimeout(() => {
         timeoutForLoading = false;
@@ -47,7 +54,6 @@ function TimelineScroll({
       timeoutForLoadingBottom = true;
     }
   }
-  console.log(timeline);
   // function whenBottom() {
   //   getGr;
   // }

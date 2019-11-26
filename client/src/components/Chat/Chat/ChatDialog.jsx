@@ -145,9 +145,12 @@ function ChatDialog({
    * CHAT RENDERING
    */
   let messages;
+  let loadingMessages;
   if (chat.chat && chat.chat.messages && chat.route === ROUTES.CHAT) {
     messages = chat.chat.messages;
+    loadingMessages = chat.chat.tempMessages;
   }
+
   const actionChat = (
     <div className="row" style={{ width: '95%', overflowX: 'hidden' }}>
       <div className="col-md-10">
@@ -186,6 +189,7 @@ function ChatDialog({
         Render={returnRightRender(render)}
         propsRender={{
           messages,
+          loadingMessages,
           otherUser,
           username: auth ? auth.id : '',
           chats: chat.chats,

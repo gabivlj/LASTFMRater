@@ -28,9 +28,11 @@ const Artist = ({ artist, className, ...props }) => {
   return (
     <Card className={`${classes.card} ${className}`}>
       <CardActionArea
-        onClick={() =>
-          (window.location.href = `/artist/${artist.name}/${artist.mbid}`)
-        }
+        onClick={() => {
+          window.location.href = `/artist/${encodeURIComponent(
+            artist.name,
+          )}/${encodeURIComponent(artist.mbid)}`;
+        }}
       >
         <CardMedia
           className={classes.media}
@@ -45,7 +47,9 @@ const Artist = ({ artist, className, ...props }) => {
             {artist.name}
           </Typography>
           <Typography component="p">
-            {artist.artist} <br />
+            {artist.artist} 
+{' '}
+<br />
             {artist.mbid}
           </Typography>
         </CardContent>

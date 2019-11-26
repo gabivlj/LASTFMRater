@@ -13,6 +13,7 @@
     "react/require-default-props": "off",
     "no-multi-assign": "off",
     "react/forbid-prop-types": "warn",
+    "react/jsx-filename-extension": "off",
     "no-underscore-dangle": "off",
     "comma-dangle": "error",
     // This let us use for of without warnings. for of performance and readibility >>>>> forEach...

@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/grampy-next/node_modules
+/grampy-next
 /client/node_modules
 /server/node_modules
 /client/src/API.js
