@@ -50,7 +50,7 @@ function ChatDialog({
         case ROUTES.CHAT:
           getChat(chat.currentChatInfo.id);
           setRender(0);
-          break;
+          break; //
         case ROUTES.CHATS:
           getChats();
           setRouteBefore(ROUTES.CHATS);
