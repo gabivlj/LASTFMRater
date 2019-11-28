@@ -37,7 +37,6 @@ function ChatDialog({
 }) {
   // Variables
   const [routeBefore, setRouteBefore] = useState(ROUTES.CHATS);
-  const disabled = false;
   const [text, setText] = useState('');
   const [render, setRender] = useState(0);
   const { isLoading } = chat;
@@ -75,8 +74,8 @@ function ChatDialog({
     setText(e.target.value);
   }
   /**
-   * @param {number} Render, RenderComponent that you want
-   * @returns {JSXElement}, JSX Component.
+   * @param {Number} Render, RenderComponent that you want
+   * @returns {React.FunctionComponent}, JSX Component.
    */
   function returnRightRender(n) {
     switch (n) {
