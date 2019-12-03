@@ -8,6 +8,10 @@ const AlbumSchema = new Schema({
     type: Number,
     default: 0,
   },
+  headerURL: {
+    type: String,
+    default: '',
+  },
   genres: [String],
   notProcessed: {
     type: Boolean,

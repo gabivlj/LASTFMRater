@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
+const jimp = require('jimp');
+
 const Album = require('../models/Album');
 const Lastfm = require('../classes/Lastfm');
 const handleError = require('../lib/handleError');
@@ -258,9 +260,7 @@ router.delete(
 // @OPTIONALQUERYPARAMS username, userId, mbid
 router.get('/:albumname/:artistname', async (req, res) => {
   const { lastfm, username = '', userId, mbid = 'null' } = req.query;
-  console.log(req.params);
   const isIdMbid = isMbid(mbid);
-  console.log(mbid, isIdMbid);
   if (!isIdMbid) {
     const [err, album] = await handleError(
       albumHelper.getAlbumViaMbid(mbid, lastfm, FM, userId, username),
@@ -278,6 +278,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
     artist: req.params.artistname,
     mbid,
   };
+
   // eslint-disable-next-line prefer-const
   let [errFM, albumFM] = await handleError(FM.getAlbum(AlbumDataForLastFM));
   if (errFM) {

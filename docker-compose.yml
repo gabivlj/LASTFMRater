@@ -36,6 +36,7 @@ services:
     build: ./server
     expose:
       - ${APP_SERVER_PORT}
+    network_mode: bridge
     environment:
       API_HOST: ${API_HOST}
       APP_SERVER_PORT: ${APP_SERVER_PORT}

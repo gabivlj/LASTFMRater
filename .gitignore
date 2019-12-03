@@ -12,6 +12,7 @@
 /server/config/keys.js
 /server/config/api.js
 /chat/.env
+/image/.env
 # testing
 /coverage
 

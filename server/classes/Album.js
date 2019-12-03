@@ -1,3 +1,6 @@
+const Jimp = require('jimp');
+const FormData = require('form-data');
+const fetch = require('node-fetch');
 const Album = require('../models/Album');
 const Chart = require('./Chart');
 
@@ -53,6 +56,45 @@ const albumHelper = {
               )[0] || {}
             ).puntuation) ||
           0;
+        const image = albumFM.album.image[albumFM.album.image.length - 1];
+
+        if (image) {
+          const imageURL = image['#text'];
+          Jimp.read(imageURL, async (err, image) => {
+            await image.dither16();
+            // image.write('nodither.png');
+            await image.blur(45);
+            await image.resize(1000, 600);
+            image.write('test.png');
+            const filename = `${album._id}-header`;
+            try {
+              const form = new FormData();
+              form.append(
+                'grumpy-file',
+                await image.getBufferAsync('image/png'),
+                {
+                  filename,
+                },
+              );
+              fetch(`http://172.17.42.1:2222/api/image`, {
+                method: 'POST',
+                headers: {
+                  // 'Content-Type': 'multipart/form-data',
+                  CLIENT_KEY: 'p7SmC80UKunIMRGcXWqQzlUqFEZTOJ',
+                },
+                body: form,
+              })
+                .then(e => console.log(e))
+                .catch(er => console.log(er));
+              album.headerURL = `/api/image/${filename}`;
+              album.save();
+            } catch (err) {
+              console.log(err);
+            }
+          });
+        }
+
+        albumFM.album.headerURL = album.headerURL;
         albumFM.album.reviews = album.reviews;
         albumFM.album._id = album._id;
         albumFM.album.__v = album.__v;
