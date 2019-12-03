@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 
-
 	server "github.com/gabivlj/image_server_grampy/server"
 
 	// server "github.com/gabivlj/grumpy_image_server/server"
@@ -18,10 +17,6 @@ import (
 	"github.com/gabivlj/image_server_grampy/mongodb"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-
 )
 
 func main() {
@@ -73,10 +68,9 @@ func main() {
 	// router.HandleFunc("/api/login", server.LogIn).Methods("POST")
 	router.HandleFunc("/api/image/{id}", server.ServeImage).Methods("GET")
 	// router.HandleFunc("/api/image_header/", server.SaveAlbumHeader).Methods("POST")
-<<<<<<< HEAD
-=======
+
 	// TODO Uncomment this on production
->>>>>>> tmp
+
 	// router.Use(JwtAuthentication)
 	router.HandleFunc("/api/image", server.GetImage).Methods("POST")
 	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router)))
