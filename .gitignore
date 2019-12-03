@@ -13,6 +13,7 @@
 /server/config/api.js
 /chat/.env
 /image/.env
+/image/temp
 # testing
 /coverage
 
