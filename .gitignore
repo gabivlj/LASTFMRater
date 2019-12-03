@@ -12,6 +12,9 @@
 /server/config/keys.js
 /server/config/api.js
 /chat/.env
+/image/.env
+/image/grumpy-image-server
+/image/temp
 # testing
 /coverage
 
