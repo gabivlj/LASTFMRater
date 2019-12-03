@@ -39,6 +39,7 @@ import css from './css';
 import ArtistForm from './components/Artist/Form/ArtistForm';
 import Suggestions from './components/Suggestion/Suggestions';
 import TrackPage from './components/Track/TrackPage';
+import SignInSide from './components/Test/SignInTest';
 
 store.dispatch(logFromSession());
 
@@ -58,7 +59,7 @@ function App() {
                 <Route
                   exact
                   path="/test/you/shouldnt/be/here"
-                  component={Test}
+                  component={SignInSide}
                 />
                 <Route exact path="/artist/:name/:_id" component={Artist} />
                 <Route
