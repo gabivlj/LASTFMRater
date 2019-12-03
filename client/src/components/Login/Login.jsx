@@ -6,6 +6,7 @@ import logo from '../../logo.png';
 import store from '../../store';
 import PropTypes from 'prop-types';
 import Test from '../Test/Test';
+import SignInTest from '../Test/SignInTest';
 
 const propTypes = {
   auth: PropTypes.object.isRequired,
@@ -16,12 +17,15 @@ class Login extends Component {
   static propTypes = propTypes;
 
   state = {
-    email: '',
-    password: '',
+    email: { label: 'Email address', value: '', autoComplete: 'email' },
+    password: { label: 'Password', value: '', autoComplete: 'password' },
   };
 
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({
+      ...this.state,
+      [e.target.name]: { ...this.state[e.target.name], value: e.target.value },
+    });
   };
 
   componentDidMount() {
@@ -42,7 +46,10 @@ class Login extends Component {
 
   componentSubmit = e => {
     e.preventDefault();
-    this.props.logIn(this.state);
+    this.props.logIn({
+      email: this.state.email.value,
+      password: this.state.password.value,
+    });
   };
 
   componentWillUnmount() {
@@ -58,44 +65,13 @@ class Login extends Component {
   render() {
     const { errors } = this.props.auth;
     return (
-      <div className="container jumbotron mt-3">
-        <Test pro={'probuilds'} />
-        <img
-          src={logo}
-          className="App-logo"
-          alt="logo"
-          style={{ width: '200px', height: '200px', marginLeft: '40%' }}
-        />
-        <h1 className="ml-3">Login</h1>
-        <form onSubmit={this.componentSubmit}>
-          <InputBorderline
-            type="email"
-            name="email"
-            label="Email"
-            value={this.state.email}
-            onChange={this.onChange}
-            multiline={false}
-            error={errors['email'] || '' || (errors['auth'] || '')}
-            cleanErrors={this.cleanErrors}
-          />
-          <InputBorderline
-            type="password"
-            name="password"
-            label="Password"
-            value={this.state.password}
-            onChange={this.onChange}
-            multiline={false}
-            error={errors['password'] || ''}
-            cleanErrors={this.cleanErrors}
-          />
-          <br />
-          <input
-            type="submit"
-            className="btn btn-primary mt-3"
-            value="Log in"
-          />
-        </form>
-      </div>
+      <SignInTest
+        title="Sign into Grampy!"
+        errors={errors}
+        onChange={this.onChange}
+        state={this.state}
+        onSubmit={this.componentSubmit}
+      />
     );
   }
 }
