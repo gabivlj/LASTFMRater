@@ -1,7 +1,7 @@
 export default {
   API:
     process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000/api'
+      ? 'http://0.0.0.0:8080/api'
       : 'http://localhost/api',
   // todo: Create go image server instance and set it here.
   GO_IMAGE:

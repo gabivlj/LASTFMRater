@@ -1,8 +1,7 @@
 .gramp {
-
   max-height: 100vh;
   min-height: 5vh;
-  max-width: 500px;
+  max-width: 1000px;
   min-width: 200px;
   -webkit-box-shadow: 0px 1px 2px 3px #1f3492;
   -moz-box-shadow: 0px 1px 2px 3px #1f3492;
@@ -10,12 +9,11 @@
   margin: 15px;
 }
 
-
 .hide-notification {
   top: -500px;
   z-index: 10;
   right: 47.5%;
-  animation: HideNotificationFromBottom 1 .7s;
+  animation: HideNotificationFromBottom 1 0.7s;
   animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   position: fixed;
 }
@@ -28,7 +26,7 @@
   top: 20px;
   z-index: 10;
   position: fixed;
-  animation: NotificationFromTop 1 .7s;
+  animation: NotificationFromTop 1 0.7s;
   animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   right: 47.5%;
 }
@@ -37,12 +35,11 @@
   padding-bottom: 100px;
   height: 100%;
   /* z-index: 1; */
-  position: fixed;  
+  position: fixed;
   overflow-y: hidden;
   /* height: 100%; */
   width: 100%;
   /* padding-right: 17px; */
-  
 }
 
 @media (max-width: 1000px) {
@@ -74,7 +71,6 @@
   cursor: pointer;
 }
 
-
 .gramp-upper {
   padding: 10px 40px 5px 40px;
 }
@@ -89,6 +85,7 @@
 
 .gramp-body {
   padding: 0 40px 30px 60px;
+  margin-left: 10vw;
 }
 
 .gramp-avatar {
@@ -102,8 +99,12 @@
 }
 
 @media (max-height: 700px) {
-  .gramp h2 { font-size: 18px; }
-  .gramp { min-height: 100px }
+  .gramp h2 {
+    font-size: 18px;
+  }
+  .gramp {
+    min-height: 100px;
+  }
 }
 
 @media (max-width: 500px) {

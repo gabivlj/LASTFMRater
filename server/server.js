@@ -6,6 +6,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const https = require('https');
+const cors = require('cors');
 const http = require('http');
 // Mongodb Key
 const db = require('./config/keys').MONGOURI;
@@ -59,6 +60,7 @@ function connect() {
 }
 
 connect();
+app.use(cors());
 // BodyParser Init.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -73,6 +75,10 @@ passportConfig(passport);
 app.get('/api/token', (req, res) => {
   const { token } = req.query;
   res.redirect(`http://localhost:3000/${token}`);
+});
+app.get('/api/test', (req, res) => {
+  console.log('allesgood');
+  res.json({ response: 'allesgood' });
 });
 
 // Use routes
@@ -108,7 +114,7 @@ const httpsServer = https.createServer({}, app);
 const httpServer = http.createServer(app);
 
 // Port listening
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 httpServer.listen(PORT, err =>
   err
     ? console.log(err)

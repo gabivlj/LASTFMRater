@@ -15,6 +15,7 @@ function TimelineScroll({
   loadGrampsOwnTimeline,
   setCommentOverlay,
   cleanGrampsProfile,
+  style = {},
 }) {
   const ADDER_N_GRAMPS = 25;
   const TIMEOUT = 1000;
@@ -62,9 +63,7 @@ function TimelineScroll({
       timeoutForLoadingBottom = true;
     }
   }
-  // function whenBottom() {
-  //   getGr;
-  // }
+
   return (
     <div>
       <h1>Timeline scroller</h1>
@@ -75,15 +74,17 @@ function TimelineScroll({
         preload={false}
         style={{ maxHeight: '500px', width: '100%', minHeight: '200px' }}
       >
-        {!timeline.loaded && timeline.restartTimelineProfile ? (
-          <LinearProgress style={{ width: '100%', marginTop: '5px' }} />
-        ) : null}
-        {timeline.grampsProfile.map(gramp => (
-          <Gramp gramp={gramp} key={gramp._id} onClick={setCommentOverlay} />
-        ))}
-        {!timeline.loaded && timeline.grampsProfile.length ? (
-          <LinearProgress style={{ width: '100%' }} />
-        ) : null}
+        <div style={style}>
+          {!timeline.loaded && timeline.restartTimelineProfile ? (
+            <LinearProgress style={{ width: '100%', marginTop: '5px' }} />
+          ) : null}
+          {timeline.grampsProfile.map(gramp => (
+            <Gramp gramp={gramp} key={gramp._id} onClick={setCommentOverlay} />
+          ))}
+          {!timeline.loaded && timeline.grampsProfile.length ? (
+            <LinearProgress style={{ width: '100%' }} />
+          ) : null}
+        </div>
       </ScrollerLoader>
     </div>
   );

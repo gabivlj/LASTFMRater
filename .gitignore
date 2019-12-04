@@ -20,7 +20,7 @@
 
 # production
 /build
-#nice
+
 # misc
 .DS_Store
 .env.local

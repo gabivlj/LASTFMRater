@@ -48,7 +48,7 @@ COPY . .
 RUN go build
 
 # Expose port 8080 to the outside world
-EXPOSE 1234
+EXPOSE 2222
 
 # Run the executable
-CMD ["./gramp"]
+CMD ["./image_server_grampy"]

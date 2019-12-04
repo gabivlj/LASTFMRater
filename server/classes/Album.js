@@ -58,7 +58,7 @@ const albumHelper = {
           0;
         const image = albumFM.album.image[albumFM.album.image.length - 1];
 
-        if (image) {
+        if (image && !album.headerURL) {
           const imageURL = image['#text'];
           Jimp.read(imageURL, async (err, image) => {
             await image.dither16();
@@ -76,10 +76,12 @@ const albumHelper = {
                   filename,
                 },
               );
-              fetch(`http://172.17.42.1:2222/api/image`, {
+              console.log('fetchhh');
+              fetch(`http://image:2222/api/image`, {
                 method: 'POST',
                 headers: {
                   // 'Content-Type': 'multipart/form-data',
+
                   CLIENT_KEY: 'p7SmC80UKunIMRGcXWqQzlUqFEZTOJ',
                 },
                 body: form,

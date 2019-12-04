@@ -74,13 +74,13 @@ class AppBarMine extends Component {
             <Toolbar className={classes.toolbar}>
               <PopComponent />
 
-              <Fab
+              {/* <Fab
                 color="secondary"
                 aria-label="Add"
                 className={classes.fabButton}
               >
                 <AddIcon />
-              </Fab>
+              </Fab> */}
               <div>
                 <Input
                   className={this.state.extended ? 'ExtendedInput' : 'NoInput'}

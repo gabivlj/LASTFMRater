@@ -112,106 +112,121 @@ class Album extends Component {
         0,
       );
     }
-
+    const bg = album ? `url(http://localhost:2222${album.headerURL}-0)` : '';
+    console.log(bg);
     return (
       <div>
-        <div className="jumbotron">
-          <div className="container">
+        <div>
+          <div>
             {album ? (
               <div>
-                <div className="row">
-                  <div className="col-md-4 " style={{ marginTop: '10%' }}>
-                    <h1 className="display-6">
-                      <Link
-                        to={encodeURI(
-                          `/artist/${this.state.artist}/${album.artistId}`,
-                        )}
-                      >
-                        {album.artist}
-                      </Link>
-                    </h1>
-                    <h2 className="display-3">{album.name}</h2>
-                    <p>{album.mbid}</p>
-                    {album.userplaycount ? (
-                      <h5>
-                        {this.props.currentUser
-                          ? this.props.currentUser.user
-                          : ''}
-                        's playcount: {album.userplaycount}
-                      </h5>
-                    ) : null}
+                <div
+                  style={{
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundImage: bg,
+                    backgroundAttachment: 'fixed',
+                  }}
+                >
+                  <div className="container" style={{ padding: '5%' }}>
+                    <div className="row">
+                      <div className="col-md-4" style={{ marginTop: '10%' }}>
+                        <h1 className="display-6">
+                          <Link
+                            to={encodeURI(
+                              `/artist/${this.state.artist}/${album.artistId}`,
+                            )}
+                          >
+                            {album.artist}
+                          </Link>
+                        </h1>
+                        <h2 className="display-3">{album.name}</h2>
+                        <p>{album.mbid}</p>
+                        {album.userplaycount ? (
+                          <h5>
+                            {this.props.currentUser
+                              ? this.props.currentUser.user
+                              : ''}
+                            's playcount: {album.userplaycount}
+                          </h5>
+                        ) : null}
+                      </div>
+                      <div className="col-md-4">
+                        <img
+                          style={{ borderRadius: '3%' }}
+                          alt="Album"
+                          src={album.image[3]['#text']}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-md-4">
-                    <img
-                      style={{ borderRadius: '3%' }}
-                      alt="Album"
-                      src={album.image[3]['#text']}
+                </div>
+                <div className="container mt-3">
+                  <RatingsCommon
+                    model={album}
+                    ratings={album.ratings}
+                    auth={this.props.currentUser || null}
+                    elementWithRatings={album}
+                    setRatings={this.props.addAlbumRating}
+                    username={
+                      !this.props.currentUser ? '' : this.props.currentUser.user
+                    }
+                    elementId={album._id}
+                  />
+
+                  {album.liked ? (
+                    <IconButton style={{}} onClick={() => likeAlbum(album._id)}>
+                      <HeartIcon
+                        style={{ color: '#4263f5' }} //#bfe0f2
+                      ></HeartIcon>
+                    </IconButton>
+                  ) : (
+                    <IconButton style={{}} onClick={() => likeAlbum(album._id)}>
+                      <HeartBorderIcon
+                        style={{ color: '#4263f5' }} //#bfe0f2
+                      ></HeartBorderIcon>
+                    </IconButton>
+                  )}
+
+                  {this.props.currentUser && this.props.currentUser.id ? (
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      component="span"
+                      onClick={() => postReview(history, album._id)}
+                    >
+                      Make a review
+                    </Button>
+                  ) : null}
+
+                  <h5 className="mt-3 ">Track list:</h5>
+                  <ul className="list-group mt-3 w-100">
+                    {tracks && tracks.length > 0
+                      ? tracks
+                      : 'There are no tracks listed on this album, wanna add one? Collaborate!'}
+                  </ul>
+                  <div className="badge badge-primary mt-3">
+                    Playcount: {album.playcount}
+                  </div>
+                  <div className="badge badge-primary ml-3 mt-3">
+                    Listeners: {album.listeners}
+                  </div>
+                  <div className="badge badge-primary ml-3 mt-3">
+                    Total duration: {hourFormat.fmtMSS(duration)}
+                  </div>
+                  <h3 className="m-2">Reviews</h3>
+                  <ReviewsSection objectID={album._id} type={'ALBUM'} />
+                  <br />
+                  {/* TODO: We are cuerrently testing this component for reusable. */}
+                  <div style={{ margin: '50px 0 20px 0' }}>
+                    <CommentComponent
+                      keyy={'999'}
+                      objectId={album._id}
+                      numberOfCommentsAdd={20}
+                      name={`${album.name} by ${this.state.artist}`}
                     />
                   </div>
-                </div>
-                <RatingsCommon
-                  model={album}
-                  ratings={album.ratings}
-                  auth={this.props.currentUser || null}
-                  elementWithRatings={album}
-                  setRatings={this.props.addAlbumRating}
-                  username={
-                    !this.props.currentUser ? '' : this.props.currentUser.user
-                  }
-                  elementId={album._id}
-                />
-
-                {album.liked ? (
-                  <IconButton style={{}} onClick={() => likeAlbum(album._id)}>
-                    <HeartIcon
-                      style={{ color: '#4263f5' }} //#bfe0f2
-                    ></HeartIcon>
-                  </IconButton>
-                ) : (
-                  <IconButton style={{}} onClick={() => likeAlbum(album._id)}>
-                    <HeartBorderIcon
-                      style={{ color: '#4263f5' }} //#bfe0f2
-                    ></HeartBorderIcon>
-                  </IconButton>
-                )}
-
-                {this.props.currentUser && this.props.currentUser.id ? (
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    component="span"
-                    onClick={() => postReview(history, album._id)}
-                  >
-                    Make a review
-                  </Button>
-                ) : null}
-
-                <h5 className="mt-3 ">Track list:</h5>
-                <ul className="list-group mt-3 w-100">
-                  {tracks && tracks.length > 0
-                    ? tracks
-                    : 'There are no tracks listed on this album, wanna add one? Collaborate!'}
-                </ul>
-                <div className="badge badge-primary mt-3">
-                  Playcount: {album.playcount}
-                </div>
-                <div className="badge badge-primary ml-3 mt-3">
-                  Listeners: {album.listeners}
-                </div>
-                <div className="badge badge-primary ml-3 mt-3">
-                  Total duration: {hourFormat.fmtMSS(duration)}
-                </div>
-                <h3 className="m-2">Reviews</h3>
-                <ReviewsSection objectID={album._id} type={'ALBUM'} />
-                <br />
-                {/* TODO: We are cuerrently testing this component for reusable. */}
-                <div style={{ margin: '50px 0 20px 0' }}>
-                  <CommentComponent
-                    keyy={'999'}
-                    objectId={album._id}
-                    numberOfCommentsAdd={20}
-                    name={`${album.name} by ${this.state.artist}`}
-                  />
                 </div>
               </div>
             ) : (

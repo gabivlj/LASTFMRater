@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { logIn } from '../../actions/authActions';
-import InputBorderline from '../Common/InputBorderline';
-import logo from '../../logo.png';
 import store from '../../store';
 import PropTypes from 'prop-types';
-import Test from '../Test/Test';
 import SignInTest from '../Test/SignInTest';
 
 const propTypes = {

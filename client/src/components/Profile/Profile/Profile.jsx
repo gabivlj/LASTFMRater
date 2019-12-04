@@ -107,7 +107,12 @@ function Profile({
     };
 
     const timeline = {
-      Component: <TimelineScroll id={profile.profile._id} />,
+      Component: (
+        <TimelineScroll
+          style={{ marginLeft: '10%' }}
+          id={profile.profile._id}
+        />
+      ),
       jsx: false,
       name: 'Gramps',
     };
@@ -199,7 +204,7 @@ function Profile({
   }
 
   return (
-    <div style={{ marginTop: '100px', paddingBottom: '200px' }}>
+    <div style={{ marginTop: '1px', paddingBottom: '200px' }}>
       {profile.isLoading || !profile.profile ? (
         <LinearProgress />
       ) : (

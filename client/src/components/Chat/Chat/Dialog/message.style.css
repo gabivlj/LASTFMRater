@@ -43,13 +43,13 @@
 }
 
 .last-msg-me {
-  animation: WidthMsg 1 0.7s;
+  animation: WidthMsg 1 0.3s;
   /* animation-timing-function: cubic-bezier(0.98, -0.8, 0.5, 10); */
   animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .last-msg-them {
-  animation: WidthMsg 1 1.4s;
+  animation: WidthMsg 1 0.4s;
   animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
