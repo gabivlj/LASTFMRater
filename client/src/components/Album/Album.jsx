@@ -162,7 +162,10 @@ class Album extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="container mt-3">
+                <div
+                  className="container mt-3"
+                  style={{ paddingBottom: '100px' }}
+                >
                   <RatingsCommon
                     model={album}
                     ratings={album.ratings}

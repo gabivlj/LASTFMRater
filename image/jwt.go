@@ -24,6 +24,10 @@ type Token struct {
 
 var JwtAuthentication = func(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "POST" && r.Header.Get("KEY_IMAGE_SERVER") == server.SpecialKey {
+			next.ServeHTTP(w, r)
+			return
+		}
 		if r.Method == "GET" {
 			next.ServeHTTP(w, r)
 			return

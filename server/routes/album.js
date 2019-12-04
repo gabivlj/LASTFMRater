@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const passport = require('passport');
-const jimp = require('jimp');
 
 const Album = require('../models/Album');
 const Lastfm = require('../classes/Lastfm');
@@ -310,8 +309,10 @@ router.get('/:albumname/:artistname', async (req, res) => {
       albumDB.lastfmSource = true;
       dontCareWaitingForSave(albumDB, false);
     }
-    // albumFM.ratings = albumDB.ratings;
-    // albumFM.album.score = Chart.averageWithPowerLevel(albumDB.ratings);
+    const image = albumFM.image[albumFM.album.image.length - 1];
+    if (image && !albumDB.headerURL) {
+      albumHelper.blurImage(albumDB, image);
+    }
     albumFM.userScore =
       (username &&
         (

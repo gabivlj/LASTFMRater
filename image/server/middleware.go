@@ -10,6 +10,7 @@ import (
 // Key that needs to be included on POST requests.
 var Key string
 var GoogleKey string
+var SpecialKey string
 
 // Cors ::: enable cors, (DEPRECATED FOR THIS PROJECT ATM)
 var Cors = func(next http.Handler) http.Handler {

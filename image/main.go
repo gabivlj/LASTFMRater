@@ -27,7 +27,7 @@ func main() {
 	ok, ok2, ok3 := false, false, false
 	server.Key, ok = os.LookupEnv("CLIENT_KEY")
 	server.SecretKey, ok2 = os.LookupEnv("SECRET_OR_KEY")
-	server.GoogleKey, ok3 = os.LookupEnv("GOOGLE_KEY")
+	server.SpecialKey, ok3 = os.LookupEnv("SPECIAL_KEY_IMAGE")
 
 	if !ok || !ok2 || !ok3 {
 		fmt.Println("not ok")

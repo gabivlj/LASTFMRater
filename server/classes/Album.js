@@ -3,8 +3,41 @@ const FormData = require('form-data');
 const fetch = require('node-fetch');
 const Album = require('../models/Album');
 const Chart = require('./Chart');
+const { keyImageServer } = require('../config/keys');
+
+function blurImage(album, image) {
+  const imageURL = image['#text'];
+  Jimp.read(imageURL, async (err, image) => {
+    await image.dither16();
+    // image.write('nodither.png');
+    await image.blur(45);
+    await image.resize(1000, 600);
+    const filename = `${album._id}-header`;
+    try {
+      const form = new FormData();
+      form.append('grumpy-file', await image.getBufferAsync('image/png'), {
+        filename,
+      });
+
+      fetch(`http://image:2222/api/image`, {
+        method: 'POST',
+        headers: {
+          KEY_IMAGE_SERVER: keyImageServer,
+        },
+        body: form,
+      })
+        .then(e => console.log(e))
+        .catch(er => console.log(er));
+      album.headerURL = `/api/image/${filename}`;
+      album.save();
+    } catch (err) {
+      console.log(err);
+    }
+  });
+}
 
 const albumHelper = {
+  blurImage,
   mapLikesDislikes: comments =>
     comments.map(comment => ({
       ...comment,
@@ -48,8 +81,8 @@ const albumHelper = {
         }
         // albumFM.album.ratings = album.ratings;
         albumFM.album.score = Chart.averageWithPowerLevel(album.ratings);
-        albumFM.userScore =
-          (username &&
+        albumFM.album.userScore =
+          (usernameGrampy &&
             (
               album.ratings.filter(
                 r => String(r.user) === String(usernameGrampy),
@@ -59,41 +92,7 @@ const albumHelper = {
         const image = albumFM.album.image[albumFM.album.image.length - 1];
 
         if (image && !album.headerURL) {
-          const imageURL = image['#text'];
-          Jimp.read(imageURL, async (err, image) => {
-            await image.dither16();
-            // image.write('nodither.png');
-            await image.blur(45);
-            await image.resize(1000, 600);
-            image.write('test.png');
-            const filename = `${album._id}-header`;
-            try {
-              const form = new FormData();
-              form.append(
-                'grumpy-file',
-                await image.getBufferAsync('image/png'),
-                {
-                  filename,
-                },
-              );
-              console.log('fetchhh');
-              fetch(`http://image:2222/api/image`, {
-                method: 'POST',
-                headers: {
-                  // 'Content-Type': 'multipart/form-data',
-
-                  CLIENT_KEY: 'p7SmC80UKunIMRGcXWqQzlUqFEZTOJ',
-                },
-                body: form,
-              })
-                .then(e => console.log(e))
-                .catch(er => console.log(er));
-              album.headerURL = `/api/image/${filename}`;
-              album.save();
-            } catch (err) {
-              console.log(err);
-            }
-          });
+          blurImage(album, image);
         }
 
         albumFM.album.headerURL = album.headerURL;
