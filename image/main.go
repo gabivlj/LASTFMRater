@@ -54,7 +54,7 @@ func main() {
 
 	port := "2222"
 	router := mux.NewRouter()
-	router.Use(server.TokenAuth)
+	// router.Use(server.TokenAuth)
 	// CORS ...
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Origin", "Content-Type", "X-Auth-Token", "Authorization", "CLIENT_KEY"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
@@ -71,7 +71,7 @@ func main() {
 
 	// TODO Uncomment this on production
 
-	// router.Use(JwtAuthentication)
+	router.Use(JwtAuthentication)
 	router.HandleFunc("/api/image", server.GetImage).Methods("POST")
 	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-// TODO: Add private routes as well. Also, we must check if we can make authentification without Lastfm API.
+
 import {
   BrowserRouter as Router,
   Route,

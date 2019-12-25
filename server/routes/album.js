@@ -285,8 +285,6 @@ router.get('/:albumname/:artistname', async (req, res) => {
     return res.status(400).json({ error: 'Error requesting album' });
   }
 
-  console.log(albumFM);
-
   if (albumFM && albumFM.album) {
     albumFM = albumFM.album;
     let albumDB = await Album.findOne({
@@ -300,7 +298,6 @@ router.get('/:albumname/:artistname', async (req, res) => {
         mbid: isSNull(albumFM.mbid) ? '0' : albumFM.mbid,
         lastfmSource: true,
       });
-      console.log(newAlbum);
       const saved = await newAlbum.save();
       albumDB = saved;
     }
@@ -309,8 +306,8 @@ router.get('/:albumname/:artistname', async (req, res) => {
       albumDB.lastfmSource = true;
       dontCareWaitingForSave(albumDB, false);
     }
-    const image = albumFM.image[albumFM.album.image.length - 1];
-    if (image && !albumDB.headerURL) {
+    const image = albumFM.image[albumFM.image.length - 1];
+    if (image && isSNull(albumDB.headerURL)) {
       albumHelper.blurImage(albumDB, image);
     }
     albumFM.userScore =
@@ -321,6 +318,7 @@ router.get('/:albumname/:artistname', async (req, res) => {
         ).puntuation) ||
       0;
     albumFM.reviews = albumDB.reviews;
+    albumFM.headerURL = albumDB.headerURL;
     albumFM._id = albumDB._id;
     albumFM.__v = albumDB.__v;
     albumFM.typeAlbum = albumDB.typeAlbum;

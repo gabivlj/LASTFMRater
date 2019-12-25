@@ -1,8 +1,6 @@
 package server
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 )
@@ -30,19 +28,19 @@ func isSocketRequest(s string) bool {
 
 // TokenAuth ...
 // Authentifies that any post request is authentified by the provided keys.
-var TokenAuth = func(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "POST" || isSocketRequest(r.URL.Path) {
-			headerKey := r.Header.Get("CLIENT_KEY")
-			fmt.Print(headerKey)
-			if headerKey == "" || headerKey != Key {
-				fmt.Print("Unauthorized")
-				w.Header().Add("Content-Type", "application/json")
-				msg := map[string]interface{}{"err": "Unauthorized"}
-				_ = json.NewEncoder(w).Encode(msg)
-				return
-			}
-		}
-		next.ServeHTTP(w, r)
-	})
-}
+// var TokenAuth = func(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		if r.Method == "POST" || isSocketRequest(r.URL.Path) {
+// 			headerKey := r.Header.Get("CLIENT_KEY")
+// 			fmt.Print(headerKey)
+// 			if headerKey == "" || headerKey != Key {
+// 				fmt.Print("Unauthorized")
+// 				w.Header().Add("Content-Type", "application/json")
+// 				msg := map[string]interface{}{"err": "Unauthorized"}
+// 				_ = json.NewEncoder(w).Encode(msg)
+// 				return
+// 			}
+// 		}
+// 		next.ServeHTTP(w, r)
+// 	})
+// }
